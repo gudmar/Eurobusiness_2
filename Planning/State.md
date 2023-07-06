@@ -7,6 +7,8 @@
     f. nrFieldsToMove
     g. isInPrison
     h. nrTurnsToWait
+    i. isBackrupted
+    j. isInGame (if player started game)
 
 2. Players
     a. playersInOrder
