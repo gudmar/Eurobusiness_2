@@ -18,7 +18,7 @@ Game
                 NrSepcialCards
                 PreciseReport (button opens a modal)  (INFO)
             PlayerYellow $
-                $
+                $ 
                 NrSepcialCards
                 PreciseReport (button opens a modal)  (INFO)
             RoundNumber
@@ -49,6 +49,8 @@ Game
         PlayerRed
         PleyerYellow
         PlayerGreen
+
+    StartScreen (uses Information to select players...)
 
     Information (A modal taking a component to display)
 

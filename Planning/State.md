@@ -8,7 +8,7 @@
     g. isInPrison
     h. nrTurnsToWait
     i. isBackrupted
-    j. isInGame (if player started game)
+    j. decisionMaker: 'human' | 'computer' | 'none' // none -> player not in the game
 
 2. Players
     a. playersInOrder
