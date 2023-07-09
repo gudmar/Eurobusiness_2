@@ -1,55 +1,40 @@
 import React, { createContext, useContext, useEffect, useState } from "react"
 import { ThemeProvider } from "react-jss";
+import themes, { INITIAL_THEME } from "../Themes";
+import { NamedTheme } from "../Types/themes";
 
-const themes = [
-    {
-        name: 'Green',
-        theme: {
-            mainScreenBackground: 'green'
-        }
-    },
-    {
-        name: 'Red',
-        theme: {
-            mainScreenBackground: 'red'
-        }
-    },
-    {
-        name: 'Gray',
-        theme: {
-            mainScreenBackground: 'gray'
-        }
-    }
 
-]
-
-const findTheme = (themes:any, themeName:any) => themes.find(({ name }:any) => {
+const findTheme = (themes:NamedTheme[], themeName:string):NamedTheme|undefined => themes.find(({ name }:any) => {
     if (name === themeName) return true;
     return false;
 })
 
-const initialTheme = findTheme(themes, 'Green')
+const initialTheme: NamedTheme = INITIAL_THEME
 
-const useThemeFromName = (themes: any[], initialName: string) => {
+const throwThemeNotFoundIfNoTheme = (nextTheme: NamedTheme | undefined) => {
+    if (!nextTheme) throw new Error('Theme not found')
+}
+
+const useThemeFromName = (themes: NamedTheme[], initialName: string) => {
     const [themeName, setThemeName] = useState(initialName);
-    const [theme, setTheme] = useState(initialTheme)
+    const [theme, setTheme]: [NamedTheme, (arg0: NamedTheme)=>void] = useState(initialTheme)
     useEffect(() => {
         const nextTheme = findTheme(themes, themeName);
-        setTheme(nextTheme);
+        throwThemeNotFoundIfNoTheme(nextTheme);
+        setTheme(nextTheme as NamedTheme);
     }, [themeName, themes])
-    useEffect(() => console.log(theme), [theme])
     return { theme: theme.theme, setThemeName, themeNames: themes.map(({name}) => name) }
 }
 
 const ThemesContext = createContext({
     theme: {},
-    setThemeName: (val:any) => {console.error('Initial function not changed')},
+    setThemeName: (val:any) => {console.error('setThemeName is not overrided')},
     themeNames: themes.map(({name})=>name)
 });
 
 export const ThemeContextProvider = ({children}: {children: React.ReactNode}) => {
-    const {theme, setThemeName, themeNames} = useThemeFromName(themes, 'Green')
-    useEffect(() => console.log(theme), [theme])
+    const {theme, setThemeName, themeNames} = useThemeFromName(themes, initialTheme.name)
+    // useEffect(() => console.log(theme), [theme])
     return(
         <ThemesContext.Provider value={{theme, setThemeName, themeNames}}>
             <ThemeProvider theme={theme}>
@@ -59,6 +44,7 @@ export const ThemeContextProvider = ({children}: {children: React.ReactNode}) =>
     )
 
 }
+
 export const useThemesAPI = () => {
     const themesAPI = useContext(ThemesContext);
     if (!ThemesContext) throw new Error('useThemesAPI should be used within ThemeContextProvider');
