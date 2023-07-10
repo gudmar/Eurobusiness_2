@@ -1,7 +1,7 @@
 import { NamedTheme } from "../Types/themes";
 
 export const DARK_THEME: NamedTheme = {
-    name: 'Dark hole',
+    name: 'Black hole',
     theme: {
         canvasColor: '#333333',
         penColor: '#dfdfdf',
