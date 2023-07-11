@@ -20,7 +20,7 @@ export type tOtherTypes =
     'Go to jail' |
     'Tax' | 'Guarded Parking';
 
-export type tCountries = 'Greece' | 'Italy' | 'Spain' | 'UK' | 'Benelux' | 'Sweeden' | 'RFN' | 'Austria'
+export type tCountries = 'Greece' | 'Italy' | 'Spain' | 'UK' | 'Benelux' | 'Sweeden' | 'RFN' | 'Austria' | 'Railways' | 'Plant'
 export type tNonCountryFieldTypes = 'Railwaus' | 'Plant'
 
 export type tCityField = {
@@ -42,10 +42,12 @@ export type tCityField = {
     isPlegded: boolean,
 }
 
+export type tIcon = any;  // PRECISE this type,
+
 export type tChance = {
     type: 'Chance blue' | 'Chance red',
     info: string,
-    icon: any, // PRECISE this type,
+    icon: tIcon,
 }
 
 export type tOtherFieldTypes = {
@@ -53,7 +55,7 @@ export type tOtherFieldTypes = {
     visit?: tVisitPayment,
     info: string,
     wait?: number,
-    icon: any,
+    icon: tIcon,
     // boardFieldNumber: number,
 }
 
@@ -65,10 +67,12 @@ export type tNonCityEstates = {
     visit: tVisitPayment,
     owner: string,
     isPlegded: boolean,
-    icon: any,
+    icon: tIcon,
 }
 
-export interface tBoard {
+export type tBoardField = tOtherFieldTypes | tCityField | tChance | tNonCityEstates
+
+export type tBoard = {
     [START]: tOtherFieldTypes,
     [ATENY]: tCityField,
     [CHANCE_BLUE]: tChance,
