@@ -23,7 +23,7 @@ export type tOtherTypes =
 export type tCountries = 'Greece' | 'Italy' | 'Spain' | 'UK' | 'Benelux' | 'Sweeden' | 'RFN' | 'Austria' | 'Railways' | 'Plant'
 export type tNonCountryFieldTypes = 'Railwaus' | 'Plant'
 
-export type tCityField = {
+export interface iCityField {
     type: tEstateTypes,
     country: tCountries,
     price: number,
@@ -42,24 +42,37 @@ export type tCityField = {
     isPlegded: boolean,
 }
 
+export interface iNamedCityField extends iCityField {
+    name: string;
+}
+
 export type tIcon = any;  // PRECISE this type,
 
-export type tChance = {
-    type: 'Chance blue' | 'Chance red',
+export type tChanceType = 'Chance blue' | 'Chance red';
+
+export interface iChance {
+    type: tChanceType,
     info: string,
     icon: tIcon,
 }
 
-export type tOtherFieldTypes = {
+export interface iNamedChance extends iChance {
+    name: string;
+}
+
+export interface iOtherFieldTypes {
     type: tOtherTypes,
     visit?: tVisitPayment,
     info: string,
     wait?: number,
     icon: tIcon,
-    // boardFieldNumber: number,
 }
 
-export type tNonCityEstates = {
+export interface iNamedOtherField extends iOtherFieldTypes {
+    name:string;
+}
+
+export interface iNonCityEstates {
     country: 'Railways' | 'Plant',
     type: 'Railway' | 'Power Station' | 'Water Plant',
     price: number,
@@ -70,45 +83,51 @@ export type tNonCityEstates = {
     icon: tIcon,
 }
 
-export type tBoardField = tOtherFieldTypes | tCityField | tChance | tNonCityEstates
+export interface iNamedNonCityEstates extends iNonCityEstates {
+    name: string
+}
+
+export type tBoardField = iOtherFieldTypes | iCityField | iChance | iNonCityEstates
+
+export type tNamedBoardField = iNamedOtherField | iNamedCityField | iNamedChance | iNamedNonCityEstates;
 
 export type tBoard = {
-    [START]: tOtherFieldTypes,
-    [ATENY]: tCityField,
-    [CHANCE_BLUE]: tChance,
-    [CHANCE_RED]: tChance,
-    [SALONIKI]: tCityField,
-    [GUARDED_PARKING]: tOtherFieldTypes,
-    [FREE_PARK]: tOtherFieldTypes,
-    [JAIL]: tOtherFieldTypes,
-    [GO_TO_JAIL]: tOtherFieldTypes,
-    [SOUTH_RAILWAY]: tNonCityEstates,
-    [NEAPOL]: tCityField,
-    [MEDIOLAN]: tCityField,
-    [ROME]: tCityField,
-    [BARCELONA]: tCityField,
-    [POWER_STATION]: tNonCityEstates,
-    [SEWILLA]: tCityField,
-    [MADRIT]: tCityField,
-    [WEST_RAILWAYS]: tNonCityEstates,
-    [LIVERPOOL]: tCityField,
-    [GLASGOW]: tCityField,
-    [LONDON]: tCityField,
-    [ROTTERDAM]: tCityField,
-    [BRUKSELA]: tCityField,
-    [AMSTERDAM]: tCityField,
-    [NORTH_RAILWAYS]: tNonCityEstates,
-    [MALMO]: tCityField,
-    [GOTEBORG]: tCityField,
-    [WATER_PLANT]: tNonCityEstates,
-    [SZTOKHOLM]: tCityField,
-    [FRANKFURT]: tCityField,
-    [KOLONIA]: tCityField,
-    [BONN]: tCityField,
-    [EAST_RAILWAYS]: tNonCityEstates,
-    [INSBRUK]: tCityField,
-    [TAX]: tOtherFieldTypes,
-    [WIEDEN]: tCityField,
+    [START]: iOtherFieldTypes,
+    [ATENY]: iCityField,
+    [CHANCE_BLUE]: iChance,
+    [CHANCE_RED]: iChance,
+    [SALONIKI]: iCityField,
+    [GUARDED_PARKING]: iOtherFieldTypes,
+    [FREE_PARK]: iOtherFieldTypes,
+    [JAIL]: iOtherFieldTypes,
+    [GO_TO_JAIL]: iOtherFieldTypes,
+    [SOUTH_RAILWAY]: iNonCityEstates,
+    [NEAPOL]: iCityField,
+    [MEDIOLAN]: iCityField,
+    [ROME]: iCityField,
+    [BARCELONA]: iCityField,
+    [POWER_STATION]: iNonCityEstates,
+    [SEWILLA]: iCityField,
+    [MADRIT]:iCityField,
+    [WEST_RAILWAYS]: iNonCityEstates,
+    [LIVERPOOL]: iCityField,
+    [GLASGOW]: iCityField,
+    [LONDON]: iCityField,
+    [ROTTERDAM]: iCityField,
+    [BRUKSELA]: iCityField,
+    [AMSTERDAM]: iCityField,
+    [NORTH_RAILWAYS]: iNonCityEstates,
+    [MALMO]: iCityField,
+    [GOTEBORG]: iCityField,
+    [WATER_PLANT]: iNonCityEstates,
+    [SZTOKHOLM]: iCityField,
+    [FRANKFURT]: iCityField,
+    [KOLONIA]: iCityField,
+    [BONN]: iCityField,
+    [EAST_RAILWAYS]: iNonCityEstates,
+    [INSBRUK]: iCityField,
+    [TAX]: iOtherFieldTypes,
+    [WIEDEN]: iCityField,
 }
 
 console.warn('Precise type of icon');

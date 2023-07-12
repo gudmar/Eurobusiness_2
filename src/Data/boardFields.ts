@@ -1,7 +1,4 @@
 import {
-    tEstateTypes,
-    tOtherTypes,
-    tChanceTypes,
     tBoard,
 } from './types'
 

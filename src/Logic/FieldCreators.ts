@@ -2,7 +2,7 @@ import {
     BANK,
     CITY
 } from '../Data/const'
-import { tBoardField, tCityField, tCountries, tEstateTypes, tIcon, tNonCityEstates, tOtherFieldTypes, tOtherTypes, tVisitPayment } from '../Data/types';
+import { iChance, iCityField, iNamedCityField, iNonCityEstates, iOtherFieldTypes, tBoardField, tChanceType, tCountries, tEstateTypes, tIcon, tOtherTypes, tVisitPayment } from '../Data/types';
 
 export class NullishField {
     descriptor?: tBoardField;
@@ -26,8 +26,10 @@ export class CityField {
     owner: string = BANK;
     nrOfHouses: number = 0;
     isPlegded: boolean = false;
+    static instances: {[key:string]: CityField};
 
     constructor({
+        name,
         type,
         country,
         price,
@@ -38,7 +40,11 @@ export class CityField {
         owner,
         nrOfHouses,
         isPlegded
-    }: tCityField) {
+    }: iNamedCityField) {
+
+        if (CityField.instances[name] !== undefined) {
+            return CityField.instances[name]
+        } 
         this.type = type;
         this.country = country;
         this.price = price;
@@ -49,6 +55,7 @@ export class CityField {
         this.owner = owner;
         this.nrOfHouses = nrOfHouses;
         this.isPlegded = isPlegded;
+        return this;
     }
 }
 
@@ -70,7 +77,7 @@ export class NonCityEstatesField {
         owner,
         isPlegded,
         icon
-    }: tNonCityEstates) {
+    }: iNonCityEstates) {
         this.type = type;
         this.country = country;
         this.price = price;
@@ -82,7 +89,7 @@ export class NonCityEstatesField {
     }
 }
 
-export class  OtherFieldTypesCreator {
+export class  OtherFieldTypesField {
     type: tOtherTypes;
     visit?: tVisitPayment;
     info: string;
@@ -94,11 +101,24 @@ export class  OtherFieldTypesCreator {
         info,
         wait,
         icon,
-    }: tOtherFieldTypes) {
+    }: iOtherFieldTypes) {
         this.type = type;
         this.info = info;
         this.wait = wait;
         this.icon = icon;
         this.visit = visit;
+    }
+}
+
+export class ChanceField {
+    type: tChanceType;
+    info: string;
+    icon: tIcon;
+    constructor({
+        type, info, icon
+    }: iChance) {
+        this.type = type;
+        this.info = info;
+        this.icon = icon;
     }
 }
