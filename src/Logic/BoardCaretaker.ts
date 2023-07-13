@@ -1,6 +1,6 @@
 import { toBeChecked } from "@testing-library/jest-dom/matchers";
 import { CHANCE_BLUE, CHANCE_RED, CITY, FREE_PARK, GO_TO_JAIL, GUARDED_PARKING, JAIL, PLANT, POWER_STATION, RAILWAY, START, TAX } from "../Data/const";
-import { iChance, iCityField, iNonCityEstates, iOtherFieldTypes, tBoard, tBoardField, tChanceTypes, tNamedBoardField, } from "../Data/types";
+import { iChance, iCityField, iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, iNonCityEstates, iOtherFieldTypes, tBoard, tBoardField, tChanceTypes, tNamedBoardField, } from "../Data/types";
 import { ChanceField, CityField, NonCityEstatesField, NullishField, OtherFieldTypesField } from "./FieldCreators";
 import { createBoardDescriptor } from "./Utils/createBoardDescriptor";
 
@@ -23,27 +23,27 @@ abstract class FieldCreator {
 class CityCreator extends FieldCreator {
     supportedTypes = [CITY];
     protected construct(fieldDescriptor: tBoardField){
-        return new CityField(fieldDescriptor as iCityField)
+        return new CityField(fieldDescriptor as iNamedCityField)
     }
 }
 
 class NonCityEstatesCreator extends FieldCreator {
     supportedTypes = [RAILWAY, PLANT, POWER_STATION];
     protected construct(fieldDescriptor: iNonCityEstates) {
-        return new NonCityEstatesField(fieldDescriptor as iNonCityEstates);
+        return new NonCityEstatesField(fieldDescriptor as iNamedNonCityEstates);
     }
 }
 
 class OtherFieldTypesCreator extends FieldCreator {
     supportedTypes = [START, JAIL, FREE_PARK, GO_TO_JAIL, TAX, GUARDED_PARKING];
-    protected construct(fieldDescriptor: iOtherFieldTypes) {
+    protected construct(fieldDescriptor: iNamedOtherField) {
         return new OtherFieldTypesField(fieldDescriptor);
     }
 }
 
 class ChanceFieldCreator extends FieldCreator {
     supportedTypes = [CHANCE_BLUE, CHANCE_RED];
-    protected construct(fieldDescriptor: iChance){
+    protected construct(fieldDescriptor: iNamedChance){
         return new ChanceField(fieldDescriptor)
     }
 }
@@ -88,6 +88,7 @@ export class BoardCaretaker extends FieldCreator {
 export class BoardCreator {
     factory: FieldFactory = new FieldFactory(LIST_OF_FIELD_PRODUCERS);
     caretaker: BoardCaretaker;
+    
     constructor(fieldNamesInOrder: string[], fieldDescriptors: tBoard){
         this.caretaker = new BoardCaretaker()
         const boardDescriptor = createBoardDescriptor(fieldNamesInOrder, fieldDescriptors);
