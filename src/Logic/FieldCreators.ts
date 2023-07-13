@@ -2,7 +2,7 @@ import {
     BANK,
     CITY
 } from '../Data/const'
-import { iChance, iCityField, iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, iNonCityEstates, iOtherFieldTypes, tBoardField, tChanceType, tCountries, tEstateTypes, tIcon, tNamedBoardField, tOtherTypes, tVisitPayment } from '../Data/types';
+import { iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, iNonCityEstates, iOtherFieldTypes, tBoardField, tChanceType, tCountries, tEstateTypes, tIcon, tNamedBoardField, tOtherTypes, tVisitPayment } from '../Data/types';
 
 export class NullishField {
     descriptor?: tBoardField;
@@ -16,16 +16,16 @@ export class NullishField {
 }
 
 export class CityField {
-    type: tEstateTypes = CITY;
-    country!: tCountries;
-    price: number = 0;
-    mortage: number = 0;
-    housePrice: number = 0;
-    hotelPrice: number = 0;
-    visit: tVisitPayment = [0];
-    owner: string = BANK;
-    nrOfHouses: number = 0;
-    isPlegded: boolean = false;
+    private _type: tEstateTypes = CITY;
+    private _country!: tCountries;
+    private _price: number = 0;
+    private _mortage: number = 0;
+    private _housePrice: number = 0;
+    private _hotelPrice: number = 0;
+    private _visit: tVisitPayment = [0];
+    private _owner: string = BANK;
+    private _nrOfHouses: number = 0;
+    private _isPlegded: boolean = false;
     static instances: {[key:string]: CityField};
 
     constructor({
@@ -45,30 +45,47 @@ export class CityField {
         if (CityField.instances[name] !== undefined) {
             return CityField.instances[name]
         } 
-        this.type = type;
-        this.country = country;
-        this.price = price;
-        this.mortage = mortage;
-        this.housePrice = housePrice;
-        this.hotelPrice = hotelPrice;
-        this.visit = visit;
-        this.owner = owner;
-        this.nrOfHouses = nrOfHouses;
-        this.isPlegded = isPlegded;
+        this._type = type;
+        this._country = country;
+        this._price = price;
+        this._mortage = mortage;
+        this._housePrice = housePrice;
+        this._hotelPrice = hotelPrice;
+        this._visit = visit;
+        this._owner = owner;
+        this._nrOfHouses = nrOfHouses;
+        this._isPlegded = isPlegded;
+        CityField.instances[name] = this;
         return this;
     }
+    get type() { return this._type }
+    get country() { return this._country }
+    get price() { return this._price }
+    get mortage() { return this._mortage }
+    get housePrice() {return this._housePrice }
+    get hotelPrice() {return this._hotelPrice} 
+    get visit() {return this._visit}
+    get owner() {return this._owner}
+    get nrOfHouses() {return this._nrOfHouses}
+    get isPlegded() { return this._isPlegded }
+    set nrOfHouses(val: number) {
+        if (val > 5 || val < 0) throw new Error('Nr of houses has to be > 0 and < 6')
+        this._nrOfHouses = val
+    }
+    set owner(val: string) { this._owner = val}
+    set isPlegded(val: boolean) { this._isPlegded = val}
 }
 
 export class NonCityEstatesField {
-    type!: tEstateTypes;
-    country!: tCountries;
-    price!: number;
-    mortage!: number;
-    visit!: tVisitPayment;
-    owner: string = BANK;
-    isPlegded: boolean = false;
-    icon: tIcon;
-    name!: string;
+    private _type!: tEstateTypes;
+    private _country!: tCountries;
+    private _price!: number;
+    private _mortage!: number;
+    private _visit!: tVisitPayment;
+    private _owner: string = BANK;
+    private _isPlegded: boolean = false;
+    private _icon: tIcon;
+    private _name!: string;
     static instances: { [key:string] : NonCityEstatesField };
 
     constructor({
@@ -85,26 +102,39 @@ export class NonCityEstatesField {
         if (NonCityEstatesField.instances[name] !== undefined) {
             return NonCityEstatesField.instances[name]
         }
-        this.name = name;
-        this.type = type;
-        this.country = country;
-        this.price = price;
-        this.mortage = mortage;
-        this.visit = visit;
-        this.owner = owner;
-        this.isPlegded = isPlegded;
-        this.icon = icon;
+        this._name = name;
+        this._type = type;
+        this._country = country;
+        this._price = price;
+        this._mortage = mortage;
+        this._visit = visit;
+        this._owner = owner;
+        this._isPlegded = isPlegded;
+        this._icon = icon;
+        NonCityEstatesField.instances[name] = this;
         return this;
     }
+    get name() { return this._name}
+    get type() { return this._type}
+    get country() {return this._country}
+    get price() {return this._price}
+    get mortage() {return this._mortage}
+    get visit() {return this._visit}
+    get owner() {return this._owner}
+    get isPlegded() {return this._isPlegded}
+    get icon() {return this._icon}
+    set isPlegded(val: boolean) { 1this._isPlegded = val}
+    set owner(val: string) {this._owner = val}
 }
 
 export class  OtherFieldTypesField {
-    type: tOtherTypes;
-    visit?: tVisitPayment;
-    info: string;
-    wait?: number;
-    icon: tIcon;
-    name: string;
+    private _type!: tOtherTypes;
+    private _visit?: tVisitPayment;
+    private _info!: string;
+    private _wait?: number;
+    private _icon!: tIcon;
+    private _name!: string;
+    static instances: {[key: string]: OtherFieldTypesField}
     constructor({
         type,
         visit,
@@ -113,26 +143,47 @@ export class  OtherFieldTypesField {
         icon,
         name,
     }: iNamedOtherField) {
-        this.type = type;
-        this.info = info;
-        this.wait = wait;
-        this.icon = icon;
-        this.visit = visit;
-        this.name = name;
+        if (OtherFieldTypesField.instances[name] !== undefined) {
+            return OtherFieldTypesField.instances[name];
+        }
+        this._type = type;
+        this._info = info;
+        this._wait = wait;
+        this._icon = icon;
+        this._visit = visit;
+        this._name = name;
+        OtherFieldTypesField.instances[name] = this;
+        return this;
     }
+    get type() { return this._type}
+    get info() { return this._info}
+    get wait() { return this._wait}
+    get icon() { return this._icon}
+    get visit() {return this._visit}
+    get naem() {return this._name}
 }
 
 export class ChanceField {
-    type: tChanceType;
-    info: string;
-    icon: tIcon;
-    name: string;
+    private _type!: tChanceType;
+    private _info!: string;
+    private _icon!: tIcon;
+    private _name!: string;
+    static instances: {[key: string]: ChanceField}
     constructor({
         type, info, icon, name
     }: iNamedChance) {
-        this.name = name;
-        this.type = type;
-        this.info = info;
-        this.icon = icon;
+        if (ChanceField.instances[name] !== undefined) {
+            return ChanceField.instances[name];
+        }
+        this._name = name;
+        this._type = type;
+        this._info = info;
+        this._icon = icon;
+        ChanceField.instances[name] = this;
+        return this;
     }
+    get name() { return this._name}
+    get type() { return this._type}
+    get info() { return this._info}
+    get icon() { return this._icon}
 }

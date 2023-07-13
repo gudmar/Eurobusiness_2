@@ -1,4 +1,4 @@
-import { ATENY, CHANCE_BLUE, CITY, JAIL, NEAPOL, START } from "../../Data/const";
+import { ATENY, CHANCE_BLUE, JAIL, NEAPOL, START } from "../../Data/const";
 import { iNamedChance, iNamedCityField, iNamedOtherField } from "../../Data/types";
 import { descriptors } from '../../Data/boardFields'
 import { createBoardDescriptor } from "../Utils/createBoardDescriptor";
