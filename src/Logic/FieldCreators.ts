@@ -2,7 +2,7 @@ import {
     BANK,
     CITY
 } from '../Data/const'
-import { iChance, iCityField, iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, iNonCityEstates, iOtherFieldTypes, tBoardField, tChanceType, tCountries, tEstateTypes, tIcon, tNamedBoardField, tOtherTypes, tVisitPayment } from '../Data/types';
+import { iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, iNonCityEstates, iOtherFieldTypes, tBoardField, tChanceType, tCountries, tEstateTypes, tIcon, tNamedBoardField, tOtherTypes, tVisitPayment } from '../Data/types';
 
 export class NullishField {
     descriptor?: tBoardField;
