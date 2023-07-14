@@ -7,6 +7,10 @@ export const GREY_THEME: NamedTheme = {
         penColor: '#222222',
         fontStyles:  `-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
         'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-        sans-serif`,    
+        sans-serif`,
+
+        boardMiddleSectionColor: 'yellow',
+        boardFieldBackgroundColor: 'white',
+    
     }
 }
