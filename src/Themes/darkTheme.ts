@@ -8,5 +8,9 @@ export const DARK_THEME: NamedTheme = {
         fontStyles:  `-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
         'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
         sans-serif`,    
+
+        boardMiddleSectionColor: 'orange',
+        boardFieldBackgroundColor: '#afafaf',
+    
     }
 }

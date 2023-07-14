@@ -123,7 +123,7 @@ export class NonCityEstatesField {
     get owner() {return this._owner}
     get isPlegded() {return this._isPlegded}
     get icon() {return this._icon}
-    set isPlegded(val: boolean) { 1this._isPlegded = val}
+    set isPlegded(val: boolean) { this._isPlegded = val}
     set owner(val: string) {this._owner = val}
 }
 

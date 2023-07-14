@@ -108,3 +108,20 @@
     * Build a house if I have ....
     * Build a hotel if I have. ...
 19. Skins changing look of app
+20. Save application state to localStorage
+21. Retrieve application state from JS object, / local storage
+THis may be used to inject game initial state
+22. Editor for state creation
+23. Message hidden window allowing to access hidden things like state editor.
+Message would show it self as long as some correct meeage is being typed.
+When typed message stops being recognized, it is no longer displayed
+
+MEMENTO:
+1. Originator, an object that has state that needs to be saved
+2. Memento: an object created by Originator. Only originator may access its data
+as this object is some private class
+3. Originator has method createMemento, that is public. Caretaker invokes its method to get originators state
+4. Caretaker keeps memento, and calls .restore method on Originator, passing Memento,
+5. Originator restores its state based on memento
+In my case it is not possible to keep encapsulation, as object needs to be saved as string
+Perhaps a 'visitor', that would ask each object in game to add its state to some object
