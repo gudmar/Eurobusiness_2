@@ -56,7 +56,8 @@ class FieldFactory extends FieldCreator {
     }
 
     create(field: tBoardField) {
-        const instance = this.creators?.find((creator) => creator.tryProducing(field));
+        const attempts = this.creators?.map((creator) => creator.tryProducing(field));
+        const instance = attempts?.find((i) => !!i);
         if (!instance) throw new Error('Something is wrong. Field cannot be produced. Unknown field type.')
         return instance;
     }
@@ -68,19 +69,13 @@ const LIST_OF_FIELD_PRODUCERS = [
 ]
 
 export class BoardCaretaker extends FieldCreator {
-    // boardDescriptor: tBoardField[] | undefined;
-    static fieldInstances: any = {};
-    // constructor(boardDescriptor: tBoardField[]) {
-    //     super();
-    //     this.boardDescriptor = boardDescriptor;
-    // }
+    static fieldInstances: any = [];
 
     registerField(fieldInstance: any) {
-        const name: string = fieldInstance.name;
-        BoardCaretaker.fieldInstances[name] = fieldInstance;
+        BoardCaretaker.fieldInstances.push(fieldInstance)
     }
 
-    get fieldNames() {
+    static get fieldNames() {
         const names = BoardCaretaker.fieldInstances.map((instance:tNamedBoardField) => instance.name)
         return names;
     }
@@ -89,10 +84,6 @@ export class BoardCaretaker extends FieldCreator {
         const field = BoardCaretaker.fieldInstances.find((instance: tNamedBoardField) => instance.name === name);
         return field;
     }
-
-    // newField(fieldDescriptor: tBoardField) {
-    //     return this.factory.tryProducing(fieldDescriptor);
-    // }
 }
 
 export class BoardCreator {
