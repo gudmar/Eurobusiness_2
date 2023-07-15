@@ -34,7 +34,6 @@ const ThemesContext = createContext({
 
 export const ThemeContextProvider = ({children}: {children: React.ReactNode}) => {
     const {theme, setThemeName, themeNames} = useThemeFromName(themes, initialTheme.name)
-    // useEffect(() => console.log(theme), [theme])
     return(
         <ThemesContext.Provider value={{theme, setThemeName, themeNames}}>
             <ThemeProvider theme={theme}>

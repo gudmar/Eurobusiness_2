@@ -3,8 +3,7 @@ import { AMSTERDAM, ATENY, BARCELONA, BONN, BRUKSELA, CHANCE_BLUE, CHANCE_RED, E
 export type tEstateTypes =
     'City' |
     'Railway' |
-    'Power Station' |
-    'Water Plant'
+    'Plant'
 
 export type tVisitPayment = (number | '10 x thrown dice result' | '20 x thrown dice result')[]
 
@@ -74,7 +73,7 @@ export interface iNamedOtherField extends iOtherFieldTypes {
 
 export interface iNonCityEstates {
     country: 'Railways' | 'Plant',
-    type: 'Railway' | 'Power Station' | 'Water Plant',
+    type: 'Railway' | 'Plant',
     price: number,
     mortage: number,
     visit: tVisitPayment,

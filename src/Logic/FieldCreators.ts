@@ -16,6 +16,7 @@ export class NullishField {
 }
 
 export class CityField {
+    private _name!: string;
     private _type: tEstateTypes = CITY;
     private _country!: tCountries;
     private _price: number = 0;
@@ -26,7 +27,7 @@ export class CityField {
     private _owner: string = BANK;
     private _nrOfHouses: number = 0;
     private _isPlegded: boolean = false;
-    static instances: {[key:string]: CityField};
+    static instances: {[key:string]: CityField} = {};
 
     constructor({
         name,
@@ -44,7 +45,8 @@ export class CityField {
 
         if (CityField.instances[name] !== undefined) {
             return CityField.instances[name]
-        } 
+        }
+        this._name = name;
         this._type = type;
         this._country = country;
         this._price = price;
@@ -58,6 +60,7 @@ export class CityField {
         CityField.instances[name] = this;
         return this;
     }
+    get name() { return this._name}
     get type() { return this._type }
     get country() { return this._country }
     get price() { return this._price }
@@ -86,7 +89,7 @@ export class NonCityEstatesField {
     private _isPlegded: boolean = false;
     private _icon: tIcon;
     private _name!: string;
-    static instances: { [key:string] : NonCityEstatesField };
+    static instances: { [key:string] : NonCityEstatesField } = {};
 
     constructor({
         type,
@@ -134,7 +137,7 @@ export class  OtherFieldTypesField {
     private _wait?: number;
     private _icon!: tIcon;
     private _name!: string;
-    static instances: {[key: string]: OtherFieldTypesField}
+    static instances: {[key: string]: OtherFieldTypesField} = {}
     constructor({
         type,
         visit,
@@ -160,7 +163,7 @@ export class  OtherFieldTypesField {
     get wait() { return this._wait}
     get icon() { return this._icon}
     get visit() {return this._visit}
-    get naem() {return this._name}
+    get name() {return this._name}
 }
 
 export class ChanceField {
@@ -168,7 +171,7 @@ export class ChanceField {
     private _info!: string;
     private _icon!: tIcon;
     private _name!: string;
-    static instances: {[key: string]: ChanceField}
+    static instances: {[key: string]: ChanceField} = {}
     constructor({
         type, info, icon, name
     }: iNamedChance) {
