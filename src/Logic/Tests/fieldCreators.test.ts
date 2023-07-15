@@ -17,7 +17,6 @@ describe('Testing field creators, based on CityFied', () => {
     it('Should create Ateny, Saloniki, Neapol, Insbruck instances, and keep them as a static value', () => {
         allCities.forEach((city) => new CityField(city))
         const addedCities = Object.keys(CityField.instances);
-        console.log(CityField.instances)
         expect(addedCities).toContain(ATENY)
         expect(addedCities).toContain(NEAPOL)
         expect(addedCities).toContain(INSBRUK)

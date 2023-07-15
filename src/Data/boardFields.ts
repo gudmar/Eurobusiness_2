@@ -4,7 +4,7 @@ import {
 
 import { 
     AMSTERDAM, ATENY, AUSTRIA, BANK, BARCELONA, BENELUX, BONN, BRUKSELA, CHANCE_BLUE, 
-    CHANCE_RED, EAST_RAILWAYS, FRANKFURT, FREE_PARK, FREE_PARKING, 
+    CHANCE_RED, EAST_RAILWAYS, FRANKFURT, FREE_PARK,
     GLASGOW, GOTEBORG, GO_TO_JAIL, GREECE, GUARDED_PARKING, INSBRUK, 
     ITALY, 
     JAIL, KOLONIA, LIVERPOOL, LONDON, MADRIT, MALMO, MEDIOLAN, 
@@ -15,17 +15,17 @@ import {
     UK, 
     WATER_PLANT, WEST_RAILWAYS, WIEDEN
 } from './const';
-import start from '../../public/BoardIcons/Start.svg';
-import questionRed from '../../public/BoardIcons/questionRed.svg';
-import questionBlue from '../../public/BoardIcons/questionBlue.svg';
-import freePark from '../../public/BoardIcons/freePark.svg';
-import jail from '../../public/BoardIcons/jail.svg';
-import goToJail from '../../public/BoardIcons/goToJail.svg';
-import railway from '../../public/BoardIcons/railway.svg'
-import powerStation from '../../public/BoardIcons/electricPlant.svg'
-import waterPlant from '../../public/BoardIcons/waterPlant.svg'
-import tax from '../../public/BoardIcons/tax.svg'
-import parkingIcon from '../../public/BoardIcons/park.svg';
+import start from '../Icons/Start.svg';
+import questionRed from '../Icons/questionRed.svg';
+import questionBlue from '../Icons/questionBlue.svg';
+import freePark from '../Icons/freePark.svg';
+import jail from '../Icons/jail.svg';
+import goToJail from '../Icons/goToJail.svg';
+import railway from '../Icons/railway.svg'
+import powerStation from '../Icons/electricPlant.svg'
+import waterPlant from '../Icons/waterPlant.svg'
+import tax from '../Icons/tax.svg'
+import parkingIcon from '../Icons/park.svg';
 import { CITY } from './const';
 
 export const descriptors: tBoard = {
@@ -226,7 +226,7 @@ export const descriptors: tBoard = {
     },
     [POWER_STATION]: {
         country: PLANT,
-        type: POWER_STATION,
+        type: PLANT,
         price: 300,
         mortage: 150,
         owner: BANK,
@@ -442,7 +442,7 @@ export const descriptors: tBoard = {
     },
     [WATER_PLANT]: {
         country: PLANT,
-        type: WATER_PLANT,
+        type: PLANT,
         price: 300,
         mortage: 150,
         owner: BANK,
@@ -583,6 +583,6 @@ export const descriptors: tBoard = {
 export const boardInOrder = [
     START, SALONIKI, CHANCE_BLUE, ATENY, GUARDED_PARKING, SOUTH_RAILWAY, NEAPOL, CHANCE_RED, MEDIOLAN, ROME, 
     JAIL, BARCELONA, POWER_STATION, SEWILLA, MADRIT, WEST_RAILWAYS, LIVERPOOL, CHANCE_BLUE, GLASGOW, LONDON, 
-    FREE_PARKING, ROTTERDAM, CHANCE_RED, BRUKSELA, AMSTERDAM, NORTH_RAILWAYS, MALMO, GOTEBORG, WATER_PLANT, SZTOKHOLM, 
+    FREE_PARK, ROTTERDAM, CHANCE_RED, BRUKSELA, AMSTERDAM, NORTH_RAILWAYS, MALMO, GOTEBORG, WATER_PLANT, SZTOKHOLM, 
     GO_TO_JAIL, FRANKFURT, KOLONIA, CHANCE_BLUE, BONN, EAST_RAILWAYS, CHANCE_RED, INSBRUK, TAX, WIEDEN
 ];

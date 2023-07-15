@@ -69,15 +69,25 @@ const LIST_OF_FIELD_PRODUCERS = [
 
 export class BoardCaretaker extends FieldCreator {
     // boardDescriptor: tBoardField[] | undefined;
-    static fieldInstances: any;
+    static fieldInstances: any = {};
     // constructor(boardDescriptor: tBoardField[]) {
     //     super();
     //     this.boardDescriptor = boardDescriptor;
     // }
 
     registerField(fieldInstance: any) {
-        const name: string = fieldInstance.getName();
+        const name: string = fieldInstance.name;
         BoardCaretaker.fieldInstances[name] = fieldInstance;
+    }
+
+    get fieldNames() {
+        const names = BoardCaretaker.fieldInstances.map((instance:tNamedBoardField) => instance.name)
+        return names;
+    }
+
+    getFieldByName(name:string) {
+        const field = BoardCaretaker.fieldInstances.find((instance: tNamedBoardField) => instance.name === name);
+        return field;
     }
 
     // newField(fieldDescriptor: tBoardField) {
@@ -87,14 +97,25 @@ export class BoardCaretaker extends FieldCreator {
 
 export class BoardCreator {
     factory: FieldFactory = new FieldFactory(LIST_OF_FIELD_PRODUCERS);
-    caretaker: BoardCaretaker;
-    
+    caretaker!: BoardCaretaker;
+    _fields: tBoardField[] = [];
+    static instance: BoardCreator;
+
     constructor(fieldNamesInOrder: string[], fieldDescriptors: tBoard){
+        if (BoardCreator.instance) {
+            return BoardCreator.instance;
+        }
         this.caretaker = new BoardCaretaker()
         const boardDescriptor = createBoardDescriptor(fieldNamesInOrder, fieldDescriptors);
         boardDescriptor.forEach((fieldDescirptor: tNamedBoardField) => {
-            const field = this.factory.tryProducing(fieldDescirptor);
+            const field = this.factory.create(fieldDescirptor);
             this.caretaker.registerField(field);
+            this.fields.push(field);
         })
+        BoardCreator.instance = this;
+        return this;
     }
+    get fields() {return this._fields}
+
+    provideCaretaker() { return this.caretaker}
 }

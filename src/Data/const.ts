@@ -35,7 +35,6 @@ export const WEST_RAILWAYS = 'West Railways';
 // export const CHANCE_BLUE_LEFT = 'Chance blue left';
 export const GLASGOW = 'Glasgow';
 export const LONDON = 'London';
-export const FREE_PARKING = 'Free Parking';
 export const ROTTERDAM = 'Rotterdam';
 // export const CHANCE_RED_TOP = 'Chance red top';
 export const BRUKSELA = 'Bruksela';

@@ -8,7 +8,6 @@ import { useStyles } from './styles';
 const Game = () => {
     const { theme, setThemeName } = useThemesAPI();
     const classes = useStyles(theme as any);
-    useEffect(()=>console.log(theme, classes), [theme, classes])
     return (
         <div className = {classes.screen}>
             <button onClick={() => setThemeName(DARK_THEME.name)}>{DARK_THEME.name}</button>
