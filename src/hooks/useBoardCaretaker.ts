@@ -3,7 +3,7 @@ import { BoardCreator } from "../Logic/BoardCaretaker";
 import { useCreateSingleton } from "./useCreateSingleton"
 
 export const useBoardCaretaker = () => {
-    const boardCaretaker = useCreateSingleton(BoardCreator, boardInOrder, descriptors);
+    const boardCaretaker: any = useCreateSingleton(BoardCreator, boardInOrder, descriptors);
 
     return { boardCaretaker };
 }
