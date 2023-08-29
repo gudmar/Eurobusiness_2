@@ -11,6 +11,7 @@ export const DARK_THEME: NamedTheme = {
 
         boardMiddleSectionColor: 'orange',
         boardFieldBackgroundColor: '#afafaf',
-    
+        boardFieldFontWeight: 'bold',
+        boardFieldFont: 'arial',
     }
 }

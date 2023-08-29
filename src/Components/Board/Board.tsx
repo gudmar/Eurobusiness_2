@@ -24,7 +24,7 @@ export const Board = () => {
             <BoardSide direction={RIGHT} />
             <BoardSide direction={BOTTOM} />
             <BoardSide direction={LEFT} />
-            <div className={classes.middleBoard}></div>
+            <div className={classes.middleBoard}> </div>
         </div>
     )
 }

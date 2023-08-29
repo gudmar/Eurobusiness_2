@@ -11,6 +11,7 @@ export const GREY_THEME: NamedTheme = {
 
         boardMiddleSectionColor: 'yellow',
         boardFieldBackgroundColor: 'white',
-    
+        boardFieldFontWeight: 'bold',
+        boardFieldFont: 'arial',
     }
 }
