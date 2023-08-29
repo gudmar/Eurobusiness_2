@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useThemesAPI } from "../../Contexts/ThemeContext";
-import { useBoardCaretaker } from "../../hooks/useBoardCaretaker";
+import { getBoardCaretaker } from "../../Functions/getBoardCaretaker";
 import { BoardCaretaker } from "../../Logic/BoardCaretaker";
 import BoardSide from "./BoardSide/BoardSide";
 import { useStyles } from "./styles";
@@ -9,8 +9,14 @@ import { TOP, RIGHT, LEFT, BOTTOM } from './types'
 export const Board = () => {
     const { theme } = useThemesAPI();
     const classes = useStyles(theme as any);
-    const boardCaretaker: any = useBoardCaretaker();
-    useEffect(() => console.log(BoardCaretaker.fieldNames), [boardCaretaker])
+    const boardCaretaker: any = getBoardCaretaker();
+    useEffect(
+        () => {
+            console.log(boardCaretaker)
+            if (boardCaretaker) {
+                BoardCaretaker.fieldNames.forEach((fieldName: any) => console.log(fieldName, boardCaretaker?.getFieldByName(fieldName) || boardCaretaker))
+            }               
+        }, [boardCaretaker])
 
     return(
         <div className={classes.board}>
