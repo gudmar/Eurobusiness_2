@@ -32,6 +32,7 @@ export interface iCityField {
     visit: tVisitPayment,
     owner: string,
     nrOfHouses: number,
+    color: string,
     // nrOfCitiesInCountry: number,
     // nrOfHousesToPurchase?: number,
     // nrOfHousesToSell?: number,

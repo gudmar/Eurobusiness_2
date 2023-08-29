@@ -28,6 +28,15 @@ import tax from '../Icons/tax.svg'
 import parkingIcon from '../Icons/park.svg';
 import { CITY } from './const';
 
+const YELLOW = '#ffff00';
+const RED = '#ff0000';
+const BLUE = '#0000FF';
+const ORANGE = '#ff8800';
+const GREEN = '#00ff00';
+const VIOLET = '#ff00ff';
+const BROWN = 'brown';
+const BLACK = '#222222'
+
 export const descriptors: tBoard = {
     [START]: {
         type: START,
@@ -53,6 +62,8 @@ export const descriptors: tBoard = {
         // nrOfHotelsToBuy: 0,        
         // boardFieldNumber: 2,
         isPlegded: false, // zastawiony
+        color: YELLOW,
+        
     },
     [CHANCE_BLUE]: {
         type: CHANCE_BLUE,
@@ -111,6 +122,7 @@ export const descriptors: tBoard = {
         // nrInSet: 2,
         // boardFieldNumber: 4,
         isPlegded: false,
+        color: YELLOW,
     },
     [GUARDED_PARKING]: {
         type: GUARDED_PARKING,
@@ -169,6 +181,7 @@ export const descriptors: tBoard = {
         // nrInSet: 3,
         // boardFieldNumber: 7,
         isPlegded: false,
+        color: RED,
     },
     [MEDIOLAN]: {
         country: ITALY,
@@ -187,6 +200,7 @@ export const descriptors: tBoard = {
         // nrInSet: 3,
         // boardFieldNumber: 9,
         isPlegded: false,
+        color: RED,
     },
     [ROME]: {
         country: ITALY,
@@ -205,6 +219,7 @@ export const descriptors: tBoard = {
         // nrInSet: 3,
         // boardFieldNumber: 10,
         isPlegded: false,
+        color: RED,
     },
     [BARCELONA]: {
         country: SPAIN,
@@ -223,6 +238,7 @@ export const descriptors: tBoard = {
         // nrInSet: 3,
         // boardFieldNumber: 12,
         isPlegded: false,
+        color: BLUE,
     },
     [POWER_STATION]: {
         country: PLANT,
@@ -253,6 +269,7 @@ export const descriptors: tBoard = {
         // nrInSet: 3,
         // boardFieldNumber: 14,
         isPlegded: false,
+        color: BLUE,
     },
     [MADRIT]: {
         country: SPAIN,
@@ -271,6 +288,7 @@ export const descriptors: tBoard = {
         // nrInSet: 3,
         // boardFieldNumber: 15,
         isPlegded: false,
+        color: BLUE,
     },
     [WEST_RAILWAYS]: {
         country: RAILWAYS,
@@ -301,6 +319,7 @@ export const descriptors: tBoard = {
         // nrInSet: 3,
         // boardFieldNumber: 17,
         isPlegded: false,
+        color: ORANGE,
     },
     [GLASGOW]: {
         country: UK,
@@ -319,6 +338,7 @@ export const descriptors: tBoard = {
         // nrInSet: 3,
         // boardFieldNumber: 19,
         isPlegded: false,
+        color: ORANGE,
     },
     [LONDON]: {
         country: UK,
@@ -337,6 +357,7 @@ export const descriptors: tBoard = {
         // nrInSet: 3,
         // boardFieldNumber: 20,
         isPlegded: false,
+        color: ORANGE,
     },
     [ROTTERDAM]: {
         country: BENELUX,
@@ -355,6 +376,7 @@ export const descriptors: tBoard = {
         // nrInSet: 3,
         // boardFieldNumber: 22,
         isPlegded: false,
+        color: GREEN,
     },
     [BRUKSELA]: {
         country: BENELUX,
@@ -373,6 +395,7 @@ export const descriptors: tBoard = {
         // nrInSet: 3,
         // boardFieldNumber: 24,
         isPlegded: false,
+        color: GREEN,
     },
     [AMSTERDAM]: {
         country: BENELUX,
@@ -391,6 +414,7 @@ export const descriptors: tBoard = {
         // nrInSet: 3,
         // boardFieldNumber: 25,
         isPlegded: false,
+        color: GREEN,
     },
     [NORTH_RAILWAYS]: {
         country: RAILWAYS,
@@ -421,6 +445,7 @@ export const descriptors: tBoard = {
         // nrInSet: 3,
         // boardFieldNumber: 27,
         isPlegded: false,
+        color: VIOLET,
     },
     [GOTEBORG]: {
         country: SWEEDEN,
@@ -439,6 +464,7 @@ export const descriptors: tBoard = {
         // nrInSet: 3,
         // boardFieldNumber: 28,
         isPlegded: false,
+        color: VIOLET,
     },
     [WATER_PLANT]: {
         country: PLANT,
@@ -469,6 +495,7 @@ export const descriptors: tBoard = {
         // nrInSet: 3,
         isPlegded: false,
         // boardFieldNumber: 30,
+        color: VIOLET,
     },
     [FRANKFURT]: {
         country: RFN,
@@ -487,6 +514,7 @@ export const descriptors: tBoard = {
         // nrInSet: 3,
         // boardFieldNumber: 32,
         isPlegded: false,
+        color: BROWN,
     },
     [KOLONIA]: {
         country: RFN,
@@ -505,6 +533,7 @@ export const descriptors: tBoard = {
         // nrInSet: 3,
         // boardFieldNumber: 33,
         isPlegded: false,
+        color: BROWN,
     },
     [BONN]: {
         country: RFN,
@@ -523,6 +552,7 @@ export const descriptors: tBoard = {
         // nrInSet: 3,
         // boardFieldNumber: 35,
         isPlegded: false,
+        color: BROWN,
     },
     [EAST_RAILWAYS]: {
         country: RAILWAYS,
@@ -553,6 +583,7 @@ export const descriptors: tBoard = {
         // nrInSet: 3,
         // boardFieldNumber: 38,
         isPlegded: false,
+        color: BLACK,
     },
     [TAX]: {
         type: TAX,
@@ -577,6 +608,7 @@ export const descriptors: tBoard = {
         // nrInSet: 3,
         // boardFieldNumber: 40,
         isPlegded: false,
+        color: BLACK,
     },
 }
 

@@ -5,6 +5,8 @@ export type CustomTheme = {
 
     boardMiddleSectionColor: string,
     boardFieldBackgroundColor: string,
+    boardFieldFontWeight: string,
+    boardFieldFont: string,
 }
 
 export type NamedTheme = {
