@@ -101,7 +101,7 @@ export class BoardCreator {
         boardDescriptor.forEach((fieldDescirptor: tNamedBoardField) => {
             const field = this.factory.create(fieldDescirptor);
             this.caretaker.registerField(field);
-            this.fields.push(field);
+            this._fields.push(field);
         })
         BoardCreator.instance = this;
         return this;

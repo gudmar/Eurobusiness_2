@@ -77,6 +77,7 @@ export class CityField {
     }
     set owner(val: string) { this._owner = val}
     set isPlegded(val: boolean) { this._isPlegded = val}
+    subscribe(callback: (state: iNamedCityField) => void)
 }
 
 export class NonCityEstatesField {
