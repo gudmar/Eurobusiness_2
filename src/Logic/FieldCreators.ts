@@ -2,7 +2,8 @@ import {
     BANK,
     CITY
 } from '../Data/const'
-import { iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, iNonCityEstates, iOtherFieldTypes, tBoardField, tChanceType, tCountries, tEstateTypes, tIcon, tNamedBoardField, tOtherTypes, tVisitPayment } from '../Data/types';
+import { iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, iNonCityEstates, iOtherFieldTypes, tBoardField, tChanceType, tCity, tCountries, tEstateTypes, tIcon, tNonCityEstates, tOtherTypes, tVisitPayment } from '../Data/types';
+import { SubscribtionsHandler } from './SubscrbtionsHandler';
 
 export class NullishField {
     descriptor?: tBoardField;
@@ -15,7 +16,7 @@ export class NullishField {
     }
 }
 
-export class CityField {
+export class CityField extends SubscribtionsHandler<tCity, iNamedCityField> {
     private _name!: string;
     private _type: tEstateTypes = CITY;
     private _country!: tCountries;
@@ -27,6 +28,7 @@ export class CityField {
     private _owner: string = BANK;
     private _nrOfHouses: number = 0;
     private _isPlegded: boolean = false;
+    private _color: string = '#fff';
     static instances: {[key:string]: CityField} = {};
 
     constructor({
@@ -40,9 +42,10 @@ export class CityField {
         visit,
         owner,
         nrOfHouses,
-        isPlegded
+        isPlegded,
+        color,
     }: iNamedCityField) {
-
+        super();
         if (CityField.instances[name] !== undefined) {
             return CityField.instances[name]
         }
@@ -57,6 +60,7 @@ export class CityField {
         this._owner = owner;
         this._nrOfHouses = nrOfHouses;
         this._isPlegded = isPlegded;
+        this._color = color;
         CityField.instances[name] = this;
         return this;
     }
@@ -71,16 +75,16 @@ export class CityField {
     get owner() {return this._owner}
     get nrOfHouses() {return this._nrOfHouses}
     get isPlegded() { return this._isPlegded }
+    get color() { return this._color}
     set nrOfHouses(val: number) {
         if (val > 5 || val < 0) throw new Error('Nr of houses has to be > 0 and < 6')
         this._nrOfHouses = val
     }
     set owner(val: string) { this._owner = val}
     set isPlegded(val: boolean) { this._isPlegded = val}
-    subscribe(callback: (state: iNamedCityField) => void)
 }
 
-export class NonCityEstatesField {
+export class NonCityEstatesField extends SubscribtionsHandler<tNonCityEstates, iNamedNonCityEstates>{
     private _type!: tEstateTypes;
     private _country!: tCountries;
     private _price!: number;
@@ -103,6 +107,7 @@ export class NonCityEstatesField {
         icon,
         name,
     }: iNamedNonCityEstates) {
+        super();
         if (NonCityEstatesField.instances[name] !== undefined) {
             return NonCityEstatesField.instances[name]
         }
@@ -131,7 +136,7 @@ export class NonCityEstatesField {
     set owner(val: string) {this._owner = val}
 }
 
-export class  OtherFieldTypesField {
+export class  OtherFieldTypesField extends SubscribtionsHandler<tOtherTypes, iNamedOtherField> {
     private _type!: tOtherTypes;
     private _visit?: tVisitPayment;
     private _info!: string;
@@ -147,6 +152,7 @@ export class  OtherFieldTypesField {
         icon,
         name,
     }: iNamedOtherField) {
+        super();
         if (OtherFieldTypesField.instances[name] !== undefined) {
             return OtherFieldTypesField.instances[name];
         }
