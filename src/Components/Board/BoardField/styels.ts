@@ -18,6 +18,7 @@ export const useStyles = createUseStyles({
         margin: '0',
         padding: '0'
     },
+    empty: { gridArea: 'empty'},
     title: { gridArea: 'titleBar' },
     price: { gridArea: 'price' },
     titleUpsideDown: { gridArea: 'titleUpsideDown', transform: 'rotate(-180deg' },
