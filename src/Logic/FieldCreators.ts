@@ -80,6 +80,22 @@ export class CityField extends SubscribtionsHandler<tCity, iNamedCityField> {
         if (val > 5 || val < 0) throw new Error('Nr of houses has to be > 0 and < 6')
         this._nrOfHouses = val
     }
+    get state() {
+        return ({
+            name: this._name,
+            type: this._type,
+            country: this._country,
+            price: this._price,
+            mortage: this._mortage,
+            housePrice: this._housePrice,
+            hotelPrice: this._hotelPrice,
+            visit: this._visit,
+            owner: this._owner,
+            nrOfHouses: this._nrOfHouses,
+            isPlegded: this._isPlegded,
+            color: this._color
+        })
+    }
     set owner(val: string) { this._owner = val}
     set isPlegded(val: boolean) { this._isPlegded = val}
 }
@@ -134,6 +150,19 @@ export class NonCityEstatesField extends SubscribtionsHandler<tNonCityEstates, i
     get icon() {return this._icon}
     set isPlegded(val: boolean) { this._isPlegded = val}
     set owner(val: string) {this._owner = val}
+    get state() {
+        return {
+            type: this._type,
+            country: this._country,
+            price: this._price,
+            mortage: this._mortage,
+            visit: this._visit,
+            owner: this._owner,
+            isPlegded: this._isPlegded,
+            icon: this._icon,
+            name: this._name,
+        }
+    }
 }
 
 export class  OtherFieldTypesField extends SubscribtionsHandler<tOtherTypes, iNamedOtherField> {

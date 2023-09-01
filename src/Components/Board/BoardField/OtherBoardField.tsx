@@ -3,7 +3,7 @@ import { tOtherTypes } from "../../../Data/types";
 import { useOtherField } from "../../../hooks/useField";
 import { useStyles } from "./styels";
 
-const FreeParkingField = (props: any) => {
+const OtherBoardField = (props: any) => {
     const {
         name,
         type,
@@ -26,4 +26,4 @@ const FreeParkingField = (props: any) => {
     )
 }
 
-export default FreeParkingField
+export default OtherBoardField
