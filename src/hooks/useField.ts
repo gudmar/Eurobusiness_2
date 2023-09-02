@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react"
 import { iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, iNonCityEstates, iOtherFieldTypes, tChanceType, tCity, tNonCityEstates, tOtherTypes } from "../Data/types";
+import { getBoardCaretaker } from "../Functions/getBoardCaretaker";
+import { BoardCaretaker } from "../Logic/BoardCaretaker";
 import { useBoardFields } from "./useBoardFields"
 
 type tFieldName = tCity | tNonCityEstates | tOtherTypes | tChanceType
 
 export const useAbstractField = <FieldType>(name: tFieldName) => {
-    const { caretaker } = useBoardFields();
+    // const { caretaker } = useBoardFields();
+    const caretaker = getBoardCaretaker();
     const ID: tFieldName = name;
     const thisField = caretaker.getFieldByName(name)
+    // console.log(name, BoardCaretaker.fieldInstances)
     const [state, setState]: [FieldType, any] = useState(thisField.state)
     
     
