@@ -1,13 +1,13 @@
 import { memo } from "react"
 import { useThemesAPI } from "../../../Contexts/ThemeContext";
 import { tChanceType } from "../../../Data/types";
-import { useChanceField } from "../../../hooks/useField";
+import { getFieldState } from "../../../hooks/useField";
 import { useStyles } from "./styels";
 
 const withChanceField = (onClick: () => void) => (props: any) => {
     const {
         type, info, icon,
-    } = useChanceField(props.name as tChanceType)
+    } = getFieldState(props.name as tChanceType)
     const { theme } = useThemesAPI();
     const classes = useStyles(theme as any);
     return (

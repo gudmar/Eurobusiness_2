@@ -43,13 +43,14 @@ const BoardSide = ({
     const { theme } = useThemesAPI();
     const classes: {[key:string]: string} = useStyles(theme as any);
     const directionClassName: string = `fieldBar${direction}`;
-    const filedData = getFieldNames(direction)
+    const fieldData = getFieldNames(direction)
+    console.log(fieldData)
     // const fieldIndexes = getFieldIndexesForSide(direction);
     // const boardCaretaker: any = getBoardCaretaker();
     return (
         <div className={`${classes.fieldBar} ${classes[directionClassName]}`}>
             {
-                filedData.map(({name, type}) => <BoardField key={name} name={name} type={type} />)
+                fieldData.map(({name, type}) => <BoardField key={name} name={name} type={type} />)
             }
         </div>
     )

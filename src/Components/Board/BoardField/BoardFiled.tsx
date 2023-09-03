@@ -18,11 +18,11 @@ const getField = (props: any): ReactNode => {
         case TAX: return <OtherBoardField {...props} />;
         case PLANT:
         case RAILWAY: return <EnterpriseBoardField {...props}/>;
-        case CHANCE_BLUE: return <ChanceBlueField />;
-        case CHANCE_RED: return <ChanceRedField />;
-        case START: return <StartField />;
-        case FREE_PARK: return <FreeParkingField />
-        case JAIL: return <JailField />
+        case CHANCE_BLUE: return <ChanceBlueField  {...props}/>;
+        case CHANCE_RED: return <ChanceRedField  {...props}/>;
+        case START: return <StartField  {...props}/>;
+        case FREE_PARK: return <FreeParkingField  {...props}/>
+        case JAIL: return <JailField  {...props}/>
         default: return <></>
     }
 }
