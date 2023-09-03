@@ -1,21 +1,24 @@
 import { useEffect, useState } from "react"
-import { iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, iNonCityEstates, iOtherFieldTypes, tChanceType, tCity, tNonCityEstates, tOtherTypes } from "../Data/types";
+import { iNamedCityField, iNamedNonCityEstates, iNamedOtherField, iNonCityEstates, iOtherFieldTypes, tChanceType, tCity, tNonCityEstates, tOtherTypes } from "../Data/types";
 import { getBoardCaretaker } from "../Functions/getBoardCaretaker";
-import { BoardCaretaker } from "../Logic/BoardCaretaker";
-import { useBoardFields } from "./useBoardFields"
 
 type tFieldName = tCity | tNonCityEstates | tOtherTypes | tChanceType
 
-export const useAbstractField = <FieldType>(name: tFieldName) => {
-    // const { caretaker } = useBoardFields();
+export const getFieldState = (name: tFieldName) => {
     const caretaker = getBoardCaretaker();
-    const ID: tFieldName = name;
     const thisField = caretaker.getFieldByName(name)
-    // console.log(name, BoardCaretaker.fieldInstances)
+    
+    return ({...thisField.state})
+}    
+
+export const useAbstractField = <FieldType>(name: tFieldName) => {
+    const ID: tFieldName = name;
+    const caretaker = getBoardCaretaker();
+    const thisField = caretaker.getFieldByName(name)
     const [state, setState]: [FieldType, any] = useState(thisField.state)
-    
-    
+        
     useEffect(() => {
+        console.log(thisField)
         thisField.subscribe({
             callback: setState,
             id: ID,
@@ -30,7 +33,7 @@ export const useAbstractField = <FieldType>(name: tFieldName) => {
 export const useCityField = (name: tCity) => useAbstractField<iNamedCityField>(name)
 export const useNonCityEstatesField = (name: tNonCityEstates) => useAbstractField<iNamedNonCityEstates>(name);
 export const useOtherField = (name: tOtherTypes) =>  useAbstractField<iNamedOtherField>(name);
-export const useChanceField = (name: tChanceType) => useAbstractField<iNamedChance>(name)
+// export const useChanceField = (name: tChanceType) => useAbstractField<iNamedChance>(name)
 
 
 // export const useCityField = (name: tFieldName) => {
