@@ -15,17 +15,17 @@ import {
     UK, 
     WATER_PLANT, WEST_RAILWAYS, WIEDEN
 } from './const';
-import start from '../Icons/Start.svg';
-import questionRed from '../Icons/questionRed.svg';
-import questionBlue from '../Icons/questionBlue.svg';
-import freePark from '../Icons/freePark.svg';
-import jail from '../Icons/jail.svg';
-import goToJail from '../Icons/goToJail.svg';
-import railway from '../Icons/railway.svg'
-import powerStation from '../Icons/electricPlant.svg'
-import waterPlant from '../Icons/waterPlant.svg'
-import tax from '../Icons/tax.svg'
-import parkingIcon from '../Icons/park.svg';
+import { ReactComponent as Start } from '../Icons/Start.svg';
+import { ReactComponent as QuestionRed } from '../Icons/questionRed.svg';
+import { ReactComponent as QuestionBlue } from '../Icons/questionBlue.svg';
+import { ReactComponent as FreePark } from '../Icons/freePark.svg';
+import { ReactComponent as Jail } from '../Icons/jail.svg';
+import { ReactComponent as GoToJail } from '../Icons/goToJail.svg';
+import { ReactComponent as Railway } from '../Icons/railway.svg'
+import { ReactComponent as PowerStation } from '../Icons/electricPlant.svg'
+import { ReactComponent as WaterPlant } from '../Icons/waterPlant.svg'
+import { ReactComponent as Tax } from '../Icons/tax.svg'
+import { ReactComponent as ParkingIcon } from '../Icons/park.svg';
 import { CITY } from './const';
 
 const YELLOW = '#ffff00';
@@ -42,7 +42,7 @@ export const descriptors: tBoard = {
         type: START,
         // boardFieldNumber: 1,
         visit: [-400],
-        icon: start,
+        Icon: Start,
         info: `You stop on the OtherTypes.START field, that means You get  $400. Notihing to do here.`,
     },
     [ATENY]: {
@@ -68,43 +68,13 @@ export const descriptors: tBoard = {
     [CHANCE_BLUE]: {
         type: CHANCE_BLUE,
         info: 'Draw a blue chance card',
-        icon: questionBlue,
+        Icon: QuestionBlue,
     },
     [CHANCE_RED]: {
         type: CHANCE_RED,
         info: 'Draw a red chance card',
-        icon: questionRed,
+        Icon: QuestionRed,
     },
-    // [CHANCE_BLUE_LEFT]: {
-    //     type: ChanceTypes.CHANCE_BLUE,
-    //     info: 'Draw a blue chance card',
-    //     icon: questionBlue,
-    // },
-    // [CHANCE_RED_LEFT]: {
-    //     type: ChanceTypes.CHANCE_RED,
-    //     info: 'Draw a red chance card',
-    //     icon: questionRed,
-    // },
-    // [CHANCE_BLUE_TOP]: {
-    //     type: ChanceTypes.CHANCE_BLUE,
-    //     info: 'Draw a blue chance card',
-    //     icon: questionBlue,
-    // },
-    // [CHANCE_RED_TOP]: {
-    //     type: ChanceTypes.CHANCE_RED,
-    //     info: 'Draw a red chance card',
-    //     icon: questionRed,
-    // },
-    // [CHANCE_BLUE_RIGHT]: {
-    //     type: ChanceTypes.CHANCE_BLUE,
-    //     info: 'Draw a blue chance card',
-    //     icon: questionBlue,
-    // },
-    // [CHANCE_RED_RIGHT]: {
-    //     type: ChanceTypes.CHANCE_RED,
-    //     info: 'Draw a red chance card',
-    //     icon: questionRed,
-    // },
     [SALONIKI]: {
         country: GREECE,
         type: CITY,
@@ -112,45 +82,37 @@ export const descriptors: tBoard = {
         mortage: 60,
         housePrice: 100,
         hotelPrice: 100,
-        // nrOfHousesToPurchase: 0,
-        // nrOfHousesToSell: 0,
-        // nrOfHotelsToSell: 0,
-        // nrOfHotelsToBuy: 0,
         visit: [ 10, 40, 120, 360, 640, 900 ], // 0 houses, 1 house, 2 houses...
         owner: BANK,
         nrOfHouses: 0, // 5 houses === hotel
-        // nrInSet: 2,
-        // boardFieldNumber: 4,
         isPlegded: false,
         color: YELLOW,
     },
     [GUARDED_PARKING]: {
         type: GUARDED_PARKING,
-        // boardFieldNumber: 5,
         visit: [400],
         info: 'You pay $400 for staying one extra trun here. This is mandatory,',
-        icon: parkingIcon,
+        Icon: ParkingIcon,
     },
     [FREE_PARK]: {
         type: FREE_PARK,
-        // boardFieldNumber: 11,
         visit: [0],
         wait: 1,
         info: 'You spend one extra turn here. The only good news is, there is no fee for staying here',
-        icon: freePark,
+        Icon: FreePark,
     },
     [JAIL]: {
         type: JAIL,
         // boardFieldNumber: 11,
         wait: 2,
         info: 'You spend 2 extra turns here.',
-        icon: jail,
+        Icon: Jail,
     },
     [GO_TO_JAIL]: {
         type: GO_TO_JAIL,
         // boardFieldNumber: 31,
         info: 'You go to field 11, jail and spend 2 extra turns there.',
-        icon: goToJail,
+        Icon: GoToJail,
     },
     [SOUTH_RAILWAY]: {
         country: RAILWAYS,
@@ -162,7 +124,7 @@ export const descriptors: tBoard = {
         // nrInSet: 4,
         // boardFieldNumber: 6,
         isPlegded: false,
-        icon: railway,
+        Icon: Railway,
     },
     [NEAPOL]: {
         country: ITALY,
@@ -250,7 +212,7 @@ export const descriptors: tBoard = {
         // nrInSet: 2,
         visit: [ THROW_10, THROW_20],
         isPlegded: false,
-        icon: powerStation,
+        Icon: PowerStation,
     },
     [SEWILLA]: {
         country: SPAIN,
@@ -300,7 +262,7 @@ export const descriptors: tBoard = {
         // nrInSet: 4,
         // boardFieldNumber: 16,
         isPlegded: false,
-        icon: railway,
+        Icon: Railway,
     },
     [LIVERPOOL]: {
         country: UK,
@@ -426,7 +388,7 @@ export const descriptors: tBoard = {
         // nrInSet: 4,
         // boardFieldNumber: 26,
         isPlegded: false,
-        icon: railway,
+        Icon: Railway,
     },
     [MALMO]: {
         country: SWEEDEN,
@@ -476,7 +438,7 @@ export const descriptors: tBoard = {
         // boardFieldNumber: 29,
         visit: [ THROW_10, THROW_20],
         isPlegded: false,
-        icon: waterPlant
+        Icon: WaterPlant
     },
     [SZTOKHOLM]: {
         country: SWEEDEN,
@@ -564,7 +526,7 @@ export const descriptors: tBoard = {
         // nrInSet: 4,
         // boardFieldNumber: 36,
         isPlegded: false,
-        icon: railway,
+        Icon: Railway,
     },
     [INSBRUK]: {
         country: AUSTRIA,
@@ -589,7 +551,7 @@ export const descriptors: tBoard = {
         type: TAX,
         visit: [200],
         info: 'You pay $200, nothing more happens here.',
-        icon: tax,
+        Icon: Tax,
     },
     [WIEDEN]: {
         country: AUSTRIA,

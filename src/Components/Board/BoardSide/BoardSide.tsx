@@ -26,9 +26,9 @@ const getFieldNames = (direction: tBoardSideDirections) => {
     const indexes = getFieldIndexesForSide(direction);
     const names = BoardCaretaker.fieldNames;
     const boardCaretaker: any = getBoardCaretaker();
-    console.log(names)
+    // console.log(names)
     const result = indexes.map((index) => {
-        console.log('NAME', names[index - 1])
+        // console.log('NAME', names[index - 1])
         return ({
             name: names[index - 1],
             type: boardCaretaker.getFieldByName(names[index - 1]).type
@@ -44,13 +44,13 @@ const BoardSide = ({
     const classes: {[key:string]: string} = useStyles(theme as any);
     const directionClassName: string = `fieldBar${direction}`;
     const fieldData = getFieldNames(direction)
-    console.log(fieldData)
+    // console.log(fieldData)
     // const fieldIndexes = getFieldIndexesForSide(direction);
     // const boardCaretaker: any = getBoardCaretaker();
     return (
         <div className={`${classes.fieldBar} ${classes[directionClassName]}`}>
             {
-                fieldData.map(({name, type}) => <BoardField key={name} name={name} type={type} />)
+                fieldData.map(({name, type}) => <BoardField key={name} name={name} type={type} direction={direction} />)
             }
         </div>
     )

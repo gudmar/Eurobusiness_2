@@ -26,13 +26,24 @@ export const useAbstractField = <FieldType>(name: tFieldName) => {
         })
         return thisField.unsubscribe(name, ID)
     }, [])
-
+    console.log({...state})
+    useEffect(() => console.log(state), [state])
     return ({...state})
 }
 
-export const useCityField = (name: tCity) => useAbstractField<iNamedCityField>(name)
-export const useNonCityEstatesField = (name: tNonCityEstates) => useAbstractField<iNamedNonCityEstates>(name);
-export const useOtherField = (name: tOtherTypes) =>  useAbstractField<iNamedOtherField>(name);
+export const useCityField = (name: tCity) => {
+    const state = useAbstractField<iNamedCityField>(name)
+    return state
+}
+export const useNonCityEstatesField = (name: tNonCityEstates) => {
+    const state = useAbstractField<iNamedNonCityEstates>(name);
+    return state
+}
+export const useOtherField = (name: tOtherTypes) => {
+    const state = useAbstractField<iNamedOtherField>(name);
+    console.log(name, state)
+    return state
+}
 // export const useChanceField = (name: tChanceType) => useAbstractField<iNamedChance>(name)
 
 
