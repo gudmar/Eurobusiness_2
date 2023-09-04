@@ -11,7 +11,7 @@ const withChanceField = (onClick: () => void) => (props: any) => {
     const { theme } = useThemesAPI();
     const classes = useStyles(theme as any);
     return (
-        <div className={classes.questionMarkWrapper}>
+        <div className={`${classes.questionMarkWrapper}  ${classes.singleWidth}`}>
             <div className={classes.empty}></div>
             <div className={classes.icon}>{icon}</div>
             <div className={classes.fieldNumber}>X</div>

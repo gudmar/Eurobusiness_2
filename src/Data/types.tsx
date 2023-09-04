@@ -1,3 +1,4 @@
+import { FC } from "react"
 import { AMSTERDAM, ATENY, BARCELONA, BONN, BRUKSELA, CHANCE_BLUE, CHANCE_RED, EAST_RAILWAYS, FRANKFURT, FREE_PARK, GLASGOW, GOTEBORG, GO_TO_JAIL, GUARDED_PARKING, INSBRUK, JAIL, KOLONIA, LIVERPOOL, LONDON, MADRIT, MALMO, MEDIOLAN, NEAPOL, NORTH_RAILWAYS, POWER_STATION, ROME, ROTTERDAM, SALONIKI, SEWILLA, SOUTH_RAILWAY, START, SZTOKHOLM, TAX, WATER_PLANT, WEST_RAILWAYS, WIEDEN } from "./const"
 
 export type tCity = 'Amsterdam' | 'Ateny' |  'Barcelona' | 'Bonn' | 'Bruksela' | 'Frankfurt' | 'Glasgow' | 'Goteborg' | 'Insbruk' | 'Kolonia' | 'Liverpool' | 'London' | 'Madrit' | 'Malmo' | 'Mediolan' | 'Neapol' | 'Rome' | 'Rotterdam' | 'Saloniki' | 'Sewilla' | 'Sztokholm' | 'Wieden'
@@ -48,14 +49,14 @@ export interface iNamedCityField extends iCityField {
     name: string;
 }
 
-export type tIcon = any;  // PRECISE this type,
+export type tIcon = FC;  // PRECISE this type,
 
 export type tChanceType = 'Chance blue' | 'Chance red';
 
 export interface iChance {
     type: tChanceType,
     info: string,
-    icon: tIcon,
+    Icon: tIcon,
 }
 
 export interface iNamedChance extends iChance {
@@ -67,7 +68,7 @@ export interface iOtherFieldTypes {
     visit?: tVisitPayment,
     info: string,
     wait?: number,
-    icon: tIcon,
+    Icon: tIcon,
 }
 
 export interface iNamedOtherField extends iOtherFieldTypes {
@@ -84,7 +85,7 @@ export interface iNonCityEstates {
     visit: tVisitPayment,
     owner: string,
     isPlegded: boolean,
-    icon: tIcon,
+    Icon: FC,
 }
 
 export interface iNamedNonCityEstates extends iNonCityEstates {

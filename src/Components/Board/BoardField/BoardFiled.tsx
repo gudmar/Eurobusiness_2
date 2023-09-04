@@ -31,9 +31,9 @@ const BoardField = (props: any) => {
     const { theme } = useThemesAPI();
     const classes = useStyles(theme as any);
     return (
-        <div>
+        <>
             {getField(props)}
-        </div>
+        </>
     )
 }
 

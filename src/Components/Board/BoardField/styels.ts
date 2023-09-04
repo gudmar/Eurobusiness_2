@@ -2,7 +2,19 @@ import { createUseStyles } from "react-jss";
 import { CustomTheme } from "../../../Types/themes";
 
 export const useStyles = createUseStyles({
+    singleWidth: {
+        flexGrow: '1',
+        flexShrink: '1',
+        flexBasis: '0',
+        overflow: 'auto',
+    },
+    doubleWidth: {
+        flexGrow: '2',
+        flexShrink: '2',
+        flexBasis: '0',
+    },
     cityFieldWrapper: {
+        textAlign: 'center',
         display: "grid",
         position: 'relative',
         gridTemplate: `

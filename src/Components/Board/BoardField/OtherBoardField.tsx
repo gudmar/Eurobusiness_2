@@ -10,15 +10,16 @@ const OtherBoardField = (props: any) => {
         visit,
         info,
         wait,
-        icon,
+        Icon,
     } = useOtherField(props.name as tOtherTypes)
     const { theme } = useThemesAPI();
     const classes = useStyles(theme as any);
+    const ActualIcon = Icon || (() => <></>)
     return (
-        <div className={classes.enterpriseFieldWrapper}>
+        <div className={`${classes.enterpriseFieldWrapper}  ${classes.singleWidth}`}>
             <div className={classes.title}>{name}</div>
             <div className={classes.price}>{visit}</div>
-            <div className={classes.icon}>{icon}</div>
+            <div className={classes.icon}><ActualIcon /></div>
             <div className={classes.priceUpsideDown}>{visit}</div>
             <div className={classes.titleUpsideDown}>{name}</div>
             <div className={classes.fieldNumber}>X</div>

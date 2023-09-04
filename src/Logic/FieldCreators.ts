@@ -108,7 +108,7 @@ export class NonCityEstatesField extends SubscribtionsHandler<tNonCityEstates, i
     private _visit!: tVisitPayment;
     private _owner: string = BANK;
     private _isPlegded: boolean = false;
-    private _icon: tIcon;
+    private _icon!: tIcon;
     private _name!: string;
     static instances: { [key:string] : NonCityEstatesField } = {};
 
@@ -120,7 +120,7 @@ export class NonCityEstatesField extends SubscribtionsHandler<tNonCityEstates, i
         visit,
         owner,
         isPlegded,
-        icon,
+        Icon,
         name,
     }: iNamedNonCityEstates) {
         super();
@@ -135,7 +135,7 @@ export class NonCityEstatesField extends SubscribtionsHandler<tNonCityEstates, i
         this._visit = visit;
         this._owner = owner;
         this._isPlegded = isPlegded;
-        this._icon = icon;
+        this._icon = Icon;
         NonCityEstatesField.instances[name] = this;
         return this;
     }
@@ -147,7 +147,7 @@ export class NonCityEstatesField extends SubscribtionsHandler<tNonCityEstates, i
     get visit() {return this._visit}
     get owner() {return this._owner}
     get isPlegded() {return this._isPlegded}
-    get icon() {return this._icon}
+    get Icon() {return this._icon}
     set isPlegded(val: boolean) { this._isPlegded = val}
     set owner(val: string) {this._owner = val}
     get state() {
@@ -159,7 +159,7 @@ export class NonCityEstatesField extends SubscribtionsHandler<tNonCityEstates, i
             visit: this._visit,
             owner: this._owner,
             isPlegded: this._isPlegded,
-            icon: this._icon,
+            Icon: this._icon,
             name: this._name,
         }
     }
@@ -178,7 +178,7 @@ export class  OtherFieldTypesField extends SubscribtionsHandler<tOtherTypes, iNa
         visit,
         info,
         wait,
-        icon,
+        Icon,
         name,
     }: iNamedOtherField) {
         super();
@@ -188,7 +188,7 @@ export class  OtherFieldTypesField extends SubscribtionsHandler<tOtherTypes, iNa
         this._type = type;
         this._info = info;
         this._wait = wait;
-        this._icon = icon;
+        this._icon = Icon;
         this._visit = visit;
         this._name = name;
         OtherFieldTypesField.instances[name] = this;
@@ -209,7 +209,7 @@ export class ChanceField {
     private _name!: string;
     static instances: {[key: string]: ChanceField} = {}
     constructor({
-        type, info, icon, name
+        type, info, Icon, name
     }: iNamedChance) {
         if (ChanceField.instances[name] !== undefined) {
             return ChanceField.instances[name];
@@ -217,7 +217,7 @@ export class ChanceField {
         this._name = name;
         this._type = type;
         this._info = info;
-        this._icon = icon;
+        this._icon = Icon;
         ChanceField.instances[name] = this;
         return this;
     }
