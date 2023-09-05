@@ -78,16 +78,18 @@ export const useStyles = createUseStyles({
         padding: '0'
     },
     colorBarRight: {
+        gridArea: 'colorBar',
+        height: '100%'
     },
     colorBarLeft: {
         gridArea: 'colorBar',
         height: '100%'
     },
     colorBarTop: {
-
+        gridArea: 'colorBar',
     },
     colorBarBottom: {
-
+        gridArea: 'colorBar',
     },
     titleRight: {
         writingMode: 'vertical-lr',
@@ -101,10 +103,10 @@ export const useStyles = createUseStyles({
 
     },
     titleBottom: {
-
+        gridArea: 'titleBar',
     },
     titleTop: {
-
+        gridArea: 'titleBar',
     },
     priceRight: {
         writingMode: 'vertical-lr',
@@ -118,10 +120,10 @@ export const useStyles = createUseStyles({
 
     },
     priceTop: {
-
+        gridArea: 'price',
     },
     priceBottom: {
-
+        gridArea: 'price',
     },
     priceUpsideDownRight: {
         greidArea: 'priceUpsideDown',
@@ -135,10 +137,10 @@ export const useStyles = createUseStyles({
 
     },
     priceUpsideDownTop: {
-
+        gridArea: 'priceUpsideDown',
     },
     priceUpsideDownBottom: {
-
+        gridArea: 'priceUpsideDown',
     },
     emptyLeft: {
         gridArea: 'empty',
@@ -152,10 +154,10 @@ export const useStyles = createUseStyles({
         textAlign: 'center'
     },
     emptyTop: {
-
+        gridArea: 'empty',
     },
     emptyBottom: {
-
+        gridArea: 'empty',
     },
     titleUpsideDownLeft: {
         gridArea: 'titleUpsideDown',
@@ -164,14 +166,15 @@ export const useStyles = createUseStyles({
 
     },
     titleUpsideDownRight: {
+        gridArea: 'titleUpsideDown',
         writingMode: 'vertical-lr',
         textAlign: 'center'
     },
     titleUpsideDownTop: {
-
+        gridArea: 'titleUpsideDown',
     },
     titleUpsideDownBottom: {
-
+        gridArea: 'titleUpsideDown',
     },
     fieldNumberLeft: {
         gridArea: 'fieldNumber',
@@ -184,13 +187,13 @@ export const useStyles = createUseStyles({
         textAlign: 'center'
     },
     fieldNumberTop: {
-
+        gridArea: 'fieldNumber',
     },
     fieldNumberBottom: {
-
+        gridArea: 'fieldNumber',
     },
     cityFieldWrapperRight: {
-        gridTemplateColumns: '2fr 1fr 3fr 1fr 2fr 1fr 1fr',
+        gridTemplateColumns: '2fr 1fr 1fr 3fr 1fr 1fr 1fr',
         gridTemplate: `
             "colorBar titleBar price empty priceUpsideDown titleUpsideDown fieldNumber" 1fr
         `,
@@ -200,7 +203,7 @@ export const useStyles = createUseStyles({
         padding: '0',        
     },
     cityFieldWrapperLeft: {
-        gridTemplateColumns: '1fr 1fr 2fr 1fr 3fr 1fr 2fr',
+        gridTemplateColumns: '1fr 1fr 1fr 3fr 1fr 1fr 2fr',
         gridTemplate: `
             "fieldNumber titleUpsideDown priceUpsideDown empty price titleBar colorBar" 1fr
         `,
@@ -218,11 +221,11 @@ export const useStyles = createUseStyles({
         padding: '0',
         gridTemplate: `
             "colorBar" 2fr
-            "titleBar" 2fr
+            "titleBar" 1fr
             "price" 1fr
-            "empty" 4fr
+            "empty" 3fr
             "priceUpsideDown" 1fr
-            "titleUpsideDown" 2fr
+            "titleUpsideDown" 1fr
             "fieldNumber" 1fr
         `,
     },
@@ -235,11 +238,11 @@ export const useStyles = createUseStyles({
         padding: '0',
         gridTemplate: `
             "fieldNumber" 1fr    
-            "titleUpsideDown" 2fr
+            "titleUpsideDown" 1fr
             "priceUpsideDown" 1fr
-            "empty" 4fr
+            "empty" 3fr
             "price" 1fr
-            "titleBar" 2fr
+            "titleBar" 1fr
             "colorBar" 2fr
         `,
     },
