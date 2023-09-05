@@ -20,6 +20,8 @@ export const useStyles = createUseStyles({
     fieldBarRight: {
         borderBottom: "none",
         gridArea: 'f-right',
+        display: 'flex',
+        flexDirection: 'column-reverse',
         // transform: 'rotate(-90deg)',
         // gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 2fr',
         gridTemplate: `
@@ -34,14 +36,12 @@ export const useStyles = createUseStyles({
                         "9-slot" 1fr 
                         "10-slot" 1fr
         `,
-        '&>*': {
-            transform: 'rotate(-90deg)'
-        }
     },
     fieldBarLeft: {
         borderTop: 'none',
         bordeRight: BORDER,
         gridArea: 'f-left',
+        flexDirection: 'column',
         // transform: 'rotate(90deg)',
         // gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 2fr',
         gridTemplate:`

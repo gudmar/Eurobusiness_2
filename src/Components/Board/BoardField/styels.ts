@@ -76,7 +76,171 @@ export const useStyles = createUseStyles({
         border: 'solid medium balck',
         margin: '0',
         padding: '0'
-    }
+    },
+    colorBarRight: {
+    },
+    colorBarLeft: {
+        gridArea: 'colorBar',
+        height: '100%'
+    },
+    colorBarTop: {
 
+    },
+    colorBarBottom: {
 
+    },
+    titleRight: {
+        writingMode: 'vertical-lr',
+        textAlign: 'center',
+        gridArea: 'titleBar',
+    },
+    titleLeft: {
+        gridArea: 'titleBar',
+        writingMode: 'vertical-rl',
+        textAlign: 'center'
+
+    },
+    titleBottom: {
+
+    },
+    titleTop: {
+
+    },
+    priceRight: {
+        writingMode: 'vertical-lr',
+        textAlign: 'center',
+        gridArea: 'price',
+    },
+    priceLeft: {
+        gridArea: 'price',
+        writingMode: 'vertical-rl',
+        textAlign: 'center'
+
+    },
+    priceTop: {
+
+    },
+    priceBottom: {
+
+    },
+    priceUpsideDownRight: {
+        greidArea: 'priceUpsideDown',
+        writingMode: 'vertical-lr',
+        textAlign: 'center'
+    },
+    priceUpsideDownLeft: {
+        gridArea: 'priceUpsideDown',
+        writingMode: 'vertical-rl',
+        textAlign: 'center'
+
+    },
+    priceUpsideDownTop: {
+
+    },
+    priceUpsideDownBottom: {
+
+    },
+    emptyLeft: {
+        gridArea: 'empty',
+        writingMode: 'vertical-rl',
+        textAlign: 'center'
+
+    },
+    emptyRight: {
+        gridArea: 'empty',
+        writingMode: 'vertical-lr',
+        textAlign: 'center'
+    },
+    emptyTop: {
+
+    },
+    emptyBottom: {
+
+    },
+    titleUpsideDownLeft: {
+        gridArea: 'titleUpsideDown',
+        writingMode: 'vertical-rl',
+        textAlign: 'center'
+
+    },
+    titleUpsideDownRight: {
+        writingMode: 'vertical-lr',
+        textAlign: 'center'
+    },
+    titleUpsideDownTop: {
+
+    },
+    titleUpsideDownBottom: {
+
+    },
+    fieldNumberLeft: {
+        gridArea: 'fieldNumber',
+        writingMode: 'vertical-rl',
+        textAlign: 'center'
+    },
+    fieldNumberRight: {
+        gridArea: 'fieldNumber',
+        writingMode: 'vertical-lr',
+        textAlign: 'center'
+    },
+    fieldNumberTop: {
+
+    },
+    fieldNumberBottom: {
+
+    },
+    cityFieldWrapperRight: {
+        gridTemplateColumns: '2fr 1fr 3fr 1fr 2fr 1fr 1fr',
+        gridTemplate: `
+            "colorBar titleBar price empty priceUpsideDown titleUpsideDown fieldNumber" 1fr
+        `,
+        display: "grid",
+        border: 'solid medium balck',
+        margin: '0',
+        padding: '0',        
+    },
+    cityFieldWrapperLeft: {
+        gridTemplateColumns: '1fr 1fr 2fr 1fr 3fr 1fr 2fr',
+        gridTemplate: `
+            "fieldNumber titleUpsideDown priceUpsideDown empty price titleBar colorBar" 1fr
+        `,
+        display: "grid",
+        border: 'solid medium balck',
+        margin: '0',
+        padding: '0',
+    },
+    cityFieldWrapperBottom: {
+        textAlign: 'center',
+        display: "grid",
+        position: 'relative',
+        border: 'solid medium balck',
+        margin: '0',
+        padding: '0',
+        gridTemplate: `
+            "colorBar" 2fr
+            "titleBar" 2fr
+            "price" 1fr
+            "empty" 4fr
+            "priceUpsideDown" 1fr
+            "titleUpsideDown" 2fr
+            "fieldNumber" 1fr
+        `,
+    },
+    cityFieldWrapperTop: {
+        textAlign: 'center',
+        display: "grid",
+        position: 'relative',
+        border: 'solid medium balck',
+        margin: '0',
+        padding: '0',
+        gridTemplate: `
+            "fieldNumber" 1fr    
+            "titleUpsideDown" 2fr
+            "priceUpsideDown" 1fr
+            "empty" 4fr
+            "price" 1fr
+            "titleBar" 2fr
+            "colorBar" 2fr
+        `,
+    },
 });
