@@ -60,8 +60,10 @@ export const useStyles = createUseStyles({
     fieldBarTop: { 
         borderRight: 'none',
         borderBottom: BORDER,
-        transform: 'rotate(180deg)',
+        // transform: 'rotate(180deg)',
         gridArea: 'f-top',
-        gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr',
+        display: 'flex',
+        flexDirection: 'row-revarse',
+        // gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr',
     }
 })
