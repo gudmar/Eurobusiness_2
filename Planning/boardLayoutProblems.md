@@ -9,3 +9,4 @@
 9. Introduce themes
 10. Upsede down prices not properly placed
 11. Color bars are too nerrow
+
