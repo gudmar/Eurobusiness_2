@@ -2,8 +2,9 @@ import { useThemesAPI } from "../../../Contexts/ThemeContext";
 import { iNamedCityField, tCity } from "../../../Data/types"
 import { useCityField } from "../../../hooks/useField"
 import { useStyles } from "./styels";
+import { LEFT, RIGHT, TOP, BOTTOM } from "../types";
 
-const CityBoardField = (fieldDescriptor: iNamedCityField) => {
+const CityBoardField = (fieldDescriptor: iNamedCityField & {direction: 'Right' | 'Left' | 'Top' | 'Bottom' }) => {
     const {
         name,
         type,
@@ -20,15 +21,23 @@ const CityBoardField = (fieldDescriptor: iNamedCityField) => {
     } = useCityField(fieldDescriptor.name as tCity)
     const { theme } = useThemesAPI();
     const classes = useStyles(theme as any);
+    const containerClass = classes[`cityFieldWrapper${fieldDescriptor.direction}`]
+    const colorBarClass = classes[`colorBar${fieldDescriptor.direction}`]
+    const titleClass = classes[`title${fieldDescriptor.direction}`]
+    const priceClass = classes[`price${fieldDescriptor.direction}`]
+    const emptyClass = classes[`empty${fieldDescriptor.direction}`]
+    const priceUpsideDownClass = classes[`priceUpsideDown${fieldDescriptor.direction}`]
+    const titleUpsideDownClass = classes[`titleUpsideDown${fieldDescriptor.direction}`]
+    const titleFieldNumberClass = classes[`fieldNumber${fieldDescriptor.direction}`]
     return (
-        <div className={`${classes.cityFieldWrapper} ${classes.singleWidth}`}>
-            <div className={classes.colorBar} style={{backgroundColor: color}}></div>
-            <div className={classes.title}>{name}</div>
-            <div className={classes.price}>{price}</div>
-            <div className={classes.empty}></div>
-            <div className={classes.priceUpsideDown}>{price}</div>
-            <div className={classes.titleUpsideDown}>{name}</div>
-            <div className={classes.fieldNumber}>X</div>
+        <div className={`${containerClass} ${classes.singleWidth}`}>
+            <div className={colorBarClass} style={{backgroundColor: color}}></div>
+            <div className={titleClass}>{name}</div>
+            <div className={priceClass}>{price}</div>
+            <div className={emptyClass}></div>
+            <div className={priceUpsideDownClass}>{price}</div>
+            <div className={titleUpsideDownClass}>{name}</div>
+            <div className={titleFieldNumberClass}>X</div>
         </div>
     )
 }
