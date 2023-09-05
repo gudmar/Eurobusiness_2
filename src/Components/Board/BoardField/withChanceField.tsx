@@ -18,6 +18,5 @@ const withChanceField = (onClick: () => void) => (props: any) => {
         </div>
     )
 }
-
 export const ChanceBlueField = memo(withChanceField(() => {}))
 export const ChanceRedField = memo(withChanceField(() => {}))
