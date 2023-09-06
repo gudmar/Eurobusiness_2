@@ -1,7 +1,7 @@
 import {createUseStyles} from 'react-jss'
 import { px2rem } from '../../Functions/px2rem'
 
-const BOARD_HEIGHT_PX = 800;
+const BOARD_HEIGHT_PX = 1000;
 const BOARD_HEIGHT = px2rem(BOARD_HEIGHT_PX);
 const BORDER_COLOR = 'black';
 const BORDER_STYLE = 'solid';
@@ -9,7 +9,6 @@ const BORDER_THICKNTSS = px2rem(2);
 const BOARD_WIDTH_HEIGHT_FACTOR = 1.3;
 const BOARD_WIDTH = `${px2rem(BOARD_WIDTH_HEIGHT_FACTOR * BOARD_HEIGHT_PX)}`;
 const BORDER = `${BORDER_STYLE} ${BORDER_THICKNTSS} ${BORDER_COLOR}`;
-const MIDDLE_BOARD_COLOR = 'yellow';
 
 export const useStyles = createUseStyles({
     board: {
