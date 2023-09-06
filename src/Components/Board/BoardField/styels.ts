@@ -1,4 +1,5 @@
 import { createUseStyles } from "react-jss";
+import { transform } from "typescript";
 import { CustomTheme } from "../../../Types/themes";
 import { BOTTOM, LEFT, RIGHT, TOP } from "../types";
 
@@ -85,6 +86,7 @@ export const useStyles = createUseStyles({
         writingMode: 'vertical-lr',
         textAlign: 'center',
         gridArea: 'titleBar',
+        transform: 'rotate(180deg)'
     },
     titleLeft: {
         gridArea: 'titleBar',
@@ -99,20 +101,23 @@ export const useStyles = createUseStyles({
     titleTop: {
         gridArea: 'titleBar',
         textAlign: 'center',
+        transform: 'rotate(180deg)'
     },
     priceRight: {
         writingMode: 'vertical-lr',
         textAlign: 'center',
         gridArea: 'price',
+        transform: 'rotate(180deg)'
     },
     priceLeft: {
         gridArea: 'price',
         writingMode: 'vertical-rl',
-        textAlign: 'center'
+        textAlign: 'center',
     },
     priceTop: {
         gridArea: 'price',
         textAlign: 'center',
+        transform: 'rotate(180deg)'
     },
     priceBottom: {
         gridArea: 'price',
@@ -126,16 +131,18 @@ export const useStyles = createUseStyles({
     priceUpsideDownLeft: {
         gridArea: 'priceUpsideDown',
         writingMode: 'vertical-rl',
-        textAlign: 'center'
+        textAlign: 'center',
+        transform: 'rotate(180deg)'
 
     },
     priceUpsideDownTop: {
         gridArea: 'priceUpsideDown',
-        textAlign: 'center'
+        textAlign: 'center',
     },
     priceUpsideDownBottom: {
         gridArea: 'priceUpsideDown',
-        textAlign: 'center'
+        textAlign: 'center',
+        transform: 'rotate(180deg)'
     },
     emptyLeft: {
         gridArea: 'empty',
@@ -157,8 +164,8 @@ export const useStyles = createUseStyles({
     titleUpsideDownLeft: {
         gridArea: 'titleUpsideDown',
         writingMode: 'vertical-rl',
-        textAlign: 'center'
-
+        textAlign: 'center',
+        transform: 'rotate(180deg)'
     },
     titleUpsideDownRight: {
         gridArea: 'titleUpsideDown',
@@ -255,12 +262,21 @@ export const useStyles = createUseStyles({
         `,
     },
     enterpriseFieldWrapperBottom: {
-
+        textAlign: 'center',
+        borderRight: 'solid medium black',
+        gridTemplate: `
+            "titleBar" 1fr
+            "price" 1fr
+            "icon" 3fr
+            "priceUpsideDown" 1fr
+            "titleUpsideDown" 1fr
+            "fieldNumber" 1fr
+        `,
     },
     enterpriseFieldWrapperRight: {
         gridTemplateColumns: '1fr 1fr 3fr 1fr 1fr 1fr',
         gridTemplate: `
-            "titleBar price empty priceUpsideDown titleUpsideDown fieldNumber" 1fr
+            "titleBar price icon priceUpsideDown titleUpsideDown fieldNumber" 1fr
         `,
         borderTop: 'solid medium black',
     },
