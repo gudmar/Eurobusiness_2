@@ -33,6 +33,24 @@ export const useStyles = createUseStyles({
             "f-left f-left f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot   f-bot  " 1fr
             "f-left f-left f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot   f-bot  " 1fr / 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr ;
         `,
+        // gridTemplate: `
+        //     "f-top  f-top  f-top f-top f-top f-top f-top f-top f-top f-top f-top f-top   f-right f-right   f-right" 1fr
+        //     "f-top  f-top  f-top f-top f-top f-top f-top f-top f-top f-top f-top f-top   f-right f-right   f-right" 1fr
+        //     "f-top  f-top  f-top f-top f-top f-top f-top f-top f-top f-top f-top f-top   f-right f-right   f-right" 1fr
+        //     "f-left f-left f-left b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid f-right f-right f-right" 1fr
+        //     "f-left f-left f-left b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid f-right f-right f-right" 1fr
+        //     "f-left f-left f-left b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid f-right f-right f-right" 1fr
+        //     "f-left f-left f-left b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid f-right f-right f-right" 1fr
+        //     "f-left f-left f-left b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid f-right f-right f-right" 1fr
+        //     "f-left f-left f-left b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid f-right f-right f-right" 1fr
+        //     "f-left f-left f-left b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid f-right f-right f-right" 1fr
+        //     "f-left f-left f-left b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid f-right f-right f-right" 1fr
+        //     "f-left f-left f-left b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid f-right f-right f-right" 1fr
+        //     "f-left f-left f-left f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot   f-bot   f-bot  " 1fr
+        //     "f-left f-left f-left f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot   f-bot   f-bot  " 1fr
+        //     "f-left f-left f-left f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot   f-bot   f-bot  " 1fr / 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        // `,
+        
     },
     middleBoard: {
         backgroundColor: (theme) => theme.boardMiddleSectionColor,

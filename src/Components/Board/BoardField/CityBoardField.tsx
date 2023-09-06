@@ -2,9 +2,9 @@ import { useThemesAPI } from "../../../Contexts/ThemeContext";
 import { iNamedCityField, tCity } from "../../../Data/types"
 import { useCityField } from "../../../hooks/useField"
 import { useStyles } from "./styels";
-import { LEFT, RIGHT, TOP, BOTTOM } from "../types";
+import { LEFT, RIGHT, TOP, BOTTOM, tBoardSideDirections } from "../types";
 
-const CityBoardField = (fieldDescriptor: iNamedCityField & {direction: 'Right' | 'Left' | 'Top' | 'Bottom' }) => {
+const CityBoardField = (fieldDescriptor: iNamedCityField & {direction: tBoardSideDirections }) => {
     const {
         name,
         type,
@@ -30,7 +30,7 @@ const CityBoardField = (fieldDescriptor: iNamedCityField & {direction: 'Right' |
     const titleUpsideDownClass = classes[`titleUpsideDown${fieldDescriptor.direction}`]
     const titleFieldNumberClass = classes[`fieldNumber${fieldDescriptor.direction}`]
     return (
-        <div className={`${containerClass} ${classes.singleWidth}`}>
+        <div className={`${containerClass} ${classes.singleWidth} ${classes.fieldWrapper}`}>
             <div className={colorBarClass} style={{backgroundColor: color}}></div>
             <div className={titleClass}>{name}</div>
             <div className={priceClass}>{price}</div>

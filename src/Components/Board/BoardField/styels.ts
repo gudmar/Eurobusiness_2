@@ -1,5 +1,6 @@
 import { createUseStyles } from "react-jss";
 import { CustomTheme } from "../../../Types/themes";
+import { BOTTOM, LEFT, RIGHT, TOP } from "../types";
 
 export const useStyles = createUseStyles({
     singleWidth: {
@@ -12,23 +13,6 @@ export const useStyles = createUseStyles({
         flexGrow: '2',
         flexShrink: '2',
         flexBasis: '0',
-    },
-    cityFieldWrapper: {
-        textAlign: 'center',
-        display: "grid",
-        position: 'relative',
-        gridTemplate: `
-            "colorBar" 2fr
-            "titleBar" 2fr
-            "price" 1fr
-            "empty" 4fr
-            "priceUpsideDown" 1fr
-            "titleUpsideDown" 2fr
-            "fieldNumber" 1fr
-        `,
-        border: 'solid medium balck',
-        margin: '0',
-        padding: '0'
     },
     empty: { gridArea: 'empty'},
     title: { gridArea: 'titleBar' },
@@ -60,11 +44,17 @@ export const useStyles = createUseStyles({
             "titleUpsideDown" 2fr
             "fieldNumber" 1fr
         `,
-        border: 'solid medium balck',
+        border: 'solid medium black',
         margin: '0',
         padding: '0'
     },
-    icon: { gridArea: 'icon' },
+    icon: {
+        gridArea: 'icon',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignContent: 'center'
+    },
     questionMarkWrapper: {
         display: "grid",
         position: 'relative',
@@ -73,7 +63,7 @@ export const useStyles = createUseStyles({
             "icon" 5fr
             "fieldNumber" 1fr
         `,
-        border: 'solid medium balck',
+        // border: 'solid medium black',
         margin: '0',
         padding: '0'
     },
@@ -104,9 +94,11 @@ export const useStyles = createUseStyles({
     },
     titleBottom: {
         gridArea: 'titleBar',
+        textAlign: 'center'
     },
     titleTop: {
         gridArea: 'titleBar',
+        textAlign: 'center',
     },
     priceRight: {
         writingMode: 'vertical-lr',
@@ -117,13 +109,14 @@ export const useStyles = createUseStyles({
         gridArea: 'price',
         writingMode: 'vertical-rl',
         textAlign: 'center'
-
     },
     priceTop: {
         gridArea: 'price',
+        textAlign: 'center',
     },
     priceBottom: {
         gridArea: 'price',
+        textAlign: 'center',
     },
     priceUpsideDownRight: {
         greidArea: 'priceUpsideDown',
@@ -138,9 +131,11 @@ export const useStyles = createUseStyles({
     },
     priceUpsideDownTop: {
         gridArea: 'priceUpsideDown',
+        textAlign: 'center'
     },
     priceUpsideDownBottom: {
         gridArea: 'priceUpsideDown',
+        textAlign: 'center'
     },
     emptyLeft: {
         gridArea: 'empty',
@@ -172,9 +167,11 @@ export const useStyles = createUseStyles({
     },
     titleUpsideDownTop: {
         gridArea: 'titleUpsideDown',
+        textAlign: 'center'
     },
     titleUpsideDownBottom: {
         gridArea: 'titleUpsideDown',
+        textAlign: 'center'
     },
     fieldNumberLeft: {
         gridArea: 'fieldNumber',
@@ -188,37 +185,38 @@ export const useStyles = createUseStyles({
     },
     fieldNumberTop: {
         gridArea: 'fieldNumber',
+        textAlign: 'center'
     },
     fieldNumberBottom: {
         gridArea: 'fieldNumber',
+        textAlign: 'center'
     },
     cityFieldWrapperRight: {
         gridTemplateColumns: '2fr 1fr 1fr 3fr 1fr 1fr 1fr',
         gridTemplate: `
             "colorBar titleBar price empty priceUpsideDown titleUpsideDown fieldNumber" 1fr
         `,
-        display: "grid",
-        border: 'solid medium balck',
-        margin: '0',
-        padding: '0',        
+        borderTop: 'solid medium black',
     },
     cityFieldWrapperLeft: {
+        borderTop: 'solid medium black',
         gridTemplateColumns: '1fr 1fr 1fr 3fr 1fr 1fr 2fr',
         gridTemplate: `
             "fieldNumber titleUpsideDown priceUpsideDown empty price titleBar colorBar" 1fr
         `,
+    },
+    fieldWrapper: (theme) => ({
         display: "grid",
-        border: 'solid medium balck',
+        borderLeft: 'none',
         margin: '0',
         padding: '0',
-    },
+        backgroundColor: theme.boardFieldBackgroundColor,
+        font: theme.boardFieldFont,
+        fontWeight: theme.boardFieldFontWeight
+    }),
     cityFieldWrapperBottom: {
         textAlign: 'center',
-        display: "grid",
-        position: 'relative',
-        border: 'solid medium balck',
-        margin: '0',
-        padding: '0',
+        borderRight: 'solid medium black',
         gridTemplate: `
             "colorBar" 2fr
             "titleBar" 1fr
@@ -230,12 +228,9 @@ export const useStyles = createUseStyles({
         `,
     },
     cityFieldWrapperTop: {
+        borderRight: 'solid medium black',
         textAlign: 'center',
-        display: "grid",
-        position: 'relative',
-        border: 'solid medium balck',
-        margin: '0',
-        padding: '0',
+        // display: "grid",
         gridTemplate: `
             "fieldNumber" 1fr    
             "titleUpsideDown" 1fr
@@ -246,4 +241,38 @@ export const useStyles = createUseStyles({
             "colorBar" 2fr
         `,
     },
+    enterpriseFieldWrapperTop: {
+        borderRight: 'solid medium black',
+        textAlign: 'center',
+        // display: "grid",
+        gridTemplate: `
+            "fieldNumber" 1fr    
+            "titleUpsideDown" 1fr
+            "priceUpsideDown" 1fr
+            "icon" 3fr
+            "price" 1fr
+            "titleBar" 1fr
+        `,
+    },
+    enterpriseFieldWrapperBottom: {
+
+    },
+    enterpriseFieldWrapperRight: {
+        gridTemplateColumns: '1fr 1fr 3fr 1fr 1fr 1fr',
+        gridTemplate: `
+            "titleBar price empty priceUpsideDown titleUpsideDown fieldNumber" 1fr
+        `,
+        borderTop: 'solid medium black',
+    },
+    enterpriseFieldWrapperLeft: {
+        borderTop: 'solid medium black',
+        gridTemplateColumns: '1fr 1fr 1fr 3fr 1fr 1fr',
+        gridTemplate: `
+            "fieldNumber titleUpsideDown priceUpsideDown icon price titleBar" 1fr
+        `,
+    },
+    [RIGHT]:{ transform: 'rotate(-90deg)' },
+    [LEFT]:{ transform: 'rotate(90deg)' },
+    [TOP]:{ transform: 'rotate(180deg)' },
+    [BOTTOM]:{},
 });
