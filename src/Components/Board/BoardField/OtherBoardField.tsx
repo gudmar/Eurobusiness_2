@@ -1,9 +1,11 @@
 import { useThemesAPI } from "../../../Contexts/ThemeContext";
-import { tOtherTypes } from "../../../Data/types";
+import { iNamedOtherField, tOtherTypes } from "../../../Data/types";
+
 import { useOtherField } from "../../../hooks/useField";
+import { tBoardSideDirections } from "../types";
 import { useStyles } from "./styels";
 
-const OtherBoardField = (props: any) => {
+const OtherBoardField = (fieldDescriptor: iNamedOtherField & {direction: tBoardSideDirections}) => {
     const {
         name,
         type,
@@ -11,18 +13,19 @@ const OtherBoardField = (props: any) => {
         info,
         wait,
         Icon,
-    } = useOtherField(props.name as tOtherTypes)
+    } = useOtherField(fieldDescriptor.name as tOtherTypes);
     const { theme } = useThemesAPI();
     const classes = useStyles(theme as any);
     const ActualIcon = Icon || (() => <></>)
+    const containerDirectionClass = classes[`enterpriseFieldWrapper${fieldDescriptor.direction}`]
     return (
-        <div className={`${classes.enterpriseFieldWrapper}  ${classes.singleWidth}`}>
-            <div className={classes.title}>{name}</div>
-            <div className={classes.price}>{visit}</div>
-            <div className={classes.icon}><ActualIcon /></div>
-            <div className={classes.priceUpsideDown}>{visit}</div>
-            <div className={classes.titleUpsideDown}>{name}</div>
-            <div className={classes.fieldNumber}>X</div>
+        <div className={`${classes.fieldWrapper}  ${classes.singleWidth} ${containerDirectionClass}`}>
+            <div className={classes[`title${fieldDescriptor.direction}`]}>{name}</div>
+            <div className={classes[`price${fieldDescriptor.direction}`]}>{visit}</div>
+            <div className={`${classes.icon} ${classes[fieldDescriptor.direction]}`}><ActualIcon /></div>
+            <div className={classes[`priceUpsideDown${fieldDescriptor.direction}`]}>{visit}</div>
+            <div className={classes[`titleUpsideDown${fieldDescriptor.direction}`]}>{name}</div>
+            <div className={classes[`fieldNumber${fieldDescriptor.direction}`]}>X</div>
         </div>
     )
 }

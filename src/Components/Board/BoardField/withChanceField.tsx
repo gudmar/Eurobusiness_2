@@ -1,20 +1,26 @@
 import { memo } from "react"
 import { useThemesAPI } from "../../../Contexts/ThemeContext";
-import { tChanceType } from "../../../Data/types";
+import { iNamedChance, tChanceType } from "../../../Data/types";
 import { getFieldState } from "../../../hooks/useField";
+import { tBoardSideDirections } from "../types";
 import { useStyles } from "./styels";
 
-const withChanceField = (onClick: () => void) => (props: any) => {
-    const {
-        type, info, icon,
-    } = getFieldState(props.name as tChanceType)
+const withChanceField = (onClick: () => void) => (fieldDescriptor: iNamedChance & {direction: tBoardSideDirections}) => {
+    const fieldState = getFieldState(fieldDescriptor.name as tChanceType)
+    
+    // const {
+    //     type, info, Icon,
+    // } = fieldState;
+    const Icon = fieldState.Icon
+    console.log(fieldState, fieldDescriptor)
     const { theme } = useThemesAPI();
     const classes = useStyles(theme as any);
+    const questionMarkWrapper = classes[`questionMarkWrapper${fieldDescriptor.direction}`]
     return (
-        <div className={`${classes.questionMarkWrapper}  ${classes.singleWidth}`}>
+        <div className={`${questionMarkWrapper} ${classes.singleWidth} ${classes.fieldWrapper}`}>
             <div className={classes.empty}></div>
-            <div className={classes.icon}>{icon}</div>
-            <div className={classes.fieldNumber}>X</div>
+            <div className={`${classes.icon} ${classes[fieldDescriptor.direction]}`}><Icon /></div>
+            <div className={classes[`fieldNumber${fieldDescriptor.direction}`]}>X</div>
         </div>
     )
 }

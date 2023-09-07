@@ -198,6 +198,7 @@ export class  OtherFieldTypesField extends SubscribtionsHandler<tOtherTypes, iNa
     get info() { return this._info}
     get wait() { return this._wait}
     get icon() { return this._icon}
+    get Icon() { return this._icon}
     get visit() {return this._visit}
     get name() {return this._name}
 }
@@ -225,4 +226,5 @@ export class ChanceField {
     get type() { return this._type}
     get info() { return this._info}
     get icon() { return this._icon}
+    get Icon() { return this._icon}
 }
