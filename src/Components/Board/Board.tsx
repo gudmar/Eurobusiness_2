@@ -10,13 +10,12 @@ export const Board = () => {
     const { theme } = useThemesAPI();
     const classes = useStyles(theme as any);
     const boardCaretaker: any = getBoardCaretaker();
-    useEffect(
-        () => {
-            console.log(boardCaretaker)
-            if (boardCaretaker) {
-                BoardCaretaker.fieldNames.forEach((fieldName: any) => console.log(fieldName, boardCaretaker?.getFieldByName(fieldName) || boardCaretaker))
-            }               
-        }, [boardCaretaker])
+    // useEffect(
+    //     () => {
+    //         if (boardCaretaker) {
+    //             BoardCaretaker.fieldNames.forEach((fieldName: any) => console.log(fieldName, boardCaretaker?.getFieldByName(fieldName) || boardCaretaker))
+    //         }               
+    //     }, [boardCaretaker])
 
     return(
         <div className={classes.board}>

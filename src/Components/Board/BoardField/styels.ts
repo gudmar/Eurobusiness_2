@@ -54,19 +54,13 @@ export const useStyles = createUseStyles({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        alignContent: 'center'
-    },
-    questionMarkWrapper: {
-        display: "grid",
-        position: 'relative',
-        gridTemplate: `
-            "empty" 2fr
-            "icon" 5fr
-            "fieldNumber" 1fr
-        `,
-        // border: 'solid medium black',
-        margin: '0',
-        padding: '0'
+        alignContent: 'center',
+        '& svg': {
+            height: '100%',
+            marginTop: 0,
+            marginBottom: 0,
+            // width: '100%'
+        }
     },
     colorBarRight: {
         gridArea: 'colorBar',
@@ -291,4 +285,38 @@ export const useStyles = createUseStyles({
     [LEFT]:{ transform: 'rotate(90deg)' },
     [TOP]:{ transform: 'rotate(180deg)' },
     [BOTTOM]:{},
+
+    questionMarkWrapperBottom: {
+        gridTemplate: `
+            "empty" 2fr
+            "icon" 5fr
+            "fieldNumber" 1fr
+        `,
+        borderRight: 'solid medium black',
+        // border: 'solid medium black',
+    },
+    questionMarkWrapperTop: {
+        gridTemplate: `
+            "fieldNumber" 1fr            
+            "icon" 5fr
+            "empty" 2fr
+        `,
+        borderRight: 'solid medium black',
+        // border: 'solid medium black',
+    },
+    questionMarkWrapperLeft: {
+        borderTop: 'solid medium black',
+        gridTemplateColumns: '1fr 6fr 2fr',
+        gridTemplate: `
+            "fieldNumber icon empty" 1fr
+        `,
+    },
+    questionMarkWrapperRight: {
+        borderTop: 'solid medium black',
+        gridTemplateColumns: '2fr 6fr 1fr',
+        gridTemplate: `
+            "empty icon fieldNumber" 1fr
+        `,
+    }
+
 });

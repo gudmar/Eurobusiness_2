@@ -7,8 +7,8 @@ type tFieldName = tCity | tNonCityEstates | tOtherTypes | tChanceType
 export const getFieldState = (name: tFieldName) => {
     const caretaker = getBoardCaretaker();
     const thisField = caretaker.getFieldByName(name)
-    
-    return ({...thisField.state})
+    console.log(thisField)
+    return (thisField)
 }    
 
 export const useAbstractField = <FieldType>(name: tFieldName) => {
@@ -18,7 +18,6 @@ export const useAbstractField = <FieldType>(name: tFieldName) => {
     const [state, setState]: [FieldType, any] = useState(thisField.state)
         
     useEffect(() => {
-        console.log(thisField)
         thisField.subscribe({
             callback: setState,
             id: ID,
@@ -26,8 +25,6 @@ export const useAbstractField = <FieldType>(name: tFieldName) => {
         })
         return thisField.unsubscribe(name, ID)
     }, [])
-    console.log({...state})
-    useEffect(() => console.log(state), [state])
     return ({...state})
 }
 
@@ -41,7 +38,7 @@ export const useNonCityEstatesField = (name: tNonCityEstates) => {
 }
 export const useOtherField = (name: tOtherTypes) => {
     const state = useAbstractField<iNamedOtherField>(name);
-    console.log(name, state)
+    console.log(state)
     return state
 }
 // export const useChanceField = (name: tChanceType) => useAbstractField<iNamedChance>(name)
