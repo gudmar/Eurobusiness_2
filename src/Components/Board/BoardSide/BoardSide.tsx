@@ -16,7 +16,7 @@ const getFieldIndexesForSide = (side: tBoardSideDirections) => {
     switch(side) {
         case BOTTOM: return getDescendigRange(10, 10);
         case LEFT: return getDescendigRange(20, 10);
-        case TOP: return getDescendigRange(30, 10);
+        case TOP: return getDescendigRange(30, 10).reverse();
         case RIGHT: return getDescendigRange(40, 10)
         default: throw new Error('Unknown direction')
     }
@@ -26,9 +26,7 @@ const getFieldNames = (direction: tBoardSideDirections) => {
     const indexes = getFieldIndexesForSide(direction);
     const names = BoardCaretaker.fieldNames;
     const boardCaretaker: any = getBoardCaretaker();
-    // console.log(names)
     const result = indexes.map((index) => {
-        // console.log('NAME', names[index - 1])
         return ({
             name: names[index - 1],
             type: boardCaretaker.getFieldByName(names[index - 1]).type
@@ -44,7 +42,6 @@ const BoardSide = ({
     const classes: {[key:string]: string} = useStyles(theme as any);
     const directionClassName: string = `fieldBar${direction}`;
     const fieldData = getFieldNames(direction)
-    // console.log(fieldData)
     // const fieldIndexes = getFieldIndexesForSide(direction);
     // const boardCaretaker: any = getBoardCaretaker();
     return (

@@ -134,7 +134,3 @@ export type tBoard = {
     [TAX]: iOtherFieldTypes,
     [WIEDEN]: iCityField,
 }
-
-console.warn('Precise type of icon');
-
-
