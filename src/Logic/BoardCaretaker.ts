@@ -83,7 +83,6 @@ export class BoardCaretaker extends FieldCreator {
         const field = BoardCaretaker.fieldInstances.find((instance: tNamedBoardField) => instance.name === name);
         // if (field === undefined)
         const { type} = field
-        // console.log(BoardCaretaker.fieldInstances, name, field, type)
         return field;
     }
 }

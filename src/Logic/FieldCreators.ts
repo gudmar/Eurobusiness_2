@@ -194,6 +194,16 @@ export class  OtherFieldTypesField extends SubscribtionsHandler<tOtherTypes, iNa
         OtherFieldTypesField.instances[name] = this;
         return this;
     }
+    get state() {
+        return ({
+            name: this._name,
+            type: this._type,
+            Icon: this._icon,
+            visit: this._visit,
+            wait: this._wait,
+
+        })
+    }
     get type() { return this._type}
     get info() { return this._info}
     get wait() { return this._wait}

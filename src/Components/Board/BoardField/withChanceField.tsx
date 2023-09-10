@@ -12,7 +12,6 @@ const withChanceField = (onClick: () => void) => (fieldDescriptor: iNamedChance 
     //     type, info, Icon,
     // } = fieldState;
     const Icon = fieldState.Icon
-    console.log(fieldState, fieldDescriptor)
     const { theme } = useThemesAPI();
     const classes = useStyles(theme as any);
     const questionMarkWrapper = classes[`questionMarkWrapper${fieldDescriptor.direction}`]
