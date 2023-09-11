@@ -1,5 +1,4 @@
 import { createUseStyles } from "react-jss";
-import { transform } from "typescript";
 import { CustomTheme } from "../../../Types/themes";
 import { BOTTOM, LEFT, RIGHT, TOP } from "../types";
 
@@ -49,6 +48,82 @@ export const useStyles = createUseStyles({
         margin: '0',
         padding: '0'
     },
+    leftTopField: {
+        display: "grid",
+        position: 'relative',
+        gridTemplate: `
+            " fieldNumberTopLeft . . . ." 1fr
+            ". titleBarTopLeft . . ." 1fr
+            ". . iconTopLeft . ." 1fr
+            ". . . titleBarTopLeftUpside ." 1fr
+            " . . . . ." 1fr/1fr 1fr 1fr 1fr 1fr
+        `,
+        borderRight: 'solid medium black',
+        margin: '0',
+        padding: '0'
+    },
+    titleBarTopLeft: {
+        gridArea: 'titleBarTopLeft',
+        transform: 'rotateZ(135deg)'
+    },
+    titleBarTopLeftUpside: {
+        gridArea: 'titleBarTopLeftUpside',
+        transform: 'rotateZ(315deg)'
+    },
+    fieldNumberTopLeft: {
+        gridArea: 'fieldNumberTopLeft',
+        transform: 'rotateZ(135deg)',
+        textAlign: 'center',
+        transformOrigin: 'center',
+    },
+    iconTopLeft: {
+        gridArea: 'iconTopLeft',
+        transform: 'rotateZ(135deg)'
+    },
+    rightBottomField: {
+        display: "grid",
+        position: 'relative',
+        gridTemplate: `
+            ". . . . . ." 1fr
+            ". titleBarBottomRight . . . ." 1fr
+            ". . . . . ." 1fr
+            " . . . . . ." 1fr
+            " . . . . . ." 1fr
+            ". . . . titleBarBottomRightUpside ." 1fr
+            
+            ". iconBottomRight iconBottomRight iconBottomRight iconBottomRight fieldNumberBottomRight" 1fr/1fr 1fr 1fr 1fr 1fr 1fr
+        `,
+        margin: '0',
+        padding: '0'
+    },
+    titleBarBottomRight: {
+        gridArea: 'titleBarBottomRight',
+        transform: 'rotateZ(-45deg)'
+    },
+    titleBarBottomRightUpside: {
+        gridArea: 'titleBarBottomRightUpside',
+        transform: 'rotateZ(135deg)'
+    },
+    fieldNumberBottomRight: {
+        gridArea: 'fieldNumberBottomRight',
+        transform: 'rotateZ(-45deg)',
+        textAlign: 'center',
+        transformOrigin: 'center',
+    },
+    iconBottomRight: {
+        gridArea: 'iconBottomRight',
+        marginLeft: '0',
+        marginRight: '0',
+        display: 'flex',
+        width: '100%',
+        '& svg': {
+            height: '1.5rem',
+            marginRight: '-1rem',
+            marginLeft: '-1rem'
+        }
+    },
+
+
     icon: {
         gridArea: 'icon',
         display: 'flex',
