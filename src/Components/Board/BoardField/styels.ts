@@ -14,6 +14,11 @@ export const useStyles = createUseStyles({
         flexShrink: '2',
         flexBasis: '0',
     },
+    doubleWidthVertical: {
+        flexGrow: '2',
+        flexShrink: '2',
+        flexBasis: '0',
+    },
     empty: { gridArea: 'empty'},
     title: { gridArea: 'titleBar' },
     price: { gridArea: 'price' },
@@ -48,6 +53,26 @@ export const useStyles = createUseStyles({
         margin: '0',
         padding: '0'
     },
+
+    titleBarBottomLeft: {
+        gridArea: 'titleBarBottomLeft',
+        transform: 'rotateZ(45deg)'
+    },
+    titleBarBottomLeftUpside: {
+        gridArea: 'titleBarBottomLeftUpside',
+        transform: 'rotateZ(225deg)'
+    },
+    fieldNumberBottomLeft: {
+        gridArea: 'fieldNumberBottomLeft',
+        transform: 'rotateZ(45deg)',
+        textAlign: 'center',
+        transformOrigin: 'center',
+    },
+    iconBottomLeft: {
+        gridArea: 'iconBottomLeft',
+        transform: 'rotateZ(45deg)'
+    },
+
     leftTopField: {
         display: "grid",
         position: 'relative',
@@ -118,6 +143,47 @@ export const useStyles = createUseStyles({
         width: '100%',
         '& svg': {
             height: '1.5rem',
+            marginRight: '-1rem',
+            marginLeft: '-1rem'
+        }
+    },
+
+    rightTopField: {
+        display: "grid",
+        position: 'relative',
+        gridTemplate: `
+            " . . . . fieldNumberTopRight" 1fr
+            " . .  titleBarTopRight . .  " 1fr
+            " . . iconTopRight . ." 1fr
+            " . titleBarTopRightUpside . . . " 1fr
+            "  . . . . . " 1fr
+        `,
+        margin: '0',
+        padding: '0'
+    },
+
+    titleBarTopRight: {
+        gridArea: 'titleBarTopRight',
+        transform: 'rotateZ(-315deg)'
+    },
+    titleBarTopRightUpside: {
+        gridArea: 'titleBarTopRightUpside',
+        transform: 'rotateZ(-135deg)'
+    },
+    fieldNumberTopRight: {
+        gridArea: 'fieldNumberTopRight',
+        transform: 'rotateZ(-135deg)',
+        textAlign: 'center',
+        transformOrigin: 'center',
+    },
+    iconTopRight: {
+        gridArea: 'iconTopRight',
+        marginLeft: '0',
+        marginRight: '0',
+        display: 'flex',
+        width: '100%',
+        '& svg': {
+            height: '2rem',
             marginRight: '-1rem',
             marginLeft: '-1rem'
         }
@@ -283,7 +349,6 @@ export const useStyles = createUseStyles({
     },
     fieldWrapper: (theme) => ({
         display: "grid",
-        borderLeft: 'none',
         margin: '0',
         padding: '0',
         backgroundColor: theme.boardFieldBackgroundColor,
@@ -392,6 +457,21 @@ export const useStyles = createUseStyles({
         gridTemplate: `
             "empty icon fieldNumber" 1fr
         `,
-    }
+    },
+    leftBottomField: {
+        display: "grid",
+        position: 'relative',
+        gridTemplate: `
+            " . . . . ."
+            ". . . titleBarBottomLeft ."
+            ". . iconBottomLeft . ."
+            ". titleBarBottomLeftUpside . . ."
+            " fieldNumberBottomLeft . . . ."
+        `,
+        margin: '0',
+        padding: '0',
+        borderTop: 'black solid medium',
+        borderRight: 'black solid medium',
+    },
 
 });
