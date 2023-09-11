@@ -4,7 +4,7 @@ import { useOtherField } from "../../../hooks/useField";
 import { tBoardSideDirections } from "../types";
 import { useStyles } from "./styels";
 
-const JailField = (fieldDescriptor: iNamedOtherField & {direction: tBoardSideDirections}) => {
+const GoToJail = (fieldDescriptor: iNamedOtherField & {direction: tBoardSideDirections}) => {
     const {
         name,
         type,
@@ -16,14 +16,13 @@ const JailField = (fieldDescriptor: iNamedOtherField & {direction: tBoardSideDir
     const { theme } = useThemesAPI();
     const classes = useStyles(theme as any);
     return (
-        <div className={`${classes.fieldWrapper}  ${classes.leftBottomField}  ${classes.doubleWidthVertical}`}>
-            <div className={classes.titleBarBottomLeft}>{name}</div>
-            <div className={classes.iconBottomLeft}><Icon /></div>
-            <div className={classes.titleBarBottomLeftUpside}>{name}</div>
-            <div className={classes.fieldNumberBottomLeft}>X</div>
+        <div className={`${classes.fieldWrapper}  ${classes.rightTopField}  ${classes.doubleWidth}`}>
+            <div className={classes.titleBarTopRight}>{name}</div>
+            <div className={classes.iconTopRight}><Icon /></div>
+            <div className={classes.titleBarTopRightUpside}>{name}</div>
+            <div className={classes.fieldNumberTopRight}>7</div>
         </div>
     )
-
 }
 
-export default JailField
+export default GoToJail

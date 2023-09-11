@@ -1,10 +1,10 @@
 import { ReactNode } from "react";
 import { useThemesAPI } from "../../../Contexts/ThemeContext";
-import { CHANCE_BLUE, CHANCE_RED, CITY, FREE_PARK, GUARDED_PARKING, JAIL, PLANT, RAILWAY, START, TAX } from "../../../Data/const";
-import { OtherFieldTypesField } from "../../../Logic/FieldCreators";
+import { CHANCE_BLUE, CHANCE_RED, CITY, FREE_PARK, GO_TO_JAIL, GUARDED_PARKING, JAIL, PLANT, RAILWAY, START, TAX } from "../../../Data/const";
 import CityBoardField from "./CityBoardField";
 import EnterpriseBoardField from "./EnterpriseBoardField";
 import FreeParkingField from "./FreeParkingField";
+import GoToJail from "./GoToJail";
 import JailField from "./JailField";
 import OtherBoardField from "./OtherBoardField";
 import StartField from "./StartField";
@@ -23,6 +23,7 @@ const getField = (props: any): ReactNode => {
         case START: return <StartField  {...props}/>;
         case FREE_PARK: return <FreeParkingField  {...props}/>
         case JAIL: return <JailField  {...props}/>
+        case GO_TO_JAIL: return <GoToJail {...props}/>
         default: return <></>
     }
 }
