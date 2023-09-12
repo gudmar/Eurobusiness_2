@@ -1,5 +1,5 @@
 + 1. SVG not visible, paths only,
-2. No wide fields: start, jail, goto jail
++ 2. No wide fields: start, jail, goto jail
 + 3. Vertical sides are displayed either horizontaly, or layout set before rotation
 4. Board and fields size should depend on screen
 5. Scrollbars on fields
@@ -8,5 +8,9 @@
 8. Borders,
 + 9. Introduce themes
 + 10. Upsede down prices not properly placed
-11. Color bars are too nerrow
++ 11. Color bars are too nerrow
+12. Different field sizes
+13. Ugly edge fields
+14. Vertical question marks get ugly white area
+15. different color bar sizes
 
