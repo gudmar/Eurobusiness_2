@@ -7,6 +7,13 @@ export type CustomTheme = {
     boardFieldBackgroundColor: string,
     boardFieldFontWeight: string,
     boardFieldFont: string,
+
+    cityNameFontWeight: string,
+    cityNameFontSize: string,
+
+    cityPriceFontWeight: string,
+
+    fieldNrFontSize: string,
 }
 
 export type NamedTheme = {

@@ -13,5 +13,12 @@ export const GREY_THEME: NamedTheme = {
         boardFieldBackgroundColor: 'white',
         boardFieldFontWeight: 'bold',
         boardFieldFont: 'arial',
+
+        cityNameFontSize: '0.82rem',
+        cityNameFontWeight: 'bold',
+
+        cityPriceFontWeight: 'bold',
+
+        fieldNrFontSize: '0.8rem',
     }
 }
