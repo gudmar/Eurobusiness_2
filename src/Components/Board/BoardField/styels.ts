@@ -32,12 +32,26 @@ export const useStyles = createUseStyles({
     fieldNumber: {
         gridArea: 'fieldNumber'
     },
-    font: (theme: CustomTheme) => ({
-        fontWeight: theme.boardFieldFontWeight,
+    fontCityPrice: (theme: CustomTheme) => ({
+        fontSize: theme.boardFieldFont,
+        fontWeight: theme.cityPriceFontWeight,
         font: theme.boardFieldFont,
+        fontColor: theme.penColor,
+    }),
+    fontCityName: (theme: CustomTheme) => ({
+        fontSize: theme.cityNameFontSize,
+        fontWeight: theme.cityNameFontWeight,
+        font: theme.boardFieldFont,
+        fontColor: theme.penColor,
         alignText: 'center'
     }),
-
+    fontCityNumber: (theme: CustomTheme) => ({
+        fontSize: theme.fieldNrFontSize,
+        fontWeight: 'normal',
+        font: theme.boardFieldFont,
+        fontCoolor: theme.penColor,
+        alignText: 'center',
+    }),
     enterpriseFieldWrapper: {
         display: "grid",
         position: 'relative',
@@ -47,11 +61,11 @@ export const useStyles = createUseStyles({
             "icon" 3fr
             "priceUpsideDown" 1fr
             "titleUpsideDown" 2fr
-            "fieldNumber" 1fr
+            "fieldNumber" 1fr / 1fr
         `,
         border: 'solid medium black',
         margin: '0',
-        padding: '0'
+        padding: '0',
     },
 
     titleBarBottomLeft: {

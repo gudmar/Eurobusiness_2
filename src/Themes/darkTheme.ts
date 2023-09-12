@@ -13,5 +13,11 @@ export const DARK_THEME: NamedTheme = {
         boardFieldBackgroundColor: '#afafaf',
         boardFieldFontWeight: 'bold',
         boardFieldFont: 'arial',
+
+        cityNameFontSize: '1rem',
+        cityNameFontWeight: 'bold',
+
+        cityPriceFontWeight: 'bold',
+        fieldNrFontSize: '0.8rem'
     }
 }

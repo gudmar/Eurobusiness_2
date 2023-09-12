@@ -23,12 +23,12 @@ const CityBoardField = (fieldDescriptor: iNamedCityField & {direction: tBoardSid
     const classes = useStyles(theme as any);
     const containerClass = classes[`cityFieldWrapper${fieldDescriptor.direction}`]
     const colorBarClass = classes[`colorBar${fieldDescriptor.direction}`]
-    const titleClass = classes[`title${fieldDescriptor.direction}`]
-    const priceClass = classes[`price${fieldDescriptor.direction}`]
+    const titleClass = classes[`title${fieldDescriptor.direction}`] + ' ' + classes.fontCityName;
+    const priceClass = classes[`price${fieldDescriptor.direction}`] + ' ' + classes.fontCityPrice;
     const emptyClass = classes[`empty${fieldDescriptor.direction}`]
-    const priceUpsideDownClass = classes[`priceUpsideDown${fieldDescriptor.direction}`]
-    const titleUpsideDownClass = classes[`titleUpsideDown${fieldDescriptor.direction}`]
-    const titleFieldNumberClass = classes[`fieldNumber${fieldDescriptor.direction}`]
+    const priceUpsideDownClass = classes[`priceUpsideDown${fieldDescriptor.direction}`] + ' ' + classes.fontCityPrice;
+    const titleUpsideDownClass = classes[`titleUpsideDown${fieldDescriptor.direction}`] + ' ' + classes.fontCityName;
+    const titleFieldNumberClass = classes[`fieldNumber${fieldDescriptor.direction}`] + ' ' + classes.fontCityNumber;
     return (
         <div className={`${containerClass} ${classes.singleWidth} ${classes.fieldWrapper}`}>
             <div className={colorBarClass} style={{backgroundColor: color}}></div>
