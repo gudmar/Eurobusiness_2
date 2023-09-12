@@ -14,10 +14,10 @@ const getDescendigRange = (start: number, count: number) => {
 
 const getFieldIndexesForSide = (side: tBoardSideDirections) => {
     switch(side) {
-        case BOTTOM: return getDescendigRange(10, 10);
-        case LEFT: return getDescendigRange(20, 10);
-        case TOP: return getDescendigRange(30, 10).reverse();
-        case RIGHT: return getDescendigRange(40, 10)
+        case BOTTOM: return getDescendigRange(10, 9);
+        case LEFT: return getDescendigRange(20, 9);
+        case TOP: return getDescendigRange(30, 9).reverse();
+        case RIGHT: return getDescendigRange(40, 9)
         default: throw new Error('Unknown direction')
     }
 }

@@ -6,7 +6,7 @@ const BOARD_HEIGHT = px2rem(BOARD_HEIGHT_PX);
 const BORDER_COLOR = 'black';
 const BORDER_STYLE = 'solid';
 const BORDER_THICKNTSS = px2rem(2);
-const BOARD_WIDTH_HEIGHT_FACTOR = 1.3;
+const BOARD_WIDTH_HEIGHT_FACTOR = 1;
 const BOARD_WIDTH = `${px2rem(BOARD_WIDTH_HEIGHT_FACTOR * BOARD_HEIGHT_PX)}`;
 const BORDER = `${BORDER_STYLE} ${BORDER_THICKNTSS} ${BORDER_COLOR}`;
 
@@ -18,8 +18,8 @@ export const useStyles = createUseStyles({
         height: BOARD_HEIGHT,
         display: 'grid',
         gridTemplate: `
-            "f-top f-top f-top f-top f-top f-top f-top f-top f-top f-top f-top f-right f-right" 1fr
-            "f-top f-top f-top f-top f-top f-top f-top f-top f-top f-top f-top f-right f-right" 1fr
+            "f-topLeft f-topLeft f-top f-top f-top f-top f-top f-top f-top f-top f-top f-topRight f-topRight" 1fr
+            "f-topLeft f-topLeft f-top f-top f-top f-top f-top f-top f-top f-top f-top f-topRight f-topRight" 1fr
             "f-left f-left b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid f-right f-right" 1fr
             "f-left f-left b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid f-right f-right" 1fr
             "f-left f-left b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid f-right f-right" 1fr
@@ -29,39 +29,19 @@ export const useStyles = createUseStyles({
             "f-left f-left b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid f-right f-right" 1fr
             "f-left f-left b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid f-right f-right" 1fr
             "f-left f-left b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid f-right f-right" 1fr
-            "f-left f-left f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot   f-bot  " 1fr
-            "f-left f-left f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot   f-bot  " 1fr / 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr ;
+            "f-bottomLeft f-bottomLeft f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bottomRight  f-bottomRight  " 1fr
+            "f-bottomLeft f-bottomLeft f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bottomRight  f-bottomRight  " 1fr / 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr ;
         `,
-        // gridTemplate: `
-        //     "f-top  f-top  f-top f-top f-top f-top f-top f-top f-top f-top f-top f-top   f-right f-right   f-right" 1fr
-        //     "f-top  f-top  f-top f-top f-top f-top f-top f-top f-top f-top f-top f-top   f-right f-right   f-right" 1fr
-        //     "f-top  f-top  f-top f-top f-top f-top f-top f-top f-top f-top f-top f-top   f-right f-right   f-right" 1fr
-        //     "f-left f-left f-left b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid f-right f-right f-right" 1fr
-        //     "f-left f-left f-left b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid f-right f-right f-right" 1fr
-        //     "f-left f-left f-left b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid f-right f-right f-right" 1fr
-        //     "f-left f-left f-left b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid f-right f-right f-right" 1fr
-        //     "f-left f-left f-left b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid f-right f-right f-right" 1fr
-        //     "f-left f-left f-left b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid f-right f-right f-right" 1fr
-        //     "f-left f-left f-left b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid f-right f-right f-right" 1fr
-        //     "f-left f-left f-left b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid f-right f-right f-right" 1fr
-        //     "f-left f-left f-left b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid b-mid f-right f-right f-right" 1fr
-        //     "f-left f-left f-left f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot   f-bot   f-bot  " 1fr
-        //     "f-left f-left f-left f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot   f-bot   f-bot  " 1fr
-        //     "f-left f-left f-left f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot   f-bot   f-bot  " 1fr / 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-        // `,
-        
     },
+    topLeft: { gridArea: 'f-topLeft' },
+    topRight: { gridArea: 'f-topRight' },
+    bottomLeft: { gridArea: 'f-bottomLeft' },
+    bottomRight: { gridArea: 'f-bottomRight' },        
+    
     middleBoard: {
         backgroundColor: (theme) => theme.boardMiddleSectionColor,
         gridArea: 'b-mid',
         border: BORDER,
     }
-    // screen: theme => ({
-    //     backgroundColor:theme.canvasColor,
-    //     color: theme.penColor,
-    //     fontFamily: theme.fontStyles,
-    //     width: '100vw',
-    //     height: '100vh'
-    // })
 })
 

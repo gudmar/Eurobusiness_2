@@ -85,7 +85,8 @@ export const useStyles = createUseStyles({
         `,
         borderRight: 'solid medium black',
         margin: '0',
-        padding: '0'
+        padding: '0',
+        height: '100%'
     },
     titleBarTopLeft: {
         gridArea: 'titleBarTopLeft',
@@ -111,19 +112,20 @@ export const useStyles = createUseStyles({
         gridTemplate: `
             ". . . . . ." 1fr
             ". titleBarBottomRight . . . ." 1fr
-            ". . . . . ." 1fr
             " . . . . . ." 1fr
             " . . . . . ." 1fr
             ". . . . titleBarBottomRightUpside ." 1fr
-            
             ". iconBottomRight iconBottomRight iconBottomRight iconBottomRight fieldNumberBottomRight" 1fr/1fr 1fr 1fr 1fr 1fr 1fr
         `,
         margin: '0',
-        padding: '0'
+        padding: '0',
+        height: '100%',
+        borderTop: 'medium solid black',
+        // borderBottom: 'medium solid black'
     },
     titleBarBottomRight: {
         gridArea: 'titleBarBottomRight',
-        transform: 'rotateZ(-45deg)'
+        transform: 'rotateZ(-45deg)',
     },
     titleBarBottomRightUpside: {
         gridArea: 'titleBarBottomRightUpside',
@@ -462,16 +464,17 @@ export const useStyles = createUseStyles({
         display: "grid",
         position: 'relative',
         gridTemplate: `
-            " . . . . ."
-            ". . . titleBarBottomLeft ."
-            ". . iconBottomLeft . ."
-            ". titleBarBottomLeftUpside . . ."
-            " fieldNumberBottomLeft . . . ."
+            " . . . . ." 1fr
+            ". . . titleBarBottomLeft ." 1fr
+            ". . iconBottomLeft . ." 1fr
+            ". titleBarBottomLeftUpside . . ." 1fr
+            " fieldNumberBottomLeft . . . ." 1fr / 1fr 1fr 1fr 1fr 1fr
         `,
         margin: '0',
         padding: '0',
         borderTop: 'black solid medium',
         borderRight: 'black solid medium',
+        height: '100%'
     },
 
 });
