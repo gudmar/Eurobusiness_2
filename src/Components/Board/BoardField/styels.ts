@@ -24,14 +24,16 @@ export const useStyles = createUseStyles({
     price: { gridArea: 'price' },
     titleUpsideDown: { gridArea: 'titleUpsideDown', transform: 'rotate(-180deg' },
     priceUpsideDown: { gridArea: 'priceUpsideDown', transform: 'rotate(-180deg' },
-    colorBar: {
+    colorBar: (theme) => ({
         backgroundColor: 'gray',
-        borderBottom: 'solid black medium',
+        borderBottom: theme.boardBorderStyle,
         gridArea: 'colorBar',
-    },
-    fieldNumber: {
-        gridArea: 'fieldNumber'
-    },
+    }),
+    fieldNumber: (theme) => ({
+        gridArea: 'fieldNumber',
+        fontSize: theme.fieldNrFontSize,
+        fontWeight: theme.filedNrFontWeight,
+    }),
     fontCityPrice: (theme: CustomTheme) => ({
         fontSize: theme.boardFieldFont,
         fontWeight: theme.cityPriceFontWeight,
@@ -47,12 +49,12 @@ export const useStyles = createUseStyles({
     }),
     fontCityNumber: (theme: CustomTheme) => ({
         fontSize: theme.fieldNrFontSize,
-        fontWeight: 'normal',
+        fontWeight: theme.filedNrFontWeight,
         font: theme.boardFieldFont,
         fontCoolor: theme.penColor,
         alignText: 'center',
     }),
-    enterpriseFieldWrapper: {
+    enterpriseFieldWrapper: (theme) => ({
         display: "grid",
         position: 'relative',
         gridTemplate: `
@@ -63,31 +65,35 @@ export const useStyles = createUseStyles({
             "titleUpsideDown" 2fr
             "fieldNumber" 1fr / 1fr
         `,
-        border: 'solid medium black',
+        border: theme.boardBorderStyle,
         margin: '0',
         padding: '0',
-    },
+    }),
 
-    titleBarBottomLeft: {
+    titleBarBottomLeft: (theme) => ({
         gridArea: 'titleBarBottomLeft',
-        transform: 'rotateZ(45deg)'
-    },
-    titleBarBottomLeftUpside: {
+        transform: 'rotateZ(45deg)',
+        fontSize: theme.titleEdgeBoardFieldFontSize,
+    }),
+    titleBarBottomLeftUpside: (theme) => ({
         gridArea: 'titleBarBottomLeftUpside',
-        transform: 'rotateZ(225deg)'
-    },
-    fieldNumberBottomLeft: {
+        transform: 'rotateZ(225deg)',
+        fontSize: theme.titleEdgeBoardFieldFontSize,
+    }),
+    fieldNumberBottomLeft: (theme) => ({
         gridArea: 'fieldNumberBottomLeft',
         transform: 'rotateZ(45deg)',
         textAlign: 'center',
         transformOrigin: 'center',
-    },
+        fontSize: theme.fieldNrFontSize,
+        fontWeight: theme.filedNrFontWeight,
+    }),
     iconBottomLeft: {
         gridArea: 'iconBottomLeft',
         transform: 'rotateZ(45deg)'
     },
 
-    leftTopField: {
+    leftTopField: (theme) => ({
         display: "grid",
         position: 'relative',
         gridTemplate: `
@@ -97,30 +103,34 @@ export const useStyles = createUseStyles({
             ". . . titleBarTopLeftUpside ." 1fr
             " . . . . ." 1fr/1fr 1fr 1fr 1fr 1fr
         `,
-        borderRight: 'solid medium black',
+        borderRight: theme.boardBorderStyle,
         margin: '0',
         padding: '0',
         height: '100%'
-    },
-    titleBarTopLeft: {
+    }),
+    titleBarTopLeft: (theme) => ({
         gridArea: 'titleBarTopLeft',
-        transform: 'rotateZ(135deg)'
-    },
+        transform: 'rotateZ(135deg)',
+        fontSize: theme.titleFontSize,
+        fontWeight: theme.titleFontWeight,
+    }),
     titleBarTopLeftUpside: {
         gridArea: 'titleBarTopLeftUpside',
         transform: 'rotateZ(315deg)'
     },
-    fieldNumberTopLeft: {
+    fieldNumberTopLeft: (theme) => ({
         gridArea: 'fieldNumberTopLeft',
         transform: 'rotateZ(135deg)',
         textAlign: 'center',
         transformOrigin: 'center',
-    },
+        fontSize: theme.fieldNrFontSize,
+        fontWeight: theme.filedNrFontWeight,
+    }),
     iconTopLeft: {
         gridArea: 'iconTopLeft',
         transform: 'rotateZ(135deg)'
     },
-    rightBottomField: {
+    rightBottomField: (theme) => ({
         display: "grid",
         position: 'relative',
         gridTemplate: `
@@ -134,23 +144,28 @@ export const useStyles = createUseStyles({
         margin: '0',
         padding: '0',
         height: '100%',
-        borderTop: 'medium solid black',
-        // borderBottom: 'medium solid black'
-    },
-    titleBarBottomRight: {
+        borderTop: theme.boardBorderStyle,
+    }),
+    titleBarBottomRight: (theme) => ({
         gridArea: 'titleBarBottomRight',
         transform: 'rotateZ(-45deg)',
-    },
-    titleBarBottomRightUpside: {
+        fontSize: theme.titleFontSize,
+        fontWeight: theme.titleFontWeight,
+    }),
+    titleBarBottomRightUpside: (theme) => ({
         gridArea: 'titleBarBottomRightUpside',
-        transform: 'rotateZ(135deg)'
-    },
-    fieldNumberBottomRight: {
+        transform: 'rotateZ(135deg)',
+        fontSize: theme.titleFontSize,
+        fontWeight: theme.titleFontWeight,
+    }),
+    fieldNumberBottomRight: (theme) => ({
         gridArea: 'fieldNumberBottomRight',
         transform: 'rotateZ(-45deg)',
         textAlign: 'center',
         transformOrigin: 'center',
-    },
+        fontSize: theme.titleFontSize,
+        fontWeight: theme.titleFontWeight,
+    }),
     iconBottomRight: {
         gridArea: 'iconBottomRight',
         marginLeft: '0',
@@ -178,20 +193,26 @@ export const useStyles = createUseStyles({
         padding: '0'
     },
 
-    titleBarTopRight: {
+    titleBarTopRight: (theme) => ({
         gridArea: 'titleBarTopRight',
-        transform: 'rotateZ(-315deg)'
-    },
-    titleBarTopRightUpside: {
+        transform: 'rotateZ(-315deg)',
+        fontSize: theme.titleFontSize,
+        fontWeight: theme.titleFontWeight,
+    }),
+    titleBarTopRightUpside: (theme) => ({
         gridArea: 'titleBarTopRightUpside',
-        transform: 'rotateZ(-135deg)'
-    },
-    fieldNumberTopRight: {
+        transform: 'rotateZ(-135deg)',
+        fontSize: theme.titleFontSize,
+        fontWeight: theme.titleFontWeight,
+    }),
+    fieldNumberTopRight: (theme) => ({
         gridArea: 'fieldNumberTopRight',
         transform: 'rotateZ(-135deg)',
         textAlign: 'center',
         transformOrigin: 'center',
-    },
+        fontSize: theme.titleFontSize,
+        fontWeight: theme.titleFontWeight,
+    }),
     iconTopRight: {
         gridArea: 'iconTopRight',
         marginLeft: '0',
@@ -233,73 +254,95 @@ export const useStyles = createUseStyles({
     colorBarBottom: {
         gridArea: 'colorBar',
     },
-    titleRight: {
+    titleRight: (theme) => ({
         writingMode: 'vertical-lr',
         textAlign: 'center',
         gridArea: 'titleBar',
-        transform: 'rotate(180deg)'
-    },
-    titleLeft: {
+        transform: 'rotate(180deg)',
+        fontSize: theme.titleFontSize,
+        fontWeight: theme.titleFontWeight,
+    }),
+    titleLeft: (theme) => ({
         gridArea: 'titleBar',
         writingMode: 'vertical-rl',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontSize: theme.titleFontSize,
+        fontWeight: theme.titleFontWeight,
+    }),
 
-    },
-    titleBottom: {
-        gridArea: 'titleBar',
-        textAlign: 'center'
-    },
-    titleTop: {
+    titleBottom: (theme) => ({
         gridArea: 'titleBar',
         textAlign: 'center',
-        transform: 'rotate(180deg)'
-    },
-    priceRight: {
+        fontSize: theme.titleFontSize,
+        fontWeight: theme.titleFontWeight,
+    }),
+    titleTop: (theme) => ({
+        gridArea: 'titleBar',
+        textAlign: 'center',
+        transform: 'rotate(180deg)',
+        fontSize: theme.titleFontSize,
+        fontWeight: theme.titleFontWeight,
+    }),
+    priceRight: (theme) => ({
         writingMode: 'vertical-lr',
         textAlign: 'center',
         gridArea: 'price',
-        transform: 'rotate(180deg)'
-    },
-    priceLeft: {
+        transform: 'rotate(180deg)',
+        fontSize: theme.priceFontSize,
+        fontWeight: theme.priceFontWeight,
+    }),
+    priceLeft: (theme) => ({
         gridArea: 'price',
         writingMode: 'vertical-rl',
         textAlign: 'center',
-    },
-    priceTop: {
+        fontSize: theme.priceFontSize,
+        fontWeight: theme.priceFontWeight,
+    }),
+    priceTop: (theme) => ({
         gridArea: 'price',
         textAlign: 'center',
-        transform: 'rotate(180deg)'
-    },
-    priceBottom: {
+        transform: 'rotate(180deg)',
+        fontSize: theme.priceFontSize,
+        fontWeight: theme.priceFontWeight,
+    }),
+    priceBottom: (theme) => ({
         gridArea: 'price',
         textAlign: 'center',
-    },
-    priceUpsideDownRight: {
+        fontSize: theme.priceFontSize,
+        fontWeight: theme.priceFontWeight,
+    }),
+    priceUpsideDownRight: (theme) => ({
         greidArea: 'priceUpsideDown',
         writingMode: 'vertical-lr',
-        textAlign: 'center'
-    },
-    priceUpsideDownLeft: {
+        textAlign: 'center',
+        fontSize: theme.priceFontSize,
+        fontWeight: theme.priceFontWeight,
+    }),
+    priceUpsideDownLeft: (theme) => ({
         gridArea: 'priceUpsideDown',
         writingMode: 'vertical-rl',
         textAlign: 'center',
-        transform: 'rotate(180deg)'
-
-    },
-    priceUpsideDownTop: {
+        transform: 'rotate(180deg)',
+        fontSize: theme.priceFontSize,
+        fontWeight: theme.priceFontWeight,
+    }),
+    priceUpsideDownTop: (theme) => ({
         gridArea: 'priceUpsideDown',
         textAlign: 'center',
-    },
-    priceUpsideDownBottom: {
+        fontSize: theme.priceFontSize,
+        fontWeight: theme.priceFontWeight,
+    }),
+    priceUpsideDownBottom: (theme) => ({
         gridArea: 'priceUpsideDown',
         textAlign: 'center',
-        transform: 'rotate(180deg)'
-    },
+        transform: 'rotate(180deg)',
+        fontSize: theme.priceFontSize,
+        fontWeight: theme.priceFontWeight,
+    }),
     emptyLeft: {
         gridArea: 'empty',
         writingMode: 'vertical-rl',
-        textAlign: 'center'
-
+        textAlign: 'center',
     },
     emptyRight: {
         gridArea: 'empty',
@@ -312,57 +355,73 @@ export const useStyles = createUseStyles({
     emptyBottom: {
         gridArea: 'empty',
     },
-    titleUpsideDownLeft: {
+    titleUpsideDownLeft: (theme) => ({
+        fontSize: theme.titleFontSize,
+        fontWeight: theme.titleFontWeight,
         gridArea: 'titleUpsideDown',
         writingMode: 'vertical-rl',
         textAlign: 'center',
         transform: 'rotate(180deg)'
-    },
-    titleUpsideDownRight: {
+    }),
+    titleUpsideDownRight: (theme) => ({
         gridArea: 'titleUpsideDown',
         writingMode: 'vertical-lr',
-        textAlign: 'center'
-    },
-    titleUpsideDownTop: {
+        textAlign: 'center',
+        fontSize: theme.titleFontSize,
+        fontWeight: theme.titleFontWeight,
+    }),
+    titleUpsideDownTop: (theme) => ({
         gridArea: 'titleUpsideDown',
-        textAlign: 'center'
-    },
-    titleUpsideDownBottom: {
+        textAlign: 'center',
+        fontSize: theme.titleFontSize,
+        fontWeight: theme.titleFontWeight,
+    }),
+    titleUpsideDownBottom: (theme) => ({
         gridArea: 'titleUpsideDown',
-        textAlign: 'center'
-    },
-    fieldNumberLeft: {
+        textAlign: 'center',
+        fontSize: theme.titleFontSize,
+        fontWeight: theme.titleFontWeight,
+    }),
+    fieldNumberLeft: (theme) => ({
         gridArea: 'fieldNumber',
         writingMode: 'vertical-rl',
-        textAlign: 'center'
-    },
-    fieldNumberRight: {
+        textAlign: 'center',
+        fontSize: theme.fieldNrFontSize,
+        fontWeight: theme.filedNrFontWeight,
+    }),
+    fieldNumberRight: (theme) => ({
         gridArea: 'fieldNumber',
         writingMode: 'vertical-lr',
-        textAlign: 'center'
-    },
-    fieldNumberTop: {
+        textAlign: 'center',
+        fontSize: theme.fieldNrFontSize,
+        fontWeight: theme.filedNrFontWeight,
+    }),
+    fieldNumberTop: (theme) => ({
         gridArea: 'fieldNumber',
-        textAlign: 'center'
-    },
-    fieldNumberBottom: {
+        textAlign: 'center',
+        fontSize: theme.fieldNrFontSize,
+        fontWeight: theme.filedNrFontWeight,
+    }),
+    fieldNumberBottom: (theme) => ({
         gridArea: 'fieldNumber',
-        textAlign: 'center'
-    },
-    cityFieldWrapperRight: {
+        textAlign: 'center',
+        fontSize: theme.fieldNrFontSize,
+        fontWeight: theme.filedNrFontWeight,
+    }),
+    cityFieldWrapperRight: (theme) => ({
         gridTemplateColumns: '2fr 1fr 1fr 3fr 1fr 1fr 1fr',
         gridTemplate: `
             "colorBar titleBar price empty priceUpsideDown titleUpsideDown fieldNumber" 1fr
         `,
-        borderTop: 'solid medium black',
-    },
-    cityFieldWrapperLeft: {
-        borderTop: 'solid medium black',
+        borderTop: theme.boardBorderStyle,
+    }),
+    cityFieldWrapperLeft: (theme) => ({
+        borderTop: theme.boardBorderStyle,
         gridTemplateColumns: '1fr 1fr 1fr 3fr 1fr 1fr 2fr',
         gridTemplate: `
             "fieldNumber titleUpsideDown priceUpsideDown empty price titleBar colorBar" 1fr
         `,
-    },
+    }),
     fieldWrapper: (theme) => ({
         display: "grid",
         margin: '0',
@@ -371,9 +430,9 @@ export const useStyles = createUseStyles({
         font: theme.boardFieldFont,
         fontWeight: theme.boardFieldFontWeight
     }),
-    cityFieldWrapperBottom: {
+    cityFieldWrapperBottom: (theme) => ({
         textAlign: 'center',
-        borderRight: 'solid medium black',
+        borderRight: theme.boardBorderStyle,
         gridTemplate: `
             "colorBar" 2fr
             "titleBar" 1fr
@@ -383,9 +442,9 @@ export const useStyles = createUseStyles({
             "titleUpsideDown" 1fr
             "fieldNumber" 1fr
         `,
-    },
-    cityFieldWrapperTop: {
-        borderRight: 'solid medium black',
+    }),
+    cityFieldWrapperTop: (theme) => ({
+        borderRight: theme.boardBorderStyle,
         textAlign: 'center',
         // display: "grid",
         gridTemplate: `
@@ -397,9 +456,9 @@ export const useStyles = createUseStyles({
             "titleBar" 1fr
             "colorBar" 2fr
         `,
-    },
-    enterpriseFieldWrapperTop: {
-        borderRight: 'solid medium black',
+    }),
+    enterpriseFieldWrapperTop: (theme) => ({
+        borderRight: theme.boardBorderStyle,
         textAlign: 'center',
         // display: "grid",
         gridTemplate: `
@@ -410,10 +469,10 @@ export const useStyles = createUseStyles({
             "price" 1fr
             "titleBar" 1fr
         `,
-    },
-    enterpriseFieldWrapperBottom: {
+    }),
+    enterpriseFieldWrapperBottom: (theme) => ({
         textAlign: 'center',
-        borderRight: 'solid medium black',
+        borderRight: theme.boardBorderStyle,
         gridTemplate: `
             "titleBar" 1fr
             "price" 1fr
@@ -422,59 +481,57 @@ export const useStyles = createUseStyles({
             "titleUpsideDown" 1fr
             "fieldNumber" 1fr
         `,
-    },
-    enterpriseFieldWrapperRight: {
+    }),
+    enterpriseFieldWrapperRight: (theme) => ({
         gridTemplateColumns: '1fr 1fr 3fr 1fr 1fr 1fr',
         gridTemplate: `
             "titleBar price icon priceUpsideDown titleUpsideDown fieldNumber" 1fr
         `,
-        borderTop: 'solid medium black',
-    },
-    enterpriseFieldWrapperLeft: {
-        borderTop: 'solid medium black',
+        borderTop: theme.boardBorderStyle,
+    }),
+    enterpriseFieldWrapperLeft: (theme) => ({
+        borderTop: theme.boardBorderStyle,
         gridTemplateColumns: '1fr 1fr 1fr 3fr 1fr 1fr',
         gridTemplate: `
             "fieldNumber titleUpsideDown priceUpsideDown icon price titleBar" 1fr
         `,
-    },
+    }),
     [RIGHT]:{ transform: 'rotate(-90deg)' },
     [LEFT]:{ transform: 'rotate(90deg)' },
     [TOP]:{ transform: 'rotate(180deg)' },
     [BOTTOM]:{},
 
-    questionMarkWrapperBottom: {
+    questionMarkWrapperBottom: (theme) => ({
         gridTemplate: `
             "empty" 2fr
             "icon" 5fr
             "fieldNumber" 1fr
         `,
-        borderRight: 'solid medium black',
-        // border: 'solid medium black',
-    },
-    questionMarkWrapperTop: {
+        borderRight: theme.boardBorderStyle,
+    }),
+    questionMarkWrapperTop: (theme) => ({
         gridTemplate: `
             "fieldNumber" 1fr            
             "icon" 5fr
             "empty" 2fr
         `,
-        borderRight: 'solid medium black',
-        // border: 'solid medium black',
-    },
-    questionMarkWrapperLeft: {
-        borderTop: 'solid medium black',
+        borderRight: theme.boardBorderStyle,
+    }),
+    questionMarkWrapperLeft: (theme) => ({
+        borderTop: theme.boardBorderStyle,
         gridTemplateColumns: '1fr 6fr 2fr',
         gridTemplate: `
             "fieldNumber icon empty" 1fr
         `,
-    },
-    questionMarkWrapperRight: {
-        borderTop: 'solid medium black',
-        gridTemplateColumns: '2fr 6fr 1fr',
+    }),
+    questionMarkWrapperRight: (theme) => ({
+        borderTop: theme.boardBorderStyle,
+        gridTemplateColumns: '1fr 6fr 1fr',
         gridTemplate: `
             "empty icon fieldNumber" 1fr
         `,
-    },
-    leftBottomField: {
+    }),
+    leftBottomField: (theme) => ({
         display: "grid",
         position: 'relative',
         gridTemplate: `
@@ -486,9 +543,9 @@ export const useStyles = createUseStyles({
         `,
         margin: '0',
         padding: '0',
-        borderTop: 'black solid medium',
-        borderRight: 'black solid medium',
+        borderTop: theme.boardBorderStyle,
+        borderRight: theme.boardBorderStyle,
         height: '100%'
-    },
+    }),
 
 });
