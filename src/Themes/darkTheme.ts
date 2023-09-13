@@ -1,5 +1,7 @@
 import { NamedTheme } from "../Types/themes";
 
+const BORDER_COLOR = 'lightGray'
+
 export const DARK_THEME: NamedTheme = {
     name: 'Black hole',
     theme: {
@@ -10,14 +12,25 @@ export const DARK_THEME: NamedTheme = {
         sans-serif`,    
 
         boardMiddleSectionColor: 'orange',
-        boardFieldBackgroundColor: '#afafaf',
+        boardFieldBackgroundColor: '#676767',
         boardFieldFontWeight: 'bold',
         boardFieldFont: 'arial',
+        boardBorderColor: BORDER_COLOR,
+        boardBorderStyle: `${BORDER_COLOR} solid medium`,
+
 
         cityNameFontSize: '1rem',
         cityNameFontWeight: 'bold',
 
         cityPriceFontWeight: 'bold',
-        fieldNrFontSize: '0.8rem'
+        priceFontWeight: 'bold',
+        priceFontSize: 'bold',
+
+        filedNrFontWeight: 'normal',
+        fieldNrFontSize: '0.8rem',
+        titleEdgeBoardFieldFontSize: '1rem',
+        titleFontSize: '0.82rem',
+        titleFontWeight: 'bold',
+
     }
 }

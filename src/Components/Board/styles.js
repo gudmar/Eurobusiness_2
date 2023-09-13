@@ -11,9 +11,9 @@ const BOARD_WIDTH = `${px2rem(BOARD_WIDTH_HEIGHT_FACTOR * BOARD_HEIGHT_PX)}`;
 const BORDER = `${BORDER_STYLE} ${BORDER_THICKNTSS} ${BORDER_COLOR}`;
 
 export const useStyles = createUseStyles({
-    board: {
+    board: (theme) => ({
         position: 'relative',
-        border: BORDER,
+        border: theme.boardBorderStyle,
         width: BOARD_WIDTH,
         height: BOARD_HEIGHT,
         display: 'grid',
@@ -32,16 +32,16 @@ export const useStyles = createUseStyles({
             "f-bottomLeft f-bottomLeft f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bottomRight  f-bottomRight  " 1fr
             "f-bottomLeft f-bottomLeft f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bot f-bottomRight  f-bottomRight  " 1fr / 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr ;
         `,
-    },
+    }),
     topLeft: { gridArea: 'f-topLeft' },
     topRight: { gridArea: 'f-topRight' },
     bottomLeft: { gridArea: 'f-bottomLeft' },
     bottomRight: { gridArea: 'f-bottomRight' },        
     
-    middleBoard: {
-        backgroundColor: (theme) => theme.boardMiddleSectionColor,
+    middleBoard: (theme) => ({
+        backgroundColor: theme.boardMiddleSectionColor,
         gridArea: 'b-mid',
-        border: BORDER,
-    }
+        border: theme.boardBorderStyle,
+    })
 })
 
