@@ -234,9 +234,11 @@ export const useStyles = createUseStyles({
         justifyContent: 'center',
         alignContent: 'center',
         '& svg': {
-            height: '100%',
-            marginTop: 0,
-            marginBottom: 0,
+            // height: '100%',
+            marginTop: '0',
+            marginBottom: '0',
+            marginLeft: '0',
+            marginRight: '0',
             // width: '100%'
         }
     },
@@ -496,7 +498,9 @@ export const useStyles = createUseStyles({
             "fieldNumber titleUpsideDown priceUpsideDown icon price titleBar" 1fr
         `,
     }),
-    [RIGHT]:{ transform: 'rotate(-90deg)' },
+    [RIGHT]:{ 
+        transform: 'rotate(-90deg)',
+    },
     [LEFT]:{ transform: 'rotate(90deg)' },
     [TOP]:{ transform: 'rotate(180deg)' },
     [BOTTOM]:{},
@@ -520,6 +524,8 @@ export const useStyles = createUseStyles({
     questionMarkWrapperLeft: (theme) => ({
         borderTop: theme.boardBorderStyle,
         gridTemplateColumns: '1fr 6fr 2fr',
+        alignContent: 'center',
+        overflow: 'hidden',
         gridTemplate: `
             "fieldNumber icon empty" 1fr
         `,
@@ -527,6 +533,8 @@ export const useStyles = createUseStyles({
     questionMarkWrapperRight: (theme) => ({
         borderTop: theme.boardBorderStyle,
         gridTemplateColumns: '1fr 6fr 1fr',
+        alignContent: 'center',
+        overflow: 'hidden',
         gridTemplate: `
             "empty icon fieldNumber" 1fr
         `,
