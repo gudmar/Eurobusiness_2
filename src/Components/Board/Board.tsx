@@ -27,7 +27,7 @@ const getEdgeData = (direction: tBoardSideDirections) => {
     const boardCaretaker: any = getBoardCaretaker();
     return ({
             name,
-            type: boardCaretaker.getFieldByName(name).type
+            type: boardCaretaker.getFieldByName(name)?.type
         })
 }
 const getClassName = (direction: tBoardSideDirections) => {

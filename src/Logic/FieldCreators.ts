@@ -220,10 +220,10 @@ export class  OtherFieldTypesField extends SubscribtionsHandler<tOtherTypes, iNa
     get icon() { return this._icon}
     get Icon() { return this._icon}
     get visit() {return this._visit}
-    get name() {return this._name}
+    get name() {return  this._name}
 }
 
-export class ChanceField {
+export class ChanceField extends SubscribtionsHandler<tChanceType, iNamedChance> {
     private _type!: tChanceType;
     private _info!: string;
     private _icon!: tIcon;
@@ -233,7 +233,8 @@ export class ChanceField {
     constructor({
         type, info, Icon, name
     }: iNamedChance, index: number) {
-        if (ChanceField.instances[`${name} ${index}`] !== undefined) {
+        super();
+        if (ChanceField.instances[name] !== undefined) {
             return ChanceField.instances[name];
         }
         this._index = index;
@@ -250,4 +251,12 @@ export class ChanceField {
     get icon() { return this._icon}
     get Icon() { return this._icon}
     get index() { return this._index}
+    get state() {
+        return ({
+            name: this._name,
+            index: this._index,
+            Icon: this._icon,
+            type: this._type,
+        })
+    }
 }

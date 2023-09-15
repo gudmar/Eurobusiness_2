@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { iNamedCityField, iNamedNonCityEstates, iNamedOtherField, iNonCityEstates, iOtherFieldTypes, tChanceType, tCity, tNonCityEstates, tOtherTypes } from "../Data/types";
+import { iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, iNonCityEstates, iOtherFieldTypes, tChanceType, tCity, tNonCityEstates, tOtherTypes } from "../Data/types";
 import { getBoardCaretaker } from "../Functions/getBoardCaretaker";
 
 type tFieldName = tCity | tNonCityEstates | tOtherTypes | tChanceType
@@ -38,7 +38,10 @@ export const useOtherField = (name: tOtherTypes) => {
     const state = useAbstractField<iNamedOtherField>(name);
     return state
 }
-// export const useChanceField = (name: tChanceType) => useAbstractField<iNamedChance>(name)
+export const useChanceField = (name: tChanceType) => {
+    const state = useAbstractField<iNamedChance>(name)
+    return state;
+}
 
 
 // export const useCityField = (name: tFieldName) => {

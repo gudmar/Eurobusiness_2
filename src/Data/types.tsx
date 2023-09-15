@@ -1,5 +1,5 @@
 import { FC } from "react"
-import { AMSTERDAM, ATENY, BARCELONA, BONN, BRUKSELA, CHANCE_BLUE, CHANCE_RED, EAST_RAILWAYS, FRANKFURT, FREE_PARK, GLASGOW, GOTEBORG, GO_TO_JAIL, GUARDED_PARKING, INSBRUK, JAIL, KOLONIA, LIVERPOOL, LONDON, MADRIT, MALMO, MEDIOLAN, NEAPOL, NORTH_RAILWAYS, POWER_STATION, ROME, ROTTERDAM, SALONIKI, SEWILLA, SOUTH_RAILWAY, START, SZTOKHOLM, TAX, WATER_PLANT, WEST_RAILWAYS, WIEDEN } from "./const"
+import { AMSTERDAM, ATENY, BARCELONA, BONN, BRUKSELA, CHANCE_BLUE, CHANCE_BLUE_BOTTOM, CHANCE_BLUE_LEFT, CHANCE_BLUE_RIGHT, CHANCE_RED, CHANCE_RED_BOTTOM, CHANCE_RED_RIGHT, CHANCE_RED_TOP, EAST_RAILWAYS, FRANKFURT, FREE_PARK, GLASGOW, GOTEBORG, GO_TO_JAIL, GUARDED_PARKING, INSBRUK, JAIL, KOLONIA, LIVERPOOL, LONDON, MADRIT, MALMO, MEDIOLAN, NEAPOL, NORTH_RAILWAYS, POWER_STATION, ROME, ROTTERDAM, SALONIKI, SEWILLA, SOUTH_RAILWAY, START, SZTOKHOLM, TAX, WATER_PLANT, WEST_RAILWAYS, WIEDEN } from "./const"
 
 export type tCity = 'Amsterdam' | 'Ateny' |  'Barcelona' | 'Bonn' | 'Bruksela' | 'Frankfurt' | 'Glasgow' | 'Goteborg' | 'Insbruk' | 'Kolonia' | 'Liverpool' | 'London' | 'Madrit' | 'Malmo' | 'Mediolan' | 'Neapol' | 'Rome' | 'Rotterdam' | 'Saloniki' | 'Sewilla' | 'Sztokholm' | 'Wieden'
 
@@ -52,7 +52,7 @@ export interface iNamedCityField extends iCityField {
 
 export type tIcon = FC;  // PRECISE this type,
 
-export type tChanceType = 'Chance blue' | 'Chance red';
+export type tChanceType = 'Chance blue_bottom' | 'Chance blue_left' | 'Chance blue_right' | 'Chance_red_bottom' | 'Chance red_top' | 'Chance red_left' | 'Chance red' | 'Chance blue';
 
 export interface iChance {
     type: tChanceType,
@@ -103,8 +103,12 @@ export type tNamedBoardField = iNamedOtherField | iNamedCityField | iNamedChance
 export type tBoard = {
     [START]: iOtherFieldTypes,
     [ATENY]: iCityField,
-    [CHANCE_BLUE]: iChance,
-    [CHANCE_RED]: iChance,
+    [CHANCE_BLUE_RIGHT]: iChance,
+    [CHANCE_BLUE_BOTTOM]: iChance,
+    [CHANCE_BLUE_LEFT]: iChance,
+    [CHANCE_RED_RIGHT]: iChance,
+    [CHANCE_RED_BOTTOM]: iChance,
+    [CHANCE_RED_TOP]: iChance,
     [SALONIKI]: iCityField,
     [GUARDED_PARKING]: iOtherFieldTypes,
     [FREE_PARK]: iOtherFieldTypes,
