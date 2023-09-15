@@ -3,11 +3,11 @@ import { iNamedChance, iNamedCityField, iNamedOtherField } from "../../Data/type
 import { descriptors } from '../../Data/boardFields'
 import { createBoardDescriptor } from "../Utils/createBoardDescriptor";
 
-const CITY_I: iNamedCityField = { ...descriptors[ATENY], name: ATENY };
-const CITY_II: iNamedCityField = { ...descriptors[NEAPOL], name: NEAPOL };
-const JAIL_I: iNamedOtherField = { ...descriptors[JAIL], name: JAIL }
-const CHANCE_BL: iNamedChance = { ...descriptors[CHANCE_BLUE], name: CHANCE_BLUE };
-const START_I: iNamedOtherField = { ...descriptors[START], name: START };
+const CITY_I: iNamedCityField = { ...descriptors[ATENY], name: ATENY, index: 1 };
+const CITY_II: iNamedCityField = { ...descriptors[NEAPOL], name: NEAPOL, index: 2 };
+const JAIL_I: iNamedOtherField = { ...descriptors[JAIL], name: JAIL, index: 3 }
+const CHANCE_BL: iNamedChance = { ...descriptors[CHANCE_BLUE], name: CHANCE_BLUE, index: 4 };
+const START_I: iNamedOtherField = { ...descriptors[START], name: START, index: 5 };
 
 const order = [START, CHANCE_BLUE, ATENY, CHANCE_BLUE, NEAPOL, JAIL];
 

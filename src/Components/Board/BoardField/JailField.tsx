@@ -12,6 +12,7 @@ const JailField = (fieldDescriptor: iNamedOtherField & {direction: tBoardSideDir
         info,
         wait,
         Icon,
+        index,
     } = useOtherField(fieldDescriptor.name as tOtherTypes)
     const { theme } = useThemesAPI();
     const classes = useStyles(theme as any);
@@ -20,7 +21,7 @@ const JailField = (fieldDescriptor: iNamedOtherField & {direction: tBoardSideDir
             <div className={classes.titleBarBottomLeft}>{name}</div>
             <div className={classes.iconBottomLeft}><Icon /></div>
             <div className={classes.titleBarBottomLeftUpside}>{name}</div>
-            <div className={classes.fieldNumberBottomLeft}>X</div>
+            <div className={classes.fieldNumberBottomLeft}>{index+1}</div>
         </div>
     )
 

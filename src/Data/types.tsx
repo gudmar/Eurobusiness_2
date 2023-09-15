@@ -47,6 +47,7 @@ export interface iCityField {
 
 export interface iNamedCityField extends iCityField {
     name: string;
+    index: number,
 }
 
 export type tIcon = FC;  // PRECISE this type,
@@ -61,6 +62,7 @@ export interface iChance {
 
 export interface iNamedChance extends iChance {
     name: string;
+    index: number
 }
 
 export interface iOtherFieldTypes {
@@ -73,6 +75,7 @@ export interface iOtherFieldTypes {
 
 export interface iNamedOtherField extends iOtherFieldTypes {
     name:string;
+    index: number
 }
 
 export type tNonCityEstates = 'Railways' | 'Plant';
@@ -89,7 +92,8 @@ export interface iNonCityEstates {
 }
 
 export interface iNamedNonCityEstates extends iNonCityEstates {
-    name: string
+    name: string,
+    index: number
 }
 
 export type tBoardField = iOtherFieldTypes | iCityField | iChance | iNonCityEstates

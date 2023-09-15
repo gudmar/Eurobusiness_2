@@ -2,7 +2,7 @@ import {
     BANK,
     CITY
 } from '../Data/const'
-import { iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, iNonCityEstates, iOtherFieldTypes, tBoardField, tChanceType, tCity, tCountries, tEstateTypes, tIcon, tNonCityEstates, tOtherTypes, tVisitPayment } from '../Data/types';
+import { iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, tBoardField, tChanceType, tCity, tCountries, tEstateTypes, tIcon, tNonCityEstates, tOtherTypes, tVisitPayment } from '../Data/types';
 import { SubscribtionsHandler } from './SubscrbtionsHandler';
 
 export class NullishField {
@@ -29,6 +29,7 @@ export class CityField extends SubscribtionsHandler<tCity, iNamedCityField> {
     private _nrOfHouses: number = 0;
     private _isPlegded: boolean = false;
     private _color: string = '#fff';
+    private _index!: number;
     static instances: {[key:string]: CityField} = {};
 
     constructor({
@@ -44,7 +45,8 @@ export class CityField extends SubscribtionsHandler<tCity, iNamedCityField> {
         nrOfHouses,
         isPlegded,
         color,
-    }: iNamedCityField) {
+
+    }: iNamedCityField, index: number) {
         super();
         if (CityField.instances[name] !== undefined) {
             return CityField.instances[name]
@@ -61,6 +63,7 @@ export class CityField extends SubscribtionsHandler<tCity, iNamedCityField> {
         this._nrOfHouses = nrOfHouses;
         this._isPlegded = isPlegded;
         this._color = color;
+        this._index = index;
         CityField.instances[name] = this;
         return this;
     }
@@ -76,6 +79,7 @@ export class CityField extends SubscribtionsHandler<tCity, iNamedCityField> {
     get nrOfHouses() {return this._nrOfHouses}
     get isPlegded() { return this._isPlegded }
     get color() { return this._color}
+    get index() { return this._index }
     set nrOfHouses(val: number) {
         if (val > 5 || val < 0) throw new Error('Nr of houses has to be > 0 and < 6')
         this._nrOfHouses = val
@@ -93,7 +97,8 @@ export class CityField extends SubscribtionsHandler<tCity, iNamedCityField> {
             owner: this._owner,
             nrOfHouses: this._nrOfHouses,
             isPlegded: this._isPlegded,
-            color: this._color
+            color: this._color,
+            index: this._index,
         })
     }
     set owner(val: string) { this._owner = val}
@@ -110,6 +115,7 @@ export class NonCityEstatesField extends SubscribtionsHandler<tNonCityEstates, i
     private _isPlegded: boolean = false;
     private _icon!: tIcon;
     private _name!: string;
+    private _index!: number;
     static instances: { [key:string] : NonCityEstatesField } = {};
 
     constructor({
@@ -122,7 +128,7 @@ export class NonCityEstatesField extends SubscribtionsHandler<tNonCityEstates, i
         isPlegded,
         Icon,
         name,
-    }: iNamedNonCityEstates) {
+    }: iNamedNonCityEstates, index: number) {
         super();
         if (NonCityEstatesField.instances[name] !== undefined) {
             return NonCityEstatesField.instances[name]
@@ -136,6 +142,7 @@ export class NonCityEstatesField extends SubscribtionsHandler<tNonCityEstates, i
         this._owner = owner;
         this._isPlegded = isPlegded;
         this._icon = Icon;
+        this._index = index;
         NonCityEstatesField.instances[name] = this;
         return this;
     }
@@ -161,6 +168,7 @@ export class NonCityEstatesField extends SubscribtionsHandler<tNonCityEstates, i
             isPlegded: this._isPlegded,
             Icon: this._icon,
             name: this._name,
+            index: this._index,
         }
     }
 }
@@ -172,6 +180,7 @@ export class  OtherFieldTypesField extends SubscribtionsHandler<tOtherTypes, iNa
     private _wait?: number;
     private _icon!: tIcon;
     private _name!: string;
+    private _index!: number;
     static instances: {[key: string]: OtherFieldTypesField} = {}
     constructor({
         type,
@@ -180,7 +189,7 @@ export class  OtherFieldTypesField extends SubscribtionsHandler<tOtherTypes, iNa
         wait,
         Icon,
         name,
-    }: iNamedOtherField) {
+    }: iNamedOtherField, index: number) {
         super();
         if (OtherFieldTypesField.instances[name] !== undefined) {
             return OtherFieldTypesField.instances[name];
@@ -191,6 +200,7 @@ export class  OtherFieldTypesField extends SubscribtionsHandler<tOtherTypes, iNa
         this._icon = Icon;
         this._visit = visit;
         this._name = name;
+        this._index = index;
         OtherFieldTypesField.instances[name] = this;
         return this;
     }
@@ -201,7 +211,7 @@ export class  OtherFieldTypesField extends SubscribtionsHandler<tOtherTypes, iNa
             Icon: this._icon,
             visit: this._visit,
             wait: this._wait,
-
+            index: this._index,
         })
     }
     get type() { return this._type}
@@ -218,13 +228,15 @@ export class ChanceField {
     private _info!: string;
     private _icon!: tIcon;
     private _name!: string;
+    private _index!: number;
     static instances: {[key: string]: ChanceField} = {}
     constructor({
         type, info, Icon, name
-    }: iNamedChance) {
-        if (ChanceField.instances[name] !== undefined) {
+    }: iNamedChance, index: number) {
+        if (ChanceField.instances[`${name} ${index}`] !== undefined) {
             return ChanceField.instances[name];
         }
+        this._index = index;
         this._name = name;
         this._type = type;
         this._info = info;
@@ -237,4 +249,5 @@ export class ChanceField {
     get info() { return this._info}
     get icon() { return this._icon}
     get Icon() { return this._icon}
+    get index() { return this._index}
 }
