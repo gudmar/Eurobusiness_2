@@ -12,6 +12,7 @@ const GoToJail = (fieldDescriptor: iNamedOtherField & {direction: tBoardSideDire
         info,
         wait,
         Icon,
+        index,
     } = useOtherField(fieldDescriptor.name as tOtherTypes)
     const { theme } = useThemesAPI();
     const classes = useStyles(theme as any);
@@ -20,7 +21,7 @@ const GoToJail = (fieldDescriptor: iNamedOtherField & {direction: tBoardSideDire
             <div className={classes.titleBarTopRight}>{name}</div>
             <div className={classes.iconTopRight}><Icon /></div>
             <div className={classes.titleBarTopRightUpside}>{name}</div>
-            <div className={classes.fieldNumberTopRight}>7</div>
+            <div className={classes.fieldNumberTopRight}>{index+1}</div>
         </div>
     )
 }

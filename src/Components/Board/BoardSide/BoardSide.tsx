@@ -47,7 +47,7 @@ const BoardSide = ({
     return (
         <div className={`${classes.fieldBar} ${classes[directionClassName]}`}>
             {
-                fieldData.map(({name, type}) => <BoardField key={name} name={name} type={type} direction={direction} />)
+                fieldData.map(({name, type}, index) => <BoardField key={index} name={name} type={type} direction={direction} index={index + 1}/>)
             }
         </div>
     )

@@ -15,6 +15,7 @@ const OtherBoardField = (fieldDescriptor: iNamedOtherField & {direction: tBoardS
         info,
         wait,
         Icon,
+        index,
     } = state
     const { theme } = useThemesAPI();
     const classes = useStyles(theme as any);
@@ -26,7 +27,7 @@ const OtherBoardField = (fieldDescriptor: iNamedOtherField & {direction: tBoardS
             <div className={`${classes.icon} ${classes[fieldDescriptor.direction]}`}><Icon /></div>
             <div className={classes[`priceUpsideDown${fieldDescriptor.direction}`]}>{visit}</div>
             <div className={classes[`titleUpsideDown${fieldDescriptor.direction}`]}>{name}</div>
-            <div className={classes[`fieldNumber${fieldDescriptor.direction}`]}>X</div>
+            <div className={classes[`fieldNumber${fieldDescriptor.direction}`]}>{index+1}</div>
         </div>
     )
 }

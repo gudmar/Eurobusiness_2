@@ -5,45 +5,45 @@ import { createBoardDescriptor } from "./Utils/createBoardDescriptor";
 
 abstract class FieldCreator {
     supportedTypes?: string[] = [];
-    public tryProducing(fieldDescriptor: tBoardField): any | undefined {
+    public tryProducing(fieldDescriptor: tBoardField, fieldIndex: number): any | undefined {
         if (this.checkIfTypeSupported(fieldDescriptor.type)) {
-            return this.construct(fieldDescriptor)
+            return this.construct(fieldDescriptor, fieldIndex)
         }
         return;
     }
     protected checkIfTypeSupported (fieldType: string) {
         return this.supportedTypes?.some((t) => t === fieldType)
     }
-    protected construct (filedDescriptor: tBoardField): any {
+    protected construct (filedDescriptor: tBoardField, index: number): any {
         return new NullishField(filedDescriptor);
     }
 }
 
 class CityCreator extends FieldCreator {
     supportedTypes = [CITY];
-    protected construct(fieldDescriptor: tBoardField){
-        return new CityField(fieldDescriptor as iNamedCityField)
+    protected construct(fieldDescriptor: tBoardField, index: number){
+        return new CityField(fieldDescriptor as iNamedCityField, index)
     }
 }
 
 class NonCityEstatesCreator extends FieldCreator {
     supportedTypes = [RAILWAY, PLANT, POWER_STATION];
-    protected construct(fieldDescriptor: iNonCityEstates) {
-        return new NonCityEstatesField(fieldDescriptor as iNamedNonCityEstates);
+    protected construct(fieldDescriptor: iNonCityEstates, index: number) {
+        return new NonCityEstatesField(fieldDescriptor as iNamedNonCityEstates, index);
     }
 }
 
 class OtherFieldTypesCreator extends FieldCreator {
     supportedTypes = [START, JAIL, FREE_PARK, GO_TO_JAIL, TAX, GUARDED_PARKING];
-    protected construct(fieldDescriptor: iNamedOtherField) {
-        return new OtherFieldTypesField(fieldDescriptor);
+    protected construct(fieldDescriptor: iNamedOtherField, index: number) {
+        return new OtherFieldTypesField(fieldDescriptor, index);
     }
 }
 
 class ChanceFieldCreator extends FieldCreator {
     supportedTypes = [CHANCE_BLUE, CHANCE_RED];
-    protected construct(fieldDescriptor: iNamedChance){
-        return new ChanceField(fieldDescriptor)
+    protected construct(fieldDescriptor: iNamedChance, index: number){
+        return new ChanceField(fieldDescriptor, index)
     }
 }
 
@@ -54,8 +54,8 @@ class FieldFactory extends FieldCreator {
         this.creators = listOfCreators.map(creatorClass => new creatorClass())
     }
 
-    create(field: tBoardField) {
-        const attempts = this.creators?.map((creator) => creator.tryProducing(field));
+    create(field: tBoardField, index: number) {
+        const attempts = this.creators?.map((creator) => creator.tryProducing(field, index));
         const instance = attempts?.find((i) => !!i);
         if (!instance) throw new Error('Something is wrong. Field cannot be produced. Unknown field type.')
         return instance;
@@ -99,8 +99,8 @@ export class BoardCreator {
         }
         this.caretaker = new BoardCaretaker()
         const boardDescriptor = createBoardDescriptor(fieldNamesInOrder, fieldDescriptors);
-        boardDescriptor.forEach((fieldDescirptor: tNamedBoardField) => {
-            const field = this.factory.create(fieldDescirptor);
+        boardDescriptor.forEach((fieldDescirptor: tNamedBoardField, index: number) => {
+            const field = this.factory.create(fieldDescirptor, index);
             this.caretaker.registerField(field);
             this._fields.push(field);
         })

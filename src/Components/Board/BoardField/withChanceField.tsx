@@ -19,7 +19,7 @@ const withChanceField = (onClick: () => void) => (fieldDescriptor: iNamedChance 
         <div className={`${questionMarkWrapper} ${classes.singleWidth} ${classes.fieldWrapper}`}>
             <div className={classes.empty}></div>
             <div className={`${classes.icon} ${classes[fieldDescriptor.direction]}`}><Icon /></div>
-            <div className={classes[`fieldNumber${fieldDescriptor.direction}`]}>X</div>
+            <div className={classes[`fieldNumber${fieldDescriptor.direction}`]}>{fieldDescriptor.index + 1}</div>
         </div>
     )
 }

@@ -17,7 +17,8 @@ const CityBoardField = (fieldDescriptor: iNamedCityField & {direction: tBoardSid
         owner,
         nrOfHouses,
         color,
-        isPlegded
+        isPlegded,
+         index,
     } = useCityField(fieldDescriptor.name as tCity)
     const { theme } = useThemesAPI();
     const classes = useStyles(theme as any);
@@ -37,7 +38,7 @@ const CityBoardField = (fieldDescriptor: iNamedCityField & {direction: tBoardSid
             <div className={emptyClass}></div>
             <div className={priceUpsideDownClass}>{price}</div>
             <div className={titleUpsideDownClass}>{name}</div>
-            <div className={titleFieldNumberClass}>X</div>
+            <div className={titleFieldNumberClass}>{index+1}</div>
         </div>
     )
 }

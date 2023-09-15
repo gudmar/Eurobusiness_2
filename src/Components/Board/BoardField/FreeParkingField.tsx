@@ -12,6 +12,7 @@ const FreeParkingField = (fieldDescriptor: iNamedOtherField & {direction: tBoard
         info,
         wait,
         Icon,
+        index
     } = useOtherField(fieldDescriptor.name as tOtherTypes)
     const { theme } = useThemesAPI();
     const classes = useStyles(theme as any);
@@ -20,7 +21,7 @@ const FreeParkingField = (fieldDescriptor: iNamedOtherField & {direction: tBoard
             <div className={classes.titleBarTopLeft}>{name}</div>
             <div className={classes.iconTopLeft}><Icon /></div>
             <div className={classes.titleBarTopLeftUpside}>{name}</div>
-            <div className={classes.fieldNumberTopLeft}>X</div>
+            <div className={classes.fieldNumberTopLeft}>{index+ 1}</div>
         </div>
     )
 }

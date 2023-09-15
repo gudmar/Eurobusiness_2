@@ -12,6 +12,7 @@ const StartField = (fieldDescriptor: iNamedOtherField & {direction: tBoardSideDi
             info,
             wait,
             Icon,
+            index,
         } = useOtherField(fieldDescriptor.name as tOtherTypes)
         const { theme } = useThemesAPI();
         const classes = useStyles(theme as any);
@@ -22,7 +23,7 @@ const StartField = (fieldDescriptor: iNamedOtherField & {direction: tBoardSideDi
                     <Icon /><Icon /><Icon /><Icon /><Icon /><Icon />
                 </div>
                 <div className={classes.titleBarBottomRightUpside}>{name}</div>
-                <div className={classes.fieldNumberBottomRight}>X</div>
+                <div className={classes.fieldNumberBottomRight}>{index+1}</div>
             </div>
         )
 }
