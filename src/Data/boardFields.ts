@@ -3,8 +3,13 @@ import {
 } from './types'
 
 import { 
-    AMSTERDAM, ATENY, AUSTRIA, BANK, BARCELONA, BENELUX, BONN, BRUKSELA, CHANCE_BLUE, 
-    CHANCE_RED, EAST_RAILWAYS, FRANKFURT, FREE_PARK,
+    AMSTERDAM, ATENY, AUSTRIA, BANK, BARCELONA, BENELUX, BONN, BRUKSELA,
+    CHANCE_BLUE,
+    CHANCE_BLUE_BOTTOM, 
+    CHANCE_BLUE_LEFT, 
+    CHANCE_BLUE_RIGHT, 
+    CHANCE_RED, 
+    CHANCE_RED_BOTTOM, CHANCE_RED_RIGHT, CHANCE_RED_TOP, EAST_RAILWAYS, FRANKFURT, FREE_PARK,
     GLASGOW, GOTEBORG, GO_TO_JAIL, GREECE, GUARDED_PARKING, INSBRUK, 
     ITALY, 
     JAIL, KOLONIA, LIVERPOOL, LONDON, MADRIT, MALMO, MEDIOLAN, 
@@ -65,12 +70,32 @@ export const descriptors: tBoard = {
         color: YELLOW,
         
     },
-    [CHANCE_BLUE]: {
+    [CHANCE_BLUE_BOTTOM]: {
         type: CHANCE_BLUE,
         info: 'Draw a blue chance card',
         Icon: QuestionBlue,
     },
-    [CHANCE_RED]: {
+    [CHANCE_BLUE_LEFT]: {
+        type: CHANCE_BLUE,
+        info: 'Draw a blue chance card',
+        Icon: QuestionBlue,
+    },
+    [CHANCE_BLUE_RIGHT]: {
+        type: CHANCE_BLUE,
+        info: 'Draw a blue chance card',
+        Icon: QuestionBlue,
+    },
+    [CHANCE_RED_TOP]: {
+        type: CHANCE_RED,
+        info: 'Draw a red chance card',
+        Icon: QuestionRed,
+    },
+    [CHANCE_RED_BOTTOM]: {
+        type: CHANCE_RED,
+        info: 'Draw a red chance card',
+        Icon: QuestionRed,
+    },
+    [CHANCE_RED_RIGHT]: {
         type: CHANCE_RED,
         info: 'Draw a red chance card',
         Icon: QuestionRed,
@@ -575,8 +600,8 @@ export const descriptors: tBoard = {
 }
 
 export const boardInOrder = [
-    START, SALONIKI, CHANCE_BLUE, ATENY, GUARDED_PARKING, SOUTH_RAILWAY, NEAPOL, CHANCE_RED, MEDIOLAN, ROME, 
-    JAIL, BARCELONA, POWER_STATION, SEWILLA, MADRIT, WEST_RAILWAYS, LIVERPOOL, CHANCE_BLUE, GLASGOW, LONDON, 
-    FREE_PARK, ROTTERDAM, CHANCE_RED, BRUKSELA, AMSTERDAM, NORTH_RAILWAYS, MALMO, GOTEBORG, WATER_PLANT, SZTOKHOLM, 
-    GO_TO_JAIL, FRANKFURT, KOLONIA, CHANCE_BLUE, BONN, EAST_RAILWAYS, CHANCE_RED, INSBRUK, TAX, WIEDEN
+    START, SALONIKI, CHANCE_BLUE_BOTTOM, ATENY, GUARDED_PARKING, SOUTH_RAILWAY, NEAPOL, CHANCE_RED_BOTTOM, MEDIOLAN, ROME, 
+    JAIL, BARCELONA, POWER_STATION, SEWILLA, MADRIT, WEST_RAILWAYS, LIVERPOOL, CHANCE_BLUE_LEFT, GLASGOW, LONDON, 
+    FREE_PARK, ROTTERDAM, CHANCE_RED_TOP, BRUKSELA, AMSTERDAM, NORTH_RAILWAYS, MALMO, GOTEBORG, WATER_PLANT, SZTOKHOLM, 
+    GO_TO_JAIL, FRANKFURT, KOLONIA, CHANCE_BLUE_RIGHT, BONN, EAST_RAILWAYS, CHANCE_RED_RIGHT, INSBRUK, TAX, WIEDEN
 ];
