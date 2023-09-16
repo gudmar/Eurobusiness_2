@@ -7,3 +7,8 @@ export interface iSubscription<MessageType extends string> {
     id: string,
     messageType: MessageType,
 }
+
+export type tAction<PayloadType> = {
+    type: PayloadType,
+    payload: any,
+}
