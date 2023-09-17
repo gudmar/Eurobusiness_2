@@ -1,5 +1,7 @@
 import { useRef } from "react";
+import { BOTTOM } from "../../Components/Board/types";
 import { AMSTERDAM, ATENY, BARCELONA, BONN, BRUKSELA, CHANCE_BLUE_BOTTOM, CHANCE_BLUE_LEFT, CHANCE_BLUE_RIGHT, CHANCE_RED_BOTTOM, CHANCE_RED_RIGHT, CHANCE_RED_TOP, EAST_RAILWAYS, FRANKFURT, FREE_PARK, GLASGOW, GOTEBORG, GO_TO_JAIL, GUARDED_PARKING, INSBRUK, JAIL, KOLONIA, LIVERPOOL, LONDON, MADRIT, MALMO, MEDIOLAN, NEAPOL, NORTH_RAILWAYS, POWER_STATION, ROME, ROTTERDAM, SALONIKI, SEWILLA, SOUTH_RAILWAY, START, SZTOKHOLM, TAX, WATER_PLANT, WEST_RAILWAYS, WIEDEN } from "../../Data/const";
+import { tCity } from "../../Data/types";
 import { tAction } from "../../Types/types";
 
 export type tBoardFieldPosition = {
@@ -11,19 +13,34 @@ export type tBoardFieldPosition = {
 
 export type tUseRefOnDiv = typeof useRef<HTMLDivElement>;
 
+export type tFieldSizesUpdatePayload = {
+    fieldName: tCity,
+    reference: typeof useRef<HTMLDivElement>
+}
+
 export enum DimanetionsOperations {
     update
 }
 
+const X = 'x';
+const Y = 'y'
+const WIDTH = 'width'
+const HEIGHT = 'height'
+const TOP = 'top'
+const RIGHT = 'right'
+const LEFT = 'left';
+
+export type tBoundingClientRectKeys = typeof X | typeof Y | typeof WIDTH | typeof HEIGHT | typeof TOP | typeof RIGHT | typeof BOTTOM | typeof LEFT
+
 export type tBoundingClientRect = {
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    top: number,
-    right: number,
-    buttom: number,
-    left: number,
+    [X]: number,
+    [Y]: number,
+    [WIDTH]: number,
+    [HEIGHT]: number,
+    [TOP]: number,
+    [RIGHT]: number,
+    [BOTTOM]: number,
+    [LEFT]: number,
 }
 
 export type tDimensionAction = tAction<DimanetionsOperations>

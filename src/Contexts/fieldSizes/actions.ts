@@ -1,3 +1,3 @@
-import { DimanetionsOperations, tDimensionAction, tUseRefOnDiv } from "./types"
+import { DimanetionsOperations, tDimensionAction, tFieldSizesUpdatePayload, tUseRefOnDiv } from "./types"
 
-export const updateAction = (name: string, payload: tUseRefOnDiv) => ({type: DimanetionsOperations.update, payload})
+export const updateAction = (name: string, payload: tFieldSizesUpdatePayload) => ({type: DimanetionsOperations.update, payload})

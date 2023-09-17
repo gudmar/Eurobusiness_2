@@ -1,10 +1,12 @@
-import React, { createContext, useContext, useEffect, useState } from "react"
-import { getInitialState } from "./reducer";
+import React, { createContext, useContext, useEffect, useReducer, useState } from "react"
+import { getInitialState, reducer } from "./reducer";
 import { tUseRefOnDiv } from "./types";
 
 
 
 const useFieldSizeUpdater = () => {
+    const [state, dispatch] = useReducer(reducer, getInitialState());
+    const [fieldReferences, setFieldReferences] = useState({});
     return {
         updateFieldSize: (name: string, reference: tUseRefOnDiv): void => {},
         ...getInitialState(),

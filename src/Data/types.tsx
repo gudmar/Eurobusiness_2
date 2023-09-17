@@ -1,12 +1,14 @@
 import { FC } from "react"
-import { AMSTERDAM, ATENY, BARCELONA, BONN, BRUKSELA, CHANCE_BLUE, CHANCE_BLUE_BOTTOM, CHANCE_BLUE_LEFT, CHANCE_BLUE_RIGHT, CHANCE_RED, CHANCE_RED_BOTTOM, CHANCE_RED_RIGHT, CHANCE_RED_TOP, EAST_RAILWAYS, FRANKFURT, FREE_PARK, GLASGOW, GOTEBORG, GO_TO_JAIL, GUARDED_PARKING, INSBRUK, JAIL, KOLONIA, LIVERPOOL, LONDON, MADRIT, MALMO, MEDIOLAN, NEAPOL, NORTH_RAILWAYS, POWER_STATION, ROME, ROTTERDAM, SALONIKI, SEWILLA, SOUTH_RAILWAY, START, SZTOKHOLM, TAX, WATER_PLANT, WEST_RAILWAYS, WIEDEN } from "./const"
+import { AMSTERDAM, ATENY, AUSTRIA, BARCELONA, BENELUX, BONN, BRUKSELA, CHANCE_BLUE, CHANCE_BLUE_BOTTOM, CHANCE_BLUE_LEFT, CHANCE_BLUE_RIGHT, CHANCE_RED, CHANCE_RED_BOTTOM, CHANCE_RED_RIGHT, CHANCE_RED_TOP, CITY, EAST_RAILWAYS, FRANKFURT, FREE_PARK, GLASGOW, GOTEBORG, GO_TO_JAIL, GREECE, GUARDED_PARKING, INSBRUK, ITALY, JAIL, KOLONIA, LIVERPOOL, LONDON, MADRIT, MALMO, MEDIOLAN, NEAPOL, NORTH_RAILWAYS, PLANT, POWER_STATION, RAILWAY, RAILWAYS, RFN, ROME, ROTTERDAM, SALONIKI, SEWILLA, SOUTH_RAILWAY, SPAIN, START, SWEEDEN, SZTOKHOLM, TAX, UK, WATER_PLANT, WEST_RAILWAYS, WIEDEN } from "./const"
 
-export type tCity = 'Amsterdam' | 'Ateny' |  'Barcelona' | 'Bonn' | 'Bruksela' | 'Frankfurt' | 'Glasgow' | 'Goteborg' | 'Insbruk' | 'Kolonia' | 'Liverpool' | 'London' | 'Madrit' | 'Malmo' | 'Mediolan' | 'Neapol' | 'Rome' | 'Rotterdam' | 'Saloniki' | 'Sewilla' | 'Sztokholm' | 'Wieden'
+export type tBoardFieldNames = tCity | tOtherTypes | tChanceFieldNameType | tRailway | typeof POWER_STATION | typeof WATER_PLANT
+
+export type tCity = typeof AMSTERDAM | typeof ATENY |  typeof BARCELONA | typeof BONN | typeof BRUKSELA | typeof FRANKFURT | typeof GLASGOW | typeof GOTEBORG | typeof INSBRUK | typeof KOLONIA | typeof LIVERPOOL | typeof LONDON | typeof MADRIT | typeof MALMO | typeof MEDIOLAN | typeof NEAPOL | typeof ROME | typeof ROTTERDAM | typeof SALONIKI | typeof SEWILLA | typeof SZTOKHOLM | typeof WIEDEN
 
 export type tEstateTypes =
-    'City' |
-    'Railway' |
-    'Plant'
+    typeof CITY |
+    typeof RAILWAY |
+    typeof PLANT
 
 export type tVisitPayment = (number | '10 x thrown dice result' | '20 x thrown dice result')[]
 
@@ -15,15 +17,17 @@ export type tChanceTypes = {
     CHANCE_RED:  'chanceRed',
 }
 
-export type tOtherTypes =
-    'Start' |
-    'Jail' |
-    'Free park' |
-    'Go to jail' |
-    'Tax' | 'Guarded Parking';
+export type tRailway = typeof SOUTH_RAILWAY | typeof WEST_RAILWAYS | typeof EAST_RAILWAYS | typeof NORTH_RAILWAYS
 
-export type tCountries = 'Greece' | 'Italy' | 'Spain' | 'UK' | 'Benelux' | 'Sweeden' | 'RFN' | 'Austria' | 'Railways' | 'Plant'
-export type tNonCountryFieldTypes = 'Railwaus' | 'Plant'
+export type tOtherTypes =
+    typeof START |
+    typeof JAIL |
+    typeof FREE_PARK |
+    typeof GO_TO_JAIL |
+    typeof TAX | typeof GUARDED_PARKING;
+
+export type tCountries = typeof GREECE | typeof ITALY | typeof SPAIN | typeof UK | typeof BENELUX | typeof SWEEDEN | typeof RFN | typeof AUSTRIA | typeof RAILWAY | typeof PLANT
+export type tNonCountryFieldTypes = typeof RAILWAYS | typeof PLANT
 
 export interface iCityField {
     type: tEstateTypes,
@@ -52,7 +56,9 @@ export interface iNamedCityField extends iCityField {
 
 export type tIcon = FC;  // PRECISE this type,
 
-export type tChanceType = 'Chance blue_bottom' | 'Chance blue_left' | 'Chance blue_right' | 'Chance_red_bottom' | 'Chance red_top' | 'Chance red_left' | 'Chance red' | 'Chance blue';
+export type tChanceType = tChanceFieldNameType | typeof CHANCE_RED | typeof CHANCE_BLUE;
+
+export type tChanceFieldNameType = typeof CHANCE_BLUE_BOTTOM | typeof CHANCE_BLUE_LEFT | typeof CHANCE_BLUE_RIGHT | typeof CHANCE_RED_BOTTOM | typeof CHANCE_RED_TOP | typeof CHANCE_RED_TOP
 
 export interface iChance {
     type: tChanceType,
@@ -78,11 +84,11 @@ export interface iNamedOtherField extends iOtherFieldTypes {
     index: number
 }
 
-export type tNonCityEstates = 'Railways' | 'Plant';
+export type tNonCityEstates = tNonCountryFieldTypes;
 
 export interface iNonCityEstates {
     country: tNonCityEstates,
-    type: 'Railway' | 'Plant',
+    type: typeof RAILWAY | typeof PLANT,
     price: number,
     mortage: number,
     visit: tVisitPayment,
