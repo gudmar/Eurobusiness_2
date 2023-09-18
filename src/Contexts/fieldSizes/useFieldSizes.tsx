@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useEffect, useReducer, useState } from "react"
+import { ATENY, CHANCE_BLUE_BOTTOM, CHANCE_BLUE_LEFT, CHANCE_BLUE_RIGHT, CHANCE_RED_BOTTOM, CHANCE_RED_RIGHT, CHANCE_RED_TOP, GUARDED_PARKING, SALONIKI, START } from "../../Data/const";
+import { updateAction } from "./actions";
 import { getInitialState, reducer } from "./reducer";
 import { tUseRefOnDiv } from "./types";
 
@@ -6,17 +8,22 @@ import { tUseRefOnDiv } from "./types";
 
 const useFieldSizeUpdater = () => {
     const [state, dispatch] = useReducer(reducer, getInitialState());
-    const [fieldReferences, setFieldReferences] = useState({});
+    const update = (name: string, reference: tUseRefOnDiv) => {
+        dispatch(updateAction(name, reference))
+    }
+
     return {
-        updateFieldSize: (name: string, reference: tUseRefOnDiv): void => {},
-        ...getInitialState(),
+        updateFieldSize: update,
+        state,
     }
 }
 
-const FieldSizeContext = createContext(getInitialState());
+const FieldSizeContext = createContext({
+    updateFieldSize: (name: string, reference: tUseRefOnDiv):void => {},
+    state: getInitialState()
+});
 
 export const FieldSizeContextProvider = ({children}: {children: React.ReactNode}) => {
-    // const {...fields, updateFieldSize} = useFieldSizeUpdater();
     const updaterValues = useFieldSizeUpdater();
     return(
         <FieldSizeContext.Provider value={updaterValues}>
@@ -27,7 +34,7 @@ export const FieldSizeContextProvider = ({children}: {children: React.ReactNode}
 }
 
 export const useFieldSize = () => {
-    const themesAPI = useContext(FieldSizeContext);
+    const fieldSizes = useContext(FieldSizeContext);
     if (!FieldSizeContext) throw new Error('useFieldSize should be used within FieldSizeContextProvider');
-    return {...themesAPI}
+    return {...fieldSizes}
 }
