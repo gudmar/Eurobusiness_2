@@ -26,7 +26,7 @@ export type tOtherTypes =
     typeof GO_TO_JAIL |
     typeof TAX | typeof GUARDED_PARKING;
 
-export type tCountries = typeof GREECE | typeof ITALY | typeof SPAIN | typeof UK | typeof BENELUX | typeof SWEEDEN | typeof RFN | typeof AUSTRIA | typeof RAILWAY | typeof PLANT
+export type tCountries = typeof GREECE | typeof ITALY | typeof SPAIN | typeof UK | typeof BENELUX | typeof SWEEDEN | typeof RFN | typeof AUSTRIA | typeof RAILWAYS | typeof PLANT
 export type tNonCountryFieldTypes = typeof RAILWAYS | typeof PLANT
 
 export interface iCityField {

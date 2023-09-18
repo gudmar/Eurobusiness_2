@@ -1,6 +1,6 @@
 import { AMSTERDAM, ATENY, BARCELONA, BONN, BRUKSELA, CHANCE_BLUE_BOTTOM, CHANCE_BLUE_LEFT, CHANCE_BLUE_RIGHT, CHANCE_RED_BOTTOM, CHANCE_RED_RIGHT, CHANCE_RED_TOP, EAST_RAILWAYS, FRANKFURT, FREE_PARK, GLASGOW, GOTEBORG, GO_TO_JAIL, GUARDED_PARKING, INSBRUK, JAIL, KOLONIA, LIVERPOOL, LONDON, MADRIT, MALMO, MEDIOLAN, NEAPOL, NORTH_RAILWAYS, POWER_STATION, ROME, ROTTERDAM, SALONIKI, SEWILLA, SOUTH_RAILWAY, START, SZTOKHOLM, TAX, WATER_PLANT, WEST_RAILWAYS, WIEDEN } from "../../Data/const";
-import { tBoardFieldNames, tCity } from "../../Data/types";
-import { DimanetionsOperations, tBoardDimensions, tBoundingClientRect, tBoundingClientRectKeys, tDimensionAction, tFieldSizesUpdatePayload } from "./types";
+import { tBoardFieldNames } from "../../Data/types";
+import { DimanetionsOperations, tBoardDimensions, tBoardFieldPosition, tBoundingClientRectKeys, tDimensionAction, tUseRefOnDiv } from "./types";
 
 const getInitialBoardFieldPosition = () => ({
     top: 0, left: 0, width: 0, height: 0,
@@ -48,9 +48,13 @@ export const getInitialState = () => ({
         [TAX]:            getInitialBoardFieldPosition(),
         [WIEDEN]:         getInitialBoardFieldPosition() 
 })
-type tShouldStateChange = { name: tBoardFieldNames, state: tBoardDimensions, newSizes: tBoundingClientRect }
+type tShouldStateChange = { name: tBoardFieldNames, state: tBoardDimensions, newSizes: tBoardFieldPosition }
 
-const areSizesTheSame = (sizeA: tBoundingClientRect, sizeB: tBoundingClientRect) => {
+type tComparable = {
+    [keyName: string]: number | string, 
+}
+
+const areSizesTheSame = <ComparableType extends tComparable>(sizeA: ComparableType, sizeB: ComparableType) => {
     const keysA = Object.keys(sizeA);
     const nrOfKeysA = keysA.length
     const nrOfKeysB = Object.keys(sizeB).length;
@@ -59,21 +63,26 @@ const areSizesTheSame = (sizeA: tBoundingClientRect, sizeB: tBoundingClientRect)
         const nrDifferences = sizeA[aItem] === sizeB[aItem] ? 0 : 1
         return nr + nrDifferences
     }, 0)
-    return nrOfDifferentes === 0 ? true : false; 
+    return nrOfDifferentes === 0; 
 }
-const nrOfChanges = ({name, state, newSizes} : tShouldStateChange) => {
-    const previousSizes = state[name];
-
-
-}
-
 
 const shouldStateChange = ({name, state, newSizes} : tShouldStateChange) => {
     const oldSizes = state[name];
-    const result = areSizesTheSame(oldSizes, newSizes);
+    const areEqual = areSizesTheSame(oldSizes, newSizes);
+    return !areEqual;
 }
-const getStateDependingOnClientRect = (name: tBoardFieldNames, state: tBoardDimensions, newSizes: tBoundingClientRect ) => {
+const getStateDependingOnClientRect = (name: tBoardFieldNames, state: tBoardDimensions, newSizes: tBoardFieldPosition ) => {
+    const stateShouldChange = shouldStateChange({name, state ,newSizes});
+    if (stateShouldChange) {
+        return {...state, [name]: newSizes}
+    }
+    return state;
+}
 
+const getPositionDataFromReference = (fieldReference: tUseRefOnDiv):tBoardFieldPosition => {
+    const node = fieldReference.current;
+    const {top, left, width, height} = node.getBoundingClientRect();
+    return ({top, left, width, height})
 }
 
 export const reducer = (state: tBoardDimensions, action: tDimensionAction): tBoardDimensions => {
@@ -82,17 +91,16 @@ export const reducer = (state: tBoardDimensions, action: tDimensionAction): tBoa
         case DimanetionsOperations.update: {
             const fieldName: tBoardFieldNames = payload.fieldName;
             const fieldReference = payload.reference;
-            const node = fieldReference.current;
-            const newBoundingRect : tBoundingClientRect = node.getBoundingClientRect();
+            const newSize = getPositionDataFromReference(fieldReference);
             const isFieldDefined = state[fieldName];
             if (isFieldDefined) {
-
+                const nextState = getStateDependingOnClientRect(fieldName, state, newSize)
+                return nextState
             } else {
-                const newState = {...state, [`${fieldName}`]: {...newBoundingRect}}
+                const newState = {...state, [`${fieldName}`]: {...newSize}}
                 return newState
             }
         }
         default: throw new Error(`Unknown operation type: ${type}`)
     }
-    return getInitialState();
 }
