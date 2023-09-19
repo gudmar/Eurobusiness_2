@@ -1,8 +1,10 @@
+
+
 import { DimanetionsOperations, tDimensionAction, tFieldSizesUpdatePayload, tUseRefOnDiv } from "./types"
 
-export const updateAction = (name: string, reference: tUseRefOnDiv) => (
+export const updateAction = ({fieldNameForDebugging, reference, fieldIndex}: tFieldSizesUpdatePayload) => (
     {
         type: DimanetionsOperations.update,
-        payload: {fieldName: name, reference }
+        payload: {fieldName: fieldNameForDebugging, reference, fieldIndex}
     }
 );
