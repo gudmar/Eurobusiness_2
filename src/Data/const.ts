@@ -1,3 +1,6 @@
+export const TOTAL_NR_HOTELS = 12;
+export const TOTAL_NR_HOUSES = 32;
+
 export const PLAYER_1 = 'player_1';
 export const PLAYER_2 = 'player_2';
 export const PLAYER_3 = 'player_3';
