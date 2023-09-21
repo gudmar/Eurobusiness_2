@@ -4,6 +4,7 @@
 
 # API
 
-1. `throw()`
-2. `throwPaymentProcedure(type: electricPlant, waterPlant, chanceCard?)`
+1. `throw()=>{result, dubletsNr}`
+2. `throwPaymentProcedure(type: electricPlant, waterPlant, chanceCard?) => {result, dubletsNr}`
+3. `throwForGetOutOfPrison() => {result, dubletsNr}` if player is in prison he may pay $100 and thow a dublet to get out
 

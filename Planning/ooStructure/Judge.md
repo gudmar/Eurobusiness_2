@@ -23,6 +23,8 @@
 10. throwDicesForPayProcedure mandatory prio 15
 11. stayForTurns mandatory nrOfTurns prio 30
 12. goToField mandatory fieldNr isMoneyForStart prio 5
+13. getBankruptcyTrusteeReport optional, possible even before most prio actions
+14. launchAuctioneer mandatory prio 13 (only when estate not bought)
 
 STACKING ORDER: chance card before jail must
 
