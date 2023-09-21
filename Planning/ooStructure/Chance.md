@@ -1,6 +1,6 @@
 **Keeps track over chance cards**
 * Downloads from data
-* Shufles
+* Shufles - automaticaly when created, and when cards end !
 * Keeps order
 * Reshufles if no cards left
 * Gives some cards to the plaeyr (jail) *suspends cards*
