@@ -24,7 +24,7 @@
 10. `win(player)`
 11. `allExpectPlayerPay(player, ammount)`
 12. `allExpectPlayerEarn(player, ammount)`
-13. `subscribeToPlayerState(player)`
+13. `subscribeToPlayerState(player)` 
 14. `unsubscribeFromPlayersState(player)`
 
 
