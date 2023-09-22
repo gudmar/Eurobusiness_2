@@ -1,5 +1,11 @@
 **Gets game state and informs players with options**
 
+# Use cases
+1. As Judge I will know all game ruels
+2. As Judge I need access to game state
+3. As judge I will reply to advice requests delivered to me
+4. As judge I will not hold any game state (perhaps a static class?)
+
 # API
 
 1. `getOptionsForPlayer({ playerState, boardState, bankState, decisionChainHistory})` - returns options *Decision chain history known by main is a list of decisions that were taken, as this function is RESTfull*
@@ -36,3 +42,7 @@ interface iOption {
 }
 
 type tOptions = iOption[]
+
+
+# API
+1. `ask(gameState, optionsReceiver, replyFunction): gameOptions`
