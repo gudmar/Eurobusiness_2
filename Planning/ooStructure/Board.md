@@ -1,5 +1,21 @@
 **Api for operations on board fields, like purchasing, mortgage, buy out from mortgage**
 
+# Use cases
+1. I act as a broker between estates and rest of the game
+2. I create estates when game is started,
+3. I ma the only broker, and no other borker exists,
+4. I hold references to each estate, and I can access their state (by getters and setters)
+5. I prepare reports: all estates owned by some player ...
+6. I have to be informed if estate:
+    * Changes owner
+    * Is mortgaged,
+    * Has houses build
+    * Has houses sold
+    * Has hotels build
+    * Has hotels sold
+7. I don't know game rules, I want honest requests, accepted by judge
+8. I held subscription requests to fields, GUI may need to be informed by every field about state changes
+
 # API
 
 1. `subscribeToField(fieldName, id, cb)`

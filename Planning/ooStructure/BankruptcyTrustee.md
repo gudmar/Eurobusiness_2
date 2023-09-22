@@ -4,6 +4,19 @@
 * Can make state copy to run a symulation on it in SYMULATION MANAGER
 * Can somehow apply plan to the real state
 
+# Use cases
+1. As BT I will make simulations allowing players to see optinos they would have when they mortgaged or sold some estaes,
+2. Simulations may be undone or restarted
+3. Simulations are not run on real state, but on copy instead
+4. When simulation is ongoing real game state should not change,
+5. Simulation may be later applied if player choses to
+6. When player choses to apply a simulation I will reply to him with simulation report, and he has to find a way to apply changes to the state,
+7. I just run simulations, I don't apply changes on my own
+8. No simulations take into account selling estates, as this meens asking real players about prices,
+so to sell estate in auction simulation so far has to be rejected or applied
+9. I don't exist when I am not needed
+
+
 ## Messages:
 1. sellHotel  0.5 initialPrice  if hotel available
 2. sellHouse  0.5 initialPrice  if hotel available
