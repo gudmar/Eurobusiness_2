@@ -16,6 +16,21 @@
 9. I want my customers to decrease nr of hotels / houses they own on some estate on their own 
 10. I am pointed as owner of not sold estates, but I don't hold any related information and I don't participate in any decitions
 
+# Messages 
+## Receive
+1. getNrOfHousesLeft (respond)
+2. getNrOfHotelsLeft (respond)
+3. getHotel (respond) // Already adds 3 houses to the pool, and decreaes pool of hotels by 1
+4. getHouse (respond)
+5. returnHouse
+6. returnHotel
+## Respond
+1. getNrOfHousesLeft: respond(nrOfHouses)
+2. getNrOfHotelsLeft: respond(nrOfHotels)
+3. getHotel: respond(status: done / status: error(not possible))
+4. getHouse: respond(status: done / states: error(not possible))
+
+
 # API
 1. `getHousesLeft`
 2. `getHotelsLeft`
