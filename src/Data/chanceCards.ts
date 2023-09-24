@@ -1,21 +1,33 @@
 // Judge does not know how to execute cards. This file knows that, and
 // Commander
 
-export enum ChanceMessageTypes {
-    pay = 'pay',
-    gain = 'gain',
-    payEachHouse = 'pay for each house',
-    payEachHotel = 'pay for each hotel',
-    goToField = 'go to field',
-    goToFieldConditionalyPassStart = 'go to field conditinaly gain money for pssing start',
-    goBack = 'go back nr of fields',
-    goToJailNoStartPass = 'go to jail not pass start',
-    freeFromJail = 'get free from jail',
-    gainFromEachPlayer = 'get money from every player',
-    payOrDrawFromRed = 'pay or draw from red pile'
+import { FREE_FROM_JAIL, GAIN, GAIN_FROM_EACH_PLAYER, GO_BACK, GO_TO_FIELD, GO_TO_FIELD_CONDITIONALLY_PASS_START, PAY, PAY_EACH_HOTEL, PAY_EACH_HOUSE, PAY_OR_DRAW_FROM_RED, tChanceMessages } from "../Logic/Messages/messages"
+
+// export enum ChanceMessageTypes {
+//     pay = 'pay',
+//     gain = 'gain',
+//     payEachHouse = 'pay for each house',
+//     payEachHotel = 'pay for each hotel',
+//     goToField = 'go to field',
+//     goToFieldConditionalyPassStart = 'go to field conditinaly gain money for pssing start',
+//     goBack = 'go back nr of fields',
+//     goToJailNoStartPass = 'go to jail not pass start',
+//     freeFromJail = 'get free from jail',
+//     gainFromEachPlayer = 'get money from every player',
+//     payOrDrawFromRed = 'pay or draw from red pile'
+// }
+type tChanceAction = {
+    payload?: number,
+    type: tChanceMessages,
+}
+type tChanceLanguage = {
+    [key: string]: string | tChanceAction[]
+}
+type tChance = {
+    [key: string]: tChanceLanguage
 }
 
-export const CHANCE_CARDS_RED = {
+export const CHANCE_CARDS_RED: tChance = {
     pl: {
         0:  "Zobowiązany jesteś zmodernizować swoje miasto, płacisz za każdy dom 80 $,za każdy hotel 230 $",
         1:  "Remontujesz swoje domy. Płacisz do banku za każdy dom 50 $, za każdy hotel 200 $.",
@@ -55,104 +67,104 @@ export const CHANCE_CARDS_RED = {
     computer: {
         0: [
             {
-                type: ChanceMessageTypes.payEachHouse,
+                type: PAY_EACH_HOUSE,
                 payload: 80
             },
             {
-                type: ChanceMessageTypes.payEachHotel,
+                type: PAY_EACH_HOTEL,
                 payload: 230
             },
         ],
         1: [
             {
-                type: ChanceMessageTypes.payEachHouse,
+                type: PAY_EACH_HOUSE,
                 payload: 50
             },
             {
-                type: ChanceMessageTypes.payEachHotel,
+                type: PAY_EACH_HOTEL,
                 payload: 200
             },
         ],
         2: [
             {
-                type: ChanceMessageTypes.goToField,
+                type: GO_TO_FIELD,
                 payload: 13, // indexing start as 0
             }
         ],
         3: [
             {
-                type: ChanceMessageTypes.pay,
+                type: PAY,
                 payload: 30,
             }
         ],
         4: [
             {
-                type: ChanceMessageTypes.goBack,
+                type: GO_BACK,
                 payload: 3,
             }
         ],
         5: [
             {
-                type: ChanceMessageTypes.goToField,
+                type: GO_TO_FIELD,
                 payload: 0, // indexing start as 0
             }
         ],
         6: [
             {
-                type: ChanceMessageTypes.gain,
+                type: GAIN,
                 payload: 200
             }
         ],
         7: [
             {
-                type: ChanceMessageTypes.goToFieldConditionalyPassStart,
+                type: GO_TO_FIELD_CONDITIONALLY_PASS_START,
             }
         ],
         8: [
             {
-                type: ChanceMessageTypes.pay,
+                type: PAY,
                 payload: 300,
             }
         ],
         9: [
             {
-                type: ChanceMessageTypes.goToFieldConditionalyPassStart,
+                type: GO_TO_FIELD_CONDITIONALLY_PASS_START,
                 payload: 6, // indexing start as 0
             }
         ],
         10: [
             {
-                type: ChanceMessageTypes.pay,
+                type: PAY,
                 payload: 400,
             }
         ],
         11: [
             {
-                type: ChanceMessageTypes.goToFieldConditionalyPassStart,
+                type: GO_TO_FIELD_CONDITIONALLY_PASS_START,
                 payload: 20, // indexing start as 0
             }
         ],
         12: [
             {
-                type: ChanceMessageTypes.gain,
+                type: GAIN,
                 payload: 100
             }
         ],
         13: [
             {
-                type: ChanceMessageTypes.goToFieldConditionalyPassStart,
+                type: GO_TO_FIELD_CONDITIONALLY_PASS_START,
                 payload: 35, // indexing start as 0
             }
         ],
         14: [
             {
-                type: ChanceMessageTypes.gain,
+                type: GAIN,
                 payload: 300
             }
         ],
         15: [
             {
-                type: ChanceMessageTypes.freeFromJail
+                type: FREE_FROM_JAIL
             }
         ]
     }
@@ -198,65 +210,65 @@ export const CHANCE_CARDS_BLUE = {
     },
     computer: {
         0: {
-            type: ChanceMessageTypes.pay,
+            type: PAY,
             payload: 400,
         },
         1: {
-            type: ChanceMessageTypes.gain,
+            type: GAIN,
             payload: 200,
         },
         2: {
-            type: ChanceMessageTypes.gainFromEachPlayer,
+            type: GAIN_FROM_EACH_PLAYER,
             payload: 20,
         },
         3: {
-            type: ChanceMessageTypes.goToFieldConditionalyPassStart,
+            type: GO_TO_FIELD_CONDITIONALLY_PASS_START,
         },
         4: {
-            type: ChanceMessageTypes.gain,
+            type: GAIN,
             payload: 400,
         },
         5: {
-            type: ChanceMessageTypes.pay,
+            type: PAY,
             payload: 20,
         },
         6: {
-            type: ChanceMessageTypes.freeFromJail,
+            type: FREE_FROM_JAIL,
         },
         7: {
-            type: ChanceMessageTypes.goToField,
+            type: GO_TO_FIELD,
             payload: 0
         },
         8: {
-            type: ChanceMessageTypes.gain,
+            type: GAIN,
             payload: 20,
         },
         9: {
-            type: ChanceMessageTypes.gain,
+            type: GAIN,
             payload: 200,
         },
         10: {
-            type: ChanceMessageTypes.goBack,
+            type: GO_BACK,
             payload: 39
         },
         11: {
-            type: ChanceMessageTypes.payOrDrawFromRed,
+            type: PAY_OR_DRAW_FROM_RED,
             payload: 20,
         },
         12: {
-            type: ChanceMessageTypes.gain,
+            type: GAIN,
             payload: 200,
         },
         13: {
-            type: ChanceMessageTypes.gain,
+            type: GAIN,
             payload: 40,
         },
         14: {
-            type: ChanceMessageTypes.gain,
+            type: GAIN,
             payload: 50,
         },
         15: {
-            type: ChanceMessageTypes.pay,
+            type: PAY,
             payload: 20,
         },
 
