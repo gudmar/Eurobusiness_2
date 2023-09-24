@@ -158,6 +158,7 @@ export const CHANCE_CARDS_RED = {
     }
 }
 
+
 export const CHANCE_CARDS_BLUE = {
     pl: {
     "0" : "Płacisz na budowę szpitala 400 $.",
