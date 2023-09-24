@@ -1,3 +1,6 @@
+// Judge does not know how to execute cards. This file knows that, and
+// Commander
+
 export enum ChanceMessageTypes {
     pay = 'pay',
     gain = 'gain',
@@ -7,7 +10,9 @@ export enum ChanceMessageTypes {
     goToFieldConditionalyPassStart = 'go to field conditinaly gain money for pssing start',
     goBack = 'go back nr of fields',
     goToJailNoStartPass = 'go to jail not pass start',
-    freeFromJail = 'get free from jail'
+    freeFromJail = 'get free from jail',
+    gainFromEachPlayer = 'get money from every player',
+    payOrDrawFromRed = 'pay or draw from red pile'
 }
 
 export const CHANCE_CARDS_RED = {
@@ -189,5 +194,70 @@ export const CHANCE_CARDS_BLUE = {
         13: 'You get a tax refund: $40',
         14: 'Bank pays you 7% of interest, you gain $50',
         15: 'You pay medical care fee: $20'
+    },
+    computer: {
+        0: {
+            type: ChanceMessageTypes.pay,
+            payload: 400,
+        },
+        1: {
+            type: ChanceMessageTypes.gain,
+            payload: 200,
+        },
+        2: {
+            type: ChanceMessageTypes.gainFromEachPlayer,
+            payload: 20,
+        },
+        3: {
+            type: ChanceMessageTypes.goToFieldConditionalyPassStart,
+        },
+        4: {
+            type: ChanceMessageTypes.gain,
+            payload: 400,
+        },
+        5: {
+            type: ChanceMessageTypes.pay,
+            payload: 20,
+        },
+        6: {
+            type: ChanceMessageTypes.freeFromJail,
+        },
+        7: {
+            type: ChanceMessageTypes.goToField,
+            payload: 0
+        },
+        8: {
+            type: ChanceMessageTypes.gain,
+            payload: 20,
+        },
+        9: {
+            type: ChanceMessageTypes.gain,
+            payload: 200,
+        },
+        10: {
+            type: ChanceMessageTypes.goBack,
+            payload: 39
+        },
+        11: {
+            type: ChanceMessageTypes.payOrDrawFromRed,
+            payload: 20,
+        },
+        12: {
+            type: ChanceMessageTypes.gain,
+            payload: 200,
+        },
+        13: {
+            type: ChanceMessageTypes.gain,
+            payload: 40,
+        },
+        14: {
+            type: ChanceMessageTypes.gain,
+            payload: 50,
+        },
+        15: {
+            type: ChanceMessageTypes.pay,
+            payload: 20,
+        },
+
     }
 }
