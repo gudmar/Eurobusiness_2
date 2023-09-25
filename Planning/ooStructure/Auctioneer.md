@@ -25,12 +25,19 @@ minimum price and others reply with prices they can efford. Estate is sold for M
 5. After auction finished I will die, there is not point for me to exist between auctions
 
 # Messages:
+```
 bankAuctionFinished {
     winner, estate, finalPrice
 }
+```
+
+```
 playerAuctionFinished {
     reachedMinimum, winner, pastOwner, price
 }
+```
+
+---
 startBankAuction {
     players, estate
 }

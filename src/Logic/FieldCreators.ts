@@ -28,6 +28,7 @@ export class CityField extends SubscribtionsHandler<tCity, iNamedCityField> {
     private _owner: string = BANK;
     private _nrOfHouses: number = 0;
     private _isPlegded: boolean = false;
+    private _nrOfHotels: number = 0;
     private _color: string = '#fff';
     private _index!: number;
     static instances: {[key:string]: CityField} = {};
@@ -43,6 +44,7 @@ export class CityField extends SubscribtionsHandler<tCity, iNamedCityField> {
         visit,
         owner,
         nrOfHouses,
+        nrOfHotels,
         isPlegded,
         color,
 
@@ -61,6 +63,7 @@ export class CityField extends SubscribtionsHandler<tCity, iNamedCityField> {
         this._visit = visit;
         this._owner = owner;
         this._nrOfHouses = nrOfHouses;
+        this._nrOfHotels = nrOfHotels;
         this._isPlegded = isPlegded;
         this._color = color;
         this._index = index;
@@ -77,6 +80,7 @@ export class CityField extends SubscribtionsHandler<tCity, iNamedCityField> {
     get visit() {return this._visit}
     get owner() {return this._owner}
     get nrOfHouses() {return this._nrOfHouses}
+    get nrOfHotels() {return this._nrOfHotels}
     get isPlegded() { return this._isPlegded }
     get color() { return this._color}
     get index() { return this._index }

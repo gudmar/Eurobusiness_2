@@ -1,0 +1,1 @@
+export const PRIORITY_NOT_IMPORTANT = -1;

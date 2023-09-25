@@ -10,4 +10,5 @@
 2. `unsubscribeFromBoardField(fieldName, callback, subscribtionId)`
 3. `subscribeToPlayer(playerName, callback, subscribtionId)`
 4. `unsubscribeFromPlayer(playerName, callback, subscribtionId)`
+5. `startGame()`
 
