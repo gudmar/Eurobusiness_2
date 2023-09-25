@@ -4,7 +4,8 @@ export const TOTAL_NR_HOUSES = 32;
 export const PLAYER_1 = 'player_1';
 export const PLAYER_2 = 'player_2';
 export const PLAYER_3 = 'player_3';
-export const PLAYER_4 = 'player_4' 
+export const PLAYER_4 = 'player_4';
+
 
 export const FREE_PARK = 'Free park';
 export const CITY = 'City';

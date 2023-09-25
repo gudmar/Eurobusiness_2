@@ -1,7 +1,11 @@
+import { tPlayerName } from "../Components/Pawns/types";
 import { CHANCE_BLUE, CHANCE_RED, CITY, FREE_PARK, GO_TO_JAIL, GUARDED_PARKING, JAIL, PLANT, POWER_STATION, RAILWAY, START, TAX } from "../Data/const";
-import { iChance, iCityField, iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, iNonCityEstates, iOtherFieldTypes, tBoard, tBoardField, tChanceTypes, tNamedBoardField, } from "../Data/types";
+import { iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, iNonCityEstates, iOtherFieldTypes, tBoard, tBoardField, tChanceTypes, tNamedBoardField, } from "../Data/types";
+import { tEstateField, tField } from "./boardTypes";
 import { ChanceField, CityField, NonCityEstatesField, NullishField, OtherFieldTypesField } from "./FieldCreators";
 import { createBoardDescriptor } from "./Utils/createBoardDescriptor";
+
+type tNrOfBuildings = 'nrOfHotels'  | 'nrOfHouses';
 
 abstract class FieldCreator {
     supportedTypes?: string[] = [];
@@ -68,21 +72,69 @@ const LIST_OF_FIELD_PRODUCERS = [
 ]
 
 export class BoardCaretaker extends FieldCreator {
-    static fieldInstances: any = [];
+    static fieldInstances: tField[] = [];
 
     registerField(fieldInstance: any) {
         BoardCaretaker.fieldInstances.push(fieldInstance)
     }
 
     static get fieldNames() {
-        const names = BoardCaretaker.fieldInstances.map((instance:tNamedBoardField) => instance.name)
+        const names = BoardCaretaker.fieldInstances.map((instance:tField) => instance.name)
         return names;
     }
 
     getFieldByName(name:string) {
-        const field = BoardCaretaker.fieldInstances.find((instance: tNamedBoardField) => instance.name === name);
+        const field = BoardCaretaker.fieldInstances.find((instance: tField) => instance.name === name);
         return field;
     }
+
+    getPlayersEstates(playerName: tPlayerName) {
+        const ownedEstates = BoardCaretaker.fieldInstances.filter((instance: tField) => {
+            if ( [CITY, RAILWAY, PLANT].includes(instance.type)) {
+                return (instance as tEstateField).owner === playerName
+            }
+            return false;
+        });
+        return ownedEstates;
+    }
+
+    getNrPlayerHouses(playerName: tPlayerName) {
+        const nrOfHouses = BoardCaretaker.fieldInstances.reduce((nr: number, instance: tField) => {
+            if (instance.type === CITY) {
+                if (instance.owner === playerName) {
+                    nr += (instance as CityField).nrOfHouses
+                }
+            }
+            return nr;
+        }, 0)
+        return nrOfHouses;
+    }
+
+    private getNrOfBuildings(playerName: tPlayerName, buildingProp: tNrOfBuildings ) {
+        const nrOfBuildings: number = BoardCaretaker.fieldInstances.reduce((nr: number, instance: tField) => {
+            if (instance.type === CITY) {
+                if (instance.owner === playerName) {
+                    nr += (instance as CityField)[buildingProp]
+                }
+            }
+            return nr;
+        }, 0)
+        return nrOfBuildings;
+
+    }
+
+    getNrPlayerHotels(playerName: tPlayerName) {
+        const nrOfHouses = BoardCaretaker.fieldInstances.reduce((nr: number, instance: tField) => {
+            if (instance.type === CITY) {
+                if (instance.owner === playerName) {
+                    nr += (instance as CityField).nrOfHotels
+                }
+            }
+            return nr;
+        }, 0)
+        return nrOfHouses;
+    }
+
 }
 
 export class BoardCreator {
