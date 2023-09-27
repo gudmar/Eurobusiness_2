@@ -38,9 +38,10 @@ export interface iCityField {
     hotelPrice: number,
     visit: tVisitPayment,
     owner: string,
+    color: string,
     nrOfHouses: number,
     nrOfHotels: number,
-    color: string,
+
     // nrOfCitiesInCountry: number,
     // nrOfHousesToPurchase?: number,
     // nrOfHousesToSell?: number,
@@ -57,7 +58,8 @@ export interface iNamedCityField extends iCityField {
 
 export type tIcon = FC;  // PRECISE this type,
 
-export type tChanceType = tChanceFieldNameType | typeof CHANCE_RED | typeof CHANCE_BLUE;
+// export type tChanceType = tChanceFieldNameType | typeof CHANCE_RED | typeof CHANCE_BLUE;
+export type tChanceType = typeof CHANCE_BLUE_BOTTOM | typeof CHANCE_BLUE_LEFT | typeof CHANCE_BLUE_RIGHT | typeof CHANCE_RED_BOTTOM | typeof CHANCE_RED_TOP | typeof CHANCE_RED_TOP | typeof CHANCE_RED | typeof CHANCE_BLUE;
 
 export type tChanceFieldNameType = typeof CHANCE_BLUE_BOTTOM | typeof CHANCE_BLUE_LEFT | typeof CHANCE_BLUE_RIGHT | typeof CHANCE_RED_BOTTOM | typeof CHANCE_RED_TOP | typeof CHANCE_RED_TOP
 

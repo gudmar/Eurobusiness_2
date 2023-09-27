@@ -3,10 +3,11 @@ import { boardInOrder, descriptors } from "../Data/boardFields";
 import { BoardCaretaker, BoardCreator } from "../Logic/BoardCaretaker";
 
 const initialCaretaker: any = null;
+const initialField: any = null;
 
 export const useBoardFields = () => {
     const caretaker = useRef(initialCaretaker);
-    const boardFeilds = useRef([])
+    const boardFeilds = useRef(initialField)
     useEffect(() => {
         const creator = new BoardCreator(boardInOrder, descriptors);
         const CARETAKER = creator.provideCaretaker();

@@ -1,10 +1,14 @@
-import { iSubscription } from "../Types/types"
+import { iSubscription, tSubscription } from "../Types/types"
 
 export abstract class SubscribtionsHandler<SubscriptionMessageType extends string, StateType> {
     private _subscribtions: iSubscription<SubscriptionMessageType>[] =[];
 
     subscribe(subscription: iSubscription<SubscriptionMessageType>) {
         this._subscribtions.push(subscription);
+    }
+
+    subscribeDebug(callback: tSubscription, id: string, messageType: SubscriptionMessageType){
+        this._subscribtions.push({callback, id, messageType});
     }
 
     runAllSubscriptions(type: SubscriptionMessageType, data: StateType) {

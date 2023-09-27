@@ -1,7 +1,7 @@
 // Judge does not know how to execute cards. This file knows that, and
 // Commander
 
-import { FREE_FROM_JAIL, GAIN, GAIN_FROM_EACH_PLAYER, GO_BACK, GO_TO_FIELD, GO_TO_FIELD_CONDITIONALLY_PASS_START, PAY, PAY_EACH_HOTEL, PAY_EACH_HOUSE, PAY_OR_DRAW_FROM_RED, tChanceMessages } from "../Logic/Messages/messages"
+import { FREE_FROM_JAIL, GAIN, GAIN_FROM_EACH_PLAYER, GO_BACK, GO_TO_FIELD, GO_TO_FIELD_CONDITIONALLY_PASS_START, PAY, PAY_EACH_HOTEL, PAY_EACH_HOUSE, PAY_OR_DRAW_FROM_RED, tChanceMessages } from "../Constants/commands"
 
 // export enum ChanceMessageTypes {
 //     pay = 'pay',

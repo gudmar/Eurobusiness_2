@@ -35,13 +35,16 @@
 STACKING ORDER: chance card before jail must
 
 
-
+```
 interface iOption {
     type: ,
     payload
 }
+```
 
+```
 type tOptions = iOption[]
+```
 
 
 # API

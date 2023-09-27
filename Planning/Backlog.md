@@ -1,6 +1,6 @@
-1. Display board:
-    a) Shape with empty fields
-    b) Each field has descriptions and icons
++ 1. Display board:
++    a) Shape with empty fields
++    b) Each field has descriptions and icons
 2. Dice randomly selects numbers according to specification:
     * 2 dices thrown at the same time,
     * the same number on each dice - throw once more, until different numbers on each dice. Summ all points thrown this way

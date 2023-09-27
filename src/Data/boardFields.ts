@@ -59,7 +59,8 @@ export const descriptors: tBoard = {
         hotelPrice: 100,
         visit: [ 10, 40, 120, 360, 640, 900 ], // 0 houses, 1 house, 2 houses...
         owner: BANK,
-        nrOfHouses: 0, // 5 houses === hotel
+        nrOfHouses: 0,
+        nrOfHotels: 0,
         // nrInSet: 2, // 2 cities in the country
         // nrOfHousesToPurchase: 0,
         // nrOfHousesToSell: 0,
@@ -109,7 +110,8 @@ export const descriptors: tBoard = {
         hotelPrice: 100,
         visit: [ 10, 40, 120, 360, 640, 900 ], // 0 houses, 1 house, 2 houses...
         owner: BANK,
-        nrOfHouses: 0, // 5 houses === hotel
+        nrOfHouses: 0,
+        nrOfHotels: 0,
         isPlegded: false,
         color: YELLOW,
     },
@@ -164,7 +166,8 @@ export const descriptors: tBoard = {
         // nrOfHotelsToBuy: 0,        
         visit: [ 15, 60, 150, 540, 800, 1100 ], // 0 houses, 1 house, 2 houses...
         owner: BANK,
-        nrOfHouses: 0, // 5 houses === hotel
+        nrOfHouses: 0,
+        nrOfHotels: 0,
         // nrInSet: 3,
         // boardFieldNumber: 7,
         isPlegded: false,
@@ -183,7 +186,8 @@ export const descriptors: tBoard = {
         // nrOfHotelsToBuy: 0,        
         visit: [ 15, 60, 150, 540, 800, 1100 ], // 0 houses, 1 house, 2 houses...
         owner: BANK,
-        nrOfHouses: 0, // 5 houses === hotel
+        nrOfHouses: 0,
+        nrOfHotels: 0,
         // nrInSet: 3,
         // boardFieldNumber: 9,
         isPlegded: false,
@@ -202,7 +206,8 @@ export const descriptors: tBoard = {
         // nrOfHotelsToBuy: 0,        
         visit: [ 20, 80, 200, 600, 900, 1200 ], // 0 houses, 1 house, 2 houses...
         owner: BANK,
-        nrOfHouses: 0, // 5 houses === hotel
+        nrOfHouses: 0,
+        nrOfHotels: 0,
         // nrInSet: 3,
         // boardFieldNumber: 10,
         isPlegded: false,
@@ -221,7 +226,8 @@ export const descriptors: tBoard = {
         // nrOfHotelsToBuy: 0,        
         visit: [ 20, 100, 300, 900, 1250, 1500 ], // 0 houses, 1 house, 2 houses...
         owner: 'bank',
-        nrOfHouses: 0, // 5 houses === hotel
+        nrOfHouses: 0,
+        nrOfHotels: 0,
         // nrInSet: 3,
         // boardFieldNumber: 12,
         isPlegded: false,
@@ -252,7 +258,8 @@ export const descriptors: tBoard = {
         // nrOfHotelsToBuy: 0,        
         visit: [ 20, 100, 300, 900, 1250, 1500 ], // 0 houses, 1 house, 2 houses...
         owner: BANK,
-        nrOfHouses: 0, // 5 houses === hotel
+        nrOfHouses: 0,
+        nrOfHotels: 0,
         // nrInSet: 3,
         // boardFieldNumber: 14,
         isPlegded: false,
@@ -271,7 +278,8 @@ export const descriptors: tBoard = {
         // nrOfHotelsToBuy: 0,        
         visit: [ 25, 120, 360, 1000, 1400, 1800 ], // 0 houses, 1 house, 2 houses...
         owner: BANK,
-        nrOfHouses: 0, // 5 houses === hotel
+        nrOfHouses: 0,
+        nrOfHotels: 0,
         // nrInSet: 3,
         // boardFieldNumber: 15,
         isPlegded: false,
@@ -302,7 +310,8 @@ export const descriptors: tBoard = {
         // nrOfHotelsToBuy: 0,        
         visit: [ 30, 140, 400, 1100, 1500, 1900 ], // 0 houses, 1 house, 2 houses...
         owner: BANK,
-        nrOfHouses: 0, // 5 houses === hotel
+        nrOfHouses: 0,
+        nrOfHotels: 0,
         // nrInSet: 3,
         // boardFieldNumber: 17,
         isPlegded: false,
@@ -321,7 +330,8 @@ export const descriptors: tBoard = {
         // nrOfHotelsToBuy: 0,        
         visit: [ 30, 140, 400, 1100, 1500, 1900 ], // 0 houses, 1 house, 2 houses...
         owner: BANK,
-        nrOfHouses: 0, // 5 houses === hotel
+        nrOfHouses: 0,
+        nrOfHotels: 0,
         // nrInSet: 3,
         // boardFieldNumber: 19,
         isPlegded: false,
@@ -340,7 +350,8 @@ export const descriptors: tBoard = {
         // nrOfHotelsToBuy: 0,        
         visit: [ 35, 160, 440, 1200, 1600, 2000 ], // 0 houses, 1 house, 2 houses...
         owner: BANK,
-        nrOfHouses: 0, // 5 houses === hotel
+        nrOfHouses: 0,
+        nrOfHotels: 0,
         // nrInSet: 3,
         // boardFieldNumber: 20,
         isPlegded: false,
@@ -359,7 +370,8 @@ export const descriptors: tBoard = {
         // nrOfHotelsToBuy: 0,        
         visit: [ 35, 180, 500, 1400, 1750, 2100 ], // 0 houses, 1 house, 2 houses...
         owner: BANK,
-        nrOfHouses: 0, // 5 houses === hotel
+        nrOfHouses: 0,
+        nrOfHotels: 0,
         // nrInSet: 3,
         // boardFieldNumber: 22,
         isPlegded: false,
@@ -378,7 +390,8 @@ export const descriptors: tBoard = {
         // nrOfHotelsToBuy: 0,        
         visit: [ 35, 180, 500, 1400, 1750, 2100 ], // 0 houses, 1 house, 2 houses...
         owner: BANK,
-        nrOfHouses: 0, // 5 houses === hotel
+        nrOfHouses: 0,
+        nrOfHotels: 0,
         // nrInSet: 3,
         // boardFieldNumber: 24,
         isPlegded: false,
@@ -397,7 +410,8 @@ export const descriptors: tBoard = {
         // nrOfHotelsToBuy: 0,        
         visit: [ 40, 200, 600, 1500, 1850, 2200 ], // 0 houses, 1 house, 2 houses...
         owner: BANK,
-        nrOfHouses: 0, // 5 houses === hotel
+        nrOfHouses: 0,
+        nrOfHotels: 0,
         // nrInSet: 3,
         // boardFieldNumber: 25,
         isPlegded: false,
@@ -428,7 +442,8 @@ export const descriptors: tBoard = {
         // nrOfHotelsToBuy: 0,        
         visit: [ 45, 220, 600, 1600, 1950, 2300 ], // 0 houses, 1 house, 2 houses...
         owner: BANK,
-        nrOfHouses: 0, // 5 houses === hotel
+        nrOfHouses: 0,
+        nrOfHotels: 0,
         // nrInSet: 3,
         // boardFieldNumber: 27,
         isPlegded: false,
@@ -447,7 +462,8 @@ export const descriptors: tBoard = {
         // nrOfHotelsToBuy: 0,        
         visit: [ 45, 220, 600, 1600, 1950, 2300 ], // 0 houses, 1 house, 2 houses...
         owner: BANK,
-        nrOfHouses: 0, // 5 houses === hotel
+        nrOfHouses: 0,
+        nrOfHotels: 0,
         // nrInSet: 3,
         // boardFieldNumber: 28,
         isPlegded: false,
@@ -478,7 +494,8 @@ export const descriptors: tBoard = {
         // nrOfHotelsToBuy: 0,        
         visit: [ 50, 240, 720, 1700, 2050, 2400 ], // 0 houses, 1 house, 2 houses...
         owner: BANK,
-        nrOfHouses: 0, // 5 houses === hotel
+        nrOfHouses: 0,
+        nrOfHotels: 0,
         // nrInSet: 3,
         isPlegded: false,
         // boardFieldNumber: 30,
@@ -497,7 +514,8 @@ export const descriptors: tBoard = {
         // nrOfHotelsToBuy: 0,        
         visit: [ 55, 260, 780, 1900, 2200, 2550 ], // 0 houses, 1 house, 2 houses...
         owner: BANK,
-        nrOfHouses: 0, // 5 houses === hotel
+        nrOfHouses: 0,
+        nrOfHotels: 0,
         // nrInSet: 3,
         // boardFieldNumber: 32,
         isPlegded: false,
@@ -516,7 +534,8 @@ export const descriptors: tBoard = {
         // nrOfHotelsToBuy: 0,        
         visit: [ 55, 260, 780, 1900, 2200, 2550 ], // 0 houses, 1 house, 2 houses...
         owner: BANK,
-        nrOfHouses: 0, // 5 houses === hotel
+        nrOfHouses: 0,
+        nrOfHotels: 0,
         // nrInSet: 3,
         // boardFieldNumber: 33,
         isPlegded: false,
@@ -535,7 +554,8 @@ export const descriptors: tBoard = {
         // nrOfHotelsToBuy: 0,        
         visit: [ 50, 300, 900, 2000, 2400, 2800 ], // 0 houses, 1 house, 2 houses...
         owner: BANK,
-        nrOfHouses: 0, // 5 houses === hotel
+        nrOfHouses: 0,
+        nrOfHotels: 0,
         // nrInSet: 3,
         // boardFieldNumber: 35,
         isPlegded: false,
@@ -566,7 +586,8 @@ export const descriptors: tBoard = {
         // nrOfHotelsToBuy: 0,        
         visit: [ 70, 350, 1000, 2200, 2600, 3000 ], // 0 houses, 1 house, 2 houses...
         owner: BANK,
-        nrOfHouses: 0, // 5 houses === hotel
+        nrOfHouses: 0,
+        nrOfHotels: 0,
         // nrInSet: 3,
         // boardFieldNumber: 38,
         isPlegded: false,
@@ -591,7 +612,8 @@ export const descriptors: tBoard = {
         // nrOfHotelsToBuy: 0,        
         visit: [ 70, 350, 1000, 2200, 2600, 3000 ], // 0 houses, 1 house, 2 houses...
         owner: BANK,
-        nrOfHouses: 0, // 5 houses === hotel
+        nrOfHouses: 0,
+        nrOfHotels: 0,
         // nrInSet: 3,
         // boardFieldNumber: 40,
         isPlegded: false,
