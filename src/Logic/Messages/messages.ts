@@ -1,5 +1,5 @@
 import { BANK } from "../../Data/const";
-import { GAIN, PAY } from "./commands";
+import { GAIN, PAY } from "../../Constants/commands";
 import { PRIORITY_NOT_IMPORTANT } from "./constants";
 import { iPayment } from "./types";
 

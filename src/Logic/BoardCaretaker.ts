@@ -83,7 +83,7 @@ export class BoardCaretaker extends FieldCreator {
         return names;
     }
 
-    getFieldByName(name:string) {
+    getFieldByName(name:string):tField | undefined {
         const field = BoardCaretaker.fieldInstances.find((instance: tField) => instance.name === name);
         return field;
     }

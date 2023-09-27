@@ -23,6 +23,10 @@ so to sell estate in auction simulation so far has to be rejected or applied
 3. mortgageEstate  if no house or hotel
 4. ~~sellEstateToPlayer  should ask each player how much he would like for an estate, but cannot be overused towards real player! Concidered ONLY if no other possiblity and TOWARDS serious propositions. This is for player agents, as this module does not make such decisions~~
 
+## Messages:
+1. startSimulation()
+
+
 ## API
 1. launchSimulation(): creates a Simulator instance with copy of application state.
 2. resetSimulation(): creates new Simulator instance and switches it with existing
