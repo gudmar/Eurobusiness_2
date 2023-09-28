@@ -63,6 +63,12 @@ export type tChanceType = typeof CHANCE_BLUE_BOTTOM | typeof CHANCE_BLUE_LEFT | 
 
 export type tChanceFieldNameType = typeof CHANCE_BLUE_BOTTOM | typeof CHANCE_BLUE_LEFT | typeof CHANCE_BLUE_RIGHT | typeof CHANCE_RED_BOTTOM | typeof CHANCE_RED_TOP | typeof CHANCE_RED_TOP
 
+export type tFieldTypes =  tCity | tNonCityEstates | tOtherTypes | tChanceType;
+type tConbineUnions<T> = T extends string ? T : never;
+export type tFlattenedFieldTypes = tConbineUnions<tFieldTypes> 
+
+export type tAnyState = iNamedChance | iNamedCityField | iNamedNonCityEstates | iNamedOtherField
+
 export interface iChance {
     type: tChanceType,
     info: string,
