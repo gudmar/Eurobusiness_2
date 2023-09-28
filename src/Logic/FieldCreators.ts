@@ -2,7 +2,7 @@ import {
     BANK,
     CITY
 } from '../Data/const'
-import { iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, tBoardField, tChanceType, tCity, tCountries, tEstateTypes, tIcon, tNonCityEstates, tOtherTypes, tVisitPayment } from '../Data/types';
+import { iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, tAnyState, tBoardField, tChanceType, tCity, tCountries, tEstateTypes, tFlattenedFieldTypes, tIcon, tNonCityEstates, tOtherTypes, tVisitPayment } from '../Data/types';
 import { SubscribtionsHandler } from './SubscrbtionsHandler';
 
 export class NullishField {
@@ -16,7 +16,7 @@ export class NullishField {
     }
 }
 
-export class CityField extends SubscribtionsHandler<tCity, iNamedCityField> {
+export class CityField extends SubscribtionsHandler<tFlattenedFieldTypes, tAnyState> {
     private _name!: string;
     private _type: tEstateTypes = CITY;
     private _country!: tCountries;
@@ -109,7 +109,7 @@ export class CityField extends SubscribtionsHandler<tCity, iNamedCityField> {
     set isPlegded(val: boolean) { this._isPlegded = val}
 }
 
-export class NonCityEstatesField extends SubscribtionsHandler<tNonCityEstates, iNamedNonCityEstates>{
+export class NonCityEstatesField extends SubscribtionsHandler<tFlattenedFieldTypes, tAnyState>{
     private _type!: tEstateTypes;
     private _country!: tCountries;
     private _price!: number;
@@ -177,7 +177,7 @@ export class NonCityEstatesField extends SubscribtionsHandler<tNonCityEstates, i
     }
 }
 
-export class  OtherFieldTypesField extends SubscribtionsHandler<tOtherTypes, iNamedOtherField> {
+export class  OtherFieldTypesField extends SubscribtionsHandler<tFlattenedFieldTypes, tAnyState> {
     private _type!: tOtherTypes;
     private _visit?: tVisitPayment;
     private _info!: string;
@@ -227,7 +227,7 @@ export class  OtherFieldTypesField extends SubscribtionsHandler<tOtherTypes, iNa
     get name() {return  this._name}
 }
 
-export class ChanceField extends SubscribtionsHandler<tChanceType, iNamedChance> {
+export class ChanceField extends SubscribtionsHandler<tFlattenedFieldTypes, tAnyState> {
     private _type!: tChanceType;
     private _info!: string;
     private _icon!: tIcon;
