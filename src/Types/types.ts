@@ -1,5 +1,3 @@
-import { tCountries, tEstateTypes, tVisitPayment } from "../Data/types"
-
 export type tSubscription = (state: any) => void
 
 export interface iSubscription<MessageType extends string> {
@@ -12,3 +10,5 @@ export type tAction<PayloadType> = {
     type: PayloadType,
     payload: any,
 }
+
+export type tCombineStringUnions<T> = T extends string ? T : never;

@@ -1,11 +1,12 @@
 import { tPlayerName } from "../Components/Pawns/types";
+import { NR_OF_HOTELS, NR_OF_HOUSES } from "../Constants/constants";
 import { CHANCE_BLUE, CHANCE_RED, CITY, FREE_PARK, GO_TO_JAIL, GUARDED_PARKING, JAIL, PLANT, POWER_STATION, RAILWAY, START, TAX } from "../Data/const";
 import { iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, iNonCityEstates, iOtherFieldTypes, tBoard, tBoardField, tChanceTypes, tNamedBoardField, } from "../Data/types";
 import { tEstateField, tField } from "./boardTypes";
 import { ChanceField, CityField, NonCityEstatesField, NullishField, OtherFieldTypesField } from "./FieldCreators";
 import { createBoardDescriptor } from "./Utils/createBoardDescriptor";
 
-type tNrOfBuildings = 'nrOfHotels'  | 'nrOfHouses';
+type tNrOfBuildings =  typeof NR_OF_HOUSES  | typeof NR_OF_HOTELS;
 
 abstract class FieldCreator {
     supportedTypes?: string[] = [];

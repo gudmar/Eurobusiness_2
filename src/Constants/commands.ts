@@ -1,6 +1,8 @@
 // COMMANDER MESSAGES
 
-// Commands are given as a result of final decision.
+import { tCombineStringUnions } from "../Types/types";
+
+// Commands are given as a result of final decision. HOWEVER SOME constants are reused in message opretions
 // Player gets on field, 
 // Player asks Judge about possibilities,
 // Player receives array of messages (of possibilities)
@@ -48,6 +50,7 @@ export const VISITED_FIELD = 'visitedField';
 // WHO_PARTICIPATES, RESIGNATION, NEXT_OFFER  // the same as for auctionWstate from bank
 export const SOLD_FROM_PLAYER = 'soldFromPlayer'
 
+// DIVIDED into types to keep controll over it
 
 export type tChanceMessages = 
     typeof PAY |
@@ -63,3 +66,35 @@ export type tChanceMessages =
     typeof PAY_OR_DRAW_FROM_RED
 
 
+
+export type tTransactionMessages = 
+    typeof PURCHASE_ESTATE_FROM_BANK |
+    typeof AUCTION_ESTATE |
+    typeof MORTGAGE |
+    typeof BUY_FROM_MORTGAGE |
+    typeof BUY_HOUSE |
+    typeof SELL_HOUSE |
+    typeof BUY_HOTEL |
+    typeof SELL_HOTEL |
+    typeof AUCTION_CARD
+
+export type tAuctionFromBankMessages = 
+    typeof WHO_PARTICIPATES |
+    typeof RESIGNATION |
+    typeof NEXT_OFFER |
+    typeof SOLD_FROM_BANK
+
+export type tMovementMessages =
+    typeof PASSED_START |
+    typeof VISITED_FIELD
+
+export type tAuctionFromPlayerMessages = 
+    typeof SOLD_FROM_PLAYER
+
+type tMessagesNotCombined = 
+    tChanceMessages | 
+    tTransactionMessages | 
+    tAuctionFromBankMessages | 
+    tAuctionFromPlayerMessages
+
+export type tAllMessages = tCombineStringUnions<tMessagesNotCombined>;

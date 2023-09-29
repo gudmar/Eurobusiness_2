@@ -1,23 +1,38 @@
 import { BANK } from "../../Data/const";
-import { GAIN, PAY } from "../../Constants/commands";
+import { GAIN, PAY, PAY_EACH_HOTEL } from "../../Constants/commands";
 import { PRIORITY_NOT_IMPORTANT } from "./constants";
-import { iPayment } from "./types";
+import { iGetPayMessage, iPaymentMultipleToBankOption, iPaymentOption, iPaymentToOption } from "./types";
 
-export const getPayMessage = ({source, ammount, isMandatory = false, mandatoryPriority = PRIORITY_NOT_IMPORTANT}: iPayment) => ({
+export const getPayMessage = ({source, ammount, isMandatory = false, priority = PRIORITY_NOT_IMPORTANT}: iGetPayMessage): iPaymentToOption => ({
     operation: PAY,
     source, 
     ammount,
     target: BANK,
     isMandatory,
-    mandatoryPriority,
+    priority,
 })
 
-export const getGainMessage = ({ammount, isMandatory = false, mandatoryPriority = PRIORITY_NOT_IMPORTANT}: iPayment) => ({
+export const getGainMessage = ({ammount, isMandatory = false, priority = PRIORITY_NOT_IMPORTANT}: iGetPayMessage): iPaymentOption => ({
     operation: GAIN,
     source: BANK,
     ammount,
     isMandatory,
-    mandatoryPriority,
+    priority,
 }) 
 
-export const getPayForEachHotel = ({boardInstance, hotelOwner})
+// export const getPayForEachHotel = ({
+//     boardInstance, playerName, singlePrice, priority: PRIORITY_CHANCE_PAY_EACH_HOTEL}: iPaymentMultipleToBank ): iPaymentMultipleToBankOption  => {
+        
+//     const nrOfHotels = boardInstance.getNrPlayerHotels();
+//     return {
+//         operation: PAY_EACH_HOTEL,
+//         source: playerName,
+//         nrOfSources: nrOfHotels,
+//         ammount,
+//         isMandatory,
+//         mandatoryPriority,
+//         nrOfSources,
+//         boardInstance: BoardCaretaker,
+
+//     }
+// }
