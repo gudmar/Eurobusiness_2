@@ -1,4 +1,5 @@
 import { FC } from "react"
+import { tCombineStringUnions } from "../Types/types"
 import { AMSTERDAM, ATENY, AUSTRIA, BARCELONA, BENELUX, BONN, BRUKSELA, CHANCE_BLUE, CHANCE_BLUE_BOTTOM, CHANCE_BLUE_LEFT, CHANCE_BLUE_RIGHT, CHANCE_RED, CHANCE_RED_BOTTOM, CHANCE_RED_RIGHT, CHANCE_RED_TOP, CITY, EAST_RAILWAYS, FRANKFURT, FREE_PARK, GLASGOW, GOTEBORG, GO_TO_JAIL, GREECE, GUARDED_PARKING, INSBRUK, ITALY, JAIL, KOLONIA, LIVERPOOL, LONDON, MADRIT, MALMO, MEDIOLAN, NEAPOL, NORTH_RAILWAYS, PLANT, POWER_STATION, RAILWAY, RAILWAYS, RFN, ROME, ROTTERDAM, SALONIKI, SEWILLA, SOUTH_RAILWAY, SPAIN, START, SWEEDEN, SZTOKHOLM, TAX, UK, WATER_PLANT, WEST_RAILWAYS, WIEDEN } from "./const"
 
 export type tBoardFieldNames = tCity | tOtherTypes | tChanceFieldNameType | tRailway | typeof POWER_STATION | typeof WATER_PLANT
@@ -64,8 +65,7 @@ export type tChanceType = typeof CHANCE_BLUE_BOTTOM | typeof CHANCE_BLUE_LEFT | 
 export type tChanceFieldNameType = typeof CHANCE_BLUE_BOTTOM | typeof CHANCE_BLUE_LEFT | typeof CHANCE_BLUE_RIGHT | typeof CHANCE_RED_BOTTOM | typeof CHANCE_RED_TOP | typeof CHANCE_RED_TOP
 
 export type tFieldTypes =  tCity | tNonCityEstates | tOtherTypes | tChanceType;
-type tConbineUnions<T> = T extends string ? T : never;
-export type tFlattenedFieldTypes = tConbineUnions<tFieldTypes> 
+export type tFlattenedFieldTypes = tCombineStringUnions<tFieldTypes> 
 
 export type tAnyState = iNamedChance | iNamedCityField | iNamedNonCityEstates | iNamedOtherField
 
