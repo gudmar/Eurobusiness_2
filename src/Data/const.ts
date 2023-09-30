@@ -74,3 +74,4 @@ export const BANK = 'Bank'
 
 export const THROW_10 = '10 x thrown dice result';
 export const THROW_20 = '20 x thrown dice result';
+export const BOARD_SIZE = 40;
