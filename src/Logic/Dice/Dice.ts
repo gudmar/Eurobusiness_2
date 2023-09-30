@@ -1,6 +1,6 @@
-import { GO_TO_JAIL } from "../../Data/const";
+import { BOARD_SIZE, GO_TO_JAIL } from "../../Data/const";
 import { CHANCE_FIELDS, CITY_FIELDS, NONE, PLANTS, RAILWAYS, TAX_FIELD } from "./const";
-import { iJailTestOutcome, iThrowResult, TestModes } from "./types";
+import { iJailTestOutcome, TestModes } from "./types";
 
 // DICE USES BOARD INDEX, NOT FROM 0 BuT FROM 1
 
@@ -14,7 +14,6 @@ const FIELD_INDEXES_FOR_TESTING = {
     [TAX_FIELD]: [39],
 }
 
-// NO TEST MODE IN DICE CLASS !!
 
 const getRandomGenerator = (min:number, max:number) => ():number => {
     const result = Math.floor(Math.random() * max) + min
@@ -62,16 +61,90 @@ export class Dice {
     }
 }
 
+type tDiceTestModeDecoratorInstance = DiceTestModeDecorator | null;
 
-// Class below has a good function, but this logic should not be here, no class for 
-// outcome interpretation,
-// Test mode NOT HERE
-export class DiceOutcomeProvider {
-    private testingMode: TestModes = TestModes.none;
+export class DiceTestModeDecorator {
+    private _testingMode: TestModes = TestModes.none;
     private _dice = new Dice();
+    private static _instance: tDiceTestModeDecoratorInstance = null;
+    private _getMappingInTestMode(testModeType: TestModes) {
+        switch(testModeType){
+            case TestModes.chanceFields: return FIELD_INDEXES_FOR_TESTING[CHANCE_FIELDS];
+            case TestModes.cityFields:   return FIELD_INDEXES_FOR_TESTING[CITY_FIELDS];
+            case TestModes.plants:       return FIELD_INDEXES_FOR_TESTING[PLANTS];
+            case TestModes.railways:     return FIELD_INDEXES_FOR_TESTING[RAILWAYS];
+            case TestModes.goToJailField: return FIELD_INDEXES_FOR_TESTING[GO_TO_JAIL];
+            case TestModes.taxField:     return FIELD_INDEXES_FOR_TESTING[TAX_FIELD];
+            default: throw new Error(`${testModeType} test mode type is not defined`)
+        }
+    }
+
+    constructor() {
+        if (DiceTestModeDecorator._instance) {
+            return DiceTestModeDecorator._instance
+        } else {
+            return this;
+        }
+    }
+
+    // getThrowForGetOutOfPrisonResult(): iJailTestOutcome {
+    //     if (this._testingMode === TestModes.getGetAwayFromJailPass) {
+    //         return iJailTestOutcome.pass
+    //     } else if (this._testingMode === TestModes.getGetAwayFromJailFail) {
+    //         return iJailTestOutcome.fail
+    //     }
+    //     return this._dice.getThrowForGetOutOfPrisonResult();
+    // }
+    set testingMode (nextValue: TestModes) { this._testingMode = nextValue }
+
+    private _findNextFieldNumberToVisitInTestMode(currentPlayerPosition: number, listOfFieldNumbers: number[]){
+        const orderedIndexes = listOfFieldNumbers.sort((a, b) => {
+            if (a > b) return 1;
+            if (a < b) return -1;
+            return 0;
+        });
+        console.log('oRdered', orderedIndexes)
+        const indexOfNextFieldNumber = orderedIndexes.findIndex((boardFieldNumber) => boardFieldNumber > currentPlayerPosition)
+        const result = indexOfNextFieldNumber === -1 ? listOfFieldNumbers[0] : listOfFieldNumbers[indexOfNextFieldNumber];
+        return result;
+    }
+    private _getDeltaMove(currentPlayerPosition: number, plannedPlayerPosition: number) {
+        if (plannedPlayerPosition > currentPlayerPosition) {
+            return plannedPlayerPosition - currentPlayerPosition;
+        } else {
+            const distanceFromBoardEnd = BOARD_SIZE - currentPlayerPosition;
+            return distanceFromBoardEnd + plannedPlayerPosition;
+        }
+    }
+    private _calculateThrowResultInTestMode(currentPlayerPosition: number, listOfFieldNumbers: number[]){
+        const plannedPosition = this._findNextFieldNumberToVisitInTestMode(currentPlayerPosition, listOfFieldNumbers);
+        console.log('Planned', plannedPosition)
+        const throwResult = this._getDeltaMove(currentPlayerPosition, plannedPosition);
+        return throwResult;
+    }
+
+    throwToMove(currentPlayerPosition: number){
+        if (this._testingMode === TestModes.none) {
+            return this._dice.throwToMove();
+        } else {
+            console.log('Mapping', this._getMappingInTestMode(this._testingMode))
+            const throwResult = this._calculateThrowResultInTestMode(
+                currentPlayerPosition,
+                this._getMappingInTestMode(this._testingMode)
+            )
+            return {
+                result: throwResult,
+                doublets: 0,
+            }
+        }
+    }
+
+    throwToPay(){
+        return this._dice.throwToPay()
+    }
     
     shouldPlayerLeaveJail(): iJailTestOutcome {
-        switch(this.testingMode){
+        switch(this._testingMode){
             case TestModes.getGetAwayFromJailPass: return (iJailTestOutcome.pass);
             case TestModes.getGetAwayFromJailFail: return (iJailTestOutcome.fail);
             default: return this._dice.getThrowForGetOutOfPrisonResult();
