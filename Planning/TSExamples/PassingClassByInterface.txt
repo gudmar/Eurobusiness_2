@@ -1,0 +1,220 @@
+interface ICalculator {
+    add: (input:number)=>void,
+    substract: (input:number) => void;
+    multiply: (input:number) => void;
+    divide: (input:number) => void;
+    reset: () => void;
+    set: (input:number) => void;
+    result: number;
+}
+
+export class CalculatorA {
+    private _result: number = 0;
+    get result () {return this._result}
+    add(input:number) {
+        this._result += input;
+    }
+    substract(input:number) {
+        this._result -= input;
+    }
+    multiply(input:number) {
+        this._result *= input;
+    }
+    divide(input:number) {
+        this._result /= input;
+    }
+    reset() {
+        this._result = 0;
+    }
+    set(input:number) {
+        this._result = input
+ 
+    }
+}
+export class CalculatorB {
+    private _result: number = 0;
+    get result () {return this._result}
+    add(input:number) {
+        this._result += input;
+    }
+    substract(input:number) {
+        this._result -= input;
+    }
+    multiply(input:number) {
+        this._result *= input;
+    }
+    divide(input:number) {
+        this._result /= input;
+    }
+    reset() {
+        this._result = 0;
+    }
+    set(input:number) {
+        this._result = input
+    }
+}
+export class CalculatorWithLogger {
+    private _result: number = 0;
+    private log() {
+        console.log(this.result)
+    }
+    get result () {return this._result}
+    add(input:number) {
+        this._result += input;
+        this.log()
+    }
+    substract(input:number) {
+        this._result -= input;
+        this.log()
+    }
+    multiply(input:number) {
+        this._result *= input;
+        this.log()
+    }
+    divide(input:number) {
+        this._result /= input;
+        this.log()
+    }
+    reset() {
+        this._result = 0;
+        this.log()
+    }
+    set(input:number) {
+        this._result = input
+        this.log()
+    }
+}
+
+const testCalculator = (Calculator: typeof CalculatorA) => {
+    const instance = new Calculator();
+    const results = []
+    instance.set(5);
+    if (instance.result !== 5) results.push(false)
+    instance.add(7);
+    if (instance.result !== 12) results.push(false)
+    instance.substract(15);
+    if (instance.result !== -3) results.push(false)
+    instance.reset();
+    if (instance.result !== 0) results.push(false)
+    instance.set(50);
+    instance.divide(5);
+    if (instance.result !== 10) results.push(false)
+    if (results.some((value:boolean) => value === false)) {
+        throw new Error('Test failed')
+    }
+    return true
+}
+
+testCalculator(CalculatorB);
+testCalculator(CalculatorA);
+testCalculator(CalculatorWithLogger)
+
+
+
+export class CalculatorInterfaceA implements ICalculator {
+    private _result: number = 0;
+    get result () {return this._result}
+    add(input:number) {
+        this._result += input;
+    }
+    substract(input:number) {
+        this._result -= input;
+    }
+    multiply(input:number) {
+        this._result *= input;
+    }
+    divide(input:number) {
+        this._result /= input;
+    }
+    reset() {
+        this._result = 0;
+    }
+    set(input:number) {
+        this._result = input
+ 
+    }
+}
+
+export class CalculatorInterfaceB implements ICalculator {
+    private _result: number = 0;
+    get result () {return this._result}
+    add(input:number) {
+        this._result += input;
+    }
+    substract(input:number) {
+        this._result -= input;
+    }
+    multiply(input:number) {
+        this._result *= input;
+    }
+    divide(input:number) {
+        this._result /= input;
+    }
+    reset() {
+        this._result = 0;
+    }
+    set(input:number) {
+        this._result = input
+ 
+    }
+}
+
+export class CalculatorWithLoggerInterface implements ICalculator {
+    private _result: number = 0;
+    private log() {
+        console.log(this.result)
+    }
+    get result () {return this._result}
+    add(input:number) {
+        this._result += input;
+        this.log()
+    }
+    substract(input:number) {
+        this._result -= input;
+        this.log()
+    }
+    multiply(input:number) {
+        this._result *= input;
+        this.log()
+    }
+    divide(input:number) {
+        this._result /= input;
+        this.log()
+    }
+    reset() {
+        this._result = 0;
+        this.log()
+    }
+    set(input:number) {
+        this._result = input
+        this.log()
+    }
+}
+
+type TClassType<Args extends []> = new (...args: Args) => ICalculator
+
+const testCalculatorImplementingInterface = (Calculator: TClassType<never>) => {
+    const instance = new Calculator();
+    const results = []
+    instance.set(5);
+    if (instance.result !== 5) results.push(false)
+    instance.add(7);
+    if (instance.result !== 12) results.push(false)
+    instance.substract(15);
+    if (instance.result !== -3) results.push(false)
+    instance.reset();
+    if (instance.result !== 0) results.push(false)
+    instance.set(50);
+    instance.divide(5);
+    if (instance.result !== 10) results.push(false)
+    if (results.some((value:boolean) => value === false)) {
+        throw new Error('Test failed')
+    }
+    return true
+}
+
+testCalculatorImplementingInterface(CalculatorB);
+testCalculator(CalculatorA);
+testCalculatorImplementingInterface(CalculatorWithLogger)
+
+

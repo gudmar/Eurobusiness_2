@@ -1,3 +1,5 @@
+import { tClassFromInterface } from "../../Types/types"
+
 export enum TestModes {
     none = 'none',
     chanceFields = 'chanceFields',
@@ -19,3 +21,18 @@ export interface iThrowResult {
 export enum iJailTestOutcome {
     pass = 'pass', fail = 'fail'
 }
+
+export interface iDice {
+    getThrowForGetOutOfPrisonResult(): iJailTestOutcome
+    throwToMove(): iThrowResult,
+    throwToPay(): number,
+}
+
+export interface iDiceTestModeDecorator {
+    testingMode: TestModes,
+    throwToMove(currentPlayerPosition: number): iThrowResult,
+    throwToPay(): number,
+    shouldPlayerLeaveJail(): iJailTestOutcome
+}
+
+export type tDiceTestModeDecorator = tClassFromInterface<never, iDiceTestModeDecorator>
