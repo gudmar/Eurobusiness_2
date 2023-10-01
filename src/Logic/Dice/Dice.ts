@@ -1,6 +1,6 @@
 import { BOARD_SIZE, GO_TO_JAIL } from "../../Data/const";
 import { CHANCE_FIELDS, CITY_FIELDS, NONE, PLANTS, RAILWAYS, TAX_FIELD } from "./const";
-import { iJailTestOutcome, TestModes } from "./types";
+import { iDice, iDiceTestModeDecorator, iJailTestOutcome, iThrowResult, TestModes } from "./types";
 
 // DICE USES BOARD INDEX, NOT FROM 0 BuT FROM 1
 
@@ -20,7 +20,7 @@ const getRandomGenerator = (min:number, max:number) => ():number => {
     return result
 }
 
-export class Dice {
+export class Dice implements iDice {
     private _generate = getRandomGenerator(0, 6);
     private _throw(){
         return this._generate();
@@ -37,7 +37,7 @@ export class Dice {
             return iJailTestOutcome.fail
         }
     }
-    private _getSingleThrowResultForMove() {
+    private _getSingleThrowResultForMove(): iThrowResult {
         const [ firstThrowResult, secondThrowResult ] = this._getTwoThrows();
         const isDublet = firstThrowResult === secondThrowResult;
         if (!isDublet) {
@@ -46,7 +46,7 @@ export class Dice {
             return {result: firstThrowResult + secondThrowResult, doublets: 1}
         }
     }
-    throwToMove(){
+    throwToMove(): iThrowResult{
         const firstThrowResult = this._getSingleThrowResultForMove();
         if ( firstThrowResult.doublets === 0) return firstThrowResult;
         const secondThrowResult = this._getSingleThrowResultForMove();
@@ -55,7 +55,7 @@ export class Dice {
             doublets: firstThrowResult.doublets + secondThrowResult.doublets,
         }
     }
-    throwToPay(){
+    throwToPay():number{
         const [result, _] = this._getTwoThrows();
         return result;
     }
@@ -63,7 +63,7 @@ export class Dice {
 
 type tDiceTestModeDecoratorInstance = DiceTestModeDecorator | null;
 
-export class DiceTestModeDecorator {
+export class DiceTestModeDecorator implements iDiceTestModeDecorator {
     private _testingMode: TestModes = TestModes.none;
     private _dice = new Dice();
     private static _instance: tDiceTestModeDecoratorInstance = null;
@@ -123,7 +123,7 @@ export class DiceTestModeDecorator {
         return throwResult;
     }
 
-    throwToMove(currentPlayerPosition: number){
+    throwToMove(currentPlayerPosition: number): iThrowResult{
         if (this._testingMode === TestModes.none) {
             return this._dice.throwToMove();
         } else {

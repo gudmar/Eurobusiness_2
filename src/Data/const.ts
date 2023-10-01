@@ -6,6 +6,11 @@ export const PLAYER_2 = 'player_2';
 export const PLAYER_3 = 'player_3';
 export const PLAYER_4 = 'player_4';
 
+export const YELLOW = 'yellow';
+export const RED = 'red';
+export const GREEN = 'green';
+export const BLUE = 'blue';
+
 
 export const FREE_PARK = 'Free park';
 export const CITY = 'City';
