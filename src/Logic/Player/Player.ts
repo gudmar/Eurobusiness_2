@@ -46,5 +46,4 @@ class Player {
             strategy: this._strategy,
         })
     }
-
 }
