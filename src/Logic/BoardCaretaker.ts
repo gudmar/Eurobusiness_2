@@ -2,7 +2,7 @@ import { tPlayerName } from "../Components/Pawns/types";
 import { NR_OF_HOTELS, NR_OF_HOUSES } from "../Constants/constants";
 import { CHANCE_BLUE, CHANCE_RED, CITY, FREE_PARK, GO_TO_JAIL, GUARDED_PARKING, JAIL, PLANT, POWER_STATION, RAILWAY, START, TAX } from "../Data/const";
 import { iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, iNonCityEstates, iOtherFieldTypes, tBoard, tBoardField, tChanceTypes, tNamedBoardField, } from "../Data/types";
-import { tEstateField, tField } from "./boardTypes";
+import { iBoardCaretaker, tEstateField, tField } from "./boardTypes";
 import { ChanceField, CityField, NonCityEstatesField, NullishField, OtherFieldTypesField } from "./FieldCreators";
 import { createBoardDescriptor } from "./Utils/createBoardDescriptor";
 
@@ -72,7 +72,7 @@ const LIST_OF_FIELD_PRODUCERS = [
     ChanceFieldCreator, 
 ]
 
-export class BoardCaretaker extends FieldCreator {
+export class BoardCaretaker extends FieldCreator implements iBoardCaretaker {
     static fieldInstances: tField[] = [];
 
     registerField(fieldInstance: any) {
