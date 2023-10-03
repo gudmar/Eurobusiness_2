@@ -35,4 +35,5 @@ export interface iDiceTestModeDecorator {
     shouldPlayerLeaveJail(): iJailTestOutcome
 }
 
-export type tDiceTestModeDecorator = tClassFromInterface<never, iDiceTestModeDecorator>
+export type tDiceTestModeDecorator = tClassFromInterface<null, iDiceTestModeDecorator>
+export type tDiceTestModeDecoratorInstance = iDiceTestModeDecorator;

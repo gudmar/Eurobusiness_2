@@ -3,6 +3,7 @@ import {
     CITY
 } from '../Data/const'
 import { iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, tAnyState, tBoardField, tChanceType, tCity, tCountries, tEstateTypes, tFlattenedFieldTypes, tIcon, tNonCityEstates, tOtherTypes, tVisitPayment } from '../Data/types';
+import { iChanceField, iChanceFieldState, iCityFieldClass, iNonCityEstatesField, iNonCityEstatesFieldState, iOtherFieldTypesField, iOtherFieldTypesFieldState } from './boardTypes';
 import { SubscribtionsHandler } from './SubscrbtionsHandler';
 
 export class NullishField {
@@ -16,12 +17,12 @@ export class NullishField {
     }
 }
 
-export class CityField extends SubscribtionsHandler<tFlattenedFieldTypes, tAnyState> {
+export class CityField extends SubscribtionsHandler<tFlattenedFieldTypes, tAnyState> implements iCityFieldClass {
     private _name!: string;
     private _type: tEstateTypes = CITY;
     private _country!: tCountries;
     private _price: number = 0;
-    private _mortage: number = 0;
+    private _mortgage: number = 0;
     private _housePrice: number = 0;
     private _hotelPrice: number = 0;
     private _visit: tVisitPayment = [0];
@@ -38,7 +39,7 @@ export class CityField extends SubscribtionsHandler<tFlattenedFieldTypes, tAnySt
         type,
         country,
         price,
-        mortage,
+        mortgage,
         housePrice,
         hotelPrice,
         visit,
@@ -57,7 +58,7 @@ export class CityField extends SubscribtionsHandler<tFlattenedFieldTypes, tAnySt
         this._type = type;
         this._country = country;
         this._price = price;
-        this._mortage = mortage;
+        this._mortgage = mortgage;
         this._housePrice = housePrice;
         this._hotelPrice = hotelPrice;
         this._visit = visit;
@@ -74,7 +75,7 @@ export class CityField extends SubscribtionsHandler<tFlattenedFieldTypes, tAnySt
     get type() { return this._type }
     get country() { return this._country }
     get price() { return this._price }
-    get mortage() { return this._mortage }
+    get mortgage() { return this._mortgage }
     get housePrice() {return this._housePrice }
     get hotelPrice() {return this._hotelPrice} 
     get visit() {return this._visit}
@@ -88,13 +89,13 @@ export class CityField extends SubscribtionsHandler<tFlattenedFieldTypes, tAnySt
         if (val > 5 || val < 0) throw new Error('Nr of houses has to be > 0 and < 6')
         this._nrOfHouses = val
     }
-    get state() {
+    get state(): iCityFieldClass {
         return ({
             name: this._name,
             type: this._type,
             country: this._country,
             price: this._price,
-            mortage: this._mortage,
+            mortgage: this._mortgage,
             housePrice: this._housePrice,
             hotelPrice: this._hotelPrice,
             visit: this._visit,
@@ -109,11 +110,11 @@ export class CityField extends SubscribtionsHandler<tFlattenedFieldTypes, tAnySt
     set isPlegded(val: boolean) { this._isPlegded = val}
 }
 
-export class NonCityEstatesField extends SubscribtionsHandler<tFlattenedFieldTypes, tAnyState>{
+export class NonCityEstatesField extends SubscribtionsHandler<tFlattenedFieldTypes, tAnyState> implements iNonCityEstatesField{
     private _type!: tEstateTypes;
     private _country!: tCountries;
     private _price!: number;
-    private _mortage!: number;
+    private _mortgage!: number;
     private _visit!: tVisitPayment;
     private _owner: string = BANK;
     private _isPlegded: boolean = false;
@@ -126,7 +127,7 @@ export class NonCityEstatesField extends SubscribtionsHandler<tFlattenedFieldTyp
         type,
         country,
         price,
-        mortage,
+        mortgage,
         visit,
         owner,
         isPlegded,
@@ -141,7 +142,7 @@ export class NonCityEstatesField extends SubscribtionsHandler<tFlattenedFieldTyp
         this._type = type;
         this._country = country;
         this._price = price;
-        this._mortage = mortage;
+        this._mortgage = mortgage;
         this._visit = visit;
         this._owner = owner;
         this._isPlegded = isPlegded;
@@ -154,19 +155,20 @@ export class NonCityEstatesField extends SubscribtionsHandler<tFlattenedFieldTyp
     get type() { return this._type}
     get country() {return this._country}
     get price() {return this._price}
-    get mortage() {return this._mortage}
+    get mortgage() {return this._mortgage}
     get visit() {return this._visit}
     get owner() {return this._owner}
     get isPlegded() {return this._isPlegded}
     get Icon() {return this._icon}
     set isPlegded(val: boolean) { this._isPlegded = val}
     set owner(val: string) {this._owner = val}
-    get state() {
+    get index() { return this._index }
+    get state(): iNonCityEstatesFieldState {
         return {
             type: this._type,
             country: this._country,
             price: this._price,
-            mortage: this._mortage,
+            mortgage: this._mortgage,
             visit: this._visit,
             owner: this._owner,
             isPlegded: this._isPlegded,
@@ -177,11 +179,11 @@ export class NonCityEstatesField extends SubscribtionsHandler<tFlattenedFieldTyp
     }
 }
 
-export class  OtherFieldTypesField extends SubscribtionsHandler<tFlattenedFieldTypes, tAnyState> {
+export class  OtherFieldTypesField extends SubscribtionsHandler<tFlattenedFieldTypes, tAnyState> implements iOtherFieldTypesField {
     private _type!: tOtherTypes;
     private _visit?: tVisitPayment;
     private _info!: string;
-    private _wait?: number;
+    private _wait!: number;
     private _icon!: tIcon;
     private _name!: string;
     private _index!: number;
@@ -190,7 +192,7 @@ export class  OtherFieldTypesField extends SubscribtionsHandler<tFlattenedFieldT
         type,
         visit,
         info,
-        wait,
+        wait = 0,
         Icon,
         name,
     }: iNamedOtherField, index: number) {
@@ -208,7 +210,7 @@ export class  OtherFieldTypesField extends SubscribtionsHandler<tFlattenedFieldT
         OtherFieldTypesField.instances[name] = this;
         return this;
     }
-    get state() {
+    get state(): iOtherFieldTypesFieldState {
         return ({
             name: this._name,
             type: this._type,
@@ -225,9 +227,10 @@ export class  OtherFieldTypesField extends SubscribtionsHandler<tFlattenedFieldT
     get Icon() { return this._icon}
     get visit() {return this._visit}
     get name() {return  this._name}
+    get index() {return this._index}
 }
 
-export class ChanceField extends SubscribtionsHandler<tFlattenedFieldTypes, tAnyState> {
+export class ChanceField extends SubscribtionsHandler<tFlattenedFieldTypes, tAnyState> implements iChanceField{
     private _type!: tChanceType;
     private _info!: string;
     private _icon!: tIcon;
@@ -255,7 +258,7 @@ export class ChanceField extends SubscribtionsHandler<tFlattenedFieldTypes, tAny
     get icon() { return this._icon}
     get Icon() { return this._icon}
     get index() { return this._index}
-    get state() {
+    get state(): iChanceFieldState {
         return ({
             name: this._name,
             index: this._index,

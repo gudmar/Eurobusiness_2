@@ -13,6 +13,8 @@ export type tAction<PayloadType> = {
 
 export type tCombineStringUnions<T> = T extends string ? T : never;
 
-export type tClassFromInterface<Args extends [], Interface> = new (...args: Args) => Interface
+// export type tClassFromInterface<Args extends [], Interface> = new (...args: Args) => Interface
+
+export type tClassFromInterface<Args, Interface> = Args extends [] ? new (...args: Args) => Interface : new () => Interface
 
 export type tToBeImplemented = any;
