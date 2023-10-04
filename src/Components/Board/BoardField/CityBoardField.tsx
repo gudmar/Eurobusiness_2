@@ -10,7 +10,7 @@ const CityBoardField = (fieldDescriptor: iNamedCityField & {direction: tBoardSid
         type,
         country,
         price,
-        mortage,
+        mortgage,
         housePrice,
         hotelPrice,
         visit,

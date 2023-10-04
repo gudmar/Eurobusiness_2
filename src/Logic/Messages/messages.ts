@@ -1,6 +1,6 @@
 import { BANK } from "../../Data/const";
 import { GAIN, PAY, PAY_EACH_HOTEL } from "../../Constants/commands";
-import { PRIORITY_NOT_IMPORTANT } from "./constants";
+import { MOVE, PRIORITY_NOT_IMPORTANT } from "./constants";
 import { iGetPayMessage, iPaymentMultipleToBankOption, iPaymentOption, iPaymentToOption } from "./types";
 
 export const getPayMessage = ({source, ammount, isMandatory = false, priority = PRIORITY_NOT_IMPORTANT}: iGetPayMessage): iPaymentToOption => ({

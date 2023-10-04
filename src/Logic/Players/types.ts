@@ -1,6 +1,7 @@
 import { tColors } from "../../Data/types";
 import { tToBeImplemented } from "../../Types/types";
 import { iDiceTestModeDecorator, tDiceTestModeDecorator } from "../Dice/types";
+import { MOVE } from "../Messages/constants";
 import { iStrategy } from "../Strategies/types";
 
 export interface iPlayerDescriptor {
@@ -10,8 +11,8 @@ export interface iPlayerDescriptor {
 }
 
 export interface iAllPlayersArgs {
-    DiceClass: tDiceTestModeDecorator;
-    playes: iPlayerDescriptor[];
+    DiceClass?: tDiceTestModeDecorator;
+    players?: iPlayerDescriptor[];
 }
 
 export interface iPlayerArgs {
@@ -41,5 +42,20 @@ export interface iPlayer extends iPlayerState {
 export interface iAllPlayers {
     currentPlayerState: iPlayerState,
     getAllPlayersStates: iPlayerState[],
+    getPlayerFieldIndex(color:tColors): number,
+    currentPlayer: iPlayer,
     makeMove(): Promise<boolean>,
 }
+
+// export interface iAllPlayersReturn {
+//     _diceClassInstance: iDiceTestModeDecorator,
+//     _players: iPlayer[],
+//     _currentPlayerIndex: number,
+//     _createPlayer(args: iPlayerDescriptor): iPlayer
+// }
+
+export type tMove = typeof MOVE;
+export interface iMoveMessage {
+    nrOfFields: number,
+    done(): Promise<boolean>
+} 
