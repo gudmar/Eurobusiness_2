@@ -7,7 +7,7 @@ export const useCityField = (name: tCity) => {
     const ID: tCity = name;
     const thisCity = caretaker.getFieldByName(name)
     const [{
-        type, country, price, mortage, housePrice, hotelPrice, visit, owner, nrOfHouses, color
+        type, country, price, mortgage, housePrice, hotelPrice, visit, owner, nrOfHouses, color
     }, setState]: [iCityField, any] = useState(thisCity.state)
     
     
@@ -21,6 +21,6 @@ export const useCityField = (name: tCity) => {
     }, [])
 
     return ({
-        type, country, price, mortage, housePrice, hotelPrice, visit, owner, nrOfHouses, color
+        type, country, price, mortgage, housePrice, hotelPrice, visit, owner, nrOfHouses, color
     })
 }

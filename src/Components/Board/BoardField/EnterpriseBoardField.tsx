@@ -11,7 +11,7 @@ const EnterpriseBoardField = (fieldDescriptor: iNamedNonCityEstates & {direction
         country,
         type,
         price,
-        mortage,
+        mortgage,
         visit,
         owner,
         isPlegded,

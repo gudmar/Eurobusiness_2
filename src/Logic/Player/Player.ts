@@ -1,11 +1,13 @@
 import { tColors } from "../../Data/types";
 import { tToBeImplemented } from "../../Types/types";
 import { iDiceTestModeDecorator } from "../Dice/types";
-import { iPlayerArgs, iPlayerState, iPlayer } from "../Players/types";
+import { iPlayerArgs, iPlayerState, iPlayer, iMoveMessage, tMove } from "../Players/types";
 import { INITIAL_MONEY } from "../../Data/money";
 import { iStrategy } from "../Strategies/types";
+import { SubscribtionsHandler } from "../SubscrbtionsHandler";
+import { MOVE } from "../Messages/constants";
 
-export class Player implements iPlayer {
+export class Player extends SubscribtionsHandler<tMove, iMoveMessage> implements iPlayer {
     private _diceInstance: iDiceTestModeDecorator;
     private _name: string;
     private _money: number;
@@ -21,6 +23,7 @@ export class Player implements iPlayer {
     constructor({
         name, money = INITIAL_MONEY, color, strategy, DiceClassInstance
     }: iPlayerArgs){
+        super();
         this._diceInstance = DiceClassInstance;
         this._name = name;
         this._money = money;
@@ -69,10 +72,33 @@ export class Player implements iPlayer {
             isGameLost: this._isGameLost,
         }
     }
-
+    getDoneFunction() {
+        let outsideResolve;
+        let outsideReject;
+        const promiseToAwait = new Promise((res, rej) => {
+            outsideResolve = () => res(true);
+            outsideReject = () => rej(false);
+        })
+        return {
+            resolve: outsideResolve,
+            reject: outsideReject,
+            promise: promiseToAwait,
+        }
+    }
     async move():Promise<boolean> {
-        console.error('Implement Player.move')
-        return Promise.resolve(false)
+        const {result: nrOfFields, doublets} = this._diceInstance.throwToMove(this._fieldNr);
+        if (doublets > 1) {
+            console.error('Implement go to jail here')
+        }
+        const result = await this.movePawn(nrOfFields);
+        return result;
+    }
+
+    private async movePawn(nrOfFields: number) {
+        const {resolve, promise} = this.getDoneFunction();
+        this.runAllSubscriptions(MOVE, {nrOfFields, done: resolve!});
+        await promise;
+        return Promise.resolve(true);
     }
 
 }
