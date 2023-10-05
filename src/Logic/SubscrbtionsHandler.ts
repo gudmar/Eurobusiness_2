@@ -1,5 +1,7 @@
 import { iSubscription, tSubscription } from "../Types/types"
 
+// implementations should extend iSubscribtionHandler<SubscriptionMessageType extends string, StateType>
+
 export abstract class SubscribtionsHandler<SubscriptionMessageType extends string, StateType> {
     private _subscribtions: iSubscription<SubscriptionMessageType>[] =[];
 
