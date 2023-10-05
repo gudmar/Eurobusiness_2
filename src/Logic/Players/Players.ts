@@ -1,10 +1,11 @@
 import { INITIAL_MONEY } from "../../Data/money";
 import { tColors } from "../../Data/types";
-import { iDiceTestModeDecorator, tDiceTestModeDecorator } from "../Dice/types";
+import { iDiceTestModeDecorator } from "../Dice/types";
 import { Player } from "../Player/Player";
-import { iAllPlayers, iAllPlayersArgs,  iPlayer, iPlayerDescriptor, iPlayerState } from "./types";
+import { SubscribtionsHandler } from "../SubscrbtionsHandler";
+import { iAllPlayers, iAllPlayersArgs,  iPlayer, iPlayerDescriptor, iPlayerState, tSwitchPlayer } from "./types";
 
-export class Players implements iAllPlayers {
+export class Players extends SubscribtionsHandler<tSwitchPlayer, iPlayer> implements iAllPlayers {
     private static _instance: Players;
     private _diceClassInstance!: iDiceTestModeDecorator;
     private _players: iPlayer[] = [];
@@ -14,6 +15,7 @@ export class Players implements iAllPlayers {
         return player;
     }
     constructor({DiceClass, players}: iAllPlayersArgs){
+        super();
         if (Players._instance) {
             return Players._instance
         } else {
@@ -32,7 +34,7 @@ export class Players implements iAllPlayers {
         return index;
     }
 
-    get getAllPlayersStates() {
+    get allPlayersStates() {
         const result = this._players.map((player) => player.state)
         return result;
     }
