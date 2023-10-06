@@ -1,14 +1,18 @@
 import { usePlayerData } from "../../hooks/usePlayerData";
+import { iPlayerState } from "../../Logic/Players/types";
+import { Pawn } from "./Pawn";
+import { iPawnArgs } from "./types";
 
-export const Pawns = () => {
-    const { allPlayersStates } = usePlayerData(null);
+export const Pawns = ({playerDescriptors}: iPawnArgs) => {
+    const { allPlayersStates } = usePlayerData(playerDescriptors);
+    console.log(playerDescriptors, allPlayersStates)
     return (
         <>
-            allPlayersStates.map({
-                name, money, specialCards, color, fieldNr, isInPosition, nrTurnsToWait, isGameLost
-            }) => {
-                    return (<Pawn color={color}/>)
-            }
+            {allPlayersStates?.map(({
+                name, money, specialCards, color, fieldNr, isInPrison, nrTurnsToWait, isGameLost
+            }: iPlayerState) => {
+                    return (<Pawn key={color} color={color}/>)
+            })}
         </>
     )
 }

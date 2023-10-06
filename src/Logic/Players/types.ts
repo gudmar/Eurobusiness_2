@@ -2,13 +2,13 @@ import { tColors } from "../../Data/types";
 import { iSubscription, tToBeImplemented } from "../../Types/types";
 import { iDiceTestModeDecorator, tDiceTestModeDecorator } from "../Dice/types";
 import { MOVE, SWITCH_PLAYER } from "../Messages/constants";
-import { iStrategy } from "../Strategies/types";
+import { iStrategy, StrategyNames } from "../Strategies/types";
 import { iSubscribtionHandler } from "../types";
 
 export interface iPlayerDescriptor {
     name: string,
     color: tColors,
-    strategy: iStrategy
+    strategy: StrategyNames
 }
 
 export interface iAllPlayersArgs {
@@ -20,7 +20,7 @@ export interface iPlayerArgs {
     name: string,
     money: number,
     color: tColors,
-    strategy: iStrategy,
+    strategy: StrategyNames,
     DiceClassInstance: iDiceTestModeDecorator
 }
 

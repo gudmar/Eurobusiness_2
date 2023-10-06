@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useThemesAPI } from "../../Contexts/ThemeContext";
 import { getBoardCaretaker } from "../../Functions/getBoardCaretaker";
 import { BoardCaretaker } from "../../Logic/BoardCaretaker";
@@ -42,6 +41,7 @@ const getClassName = (direction: tBoardSideDirections) => {
 
 const BoardEdge = ({direction}: iBoardSide) => {
     const { theme } = useThemesAPI();
+    console.log(theme)
     const classes: {[key:string]: string} = useStyles(theme as any);
     const {type, name} = getEdgeData(direction)
     const className = getClassName(direction);
@@ -55,6 +55,7 @@ const BoardEdge = ({direction}: iBoardSide) => {
 
 export const Board = () => {
     const { theme } = useThemesAPI();
+    console.log(theme)
     const classes = useStyles(theme as any);
     // const boardCaretaker: any = getBoardCaretaker();
     // useEffect(

@@ -6,6 +6,7 @@ import { INITIAL_MONEY } from "../../Data/money";
 import { iStrategy } from "../Strategies/types";
 import { SubscribtionsHandler } from "../SubscrbtionsHandler";
 import { MOVE } from "../Messages/constants";
+import { getStrategyProvider } from "../Strategies/getStrategyProvider";
 
 export class Player extends SubscribtionsHandler<tMove, iMoveMessage> implements iPlayer {
     private _diceInstance: iDiceTestModeDecorator;
@@ -33,7 +34,7 @@ export class Player extends SubscribtionsHandler<tMove, iMoveMessage> implements
         this._isInPrison = false;
         this._nrTurnsToWait = 0;
         this._isGameLost = false;
-        this._strategy = strategy;
+        this._strategy = getStrategyProvider(strategy);
 
         this._initialState = this.getSnapshot()
     }

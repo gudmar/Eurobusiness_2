@@ -34,7 +34,7 @@ export const usePlayerData = (playersData: iPlayerDescriptor[] | null) => {
         return playersInstance?.unsubscribe(SWITCH_PLAYER, USE_PLAYER_DATA_ID)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [setCurrentPlayer])
-    return {
+    const result = {
         currentPlayerColor: getFromPlayer(currentPlayer, COLOR),
         currentPlayerName: getFromPlayer(currentPlayer, NAME),
         currentPlayerMoney: getFromPlayer(currentPlayer, MONEY),
@@ -45,4 +45,6 @@ export const usePlayerData = (playersData: iPlayerDescriptor[] | null) => {
         currentPlayerIsGameLost: getFromPlayer(currentPlayer, IS_GAME_LOST),
         allPlayersStates: playersInstance?.allPlayersStates,
     }
+    console.log(result)
+    return result
 }
