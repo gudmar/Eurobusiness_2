@@ -31,9 +31,9 @@ export const GameStarter = () => {
             strategy: StrategyNames.manual,
         }
     ];
-    return(
+    return (
         <>
-            <Board><Board>/>
+            <Board/>
             <Pawns playerDescriptors={TEST_PLAYERS}/>
             <CommandArea/>
         </>

@@ -103,7 +103,6 @@ export class DiceTestModeDecorator implements iDiceTestModeDecorator {
             if (a < b) return -1;
             return 0;
         });
-        console.log('oRdered', orderedIndexes)
         const indexOfNextFieldNumber = orderedIndexes.findIndex((boardFieldNumber) => boardFieldNumber > currentPlayerPosition)
         const result = indexOfNextFieldNumber === -1 ? listOfFieldNumbers[0] : listOfFieldNumbers[indexOfNextFieldNumber];
         return result;
@@ -118,7 +117,6 @@ export class DiceTestModeDecorator implements iDiceTestModeDecorator {
     }
     private _calculateThrowResultInTestMode(currentPlayerPosition: number, listOfFieldNumbers: number[]){
         const plannedPosition = this._findNextFieldNumberToVisitInTestMode(currentPlayerPosition, listOfFieldNumbers);
-        console.log('Planned', plannedPosition)
         const throwResult = this._getDeltaMove(currentPlayerPosition, plannedPosition);
         return throwResult;
     }
@@ -127,7 +125,6 @@ export class DiceTestModeDecorator implements iDiceTestModeDecorator {
         if (this._testingMode === TestModes.none) {
             return this._dice.throwToMove();
         } else {
-            console.log('Mapping', this._getMappingInTestMode(this._testingMode))
             const throwResult = this._calculateThrowResultInTestMode(
                 currentPlayerPosition,
                 this._getMappingInTestMode(this._testingMode)

@@ -22,7 +22,8 @@ export class Players extends SubscribtionsHandler<tSwitchPlayer, iPlayer> implem
             this._diceClassInstance = new DiceClass!();
             players!.forEach((player) => {
                 const nextPlayer = this._createPlayer(player);
-                this._players.push(nextPlayer);    
+                this._players.push(nextPlayer);
+            Players._instance = this
         })
         }
     }
