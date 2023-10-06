@@ -8,5 +8,6 @@ export const useStyles = createUseStyles({
         width: PAWN_SIZE,
         height: PAWN_SIZE,
         borderRadius: '50%',
+        position: 'absolute'
     }
 })

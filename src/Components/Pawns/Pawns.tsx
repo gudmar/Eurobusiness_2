@@ -5,7 +5,6 @@ import { iPawnArgs } from "./types";
 
 export const Pawns = ({playerDescriptors}: iPawnArgs) => {
     const { allPlayersStates } = usePlayerData(playerDescriptors);
-    console.log(playerDescriptors, allPlayersStates)
     return (
         <>
             {allPlayersStates?.map(({
