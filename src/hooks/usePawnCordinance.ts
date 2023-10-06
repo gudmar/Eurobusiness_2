@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { tPawnSizes, tPlayerName } from "../Components/Pawns/types";
+import { tPlayerName } from "../Components/Pawns/types";
 import { tBoardFieldPosition } from "../Contexts/fieldSizes/types";
 import { useFieldSize } from "../Contexts/fieldSizes/useFieldSizes"
 import { PLAYER_1, PLAYER_2, PLAYER_3, PLAYER_4 } from "../Data/const";

@@ -10,6 +10,13 @@ export interface iStrategyArgs {
     options: tOptions,
 }
 
+export enum StrategyNames {
+    manual = 'manual',
+    easy = 'easy',
+    normal = 'normal',
+    hard = 'hard'
+}
+
 export interface iStrategy {
     selectOption(args: iStrategyArgs): Promise<tOption>,
     // Promise, because of manual player,
