@@ -3,6 +3,8 @@ import { iNamedCityField, tCity } from "../../../Data/types"
 import { useCityField } from "../../../hooks/useField"
 import { useStyles } from "./styels";
 import { LEFT, RIGHT, TOP, BOTTOM, tBoardSideDirections } from "../types";
+import { useSubscribeToFieldLocation } from "../../../Contexts/fieldLocation/useFieldLocation";
+import { LegacyRef } from "react";
 
 const CityBoardField = (fieldDescriptor: iNamedCityField & {direction: tBoardSideDirections }) => {
     const {
@@ -21,6 +23,7 @@ const CityBoardField = (fieldDescriptor: iNamedCityField & {direction: tBoardSid
          index,
     } = useCityField(fieldDescriptor.name as tCity)
     const { theme } = useThemesAPI();
+    const nodeReference = useSubscribeToFieldLocation(index)
     const classes = useStyles(theme as any);
     const containerClass = classes[`cityFieldWrapper${fieldDescriptor.direction}`]
     const colorBarClass = classes[`colorBar${fieldDescriptor.direction}`]
@@ -31,7 +34,7 @@ const CityBoardField = (fieldDescriptor: iNamedCityField & {direction: tBoardSid
     const titleUpsideDownClass = classes[`titleUpsideDown${fieldDescriptor.direction}`] + ' ' + classes.fontCityName;
     const titleFieldNumberClass = classes[`fieldNumber${fieldDescriptor.direction}`] + ' ' + classes.fontCityNumber;
     return (
-        <div className={`${containerClass} ${classes.singleWidth} ${classes.fieldWrapper}`}>
+        <div ref={nodeReference as unknown as LegacyRef<HTMLDivElement>} className={`${containerClass} ${classes.singleWidth} ${classes.fieldWrapper}`}>
             <div className={colorBarClass} style={{backgroundColor: color}}></div>
             <div className={titleClass}>{name}</div>
             <div className={priceClass}>{price}</div>
