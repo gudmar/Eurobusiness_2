@@ -6,11 +6,12 @@ import { SWITCH_PLAYER } from "../Logic/Messages/constants";
 import { Players } from "../Logic/Players/Players"
 import { iAllPlayers, iPlayer, iPlayerDescriptor, iPlayerState } from "../Logic/Players/types"
 
+// WORKS OK
+
 const USE_PLAYER_DATA_ID = 'use-player-data-id';
 
 const getFromPlayer = (player: iPlayer | null, key: keyof iPlayerState) => {
     const result = player?.state?.[key];
-    console.log(player, player?.state, key)
     return result;
 }
 
@@ -65,7 +66,6 @@ export const usePlayerData = (playersData: iPlayerDescriptor[] | null) => {
         })
         if (playersInstance) {
             const newData = getData(playersInstance);
-            console.log(currentPlayer, newData)
             setData(newData);    
         }
         return playersInstance?.unsubscribe(SWITCH_PLAYER, USE_PLAYER_DATA_ID)
