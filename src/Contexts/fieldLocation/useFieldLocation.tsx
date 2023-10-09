@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useRef, useState } from "react"
+import React, { createContext, useContext, useEffect, useRef, useState } from "react"
 import { tColors } from "../../Data/types"
 import { getPawnLocation } from "./getPawnLocation"
 import { iFieldLocationGettersStorageAPI, iPoint, tLocationGetter, tLocationStorage, tNode, tRegisterLocationGetter, tUseFieldLocationGettersStorage } from "./types"
@@ -43,7 +43,7 @@ const useFieldLocationGettersStorage: tUseFieldLocationGettersStorage = () => {
 
 export const useSubscribeToFieldLocation = (index: number) => {
     const ref = useRef<tNode>(null);
-    const {registerCurrentReference} = useFieldLocationGettersStorage();
+    const {registerCurrentReference} = useFieldSizeGetters();
     useEffect(() => {
         if (ref && ref.current && registerCurrentReference){
             registerCurrentReference(ref.current, index)
@@ -68,7 +68,7 @@ export const FieldLocationContextProvider = ({children}: {children: React.ReactN
 }
 
 export function useFieldSizeGetters() {
-    const fieldSizes = FieldLocationGettersContext;
+    const fieldSizes = useContext(FieldLocationGettersContext);
     if (!FieldLocationGettersContext) throw new Error('useFieldSize should be used within FieldSizeContextProvider');
     return {...fieldSizes}
 }
