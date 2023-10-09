@@ -1,4 +1,4 @@
-import { LegacyRef } from "react";
+import { LegacyRef, useEffect } from "react";
 import { useSubscribeToFieldLocation } from "../../../Contexts/fieldLocation/useFieldLocation";
 import { useThemesAPI } from "../../../Contexts/ThemeContext";
 import { iNamedOtherField, tOtherTypes } from "../../../Data/types";
@@ -19,6 +19,9 @@ const StartField = (fieldDescriptor: iNamedOtherField & {direction: tBoardSideDi
         const { theme } = useThemesAPI();
         const classes = useStyles(theme as any);
         const nodeReference = useSubscribeToFieldLocation(index);
+        useEffect(() => {
+            console.log(nodeReference)
+        }, [nodeReference])
         return (
             <div ref={nodeReference as unknown as LegacyRef<HTMLDivElement>} className={`${classes.fieldWrapper}  ${classes.rightBottomField}  ${classes.doubleWidth}`}>
                 <div className={classes.titleBarBottomRight}>{name}</div>
