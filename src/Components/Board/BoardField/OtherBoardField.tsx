@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { LegacyRef, useEffect } from "react";
+import { useSubscribeToFieldLocation } from "../../../Contexts/fieldLocation/useFieldLocation";
 import { useThemesAPI } from "../../../Contexts/ThemeContext";
 import { iNamedOtherField, tOtherTypes } from "../../../Data/types";
 
@@ -19,9 +20,10 @@ const OtherBoardField = (fieldDescriptor: iNamedOtherField & {direction: tBoardS
     } = state
     const { theme } = useThemesAPI();
     const classes = useStyles(theme as any);
+    const nodeReference = useSubscribeToFieldLocation(index);
     const containerDirectionClass = classes[`enterpriseFieldWrapper${fieldDescriptor.direction}`]
     return (
-        <div className={`${classes.fieldWrapper}  ${classes.singleWidth} ${containerDirectionClass}`}>
+        <div ref={nodeReference as unknown as LegacyRef<HTMLDivElement>} className={`${classes.fieldWrapper}  ${classes.singleWidth} ${containerDirectionClass}`}>
             <div className={classes[`title${fieldDescriptor.direction}`]}>{name}</div>
             <div className={classes[`price${fieldDescriptor.direction}`]}>{visit}</div>
             <div className={`${classes.icon} ${classes[fieldDescriptor.direction]}`}><Icon /></div>

@@ -1,4 +1,5 @@
-import React from "react";
+import React, { LegacyRef } from "react";
+import { useSubscribeToFieldLocation } from "../../../Contexts/fieldLocation/useFieldLocation";
 import { useThemesAPI } from "../../../Contexts/ThemeContext";
 import { iNamedNonCityEstates, tNonCityEstates } from "../../../Data/types"
 import { useNonCityEstatesField } from "../../../hooks/useField"
@@ -21,11 +22,12 @@ const EnterpriseBoardField = (fieldDescriptor: iNamedNonCityEstates & {direction
     } = useNonCityEstatesField(fieldDescriptor.name as tNonCityEstates)
     const { theme } = useThemesAPI();
     const classes = useStyles(theme as any);
+    const nodeReference = useSubscribeToFieldLocation(index);
     const enterpriseFieldWrapper = classes[`enterpriseFieldWrapper${fieldDescriptor.direction}`]
     const titleClass = classes[`title${fieldDescriptor.direction}`]
     const priceClass = classes[`price${fieldDescriptor.direction}`]
     return (
-        <div className={`${enterpriseFieldWrapper} ${classes.singleWidth} ${classes.fieldWrapper}`}>
+        <div ref={nodeReference as unknown as LegacyRef<HTMLDivElement>} className={`${enterpriseFieldWrapper} ${classes.singleWidth} ${classes.fieldWrapper}`}>
             <div className={titleClass}>{name}</div>
             <div className={priceClass}>{price}</div>
             <div className={`${classes.icon} ${classes[fieldDescriptor.direction]}`}><Icon /></div>

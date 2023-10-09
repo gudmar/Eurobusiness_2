@@ -1,32 +1,7 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from "react"
-
-interface iLocationData {
-    top: number,
-    left: number,
-    width: number,
-    height: number
-}
-
-type tNode = HTMLDivElement | HTMLElement
-
-type tLocationGetter = () => iLocationData;
-
-type tOptionalLocationGetter = undefined | tLocationGetter;
-
-type tLocationStorage = tOptionalLocationGetter[]
-
-type tGetLocationGetter = (index:number) => tLocationGetter;
-
-type tRegisterLocationGetter = (index: number, locationGetter: tLocationGetter) => void;
-
-type tRegisterCurrentReference = (node: tNode, index: number) => void;
-
-interface iFieldLocationGettersStorageAPI {
-    getLocationGetter: tGetLocationGetter,
-    registerCurrentReference: tRegisterCurrentReference
-}
-
-type tUseFieldLocationGettersStorage = () => iFieldLocationGettersStorageAPI
+import React, { createContext, useEffect, useRef, useState } from "react"
+import { tColors } from "../../Data/types"
+import { getPawnLocation } from "./getPawnLocation"
+import { iFieldLocationGettersStorageAPI, iPoint, tLocationGetter, tLocationStorage, tNode, tRegisterLocationGetter, tUseFieldLocationGettersStorage } from "./types"
 
 const NOT_VALID_LOCATION = { top: 0, left: 0, width: 0, height: 0}
 
@@ -57,7 +32,13 @@ const useFieldLocationGettersStorage: tUseFieldLocationGettersStorage = () => {
         newLocationGetters[index] = locationGetter;
         setLocationGetters(newLocationGetters);
     }
-    return { getLocationGetter, registerCurrentReference }
+    const calculatePawnLocation = (index: number, pawnDiameter: number, color: tColors): iPoint => {
+        const locationGetter = getLocationGetter(index);
+        const {top, left, width, height} = locationGetter();
+        const {x, y} = getPawnLocation({top, left, width, height}, pawnDiameter, color);
+        return {x, y};
+    }
+    return { getLocationGetter, calculatePawnLocation, registerCurrentReference }
 }
 
 export const useSubscribeToFieldLocation = (index: number) => {

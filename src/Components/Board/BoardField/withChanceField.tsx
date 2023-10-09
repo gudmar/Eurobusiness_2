@@ -1,4 +1,5 @@
-import { memo } from "react"
+import { LegacyRef, memo } from "react"
+import { useSubscribeToFieldLocation } from "../../../Contexts/fieldLocation/useFieldLocation";
 import { useThemesAPI } from "../../../Contexts/ThemeContext";
 import { iNamedChance, tChanceType } from "../../../Data/types";
 import { getFieldState, useChanceField } from "../../../hooks/useField";
@@ -17,9 +18,10 @@ const withChanceField = (onClick: () => void) => (fieldDescriptor: iNamedChance 
     // const Icon = fieldState.Icon
     const { theme } = useThemesAPI();
     const classes = useStyles(theme as any);
+    const nodeReference = useSubscribeToFieldLocation(index);
     const questionMarkWrapper = classes[`questionMarkWrapper${fieldDescriptor.direction}`]
     return (
-        <div className={`${questionMarkWrapper} ${classes.singleWidth} ${classes.fieldWrapper}`}>
+        <div ref={nodeReference as unknown as LegacyRef<HTMLDivElement>} className={`${questionMarkWrapper} ${classes.singleWidth} ${classes.fieldWrapper}`}>
             <div className={classes.empty}></div>
             <div className={`${classes.icon} ${classes[fieldDescriptor.direction]}`}><Icon /></div>
             <div className={classes[`fieldNumber${fieldDescriptor.direction}`]}>{index + 1}</div>
