@@ -8,6 +8,8 @@ export const useStyles = createUseStyles({
         width: PAWN_SIZE,
         height: PAWN_SIZE,
         borderRadius: '50%',
-        position: 'absolute'
+        position: 'absolute',
+        border: 'solid thin #aaaaaa',
+        boxShadow: 'inset 0px 0px 43px -26px rgba(66, 68, 90, 1)'
     }
 })

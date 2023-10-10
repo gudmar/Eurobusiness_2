@@ -9,3 +9,5 @@ export const FIELD_NR = 'fieldNr';
 export const IS_IN_PREISON = 'isInPrison';
 export const NR_TURNS_TO_WAIT = 'nrTurnsToWait';
 export const IS_GAME_LOST = 'isGameLost';
+
+export const PAWN_DIAMETER = 32;
