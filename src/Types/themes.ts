@@ -22,6 +22,8 @@ export type CustomTheme = {
     fieldNrFontSize: string,
     filedNrFontWeight: string,
     titleEdgeBoardFieldFontSize: string,
+
+    pawnSize: string,
 }
 
 export type NamedTheme = {

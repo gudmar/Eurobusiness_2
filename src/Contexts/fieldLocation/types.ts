@@ -1,10 +1,13 @@
 import { tColors } from "../../Data/types";
 
-export interface iLocationData {
-    top: number,
-    left: number,
+export interface iSizeData {
     width: number,
     height: number
+}
+
+export interface iLocationData extends iSizeData {
+    top: number,
+    left: number,
 }
 // export interface iCalculatePawnLocationArge {
 //     index: number,

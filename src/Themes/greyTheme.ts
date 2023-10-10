@@ -1,3 +1,4 @@
+import { PAWN_DIAMETER } from "../Constants/constants";
 import { NamedTheme } from "../Types/themes";
 
 const BORDER_COLOR = 'black'
@@ -31,5 +32,6 @@ export const GREY_THEME: NamedTheme = {
         titleFontSize: '0.82rem',
         titleFontWeight: 'bold',
 
+        pawnSize: `${PAWN_DIAMETER}px`,
     }
 }

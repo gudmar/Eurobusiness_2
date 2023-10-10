@@ -20,7 +20,7 @@ const StartField = (fieldDescriptor: iNamedOtherField & {direction: tBoardSideDi
         const classes = useStyles(theme as any);
         const nodeReference = useSubscribeToFieldLocation(index);
         useEffect(() => {
-            console.log(nodeReference)
+            console.log(nodeReference?.current?.getBoundingClientRect())
         }, [nodeReference])
         return (
             <div ref={nodeReference as unknown as LegacyRef<HTMLDivElement>} className={`${classes.fieldWrapper}  ${classes.rightBottomField}  ${classes.doubleWidth}`}>
