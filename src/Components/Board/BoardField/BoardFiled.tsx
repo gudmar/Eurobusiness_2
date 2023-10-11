@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { useThemesAPI } from "../../../Contexts/ThemeContext";
 import { CHANCE_BLUE, CHANCE_RED, CITY, FREE_PARK, GO_TO_JAIL, GUARDED_PARKING, JAIL, PLANT, RAILWAY, START, TAX } from "../../../Data/const";
+import { useClasses } from "../../Pawns/styles";
 import CityBoardField from "./CityBoardField";
 import EnterpriseBoardField from "./EnterpriseBoardField";
 import FreeParkingField from "./FreeParkingField";
@@ -29,8 +30,9 @@ const getField = (props: any): ReactNode => {
 }
 
 const BoardField = (props: any) => {
-    const { theme } = useThemesAPI();
-    const classes = useStyles(theme as any);
+    // const { theme } = useThemesAPI();
+    // const classes = useClasses();
+    // const classes = useStyles(theme as any);
     return (
         <>
             {getField(props)}

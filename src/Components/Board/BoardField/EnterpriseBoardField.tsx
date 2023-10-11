@@ -3,6 +3,7 @@ import { useSubscribeToFieldLocation } from "../../../Contexts/fieldLocation/use
 import { useThemesAPI } from "../../../Contexts/ThemeContext";
 import { iNamedNonCityEstates, tNonCityEstates } from "../../../Data/types"
 import { useNonCityEstatesField } from "../../../hooks/useField"
+import { useClasses } from "../../Pawns/styles";
 import { tBoardSideDirections } from "../types";
 import { useStyles } from "./styels";
 
@@ -22,6 +23,7 @@ const EnterpriseBoardField = (fieldDescriptor: iNamedNonCityEstates & {direction
     } = useNonCityEstatesField(fieldDescriptor.name as tNonCityEstates)
     const { theme } = useThemesAPI();
     const classes = useStyles(theme as any);
+
     const nodeReference = useSubscribeToFieldLocation(index);
     const enterpriseFieldWrapper = classes[`enterpriseFieldWrapper${fieldDescriptor.direction}`]
     const titleClass = classes[`title${fieldDescriptor.direction}`]

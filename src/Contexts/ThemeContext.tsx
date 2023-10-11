@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from "react"
 import { ThemeProvider } from "react-jss";
 import themes, { INITIAL_THEME } from "../Themes";
-import { NamedTheme } from "../Types/themes";
+import { BLANK_THEME } from "../Themes/blankTheme";
+import { CustomTheme, NamedTheme } from "../Types/themes";
 
 
 const findTheme = (themes:NamedTheme[], themeName:string):NamedTheme|undefined => themes.find(({ name }:any) => {
@@ -26,8 +27,14 @@ const useThemeFromName = (themes: NamedTheme[], initialName: string) => {
     return { theme: theme.theme, setThemeName, themeNames: themes.map(({name}) => name) }
 }
 
+export interface iThemesContext {
+    theme: CustomTheme,
+    setThemeName: (name: string) => void,
+    themeNames: string[]
+}
+
 const ThemesContext = createContext({
-    theme: {},
+    theme: BLANK_THEME.theme,
     setThemeName: (val:any) => {console.error('setThemeName is not overrided')},
     themeNames: themes.map(({name})=>name)
 });
