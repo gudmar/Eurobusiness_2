@@ -5,6 +5,7 @@ import { useStyles } from "./styels";
 import { LEFT, RIGHT, TOP, BOTTOM, tBoardSideDirections } from "../types";
 import { useSubscribeToFieldLocation } from "../../../Contexts/fieldLocation/useFieldLocation";
 import { LegacyRef } from "react";
+import { useClasses } from "../../Pawns/styles";
 
 const CityBoardField = (fieldDescriptor: iNamedCityField & {direction: tBoardSideDirections }) => {
     const {
@@ -23,8 +24,10 @@ const CityBoardField = (fieldDescriptor: iNamedCityField & {direction: tBoardSid
          index,
     } = useCityField(fieldDescriptor.name as tCity)
     const { theme } = useThemesAPI();
-    const nodeReference = useSubscribeToFieldLocation(index)
     const classes = useStyles(theme as any);
+
+    const nodeReference = useSubscribeToFieldLocation(index)
+    
     const containerClass = classes[`cityFieldWrapper${fieldDescriptor.direction}`]
     const colorBarClass = classes[`colorBar${fieldDescriptor.direction}`]
     const titleClass = classes[`title${fieldDescriptor.direction}`] + ' ' + classes.fontCityName;

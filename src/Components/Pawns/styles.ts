@@ -1,15 +1,21 @@
 import {createUseStyles} from 'react-jss'
-import { px2rem } from '../../Functions/px2rem'
+import { useThemesAPI } from '../../Contexts/ThemeContext';
+import { CustomTheme } from '../../Types/themes'
 
-const PAWN_SIZE = '2rem'
-
-export const useStyles = createUseStyles({
+export const useStyles = createUseStyles((theme: CustomTheme) => ({
     pawn: {
-        width: PAWN_SIZE,
-        height: PAWN_SIZE,
+        width: theme.pawnSize,
+        height: theme.pawnSize,
         borderRadius: '50%',
         position: 'absolute',
         border: 'solid thin #aaaaaa',
         boxShadow: 'inset 0px 0px 43px -26px rgba(66, 68, 90, 1)'
     }
 })
+);
+
+export const useClasses = () => {
+    const {theme} = useThemesAPI();
+    const classes: {[key:string]: string} = useStyles({theme});
+    return classes
+}
