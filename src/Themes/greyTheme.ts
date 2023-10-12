@@ -33,5 +33,10 @@ export const GREY_THEME: NamedTheme = {
         titleFontWeight: 'bold',
 
         pawnSize: `${PAWN_DIAMETER}px`,
+
+        modalTvBackground: 'rgba(60, 60, 60, 0.5)',
+        modalWrapperBackground: '#dedede',
+        modalWrapperColor: '#323232',
+
     }
 }

@@ -35,5 +35,9 @@ export const DARK_THEME: NamedTheme = {
 
         pawnSize: `${PAWN_DIAMETER}px`,
 
+        modalTvBackground: 'rgba(0, 0, 0, 0.5)',
+        modalWrapperBackground: '#101010',
+        modalWrapperColor: '#dedede',
+
     }
 }

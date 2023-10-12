@@ -29,5 +29,9 @@ export const BLANK_THEME: NamedTheme = {
         titleFontWeight: '',
 
         pawnSize: '',
+
+        modalTvBackground: '',
+        modalWrapperBackground: '',
+        modalWrapperColor: '',
     }
 }
