@@ -1,3 +1,4 @@
+import { tColors } from "../Data/types";
 import { iSubscription, tSubscription } from "../Types/types";
 
 export interface iSubscribtionHandler<SubscriptionMessageType extends string, StateType> {
@@ -5,4 +6,17 @@ export interface iSubscribtionHandler<SubscriptionMessageType extends string, St
     subscribeDebug: (callback: tSubscription, id: string, messageType: SubscriptionMessageType) => void;
     runAllSubscriptions: (type: SubscriptionMessageType, data: StateType) => void,
     unsubscribe: (type: SubscriptionMessageType, id: string) => void,
+}
+
+export interface iCityMemento {
+    name: string,
+    owner: string,
+    nrOfHouses: number,
+    isPlegded: boolean,
+}
+
+export interface iNonCityEstatesMemento {
+    name: string,
+    owner: string,
+    isPlegded: boolean,
 }

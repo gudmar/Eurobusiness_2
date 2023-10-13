@@ -24,6 +24,10 @@ export type CustomTheme = {
     titleEdgeBoardFieldFontSize: string,
 
     pawnSize: string,
+
+    modalTvBackground: string, // the car is so big you don't see word besides it, like with TV
+    modalWrapperBackground: string,
+    modalWrapperColor: string,
 }
 
 export type NamedTheme = {
