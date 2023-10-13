@@ -1,11 +1,8 @@
-import { useEffect } from 'react';
 import { useThemesAPI } from '../../Contexts/ThemeContext';
 import { useModal } from '../../hooks/useModal';
 import { DARK_THEME } from '../../Themes/darkTheme';
 import { GREY_THEME } from '../../Themes/greyTheme';
-import { Board } from '../Board/Board';
 import { Button } from '../Button/Button';
-import CommandArea from '../CommandArea/CommandArea';
 import { GameStarter } from './GameStarter';
 import { useStyles } from './styles';
 const Game = () => {

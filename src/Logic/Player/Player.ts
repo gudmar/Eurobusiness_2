@@ -1,7 +1,7 @@
 import { tColors } from "../../Data/types";
-import { tToBeImplemented } from "../../Types/types";
+import { iAny, tToBeImplemented } from "../../Types/types";
 import { iDiceTestModeDecorator } from "../Dice/types";
-import { iPlayerArgs, iPlayerState, iPlayer, iMoveMessage, tMove } from "../Players/types";
+import { iPlayerArgs, iPlayerState, iPlayer, iMoveMessage, tMove, iEditableState } from "../Players/types";
 import { INITIAL_MONEY } from "../../Data/money";
 import { iStrategy } from "../Strategies/types";
 import { SubscribtionsHandler } from "../SubscrbtionsHandler";
@@ -51,6 +51,32 @@ export class Player extends SubscribtionsHandler<tMove, iMoveMessage> implements
             isGameLost: this._isGameLost,
             strategy: this._strategy,
         })
+    }
+
+    getMemento() {
+        return {...this.getSnapshot()};
+    }
+
+    restoreState(newState: iEditableState | iPlayerState) {
+        const setters: iAny = {
+            name: (val: string) => this._name = val,
+            money: (val: number) => this._money = val,
+            specialCards: (val: []) => this._specialCards = val,
+            color: (val: tColors) => { /*throw new Error ('PlayerVisitor: color may not be set');*/ },
+            fieldNr: (val: number) => {
+                if (val < 1 || val > 40) throw new Error('Field number shoud be 1..40')
+                this._fieldNr = val;
+            },
+            isInPrison: (val: boolean) => this._isInPrison = val,
+            nrTurnsToWait: (val: number) => {
+                if (val < 0 || val > 2) throw new Error('Player cannot wait longer then 2 tunrs and shorter then 0')
+                this._nrTurnsToWait = val;
+            },
+            isGameLost: (val: boolean) => this._isGameLost = true,
+            strategy: (val: iStrategy) => this._strategy = val,
+        }
+        const stateEntries = Object.entries(newState);
+        stateEntries.forEach(([key, value]) => { setters[key](value) })
     }
 
     get name() { return this._name}

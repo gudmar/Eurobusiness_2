@@ -3,8 +3,9 @@ import {
     CITY
 } from '../Data/const'
 import { iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, tAnyState, tBoardField, tChanceType, tCity, tCountries, tEstateTypes, tFlattenedFieldTypes, tIcon, tNonCityEstates, tOtherTypes, tVisitPayment } from '../Data/types';
-import { iChanceField, iChanceFieldState, iCityFieldClass, iNonCityEstatesField, iNonCityEstatesFieldState, iOtherFieldTypesField, iOtherFieldTypesFieldState } from './boardTypes';
+import { iChanceField, iChanceFieldState, iCityFieldClass, iCityFieldState, iNonCityEstatesField, iNonCityEstatesFieldState, iOtherFieldTypesField, iOtherFieldTypesFieldState } from './boardTypes';
 import { SubscribtionsHandler } from './SubscrbtionsHandler';
+import { iCityMemento, iNonCityEstatesMemento } from './types';
 
 export class NullishField {
     descriptor?: tBoardField;
@@ -89,6 +90,14 @@ export class CityField extends SubscribtionsHandler<tFlattenedFieldTypes, tAnySt
         if (val > 5 || val < 0) throw new Error('Nr of houses has to be > 0 and < 6')
         this._nrOfHouses = val
     }
+    getMemento(): iCityMemento {
+        return ({
+            owner: this._owner,
+            name: this._name,
+            nrOfHouses: this._nrOfHouses,
+            isPlegded: this._isPlegded,
+        })
+    }
     get state(): iCityFieldClass {
         return ({
             name: this._name,
@@ -151,6 +160,15 @@ export class NonCityEstatesField extends SubscribtionsHandler<tFlattenedFieldTyp
         NonCityEstatesField.instances[name] = this;
         return this;
     }
+
+    getMemento(): iNonCityEstatesMemento {
+        return ({
+            name: this._name,
+            owner: this._owner,
+            isPlegded: this._isPlegded,
+        })
+    }
+
     get name() { return this._name}
     get type() { return this._type}
     get country() {return this._country}

@@ -24,15 +24,18 @@ export interface iPlayerArgs {
     DiceClassInstance: iDiceTestModeDecorator
 }
 
-export interface iPlayerState {
+export interface iEditableState {
     name: string,
     money: number,
     specialCards: tToBeImplemented,
-    color: tToBeImplemented,
     fieldNr: number, // indexed from 1
     isInPrison: boolean,
     nrTurnsToWait: number,
     isGameLost: boolean,
+}
+
+export interface iPlayerState extends iEditableState{
+    color: tToBeImplemented,
 }
 
 export interface iPlayer extends iPlayerState {
