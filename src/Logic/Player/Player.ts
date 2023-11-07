@@ -7,8 +7,10 @@ import { iStrategy } from "../Strategies/types";
 import { SubscribtionsHandler } from "../SubscrbtionsHandler";
 import { MOVE } from "../Messages/constants";
 import { getStrategyProvider } from "../Strategies/getStrategyProvider";
+import { iStateHandler } from "../types";
+import { iPlayerMemento, iPlayerSnapshot } from "./types";
 
-export class Player extends SubscribtionsHandler<tMove, iMoveMessage> implements iPlayer {
+export class Player extends SubscribtionsHandler<tMove, iMoveMessage> implements iPlayer, iStateHandler<iPlayerSnapshot, iPlayerMemento> {
     private _diceInstance: iDiceTestModeDecorator;
     private _name: string;
     private _money: number;
@@ -57,7 +59,7 @@ export class Player extends SubscribtionsHandler<tMove, iMoveMessage> implements
         return {...this.getSnapshot()};
     }
 
-    restoreState(newState: iEditableState | iPlayerState) {
+    restoreState(newState: iPlayerMemento) {
         const setters: iAny = {
             name: (val: string) => this._name = val,
             money: (val: number) => this._money = val,

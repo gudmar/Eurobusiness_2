@@ -20,3 +20,8 @@ export interface iNonCityEstatesMemento {
     owner: string,
     isPlegded: boolean,
 }
+
+export interface iStateHandler<Snapshot, Memento> {
+    restoreState: (newState: Memento) => void,
+    getMemento: () => Snapshot
+}

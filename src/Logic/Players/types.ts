@@ -2,8 +2,9 @@ import { tColors } from "../../Data/types";
 import { iSubscription, tToBeImplemented } from "../../Types/types";
 import { iDiceTestModeDecorator, tDiceTestModeDecorator } from "../Dice/types";
 import { MOVE, SWITCH_PLAYER } from "../Messages/constants";
+import { iPlayerMemento, iPlayerSnapshot } from "../Player/types";
 import { iStrategy, StrategyNames } from "../Strategies/types";
-import { iSubscribtionHandler } from "../types";
+import { iStateHandler, iSubscribtionHandler } from "../types";
 
 export interface iPlayerDescriptor {
     name: string,
@@ -38,9 +39,17 @@ export interface iPlayerState extends iEditableState{
     color: tToBeImplemented,
 }
 
-export interface iPlayer extends iPlayerState {
+export interface iPlayer extends iPlayerState, iStateHandler<iPlayerSnapshot, iPlayerMemento> {
     state: iPlayerState,
     move(): Promise<boolean>;
+}
+
+export type iPlayersSnapshot = {
+    [color in tColors]?: iPlayerSnapshot;
+};
+
+export type iPlayersMemento = {
+    [color in tColors]?: iPlayerMemento
 }
 
 export interface iAllPlayers extends iSubscribtionHandler<tSwitchPlayer, iPlayer> {
