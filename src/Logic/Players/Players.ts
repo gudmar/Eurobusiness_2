@@ -2,10 +2,12 @@ import { INITIAL_MONEY } from "../../Data/money";
 import { tColors } from "../../Data/types";
 import { iDiceTestModeDecorator } from "../Dice/types";
 import { Player } from "../Player/Player";
+import { iPlayerMemento } from "../Player/types";
 import { SubscribtionsHandler } from "../SubscrbtionsHandler";
-import { iAllPlayers, iAllPlayersArgs,  iPlayer, iPlayerDescriptor, iPlayerState, tSwitchPlayer } from "./types";
+import { iStateHandler } from "../types";
+import { iAllPlayers, iAllPlayersArgs,  iPlayer, iPlayerDescriptor, iPlayersMemento, iPlayersSnapshot, iPlayerState, tSwitchPlayer } from "./types";
 
-export class Players extends SubscribtionsHandler<tSwitchPlayer, iPlayer> implements iAllPlayers {
+export class Players extends SubscribtionsHandler<tSwitchPlayer, iPlayer> implements iAllPlayers, iStateHandler<iPlayersSnapshot, iPlayersMemento> {
     private static _instance: Players;
     private _diceClassInstance!: iDiceTestModeDecorator;
     private _players: iPlayer[] = [];
@@ -26,6 +28,27 @@ export class Players extends SubscribtionsHandler<tSwitchPlayer, iPlayer> implem
             Players._instance = this
         })
         }
+    }
+
+    getMemento(): iPlayersSnapshot {
+        const snapshots = this._players.reduce((acc: any, player: iPlayer) => {
+            const color = player.color;
+            acc[color] = player.getMemento();
+            return acc;
+        },{})
+        return snapshots;
+    };
+    private _getPlayerByColor(color: tColors) {
+        const result = this._players.find((player) => player.color === color);
+        if (!result) throw new Error(`No player with color ${color}`)
+        return result; 
+    }
+    restoreState(memento: iPlayersMemento) {
+        const colors = Object.keys(memento);
+        colors.forEach((color) => {
+            const player = this._getPlayerByColor(color as tColors);
+            player.restoreState(memento[color as tColors] as iPlayerMemento)
+        })
     }
 
     getPlayerFieldIndex(color: tColors) {
