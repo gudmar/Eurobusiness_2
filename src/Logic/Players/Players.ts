@@ -41,7 +41,7 @@ export class Players extends SubscribtionsHandler<tSwitchPlayer, iPlayer> implem
     private _getPlayerByColor(color: tColors) {
         const result = this._players.find((player) => player.color === color);
         if (!result) throw new Error(`No player with color ${color}`)
-        return result;
+        return result; 
     }
     restoreState(memento: iPlayersMemento) {
         const colors = Object.keys(memento);
