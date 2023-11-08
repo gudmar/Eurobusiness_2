@@ -1,13 +1,14 @@
 import { INITIAL_MONEY } from "../../Data/money";
 import { tColors } from "../../Data/types";
 import { iDiceTestModeDecorator } from "../Dice/types";
+import { Messages } from "../Messages/constants";
 import { Player } from "../Player/Player";
 import { iPlayerMemento } from "../Player/types";
 import { SubscribtionsHandler } from "../SubscrbtionsHandler";
 import { iStateHandler } from "../types";
 import { iAllPlayers, iAllPlayersArgs,  iPlayer, iPlayerDescriptor, iPlayersMemento, iPlayersSnapshot, iPlayerState, tSwitchPlayer } from "./types";
 
-export class Players extends SubscribtionsHandler<tSwitchPlayer, iPlayer> implements iAllPlayers, iStateHandler<iPlayersSnapshot, iPlayersMemento> {
+export class Players extends SubscribtionsHandler<Messages, iPlayer> implements iAllPlayers, iStateHandler<iPlayersSnapshot, iPlayersMemento> {
     private static _instance: Players;
     private _diceClassInstance!: iDiceTestModeDecorator;
     private _players: iPlayer[] = [];
@@ -16,6 +17,7 @@ export class Players extends SubscribtionsHandler<tSwitchPlayer, iPlayer> implem
         const player = new Player({ name, color, strategy, money: INITIAL_MONEY, DiceClassInstance: this._diceClassInstance })
         return player;
     }
+    static get instance() {return Players._instance}
     constructor({DiceClass, players}: iAllPlayersArgs){
         super();
         if (Players._instance) {
@@ -23,11 +25,16 @@ export class Players extends SubscribtionsHandler<tSwitchPlayer, iPlayer> implem
         } else {
             this._diceClassInstance = new DiceClass!();
             players!.forEach((player) => {
-                const nextPlayer = this._createPlayer(player);
-                this._players.push(nextPlayer);
+                this._addNewPlayer(player);
             Players._instance = this
         })
         }
+    }
+
+    private _addNewPlayer({color, name, strategy}: iPlayerDescriptor) {
+        const nextPlayer = this._createPlayer({color, name, strategy});
+        this._players.push(nextPlayer);
+        this.runAllSubscriptions( Messages.playerAddedDeleted, this._players )
     }
 
     getMemento(): iPlayersSnapshot {
@@ -43,12 +50,24 @@ export class Players extends SubscribtionsHandler<tSwitchPlayer, iPlayer> implem
         if (!result) throw new Error(`No player with color ${color}`)
         return result; 
     }
+    getPlayerByColor(color: tColors) {return this._getPlayerByColor(color)}
+
+    get colors() {return this._players.map((player) => player.color)}
+
     restoreState(memento: iPlayersMemento) {
+        
         const colors = Object.keys(memento);
         colors.forEach((color) => {
             const player = this._getPlayerByColor(color as tColors);
             player.restoreState(memento[color as tColors] as iPlayerMemento)
         })
+        throw new Error(`This needs:
+            1) Removing players that are not in new memento
+            2) Adding players that are not in old state
+            3) Modifying states of players that already exist
+            The best way is to delete players and recreate them
+            THis has to be done because of loading from a file
+        `)
     }
 
     getPlayerFieldIndex(color: tColors) {

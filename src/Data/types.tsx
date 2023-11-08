@@ -117,6 +117,8 @@ export type tBoardField = iOtherFieldTypes | iCityField | iChance | iNonCityEsta
 
 export type tNamedBoardField = iNamedOtherField | iNamedCityField | iNamedChance | iNamedNonCityEstates;
 
+
+
 export type tBoard = {
     [START]: iOtherFieldTypes,
     [ATENY]: iCityField,
