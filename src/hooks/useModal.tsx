@@ -6,6 +6,7 @@ export interface iUseModal {
     children: FC
 }
 
+
 export const useModal = (Children: FC) => {
     const {isOpen, setIsOpen, setOpen, setClose} = useOpenClose(false);
     const Component =
