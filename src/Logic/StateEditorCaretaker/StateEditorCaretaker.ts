@@ -7,7 +7,7 @@ export class StateCaretaker {
 
 
     getMemento() {
-
+        
     }
 }
 

@@ -12,10 +12,11 @@ export const Modal = ({children, isOpen, setIsOpen}: any) => {
                 <div className={classes.closeButton} onClick={() => setIsOpen(false)}>
                     &times;
                 </div>
-                {createPortal(
+                {children}
+                {/* {createPortal(
                     children,
                     document.body,
-                )}
+                )} */}
             </div>
         </div>
     )

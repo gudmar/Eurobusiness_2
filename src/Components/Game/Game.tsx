@@ -3,12 +3,13 @@ import { useModal } from '../../hooks/useModal';
 import { DARK_THEME } from '../../Themes/darkTheme';
 import { GREY_THEME } from '../../Themes/greyTheme';
 import { Button } from '../Button/Button';
+import { PlayerStateEditor } from '../StateEditor/PlayerStateEditor/PlayerStateEditor';
 import { GameStarter } from './GameStarter';
 import { useStyles } from './styles';
 const Game = () => {
     const { theme, setThemeName } = useThemesAPI();
     const classes = useStyles(theme as any);
-    const {component: stateEditorButton, setOpen: openStateEditor, setIsOpen: setIsOpenStateEditor} = useModal(() => <></>)
+    const {Component: StateEditor, setOpen: openStateEditor, setIsOpen: setIsOpenStateEditor} = useModal(PlayerStateEditor)
     return (
         <div className = {classes.screen}>
             <Button 
@@ -23,7 +24,7 @@ const Game = () => {
                 action = {openStateEditor}
                 label = {'State Editor'}
             />
-            {stateEditorButton}
+            {StateEditor ? StateEditor: null}
             <GameStarter/>
         </div>
     )

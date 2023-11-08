@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { COLOR, FIELD_NR, IS_GAME_LOST, IS_IN_PREISON, MONEY, NAME, NR_TURNS_TO_WAIT, SPECIAL_CARDS } from "../Constants/constants";
 import { BLUE } from "../Data/const";
 import { DiceTestModeDecorator } from "../Logic/Dice/Dice";
-import { SWITCH_PLAYER } from "../Logic/Messages/constants";
+import { Messages, SWITCH_PLAYER } from "../Logic/Messages/constants";
 import { Players } from "../Logic/Players/Players"
 import { iAllPlayers, iPlayer, iPlayerDescriptor, iPlayerState } from "../Logic/Players/types"
 
@@ -62,13 +62,13 @@ export const usePlayerData = (playersData: iPlayerDescriptor[] | null) => {
         playersInstance?.subscribe({
             callback: setCurrentPlayer,
             id: USE_PLAYER_DATA_ID,
-            messageType: SWITCH_PLAYER,
+            messageType: Messages.switchPlayer,
         })
         if (playersInstance) {
             const newData = getData(playersInstance);
             setData(newData);    
         }
-        return playersInstance?.unsubscribe(SWITCH_PLAYER, USE_PLAYER_DATA_ID)
+        return playersInstance?.unsubscribe(Messages.switchPlayer, USE_PLAYER_DATA_ID)
     }, [setCurrentPlayer, playersInstance, currentPlayer])
     return data
 }
