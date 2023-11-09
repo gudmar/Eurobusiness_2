@@ -1,9 +1,5 @@
-import { useEffect, useState } from "react";
 import { useThemesAPI } from "../../../Contexts/ThemeContext";
 import { useStyles } from "./styles";
-
-const BOARD = 'Board';
-const GENERAL = 'General';
 
 const NavigationSection = ({name, setActive, currentActiveSection}: any) => {
     const { theme } = useThemesAPI();
@@ -11,7 +7,7 @@ const NavigationSection = ({name, setActive, currentActiveSection}: any) => {
     const isActive = name === currentActiveSection;
     return (
         <span 
-            className={`${classes.tab} ${isActive ? classes.frontTab: classes.backTab}`}
+            className={`${classes.tab} ${isActive ? classes.frontTab: classes.bluredTab}`}
             
         >
             <div className={`${classes.trapezoid} ${isActive ? classes.activeTab: classes.bluredTab}`} onClick={() => setActive(name)}>
@@ -21,17 +17,13 @@ const NavigationSection = ({name, setActive, currentActiveSection}: any) => {
     )
 }
 
-export const StateEditorNavigation = ({playersColors}: any) => {
+export const StateEditorNavigation = ({sections, activeSection, setActiveSection}: any) => {
     const { theme } = useThemesAPI();
-    const classes: {[key:string]: string} = useStyles(theme as any);
-    const sections = [GENERAL, ...playersColors, BOARD]
-    const [activeSection, setActiveSection] = useState(sections[0])
-    useEffect(() => console.log(activeSection), [activeSection])
-    
+    const classes: {[key:string]: string} = useStyles(theme as any);    
     return (
         <div className={classes.navigationWrapper}>
             {sections.map(
-                (sectionName) => <NavigationSection 
+                (sectionName:string) => <NavigationSection 
                                 name = {sectionName}
                                 setActive = {(val: string) => setActiveSection(val)}
                                 currentActiveSection = {activeSection}

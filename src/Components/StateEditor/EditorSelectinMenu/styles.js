@@ -10,7 +10,7 @@ export const useStyles = createUseStyles((theme) => ({
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
         alignContent: 'flex-start',
-        
+        padding: '0.5rem'
     },
     
     tab: {
