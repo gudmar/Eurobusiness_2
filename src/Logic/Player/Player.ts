@@ -1,16 +1,17 @@
 import { tColors } from "../../Data/types";
 import { iAny, tToBeImplemented } from "../../Types/types";
 import { iDiceTestModeDecorator } from "../Dice/types";
-import { iPlayerArgs, iPlayerState, iPlayer, iMoveMessage, tMove, iEditableState } from "../Players/types";
+import { iPlayerArgs, iPlayerState, iPlayer, iMoveMessage, tPlayerChanged, iAnyChange } from "../Players/types";
 import { INITIAL_MONEY } from "../../Data/money";
 import { iStrategy } from "../Strategies/types";
 import { SubscribtionsHandler } from "../SubscrbtionsHandler";
-import { MOVE } from "../Messages/constants";
+import { ANY_CHANGE, MOVE } from "../Messages/constants";
 import { getStrategyProvider } from "../Strategies/getStrategyProvider";
 import { iStateHandler } from "../types";
 import { iPlayerMemento, iPlayerSnapshot } from "./types";
+import { YELLOW } from "../../Data/const";
 
-export class Player extends SubscribtionsHandler<tMove, iMoveMessage> implements iPlayer, iStateHandler<iPlayerSnapshot, iPlayerMemento> {
+export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | iAnyChange> implements iPlayer, iStateHandler<iPlayerSnapshot, iPlayerMemento> {
     private _diceInstance: iDiceTestModeDecorator;
     private _name: string;
     private _money: number;
@@ -39,6 +40,34 @@ export class Player extends SubscribtionsHandler<tMove, iMoveMessage> implements
         this._strategy = getStrategyProvider(strategy);
 
         this._initialState = this.getSnapshot()
+        this.runAllSubscriptions(ANY_CHANGE, {...this.getSnapshot()})
+    }
+
+    private _informAnyChange() { this.runAllSubscriptions(ANY_CHANGE, {...this.getSnapshot()}) }
+
+    set name(val: string) { this._name = val; this._informAnyChange(); }
+    set money(val: number) { this._money = val; this._informAnyChange(); }
+    // set specialCards(val: []) { this._specialCards = val; this._informAnyChange(); }
+    // instead: addSpecialCard, deleteSpecialCard
+    set fieldNr(val: number) { this._fieldNr = val; this._informAnyChange(); }
+    // set isInPrison(val: boolean) { this._isInPrison = val; this._informAnyChange(); }
+    // this is a part of more complicated transaction
+    set nrTurnsToWait(val: number) { this._nrTurnsToWait = val; this._informAnyChange(); }
+    set isGameLost(val: boolean) { this._isGameLost = val; this._informAnyChange(); }
+    // set strategy(val: string) { this._name = val; this._informAnyChange(); }
+
+    static get initialState() {
+        return {
+            name: 'John Doe',
+            money: 0,
+            specialCards: [],
+            color: YELLOW,
+            fieldNr: 0,
+            isInPrison: false,
+            nrTurnsToWait: 0,
+            isGameLost: false,
+
+        }
     }
 
     private getSnapshot() {

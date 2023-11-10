@@ -1,7 +1,7 @@
 import { tColors } from "../../Data/types";
 import { iSubscription, tToBeImplemented } from "../../Types/types";
 import { iDiceTestModeDecorator, tDiceTestModeDecorator } from "../Dice/types";
-import { Messages, MOVE, SWITCH_PLAYER } from "../Messages/constants";
+import { ANY_CHANGE, Messages, MOVE, SWITCH_PLAYER } from "../Messages/constants";
 import { iPlayerMemento, iPlayerSnapshot } from "../Player/types";
 import { iStrategy, StrategyNames } from "../Strategies/types";
 import { iStateHandler, iSubscribtionHandler } from "../types";
@@ -71,9 +71,14 @@ export interface iAllPlayers extends iSubscribtionHandler<Messages, iPlayer> {
 //     _createPlayer(args: iPlayerDescriptor): iPlayer
 // }
 
-export type tMove = typeof MOVE;
+export type tPlayerChanged = typeof MOVE | typeof ANY_CHANGE;
 export type tSwitchPlayer = typeof SWITCH_PLAYER;
 export interface iMoveMessage {
     nrOfFields: number,
     done(): Promise<boolean>
-} 
+}
+export interface iAnyChange {
+    [key: string]: any;
+}
+
+
