@@ -81,7 +81,16 @@ export const changeNameAction = (name: string) => ({type: EditPlayerTypes.change
 export const changeMoneyAction = (money: number) => ({type: EditPlayerTypes.changeMoney, payload: money});
 export const changeSpecialCardsAction = (specialCards: []) => ({type: EditPlayerTypes.changeSpecialCards, payload: specialCards});
 export const changeFieldNrAction = (fieldNr: number) => ({type: EditPlayerTypes.changeFieldNr, payload: fieldNr});
-export const changeIsInPrison = (isInPrison: string) => ({type: EditPlayerTypes.changeIsInPrison, payload: isInPrison});
+export const changeIsInPrisonAction = (isInPrison: string) => ({type: EditPlayerTypes.changeIsInPrison, payload: isInPrison});
 export const changeTurnsToWaitAction = (turnsToWait: number) => ({type: EditPlayerTypes.changeTurnsToWait, payload: turnsToWait});
 export const changeGameLostAction = (isGameLost: string) => ({type: EditPlayerTypes.changeGameLost, payload: isGameLost});
 export const changeStateAction = (state: iPlayerReducerState) => ({type: EditPlayerTypes.changeName, payload: state});
+
+export const getUpdateName = (dispatch: any) => ({name}: any) => { dispatch(changeNameAction(name))};
+export const getUpdateMoney = (dispatch: any) => ({money}: any) => { dispatch(changeMoneyAction(money))};
+export const getUpdateSpecialCards = (dispatch: any) => ({specialCards}: any) => { dispatch(changeSpecialCardsAction(specialCards))};
+export const getUpdateFieldNr = (dispatch: any) => ({fieldNr}: any) => { dispatch(changeFieldNrAction(fieldNr))};
+export const getUpdateIsInPrison = (dispatch: any) => ({isInPrison}: any) => { dispatch(changeIsInPrisonAction(isInPrison))};
+export const getUpdateTurnsToWait = (dispatch: any) => ({turnsToWait}: any) => { dispatch(changeTurnsToWaitAction(turnsToWait))};
+export const getUpdateGameLost = (dispatch: any) => ({gameLost}: any) => { dispatch(changeGameLostAction(gameLost))};
+export const getUpdateState = (dispatch: any) => (state: any) => { dispatch(changeStateAction(state))};

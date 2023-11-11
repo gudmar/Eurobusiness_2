@@ -11,7 +11,7 @@ import { iAllPlayers, iAllPlayersArgs,  iPlayer, iPlayerDescriptor, iPlayersMeme
 export class Players extends SubscribtionsHandler<Messages, iPlayer> implements iAllPlayers, iStateHandler<iPlayersSnapshot, iPlayersMemento> {
     private static _instance: Players;
     private _diceClassInstance!: iDiceTestModeDecorator;
-    private _players: iPlayer[] = [];
+    static players: iPlayer[] = [];
     private _currentPlayerIndex: number = 0;
     private _createPlayer({color, name, strategy}: iPlayerDescriptor) {
         const player = new Player({ name, color, strategy, money: INITIAL_MONEY, DiceClassInstance: this._diceClassInstance })
@@ -33,12 +33,12 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
 
     private _addNewPlayer({color, name, strategy}: iPlayerDescriptor) {
         const nextPlayer = this._createPlayer({color, name, strategy});
-        this._players.push(nextPlayer);
-        this.runAllSubscriptions( Messages.playerAddedDeleted, this._players )
+        Players.players.push(nextPlayer);
+        this.runAllSubscriptions( Messages.playerAddedDeleted, Players.players )
     }
 
     getMemento(): iPlayersSnapshot {
-        const snapshots = this._players.reduce((acc: any, player: iPlayer) => {
+        const snapshots = Players.players.reduce((acc: any, player: iPlayer) => {
             const color = player.color;
             acc[color] = player.getMemento();
             return acc;
@@ -46,13 +46,13 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
         return snapshots;
     };
     private _getPlayerByColor(color: tColors) {
-        const result = this._players.find((player) => player.color === color);
+        const result = Players.players.find((player) => player.color === color);
         if (!result) throw new Error(`No player with color ${color}`)
         return result; 
     }
     getPlayerByColor(color: tColors) {return this._getPlayerByColor(color)}
 
-    get colors() {return this._players.map((player) => player.color)}
+    get colors() {return Players.players.map((player) => player.color)}
 
     restoreState(memento: iPlayersMemento) {
         
@@ -71,14 +71,14 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
     }
 
     getPlayerFieldIndex(color: tColors) {
-        const player = this._players.find((player) => player.color === color)
+        const player = Players.players.find((player) => player.color === color)
         if (player === undefined) { throw new Error(`Players/getPlayerFieldIndex: color ${color} not found`)}
         const index = player?.fieldNr;
         return index;
     }
 
     get allPlayersStates() {
-        const result = this._players.map((player) => player.state)
+        const result = Players.players.map((player) => player.state)
         return result;
     }
 
@@ -87,7 +87,7 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
         return result;
     }
 
-    get currentPlayer(): iPlayer { return this._players[this._currentPlayerIndex] }
+    get currentPlayer(): iPlayer { return Players.players[this._currentPlayerIndex] }
 
     get currentPlayerState(): iPlayerState { return this.currentPlayer.state }
 }
