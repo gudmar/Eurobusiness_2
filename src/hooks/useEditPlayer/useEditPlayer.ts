@@ -43,6 +43,7 @@ export const useEditPlayer = (wantedColor: tColors) => {
         name, money, specialCards, color, fieldNr, isInPrison, nrTurnsToWait, isGameLost
     }, dispatch ] = useReducer(reducer, Player.initialState)
     const player = useRef<null | iPlayer>(null)
+    useEffect(() => console.log(name) , [name])
     useEffect(() => {
         const subscribtions: (()=>void)[] = [];
         const unsubscribtions: (()=>void)[] = [];
@@ -63,6 +64,10 @@ export const useEditPlayer = (wantedColor: tColors) => {
         if (player.current) { fillSubscribtions(); subscribeAll(); }
         return () => { unsubscribeAll(); clearSubscribtions(); }
     }, [players, wantedColor])
-    
-    return {name, money, specialCards, color, fieldNr, isInPrison, nrTurnsToWait, isGameLost}
+    const setName = (val: string) => {
+        if (player && player.current) {
+            player.current.name = val
+        }
+    }
+    return {name, setName, money, specialCards, color, fieldNr, isInPrison, nrTurnsToWait, isGameLost}
 }
