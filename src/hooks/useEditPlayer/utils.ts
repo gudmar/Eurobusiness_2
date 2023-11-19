@@ -18,7 +18,10 @@ enum EditPlayerTypes {
 // type tPlayerReducerTypes = Record<EditPlayerTypes, string>
 
 const changeName = (state:iPlayerReducerState, payload:tPayload) => {
-    const newState = {...state, name: payload};
+    console.log(state, payload)
+    console.error('payload here is wrong, should be only name is whole state')
+    // const newState = {...state, name: payload};
+    const newState = {...payload}
     return newState;
 }
 
@@ -86,7 +89,7 @@ export const changeTurnsToWaitAction = (turnsToWait: number) => ({type: EditPlay
 export const changeGameLostAction = (isGameLost: string) => ({type: EditPlayerTypes.changeGameLost, payload: isGameLost});
 export const changeStateAction = (state: iPlayerReducerState) => ({type: EditPlayerTypes.changeName, payload: state});
 
-export const getUpdateName = (dispatch: any) => ({name}: any) => { dispatch(changeNameAction(name))};
+export const getUpdateName = (dispatch: any) => ({name}: any) => { console.log(name); dispatch(changeNameAction(name))};
 export const getUpdateMoney = (dispatch: any) => ({money}: any) => { dispatch(changeMoneyAction(money))};
 export const getUpdateSpecialCards = (dispatch: any) => ({specialCards}: any) => { dispatch(changeSpecialCardsAction(specialCards))};
 export const getUpdateFieldNr = (dispatch: any) => ({fieldNr}: any) => { dispatch(changeFieldNrAction(fieldNr))};
