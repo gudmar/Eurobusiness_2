@@ -47,6 +47,7 @@ export const useEditPlayer = (wantedColor: tColors) => {
     useEffect(() => {
         const subscribtions: (()=>void)[] = [];
         const unsubscribtions: (()=>void)[] = [];
+        console.log('Changing subscribtions')
         const fillSubscribtions = () => {
             subscribtionsStructure.forEach(({propName, callback}) => {
                 if (player.current) {
@@ -65,6 +66,7 @@ export const useEditPlayer = (wantedColor: tColors) => {
         return () => { unsubscribeAll(); clearSubscribtions(); }
     }, [players, wantedColor])
     const setName = (val: string) => {
+        console.log(val)
         if (player && player.current) {
             player.current.name = val
         }
