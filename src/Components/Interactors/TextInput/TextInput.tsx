@@ -6,6 +6,7 @@ export const TextInput = ({
     value, label, onChange, id, isRequired, minLength, maxLength, size
 }: iTextInput ) => {
     const TextInputComponent = useMemo(() => getInput('text', {minLength, maxLength, size}), [])
+    
     return (
         <TextInputComponent
             id={id || label}
