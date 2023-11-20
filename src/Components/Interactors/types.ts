@@ -1,4 +1,4 @@
-import { ChangeEventHandler, FormEvent } from "react"
+import { ChangeEvent, ChangeEventHandler, FormEvent } from "react"
 
 export type tInputChangeFunction<EventSource> = (e: FormEvent<EventSource>) => void;
 
@@ -6,11 +6,13 @@ export type tGenericInputTypes = "number" | "text"
 export type tProbableInputTypes = number | string
 export type tInputElementTypes = HTMLInputElement
 
+export type tTextEventType = ChangeEvent<tInputElementTypes>;
+
 export interface iInputProps<InputType extends tProbableInputTypes> {
     value: InputType,
     label: string,
     // onChange: ChangeEventHandler<ChangeEventSource>,
-    onChange: ChangeEventHandler<tInputElementTypes>,
+    onChange: ChangeEventHandler<tInputElementTypes> | ((val: any) => void),
     id?: string,
     isRequired?: boolean,
 }

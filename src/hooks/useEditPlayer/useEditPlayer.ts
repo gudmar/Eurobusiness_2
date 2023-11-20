@@ -66,10 +66,14 @@ export const useEditPlayer = (wantedColor: tColors) => {
         return () => { unsubscribeAll(); clearSubscribtions(); }
     }, [players, wantedColor])
     const setName = (val: string) => {
-        console.log(val)
         if (player && player.current) {
             player.current.name = val
         }
     }
-    return {name, setName, money, specialCards, color, fieldNr, isInPrison, nrTurnsToWait, isGameLost}
+    const setFieldNr = (val: string) => {
+        if (player && player.current) {
+            player.current.fieldNr = parseInt(val)
+        }
+    }
+    return {name, setName, money, specialCards, color, fieldNr, setFieldNr, isInPrison, nrTurnsToWait, isGameLost}
 }
