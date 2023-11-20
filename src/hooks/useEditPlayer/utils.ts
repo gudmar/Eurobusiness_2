@@ -1,3 +1,4 @@
+import { iPlayerState } from "../../Logic/Players/types";
 import { iAction } from "../../Logic/types";
 
 type tPayload = string | number | [] | iPlayerReducerState
@@ -17,10 +18,12 @@ enum EditPlayerTypes {
 
 // type tPlayerReducerTypes = Record<EditPlayerTypes, string>
 
+const getNewState = (state: iPlayerReducerState, payload: tPayload) => {
+    const newState = {...payload}
+    return newState;
+}
+
 const changeName = (state:iPlayerReducerState, payload:tPayload) => {
-    console.log(state, payload)
-    console.error('payload here is wrong, should be only name is whole state')
-    // const newState = {...state, name: payload};
     const newState = {...payload}
     return newState;
 }
@@ -61,14 +64,14 @@ const changeState = (state: iPlayerReducerState, payload: tPayload) => {
 }
 
 export const REDUCER = {
-    [EditPlayerTypes.changeName]: changeName,
-    [EditPlayerTypes.changeMoney]: changeMoney,
-    [EditPlayerTypes.changeSpecialCards]: changeSpecialCards,
-    [EditPlayerTypes.changeFieldNr]: changeFieldNr,
-    [EditPlayerTypes.changeIsInPrison]: changeInPrison,
-    [EditPlayerTypes.changeTurnsToWait]: changeTrurnsToWait,
-    [EditPlayerTypes.changeGameLost]: changeGameLost,
-    [EditPlayerTypes.changeState]: changeState,
+    [EditPlayerTypes.changeName]:          getNewState,//changeName,
+    [EditPlayerTypes.changeMoney]:         getNewState,//changeMoney,
+    [EditPlayerTypes.changeSpecialCards]:  getNewState,//changeSpecialCards,
+    [EditPlayerTypes.changeFieldNr]:       getNewState,//changeFieldNr,
+    [EditPlayerTypes.changeIsInPrison]:    getNewState,//changeInPrison,
+    [EditPlayerTypes.changeTurnsToWait]:   getNewState,//changeTrurnsToWait,
+    [EditPlayerTypes.changeGameLost]:      getNewState,//changeGameLost,
+    [EditPlayerTypes.changeState]:         getNewState,//changeState,
 }
 
 type tPlayerReducerTypes = keyof typeof EditPlayerTypes
@@ -80,7 +83,7 @@ export const reducer = (state: iPlayerReducerState, {type, payload}: iPlayerEdit
     return newState;
 }
 
-export const changeNameAction = (name: string) => ({type: EditPlayerTypes.changeName, payload: name});
+export const changeNameAction = (state: iPlayerState) => ({type: EditPlayerTypes.changeName, payload: state});
 export const changeMoneyAction = (money: number) => ({type: EditPlayerTypes.changeMoney, payload: money});
 export const changeSpecialCardsAction = (specialCards: []) => ({type: EditPlayerTypes.changeSpecialCards, payload: specialCards});
 export const changeFieldNrAction = (fieldNr: number) => ({type: EditPlayerTypes.changeFieldNr, payload: fieldNr});

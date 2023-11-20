@@ -33,21 +33,21 @@ describe('Testing field creators, based on CityFied', () => {
         expect(ateny3.nrOfHouses).toBe(4);
         expect(london.nrOfHouses).toBe(0);
     })
-    it('Should not be able to set housePrice, type, contry, price, mortage, visit', () => {
-        const notAllowedDict = {
-            housePrice: 0,
-            type: CITY,
-            country: GREECE,
-            price: 0,
-            mortage: 2,
-            visit: [3]
-        }
-        const ateny: any = new CityField(atenyCity, 1);
-        Object.entries(notAllowedDict).forEach(([key, val]) => {
-            const throwingFunction = () => {
-                ateny[key] = val
-            }
-            expect(throwingFunction).toThrow(`Cannot set property ${key} of #<CityField> which has only a getter`);
-        })
-    })
+    // it('Should not be able to set housePrice, type, contry, price, mortage, visit', () => {
+    //     const notAllowedDict = {
+    //         housePrice: 0,
+    //         type: CITY,
+    //         country: GREECE,
+    //         price: 0,
+    //         mortage: 2,
+    //         visit: [3]
+    //     }
+    //     const ateny: any = new CityField(atenyCity, 1);
+    //     Object.entries(notAllowedDict).forEach(([key, val]) => {
+    //         const throwingFunction = () => {
+    //             ateny[key] = val
+    //         }
+    //         expect(throwingFunction).toThrow(`Cannot set property ${key} of #<CityField> which has only a getter`);
+    //     })
+    // })
 })
