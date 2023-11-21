@@ -11,23 +11,25 @@ export const getInput = <InputType extends tProbableInputTypes>(type: tGenericIn
     const classes: {[key:string]: string} = useStyles(theme as any);    
     return (
         <div className={classes.container}>
-            <div className={classes.label}>
-                <label
-                    htmlFor={id || label}
-                >
-                    {label}
-                </label>
-            </div>
-            <div className={classes.input}>
-                <input
-                    value={value}
-                    type={type}
-                    id={id || label}
-                    required={isRequired}
-                    onChange={onChange}
-                    {...props}
-                />
-            </div>
+
+                <div className={classes.label}>
+                    <label
+                        htmlFor={id || label}
+                    >
+                        {label}
+                    </label>
+                </div>
+                <div className={classes.input}>
+                    <input
+                        value={value}
+                        type={type}
+                        id={id || label}
+                        required={isRequired}
+                        onChange={onChange}
+                        {...props}
+                    />
+                </div>
+
         </div>
     )
 }

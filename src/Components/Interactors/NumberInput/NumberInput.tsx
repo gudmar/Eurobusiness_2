@@ -5,7 +5,7 @@ import { iTernaryNumberInputSpecificProps } from "./types";
 import { approximateValueToStep } from "./utils";
 
 const getApporximatedValue = ( val: string, {min, max, step}: iTernaryNumberInputSpecificProps) => {
-    if (!min || !max || !step) return val;
+    if (min === undefined || max === undefined || step === undefined) return val;
     return approximateValueToStep(parseInt(val), {min, max, step})
 }
 
@@ -14,13 +14,19 @@ export const NumberInput = ({
 }: iNumberInput ) => {
     const NumberInputComponent = useMemo( () => getInput('number', {min, max, step}), [])
     const approximatedValue = getApporximatedValue(value, {min, max, step});
+    const changeHandler = (e:tTextEventType) => {
+        const val = e?.target?.value;
+        const approximated = getApporximatedValue(val, {min, max, step})
+        console.log(approximated)
+        onChange(approximated)
+    }
     return (
         <NumberInputComponent
             id={id || label}
             label={label}
             value={approximatedValue}
             isRequired={isRequired}
-            onChange={(e:tTextEventType) => onChange(e?.target?.value)}
+            onChange={changeHandler}
         />
     )
 }

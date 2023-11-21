@@ -75,9 +75,18 @@ export const useEditPlayer = (wantedColor: tColors) => {
     }, [wantedColor])
     const setFieldNr = useCallback((val: string) => {
         if (player && player.current) {
-            console.log(val)
             player.current.fieldNr = parseInt(val)
         }
     }, [wantedColor])
-    return {name, setName, money, specialCards, color, fieldNr, setFieldNr, isInPrison, nrTurnsToWait, isGameLost}
+    const setMoney = useCallback((val: string) => {
+        if (player && player.current) {
+            player.current.money = parseInt(val)
+        }
+    }, [wantedColor])
+    const setNrTurnsToWait = useCallback((val: string) => {
+        if (player && player.current) {
+            player.current.nrTurnsToWait = parseInt(val)
+        }
+    }, [wantedColor])
+    return {name, setName, setMoney, money, specialCards, color, fieldNr, setFieldNr, isInPrison, nrTurnsToWait, setNrTurnsToWait, isGameLost}
 }

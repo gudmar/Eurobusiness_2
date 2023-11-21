@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { MONEY_ALLTOGETHER } from "../../../Constants/constants";
 import { useEditPlayer } from "../../../hooks/useEditPlayer/useEditPlayer"
 import { NumberInput } from "../../Interactors/NumberInput/NumberInput";
 import { TextInput } from "../../Interactors/TextInput/TextInput";
@@ -6,9 +7,13 @@ import { tTextEventType } from "../../Interactors/types";
 
 export const PlayerStateEditor = ({section}: any) => {
     const {
-        name, setName, money, specialCards, color, fieldNr, setFieldNr, isInPrison, nrTurnsToWait, isGameLost
+        name, setName, money, setMoney,
+        specialCards, color, fieldNr,
+        setFieldNr, isInPrison, nrTurnsToWait,
+        setNrTurnsToWait, isGameLost
     } = useEditPlayer(section);
     useEffect(() => console.log(section) , [section])
+    console.log(MONEY_ALLTOGETHER)
     return (
         <>
             <div><h1>Edit player with color: {section}</h1></div>
@@ -23,6 +28,14 @@ export const PlayerStateEditor = ({section}: any) => {
                 }
             />
             <div><b>Money</b>: {money}</div>
+            <NumberInput
+                label={'set money'}
+                value={money}
+                onChange={setMoney}
+                min={0}
+                max={MONEY_ALLTOGETHER}
+                step={1}
+            />
             <div><b>Special cards:</b> {specialCards}</div>
             <div><b>fieldNr</b>: {fieldNr}</div>
             <NumberInput
@@ -35,6 +48,14 @@ export const PlayerStateEditor = ({section}: any) => {
             />
             <div><b>isInPrison</b>: {isInPrison}</div>
             <div><b>nrTurnsToWait</b>: {nrTurnsToWait}</div>
+            <NumberInput
+                label={'set turns to wait'}
+                value={nrTurnsToWait}
+                onChange={setNrTurnsToWait}
+                min={0}
+                max={4}
+                step={1}
+            />
             <div><b>isGameLost</b>: {isGameLost}</div>
         </>
     )
