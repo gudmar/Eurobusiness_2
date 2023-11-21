@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { getInput } from "../Input/Input";
-import { iNumberInput } from "../types";
+import { iNumberInput, tTextEventType } from "../types";
 import { iTernaryNumberInputSpecificProps } from "./types";
 import { approximateValueToStep } from "./utils";
 
@@ -20,7 +20,7 @@ export const NumberInput = ({
             label={label}
             value={approximatedValue}
             isRequired={isRequired}
-            onChange={() => onChange(approximatedValue)}
+            onChange={(e:tTextEventType) => onChange(e?.target?.value)}
         />
     )
 }

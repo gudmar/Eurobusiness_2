@@ -8,7 +8,7 @@ export const PlayerStateEditor = ({section}: any) => {
     const {
         name, setName, money, specialCards, color, fieldNr, setFieldNr, isInPrison, nrTurnsToWait, isGameLost
     } = useEditPlayer(section);
-    useEffect(() => console.log(name) , [name])
+    useEffect(() => console.log(section) , [section])
     return (
         <>
             <div><h1>Edit player with color: {section}</h1></div>
