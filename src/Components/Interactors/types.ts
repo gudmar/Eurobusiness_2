@@ -12,7 +12,8 @@ export interface iInputProps<InputType extends tProbableInputTypes> {
     value: InputType,
     label: string,
     // onChange: ChangeEventHandler<ChangeEventSource>,
-    onChange: ChangeEventHandler<tInputElementTypes> | ((val: any) => void),
+    // onChange: ChangeEventHandler<tInputElementTypes> | ((val: any) => void) | ((e: tTextEventType) => void),
+    onChange: (val: any) => void,
     id?: string,
     isRequired?: boolean,
 }

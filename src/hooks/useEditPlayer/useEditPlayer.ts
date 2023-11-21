@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef } from "react";
+import { useCallback, useEffect, useReducer, useRef } from "react";
 import { tColors } from "../../Data/types";
 import { clearArray } from "../../Functions/clearArray";
 import { ANY_CHANGE } from "../../Logic/Messages/constants";
@@ -7,7 +7,7 @@ import { Players } from "../../Logic/Players/Players";
 import { iPlayer } from "../../Logic/Players/types";
 import { iSubscription, tSubscription } from "../../Types/types";
 import { usePlayersColors } from "../usePlayersColors";
-import { getUpdateFieldNr, getUpdateGameLost, getUpdateIsInPrison, getUpdateMoney, getUpdateName, getUpdateSpecialCards, getUpdateState, getUpdateTurnsToWait, reducer,} from "./utils";
+import { changeStateAction, getUpdateFieldNr, getUpdateGameLost, getUpdateIsInPrison, getUpdateMoney, getUpdateName, getUpdateSpecialCards, getUpdateState, getUpdateTurnsToWait, reducer,} from "./utils";
 
 const getPlayerInstance = (instances: iPlayer[], color: tColors) => (instances.find((instance: iPlayer) => instance.color === color) || null)
 
@@ -44,10 +44,11 @@ export const useEditPlayer = (wantedColor: tColors) => {
     }, dispatch ] = useReducer(reducer, Player.initialState)
     const player = useRef<null | iPlayer>(null)
     useEffect(() => console.log(name) , [name])
+    console.log(wantedColor)
     useEffect(() => {
         const subscribtions: (()=>void)[] = [];
         const unsubscribtions: (()=>void)[] = [];
-        console.log('Changing subscribtions')
+        console.log('Changing subscribtions', players)
         const fillSubscribtions = () => {
             subscribtionsStructure.forEach(({propName, callback}) => {
                 if (player.current) {
@@ -63,17 +64,20 @@ export const useEditPlayer = (wantedColor: tColors) => {
         const clearSubscribtions = () => { clearArray(subscribtions); clearArray(unsubscribtions) }
         player.current = getPlayerInstance(players, wantedColor)
         if (player.current) { fillSubscribtions(); subscribeAll(); }
+        const newPlayerState = player?.current?.state;
+        dispatch(changeStateAction(newPlayerState))
         return () => { unsubscribeAll(); clearSubscribtions(); }
     }, [players, wantedColor])
-    const setName = (val: string) => {
+    const setName = useCallback((val: string) => {
         if (player && player.current) {
             player.current.name = val
         }
-    }
-    const setFieldNr = (val: string) => {
+    }, [wantedColor])
+    const setFieldNr = useCallback((val: string) => {
         if (player && player.current) {
+            console.log(val)
             player.current.fieldNr = parseInt(val)
         }
-    }
+    }, [wantedColor])
     return {name, setName, money, specialCards, color, fieldNr, setFieldNr, isInPrison, nrTurnsToWait, isGameLost}
 }
