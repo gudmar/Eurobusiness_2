@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { MONEY_ALLTOGETHER } from "../../../Constants/constants";
 import { useEditPlayer } from "../../../hooks/useEditPlayer/useEditPlayer"
+import { Checkbox } from "../../Interactors/Checkbox/Checkbox";
 import { NumberInput } from "../../Interactors/NumberInput/NumberInput";
 import { TextInput } from "../../Interactors/TextInput/TextInput";
 import { tTextEventType } from "../../Interactors/types";
@@ -10,7 +11,7 @@ export const PlayerStateEditor = ({section}: any) => {
         name, setName, money, setMoney,
         specialCards, color, fieldNr,
         setFieldNr, isInPrison, nrTurnsToWait,
-        setNrTurnsToWait, isGameLost
+        setNrTurnsToWait, isGameLost, setIsInPrison,
     } = useEditPlayer(section);
     useEffect(() => console.log(section) , [section])
     console.log(MONEY_ALLTOGETHER)
@@ -46,7 +47,12 @@ export const PlayerStateEditor = ({section}: any) => {
                 max={40}
                 step={1}
             />
-            <div><b>isInPrison</b>: {isInPrison}</div>
+            <div><b>isInPrison</b>: {typeof isInPrison }</div>
+            <Checkbox
+                label={'Is in prison'}
+                checked={isInPrison}
+                onChange={setIsInPrison}
+            />
             <div><b>nrTurnsToWait</b>: {nrTurnsToWait}</div>
             <NumberInput
                 label={'set turns to wait'}
