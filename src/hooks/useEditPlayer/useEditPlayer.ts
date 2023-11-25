@@ -43,7 +43,7 @@ export const useEditPlayer = (wantedColor: tColors) => {
         name, money, specialCards, color, fieldNr, isInPrison, nrTurnsToWait, isGameLost
     }, dispatch ] = useReducer(reducer, Player.initialState)
     const player = useRef<null | iPlayer>(null)
-    useEffect(() => console.log(name) , [name])
+    useEffect(() => console.log('IS PRISON', isInPrison) , [isInPrison])
     console.log(wantedColor)
     useEffect(() => {
         const subscribtions: (()=>void)[] = [];
@@ -88,5 +88,17 @@ export const useEditPlayer = (wantedColor: tColors) => {
             player.current.nrTurnsToWait = parseInt(val)
         }
     }, [wantedColor])
-    return {name, setName, setMoney, money, specialCards, color, fieldNr, setFieldNr, isInPrison, nrTurnsToWait, setNrTurnsToWait, isGameLost}
+    const setIsInPrison = useCallback((val: boolean) => {
+        console.log('SETTIG PRISON', val)
+        if (player && player.current) {
+            player.current.isInPrison = val
+        }
+    }, [wantedColor])
+
+    return {
+        name, setName, setMoney, money, 
+        specialCards, color, fieldNr, setFieldNr, 
+        isInPrison, setIsInPrison, nrTurnsToWait, 
+        setNrTurnsToWait, isGameLost
+    }
 }

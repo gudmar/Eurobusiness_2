@@ -50,7 +50,7 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
     // set specialCards(val: []) { this._specialCards = val; this._informAnyChange(); }
     // instead: addSpecialCard, deleteSpecialCard
     set fieldNr(val: number) { this._fieldNr = val; this._informAnyChange(); }
-    // set isInPrison(val: boolean) { this._isInPrison = val; this._informAnyChange(); }
+    set isInPrison(val: boolean) { this._isInPrison = val; this._informAnyChange(); }
     // this is a part of more complicated transaction
     set nrTurnsToWait(val: number) { this._nrTurnsToWait = val; this._informAnyChange(); }
     set isGameLost(val: boolean) { this._isGameLost = val; this._informAnyChange(); }

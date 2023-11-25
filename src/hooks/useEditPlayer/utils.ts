@@ -19,6 +19,7 @@ enum EditPlayerTypes {
 // type tPlayerReducerTypes = Record<EditPlayerTypes, string>
 
 const getNewState = (state: iPlayerReducerState, payload: tPayload) => {
+    console.log('Payload', payload)
     const newState = {...payload}
     return newState;
 }
