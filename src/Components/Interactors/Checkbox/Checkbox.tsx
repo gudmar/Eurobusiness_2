@@ -33,7 +33,6 @@ export const Checkbox = ({id, label, onChange, checked}: iCheckboxProps) => {
             <input
                 type="checkbox"
                 id={id || label}
-                // onChange={onChange}
                 onChange={changeHandler}
                 checked={checked}
             />

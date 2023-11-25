@@ -6,7 +6,6 @@ import { Player } from "../../Logic/Player/Player";
 import { Players } from "../../Logic/Players/Players";
 import { iPlayer } from "../../Logic/Players/types";
 import { iSubscription, tSubscription } from "../../Types/types";
-import { usePlayersColors } from "../usePlayersColors";
 import { changeStateAction, getUpdateFieldNr, getUpdateGameLost, getUpdateIsInPrison, getUpdateMoney, getUpdateName, getUpdateSpecialCards, getUpdateState, getUpdateTurnsToWait, reducer,} from "./utils";
 
 const getPlayerInstance = (instances: iPlayer[], color: tColors) => (instances.find((instance: iPlayer) => instance.color === color) || null)
@@ -43,7 +42,6 @@ export const useEditPlayer = (wantedColor: tColors) => {
         name, money, specialCards, color, fieldNr, isInPrison, nrTurnsToWait, isGameLost
     }, dispatch ] = useReducer(reducer, Player.initialState)
     const player = useRef<null | iPlayer>(null)
-    useEffect(() => console.log('IS PRISON', isInPrison) , [isInPrison])
     console.log(wantedColor)
     useEffect(() => {
         const subscribtions: (()=>void)[] = [];
@@ -89,9 +87,13 @@ export const useEditPlayer = (wantedColor: tColors) => {
         }
     }, [wantedColor])
     const setIsInPrison = useCallback((val: boolean) => {
-        console.log('SETTIG PRISON', val)
         if (player && player.current) {
             player.current.isInPrison = val
+        }
+    }, [wantedColor])
+    const setIsGameLost = useCallback((val: boolean) => {
+        if (player && player.current) {
+            player.current.isGameLost = val
         }
     }, [wantedColor])
 
@@ -99,6 +101,6 @@ export const useEditPlayer = (wantedColor: tColors) => {
         name, setName, setMoney, money, 
         specialCards, color, fieldNr, setFieldNr, 
         isInPrison, setIsInPrison, nrTurnsToWait, 
-        setNrTurnsToWait, isGameLost
+        setNrTurnsToWait, isGameLost, setIsGameLost,
     }
 }
