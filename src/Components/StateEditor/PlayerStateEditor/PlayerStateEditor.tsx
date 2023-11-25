@@ -12,6 +12,7 @@ export const PlayerStateEditor = ({section}: any) => {
         specialCards, color, fieldNr,
         setFieldNr, isInPrison, nrTurnsToWait,
         setNrTurnsToWait, isGameLost, setIsInPrison,
+        setIsGameLost,
     } = useEditPlayer(section);
     useEffect(() => console.log(section) , [section])
     console.log(MONEY_ALLTOGETHER)
@@ -63,6 +64,12 @@ export const PlayerStateEditor = ({section}: any) => {
                 step={1}
             />
             <div><b>isGameLost</b>: {isGameLost}</div>
+            <Checkbox
+                label={'set is game lost'}
+                checked={isGameLost}
+                onChange={setIsGameLost}
+            />
+
         </>
     )
 }
