@@ -2,11 +2,19 @@ import { RefObject } from "react"
 
 export type tSelectFromStateHandler = (val: string) => void
 
+export interface iItemProps {
+    value: string,
+    selectedValue: string,
+    select: tSelectItem,
+}
+
+export type tSelectItem = (value: string) => void;
+
 export interface iSelectFromListProps {
     items: string[],
-    defaultValue: string,
+    defaultValue?: string,
     label: string,
-    id: string,
+    id?: string,
     onClick: tSelectFromStateHandler,
 }
 
@@ -34,7 +42,8 @@ export enum SelectFromLogicTypes {
     open = 'open',
     select = 'select',
     close = 'close',
-    search = 'search'
+    search = 'search',
+    clear = 'clear'
 }
 
 export type tSelect = {
@@ -42,7 +51,7 @@ export type tSelect = {
     payload: string
 }
 export type tOpen = {
-    type: 'open',
+    type: SelectFromLogicTypes.open,
 }
 export type tSearch = {
     type: SelectFromLogicTypes.search,
@@ -50,6 +59,9 @@ export type tSearch = {
 }
 export type tClose = {
     type: SelectFromLogicTypes.close
+}
+export type tClear = {
+    type: SelectFromLogicTypes.clear
 }
 
 export type tGetSelectFromLogicActions = (dispatch: (arg: tActions) => {}) => {
@@ -60,13 +72,16 @@ export type tGetSelectFromLogicActions = (dispatch: (arg: tActions) => {}) => {
 }
 
 export type tActions = {
-    type: 'select',
+    type: SelectFromLogicTypes.select,
     payload: string
 } | {
-    type: 'open',
+    type: SelectFromLogicTypes.open,
 } | {
-    type: 'search',
+    type: SelectFromLogicTypes.search,
     payload: string
 } | { 
-    type: 'close'
+    type: SelectFromLogicTypes.close
+} | { 
+    type: SelectFromLogicTypes.clear
 }
+
