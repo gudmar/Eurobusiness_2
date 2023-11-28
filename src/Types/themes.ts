@@ -28,6 +28,13 @@ export type CustomTheme = {
     modalTvBackground: string, // the car is so big you don't see word besides it, like with TV
     modalWrapperBackground: string,
     modalWrapperColor: string,
+
+    selectFromList_selectedItemBg: string,
+    selectedFromList_selectedItemFg: string,
+    selectFromList_notSelectedItemBg: string,
+    selectFromList_notSelectedItemFg: string,
+    notSelectFromList_hoveredNotSelectedItemBg: string,
+    notSelectFromList_hoveredNotSelectedItemFg: string,
 }
 
 export type NamedTheme = {

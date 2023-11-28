@@ -39,5 +39,12 @@ export const DARK_THEME: NamedTheme = {
         modalWrapperBackground: '#101010',
         modalWrapperColor: '#dedede',
 
+        selectFromList_selectedItemBg: '#aaa',
+        selectedFromList_selectedItemFg: '#333',
+        selectFromList_notSelectedItemBg: '#333',
+        selectFromList_notSelectedItemFg: '#aaa',
+        notSelectFromList_hoveredNotSelectedItemBg: '#656',
+        notSelectFromList_hoveredNotSelectedItemFg: '#ccc',    
+
     }
 }

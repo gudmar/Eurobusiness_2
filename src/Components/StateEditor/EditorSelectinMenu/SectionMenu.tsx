@@ -25,6 +25,7 @@ export const StateEditorNavigation = ({sections, activeSection, setActiveSection
             {sections.map(
                 (sectionName:string) => <NavigationSection 
                                 name = {sectionName}
+                                key = {sectionName}
                                 setActive = {(val: string) => setActiveSection(val)}
                                 currentActiveSection = {activeSection}
                             />)

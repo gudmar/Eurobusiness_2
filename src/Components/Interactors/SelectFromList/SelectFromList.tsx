@@ -26,13 +26,13 @@ export const SelectFromList = ({id, label, items, defaultValue='', onClick}: iSe
         isSearchListExpanded,
         selected,
         valueInTextBox,
+        visibleItems,
         selectItem,
         clearSelection,
         search,
         close,
         open
     } = useSelectFromLogic({textBoxReference, items, defaultSelection: defaultValue, onClick})
-    
     return (
         <div className={classes.container}>
             <div className={classes.label}>
@@ -47,13 +47,16 @@ export const SelectFromList = ({id, label, items, defaultValue='', onClick}: iSe
                 type="text"
                 id={id || label}
                 ref={textBoxReference}
+                value={valueInTextBox}
+                onChange={(e)=>search(e?.target?.value)}
             />
             <div className={classes.list}>
-                {items.map((value: string) => 
+                {visibleItems.map((value: string) => 
                     <Item
                         value={value}
                         select={selectItem}
                         selectedValue={selected}
+                        key={value}
                     />
                 )}
             </div>
