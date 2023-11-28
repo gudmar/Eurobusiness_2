@@ -11,7 +11,6 @@ export const usePlayersColors = () => {
         const subscribtionCallback = (players: iPlayer[]) => {
             const colors = players.map(({color}) => color );
             setColors(colors);
-            console.log('Colors', colors)
         }
         Players.instance.subscribe({
             callback: subscribtionCallback,

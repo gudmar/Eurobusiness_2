@@ -38,5 +38,12 @@ export const GREY_THEME: NamedTheme = {
         modalWrapperBackground: '#dedede',
         modalWrapperColor: '#323232',
 
+        selectFromList_selectedItemBg: '#765',
+        selectedFromList_selectedItemFg: '#222',
+        selectFromList_notSelectedItemBg: '#eee',
+        selectFromList_notSelectedItemFg: '#222',
+        notSelectFromList_hoveredNotSelectedItemBg: '#cbc',
+        notSelectFromList_hoveredNotSelectedItemFg: '#222',    
+
     }
 }

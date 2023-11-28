@@ -33,5 +33,12 @@ export const BLANK_THEME: NamedTheme = {
         modalTvBackground: '',
         modalWrapperBackground: '',
         modalWrapperColor: '',
+
+        selectFromList_selectedItemBg: '',
+        selectedFromList_selectedItemFg: '',
+        selectFromList_notSelectedItemBg: '',
+        selectFromList_notSelectedItemFg: '',
+        notSelectFromList_hoveredNotSelectedItemBg: '',
+        notSelectFromList_hoveredNotSelectedItemFg: '',    
     }
 }

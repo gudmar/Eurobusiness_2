@@ -15,7 +15,8 @@ export type tActionFunction<ActionType, ActionPayload> = (payload?: ActionPayloa
 export type tDispatchArgs<ActionType, ActionPayload> =  {type: ActionType, payload?: ActionPayload}
 
 // export const getReducer = <State extends iGenericState, Type extends string, Payload>(reducerLogic: tReducerLogic) => (state: State, {type, payload}: {type: Type, payload: Payload}) => {
-export const getReducer = <State extends iGenericState, Type extends string, Payload>(reducerLogic: tReducerLogic) => (state: State, {type, payload}: {type: Type, payload?: Payload}) => {
+export const getReducer = <State extends iGenericState, Type extends string, Payload>(reducerLogic: tReducerLogic) => 
+        (state: State, {type, payload}: {type: Type, payload?: Payload}) => {
     const newStateGetter = reducerLogic[type];
     const newState = newStateGetter(state, payload);
     return newState;

@@ -14,15 +14,15 @@ export const initialState: iSearchFromState = {
 const openAction: () => tOpen = () => ({type: SelectFromLogicTypes.open})
 const closeAction: () => tClose = () => ({type: SelectFromLogicTypes.close})
 const clearAction: () => tClear = () => ({type: SelectFromLogicTypes.clear})
-const selectAction = ( payload: string ) => ({type: SelectFromLogicTypes.select, payload})
+const selectAction = function( payload: string ) { return {type: SelectFromLogicTypes.select, payload} };
 const searchAction = ( payload: string ) => ({type: SelectFromLogicTypes.search, payload})
 
 export const getSelectFromLogicActions = (dispatch: (arg: tActions) => void) => ({
-    open: () => dispatch(openAction()),
+    open:  () => dispatch(openAction()),
     close: () => dispatch(closeAction()),
     clear: () => dispatch(clearAction()),
-    select: (payload: string) => dispatch(selectAction(payload)),
-    search: (payload: string) => dispatch(searchAction(payload)),
+    select: (payload: string) => {dispatch(selectAction(payload))},
+    search: (payload: string) => {dispatch(searchAction(payload))},
 })
 
 const openSearchMode = (state:iSearchFromState) => ({...state, isSearchListExpanded: true})
@@ -30,13 +30,16 @@ const selectOption = (state:iSearchFromState, payload: tPayloadTypes1) => ({...s
 const closeSearchMode = (state: iSearchFromState) => ({...state, isSearchListExpanded: false, displayed: state.selected});
 const clearSelection = (state: iSearchFromState) => ({...state, displayed: '', selected: ''});
 const search = (state: iSearchFromState, payload: string) => {
-    const visibleItems = state.visibleItems.filter((item: string) => item.toLocaleLowerCase() === payload.toLocaleLowerCase())
-    return { ...state, visibleItems }
+    const displayed = payload;
+    const visibleItems = state.items.filter((item: string) => {
+        return item.toLowerCase().includes(payload.toLowerCase())
+    })
+    return { ...state, visibleItems, displayed }
 }
 
 const REDUCER = {
     openSearchMode: openSearchMode,
-    selectOption: selectOption,
+    select: selectOption,
     closeSearchMode: closeSearchMode,
     search: search,
 }
@@ -51,7 +54,7 @@ export const useSelectFromLogic = ({textBoxReference, items, defaultSelection, o
         selected,
         displayed,
         visibleItems,
-    }, dispatch] = useReducer(reducer, initialState);
+    }, dispatch] = useReducer(reducer, {...initialState, visibleItems: items, items, selected: defaultSelection, displayed: defaultSelection});
     const {open, clear, close, search, select} = getSelectFromLogicActions(dispatch)
     return {
         isSearchListExpanded: isSearchExpanded,
@@ -62,5 +65,6 @@ export const useSelectFromLogic = ({textBoxReference, items, defaultSelection, o
         close,
         open,
         selected,
+        visibleItems,
     }
 }
