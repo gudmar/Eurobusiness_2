@@ -42,23 +42,32 @@ export const SelectFromList = ({id, label, items, defaultValue='', onClick}: iSe
                     {label}
                 </label>
             </div>
-        <div className={classes.input}>
-            <input
-                type="text"
-                id={id || label}
-                ref={textBoxReference}
-                value={valueInTextBox}
-                onChange={(e)=>search(e?.target?.value)}
-            />
-            <div className={classes.list}>
-                {visibleItems.map((value: string) => 
-                    <Item
-                        value={value}
-                        select={selectItem}
-                        selectedValue={selected}
-                        key={value}
+            <div className={classes.input}>
+                {/* <div className={classes.inputWrapper}> */}
+                    <input
+                        autoComplete={'off'}
+                        type="text"
+                        id={id || label}
+                        ref={textBoxReference}
+                        value={valueInTextBox}
+                        onChange={(e)=>{
+                            search(e?.target?.value)
+                            console.log(e)
+                        }}
                     />
-                )}
+                {/* </div> */}
+
+            <div className={`${classes.listWrapper} ${isSearchListExpanded ? classes.visible : classes.hidden}`}>
+                <div className={classes.scrollable}>
+                    {visibleItems.map((value: string) => 
+                        <Item
+                            value={value}
+                            select={selectItem}
+                            selectedValue={selected}
+                            key={value}
+                        />
+                    )}
+                </div>
             </div>
         </div>
     </div>
