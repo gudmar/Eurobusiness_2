@@ -43,7 +43,8 @@ export enum SelectFromLogicTypes {
     select = 'select',
     close = 'close',
     search = 'search',
-    clear = 'clear'
+    clear = 'clear',
+    clearSearchResult = 'clearSearchResult'
 }
 
 export type tSelect = {
@@ -62,6 +63,10 @@ export type tClose = {
 }
 export type tClear = {
     type: SelectFromLogicTypes.clear
+}
+
+export type tClearSearchResult = {
+    type: SelectFromLogicTypes.clearSearchResult
 }
 
 export type tGetSelectFromLogicActions = (dispatch: (arg: tActions) => {}) => {
@@ -83,5 +88,7 @@ export type tActions = {
     type: SelectFromLogicTypes.close
 } | { 
     type: SelectFromLogicTypes.clear
+} | {
+    type: SelectFromLogicTypes.clearSearchResult
 }
 

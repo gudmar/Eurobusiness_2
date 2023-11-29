@@ -17,7 +17,12 @@ export const GeneralStateEditor = () => {
                     'Ogniem i Mieczem',
                     'Pan Wołodyjowski',
                     'Sami swoi',
-                    'Jak rozpętałem 2 wojnę światową'
+                    'Jak rozpętałem 2 wojnę światową',
+                    'Poranek kojota',
+                    'Chołopaki nie płaczą',
+                    'Nie lubię poniedziałku',
+                    'Miś',
+                    'Vabank'
                 ]}
                 onClick = {setSelected}
             />
