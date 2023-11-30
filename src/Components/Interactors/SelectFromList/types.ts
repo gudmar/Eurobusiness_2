@@ -1,5 +1,3 @@
-import { RefObject } from "react"
-
 export type tSelectFromStateHandler = (val: string) => void
 
 export interface iItemProps {
@@ -19,7 +17,7 @@ export interface iSelectFromListProps {
 }
 
 export interface iSelectFromLogicArgs {
-    textBoxReference: RefObject<HTMLInputElement>
+    textBoxReference: HTMLInputElement | null,
     items: string[],
     defaultSelection: string,
     onClick: tSelectFromStateHandler,
