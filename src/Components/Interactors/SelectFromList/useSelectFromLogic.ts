@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { getReducer } from "../../../Functions/reducer";
 import { useOnBlur, useOnFocus } from "../../../hooks/useOnFocusChangers";
 import { iSearchFromState, iSelectFromLogicArgs, SelectFromLogicTypes, tActions, tClear, tClearSearchResult, tClose, tGetSelectFromLogicActions, tOpen, tPayloadTypes1 } from "./types";
@@ -64,8 +64,10 @@ export const useSelectFromLogic = ({textBoxReference, items, defaultSelection, o
         visibleItems,
     }, dispatch] = useReducer(reducer, {...initialState, visibleItems: items, items, selected: defaultSelection, displayed: defaultSelection});
     const {open, clear, close, search, select, clearSearchResult} = getSelectFromLogicActions(dispatch)
+    useEffect(()=> console.log(textBoxReference.current), [])
     useOnBlur(textBoxReference, () => {clearSearchResult()})
     useOnFocus(textBoxReference, () => {open()})
+    // useEffect(()=> console.log(textBoxReference), [])
     return {
         isSearchListExpanded: isSearchExpanded,
         valueInTextBox: displayed,
