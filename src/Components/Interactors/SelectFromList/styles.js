@@ -1,21 +1,39 @@
 import { createUseStyles } from "react-jss";
 
 export const useStyles = createUseStyles((theme) => ({
+    selectFromList: {
+        display: 'inline-block',
+    },
     container: {
         display: 'flex',
-        columnGap: '1rem',
-        margin: '1rem',
+        borderRadius: '5px',
+        backgroundColor: 'white',
+        // padding: '0.3rem',
+        // justifyContent: 'center'
+        // columnGap: '1rem',
+        // margin: '1rem',
     },
-    // inputWrapper: {
-    //     width: '240px',
-    //     height: '20px',
-    //     // overflow: 'hidden'
-    // },
+    squareButton: {
+        width: '1rem',
+        height: '1rem',
+        cursor: 'pointer'
+    },
+    squareButtonDisabled: {
+        color: 'transparent',
+        cursor: 'default'
+    },
     input: {
+        display: 'flex',
+        alignItems: 'center',
+        alignContent: 'center',
         '& input': {
             padding: '0.5rem',
             borderRadius: '0.5rem',
             border: 'none',
+            outline: 'none',
+            fontSize:'1.5rem',
+            padding: '0',
+            width: '100%'
         },
         border: 'none',
         // padding: '0.5rem',
@@ -35,12 +53,15 @@ export const useStyles = createUseStyles((theme) => ({
     visible: {
         height: '300px',
         transition: '0.3s',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        // transform: 'scaleY(1)'
     },
     hidden: {
+        // height: '300px',
         height: '0',
         transition: '0.3s',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        // transform: 'scaleY(0)'
     },
     listWrapper: {
         overflow: 'hidden',
