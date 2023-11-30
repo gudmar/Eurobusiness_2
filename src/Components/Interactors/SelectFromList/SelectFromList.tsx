@@ -56,8 +56,8 @@ export const SelectFromList = ({id, label, items, defaultValue='', onClick}: iSe
         search,
         close,
         open
-    } = useSelectFromLogic({ textBoxReference: textBoxReference.current, items, defaultSelection: defaultValue, onClick})
-    useEffect(()=> console.log(textBoxReference.current), [textBoxReference.current])
+    } = useSelectFromLogic({ textBoxReference: textBoxReference, items, defaultSelection: defaultValue, onClick})
+    useEffect(()=> console.log(textBoxReference.current), [])
     return (
             <div className={classes.selectFromList}>
                 <fieldset className={classes.container}>
