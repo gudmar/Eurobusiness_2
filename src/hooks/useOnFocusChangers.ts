@@ -1,34 +1,38 @@
 import { RefObject, useEffect } from "react";
 
 // const getUseOnEvent = (eventType: string) => <ItemType extends HTMLElement>(reference:RefObject<ItemType>, action: () => void) => {
-const getUseOnEvent = (eventType: string) => <ItemType extends HTMLElement>(reference: RefObject<ItemType> | null, action: () => void) => {
-    const current = reference?.current;
-    // const current = reference;
-    useEffect(()=> console.log(reference?.current), [])
+const getUseOnEvent = (eventType: string, stopPropagation = false) => <ItemType extends HTMLElement>(reference: RefObject<ItemType> | null, action: () => void) => {
+    const logAction = (e:any) => { action()}
+    const onEvent = stopPropagation ? (e:any) => {e.stopPropagation(); action()}:logAction
     useEffect(()=> {
         if (reference?.current) {
-            reference?.current.addEventListener(eventType, action);
+            reference?.current.addEventListener(eventType, onEvent);
         }
         const current = reference?.current
         return () => {
             if (current) {
-                current.removeEventListener(eventType, action)
+                current.removeEventListener(eventType, onEvent)
             }
         }
-    })
-    useEffect(() => {
-        if (reference?.current) {
-            reference?.current.addEventListener(eventType, action);
-        }
-        const current = reference?.current
-        return () => {
-            if (current) {
-                current.removeEventListener(eventType, action)
-            }
-        }
-    }, [reference, action]);
+    }, [])
+    // useEffect(() => {
+    //     if (reference?.current) {
+    //         reference?.current.addEventListener(eventType, action);
+    //     }
+    //     const current = reference?.current
+    //     return () => {
+    //         if (current) {
+    //             current.removeEventListener(eventType, action)
+    //         }
+    //     }
+    // }, [reference, action]);
 }
 
 export const useOnBlur = getUseOnEvent("blur");
+export const useOnBlurNotPropagate = getUseOnEvent('blur', true)
 
 export const useOnFocus = getUseOnEvent("focus")
+
+export const useOnFocusout = getUseOnEvent("focusout")
+
+export const useOnFocusin = getUseOnEvent("focusin")

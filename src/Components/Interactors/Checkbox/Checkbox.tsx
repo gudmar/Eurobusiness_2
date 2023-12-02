@@ -15,7 +15,6 @@ export const Checkbox = ({id, label, onChange, checked}: iCheckboxProps) => {
         const val = e?.target?.checked;
         onChange(val)
     }
-    useEffect(() => console.log(checked), [checked])
     const { theme } = useThemesAPI();
     const classes: {[key:string]: string} = useStyles(theme as any);    
 

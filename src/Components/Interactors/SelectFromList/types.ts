@@ -19,7 +19,8 @@ export interface iSelectFromListProps {
 }
 
 export interface iSelectFromLogicArgs {
-    textBoxReference: RefObject<HTMLInputElement>,
+    focusRef: RefObject<HTMLInputElement>,
+    blurRef:  RefObject<HTMLInputElement>,
     items: string[],
     defaultSelection: string,
     onClick: tSelectFromStateHandler,

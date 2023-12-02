@@ -51,7 +51,7 @@ export const useStyles = createUseStyles((theme) => ({
     },
 
     visible: {
-        height: '300px',
+        maxHeight: '300px',
         transition: '0.3s',
         overflow: 'hidden',
         // transform: 'scaleY(1)'
@@ -67,7 +67,7 @@ export const useStyles = createUseStyles((theme) => ({
         overflow: 'hidden',
     },
     scrollable: {
-        height: '300px',
+        maxHeight: '300px',
         overflow: 'auto'
     },
     itemWrapper: {
