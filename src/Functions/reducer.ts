@@ -18,7 +18,7 @@ export type tDispatchArgs<ActionType, ActionPayload> =  {type: ActionType, paylo
 export const getReducer = <State extends iGenericState, Type extends string, Payload>(reducerLogic: tReducerLogic) => 
         (state: State, {type, payload}: {type: Type, payload?: Payload}) => {
     const newStateGetter = reducerLogic[type];
-    console.log(newStateGetter, reducerLogic, type)
+    console.log(type, payload)
     const newState = newStateGetter(state, payload);
     return newState;
 };

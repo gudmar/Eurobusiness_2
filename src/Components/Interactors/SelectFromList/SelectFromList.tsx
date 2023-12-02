@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useThemesAPI } from "../../../Contexts/ThemeContext";
 import { useStyles } from "./styles";
 import { iItemProps, iSelectFromListProps } from "./types";
@@ -45,7 +45,8 @@ const SquareButton = ({label, disabled, onClick, ariaLabel}: iSquareButtonArgs) 
 export const SelectFromList = ({id, label, items, defaultValue='', onClick}: iSelectFromListProps) => {
     const { theme } = useThemesAPI();
     const classes: {[key:string]: string} = useStyles(theme as any);
-    const textBoxReference = useRef<HTMLInputElement>(null);
+    const focusRef = useRef<HTMLInputElement>(null);
+    const blurRef = useRef<HTMLInputElement>(null);
     const {
         isSearchListExpanded,
         selected,
@@ -56,10 +57,10 @@ export const SelectFromList = ({id, label, items, defaultValue='', onClick}: iSe
         search,
         close,
         open
-    } = useSelectFromLogic({ textBoxReference: textBoxReference, items, defaultSelection: defaultValue, onClick})
-    useEffect(()=> console.log(textBoxReference.current), [])
+    } = useSelectFromLogic({ focusRef, blurRef,  items, defaultSelection: defaultValue, onClick})
+    // useEffect(()=> console.log(textBoxReference.current), [])
     return (
-            <div className={classes.selectFromList}>
+            <div className={classes.selectFromList} ref={blurRef} tabIndex={0}>
                 <fieldset className={classes.container}>
                     <legend>{label}</legend>
                     <div className={classes.input}>
@@ -68,7 +69,7 @@ export const SelectFromList = ({id, label, items, defaultValue='', onClick}: iSe
                                 autoComplete={'off'}
                                 type="text"
                                 id={id || label}
-                                ref={textBoxReference}
+                                ref={focusRef}
                                 value={valueInTextBox}
                                 onChange={(e)=>{
                                     search(e?.target?.value)

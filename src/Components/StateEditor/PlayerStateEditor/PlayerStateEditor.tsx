@@ -14,8 +14,6 @@ export const PlayerStateEditor = ({section}: any) => {
         setNrTurnsToWait, isGameLost, setIsInPrison,
         setIsGameLost,
     } = useEditPlayer(section);
-    useEffect(() => console.log(section) , [section])
-    console.log(MONEY_ALLTOGETHER)
     return (
         <>
             <div><h1>Edit player with color: {section}</h1></div>
@@ -24,7 +22,6 @@ export const PlayerStateEditor = ({section}: any) => {
                 label={'Player name'}
                 value={name}
                 onChange={(e: tTextEventType) => {
-                        console.log(e.target.value)
                         setName(e.target.value)
                     }
                 }

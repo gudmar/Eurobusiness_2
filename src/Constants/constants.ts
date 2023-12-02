@@ -27,6 +27,5 @@ export const MONEY_ALLTOGETHER = (() => {
         acc = (acc + (parseInt(key) * value));
         return acc
     }, 0);
-    console.log('Money alltogether', result)
     return result;
 })();
