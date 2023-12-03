@@ -40,5 +40,10 @@ export const BLANK_THEME: NamedTheme = {
         selectFromList_notSelectedItemFg: '',
         notSelectFromList_hoveredNotSelectedItemBg: '',
         notSelectFromList_hoveredNotSelectedItemFg: '',    
+
+        inputBackgroundColor: '', 
+        inputIconColor:       '',
+        inputForgroundColor: '',
+    
     }
 }

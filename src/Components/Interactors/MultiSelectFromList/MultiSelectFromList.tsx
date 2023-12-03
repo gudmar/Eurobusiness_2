@@ -1,8 +1,9 @@
 import { useRef } from "react";
 import { useThemesAPI } from "../../../Contexts/ThemeContext";
+import { SquareButton } from "../SquareButton/SquareButton";
 import { useStyles } from "./styles";
 import { iItemProps, iSelectFromListProps } from "./types";
-import { useSelectFromLogic } from "./useSelectFromLogic";
+import { useMultiSelectFromLogic } from "./useMultiSelectFromLotic";
 
 const Item = ({value, selectedValue, select}:iItemProps) => {
     const { theme } = useThemesAPI();
@@ -18,31 +19,7 @@ const Item = ({value, selectedValue, select}:iItemProps) => {
     )
 }
 
-interface iSquareButtonArgs {
-    label: string,
-    disabled: boolean,
-    onClick: () => void,
-    ariaLabel: string,
-}
-
-const SquareButton = ({label, disabled, onClick, ariaLabel}: iSquareButtonArgs) => {
-    const { theme } = useThemesAPI();
-    const classes: {[key:string]: string} = useStyles(theme as any);
-    const conditionalyDisabledOnclick = () => { if (!disabled) onClick()}
-    return (
-        <div
-            role='button'
-            aria-label={ariaLabel}
-            className={`${classes.squareButton} ${classes.squareButtonDisabled}`}
-            aria-hidden = {!disabled}
-            onClick = {conditionalyDisabledOnclick}
-        >
-            {label}
-        </div>
-    )
-}
-
-export const SelectFromList = ({id, label, items, defaultValue='', onClick}: iSelectFromListProps) => {
+export const MultiSelectFromList = ({id, label, items, defaultValue='', onClick}: iSelectFromListProps) => {
     const { theme } = useThemesAPI();
     const classes: {[key:string]: string} = useStyles(theme as any);
     const focusRef = useRef<HTMLInputElement>(null);
@@ -57,7 +34,7 @@ export const SelectFromList = ({id, label, items, defaultValue='', onClick}: iSe
         search,
         close,
         open
-    } = useSelectFromLogic({ focusRef, blurRef,  items, defaultSelection: defaultValue, onClick})
+    } = useMultiSelectFromLogic({ focusRef, blurRef,  items, defaultSelection: defaultValue, onClick})
     // useEffect(()=> console.log(textBoxReference.current), [])
     return (
             <div className={classes.selectFromList} ref={blurRef} tabIndex={0}>

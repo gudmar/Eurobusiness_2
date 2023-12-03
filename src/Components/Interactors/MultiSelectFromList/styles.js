@@ -8,19 +8,6 @@ export const useStyles = createUseStyles((theme) => ({
         display: 'flex',
         borderRadius: '5px',
         backgroundColor: 'white',
-        // padding: '0.3rem',
-        // justifyContent: 'center'
-        // columnGap: '1rem',
-        // margin: '1rem',
-    },
-    squareButton: {
-        width: '1rem',
-        height: '1rem',
-        cursor: 'pointer'
-    },
-    squareButtonDisabled: {
-        color: 'transparent',
-        cursor: 'default'
     },
     input: {
         display: 'flex',
@@ -36,12 +23,6 @@ export const useStyles = createUseStyles((theme) => ({
             width: '100%'
         },
         border: 'none',
-        // padding: '0.5rem',
-        // borderRadius: '0.5rem',
-        // // border: 'none',
-        // border: 'solid thin black',
-        // outline: 'none',
-        // width: '240px'
     },
     label: {
         padding: '0.5rem',

@@ -35,6 +35,10 @@ export type CustomTheme = {
     selectFromList_notSelectedItemFg: string,
     notSelectFromList_hoveredNotSelectedItemBg: string,
     notSelectFromList_hoveredNotSelectedItemFg: string,
+
+    inputBackgroundColor: string,
+    inputIconColor: string,
+    inputForgroundColor: string,
 }
 
 export type NamedTheme = {

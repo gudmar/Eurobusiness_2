@@ -45,5 +45,8 @@ export const GREY_THEME: NamedTheme = {
         notSelectFromList_hoveredNotSelectedItemBg: '#cbc',
         notSelectFromList_hoveredNotSelectedItemFg: '#222',    
 
+        inputBackgroundColor: '#fff', 
+        inputIconColor:       '#333',
+        inputForgroundColor: '#222',
     }
 }

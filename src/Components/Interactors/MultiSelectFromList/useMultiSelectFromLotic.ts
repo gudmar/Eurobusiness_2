@@ -1,8 +1,9 @@
-import { useEffect, useReducer } from "react";
+import { useReducer } from "react";
 import { getReducer } from "../../../Functions/reducer";
-import { useOnBlur, useOnBlurNotPropagate, useOnFocus, useOnFocusin, useOnFocusout } from "../../../hooks/useOnFocusChangers";
+import { REDUCER } from "../../../hooks/useEditPlayer/utils";
+import { useOnFocusin } from "../../../hooks/useOnFocusChangers";
 import { useInvoceIfEventOutsideElement } from "../../../hooks/useOnOutsideInsideElement";
-import { iSearchFromState, iSelectFromLogicArgs, SelectFromLogicTypes, tActions, tClear, tClearSearchResult, tClose, tGetSelectFromLogicActions, tOpen, tPayloadTypes1 } from "./types";
+import { iSearchFromState, iSelectFromLogicArgs, SelectFromLogicTypes, tActions, tClear, tClearSearchResult, tClose, tOpen, tPayloadTypes1 } from "./types";
 
 export const initialState: iSearchFromState = {
     isSearchExpanded: false,
@@ -28,36 +29,10 @@ export const getSelectFromLogicActions = (dispatch: (arg: tActions) => void) => 
     clearSearchResult: () => {dispatch(clearSearchResultAction())},
 })
 
-const openSearchMode = (state:iSearchFromState) => {
-    const newState = {...state, isSearchExpanded: true};
-    return newState
-}
-const selectOption = (state:iSearchFromState, payload: tPayloadTypes1) => ({...state, isSearchListExpanded: false, selected: payload, displayed: payload, isSearchExpanded: false});
-const closeSearchMode = (state: iSearchFromState) => ({...state, isSearchListExpanded: false, displayed: state.selected, isSearchExpanded: false});
-const clearSelection = (state: iSearchFromState) => ({...state, displayed: '', selected: '', visibleItems: state.items});
-const clearSearchResult = (state: iSearchFromState) => ({...state, visibleItems: state.items, displayed: state.selected, isSearchExpanded: false})
-const search = (state: iSearchFromState, payload: string) => {
-    const displayed = payload;
-    const visibleItems = state.items.filter((item: string) => {
-        return item.toLowerCase().includes(payload.toLowerCase())
-    })
-    return { ...state, visibleItems, displayed }
-}
-
-const REDUCER = {
-    openSearchMode: openSearchMode,
-    select: selectOption,
-    closeSearchMode: closeSearchMode,
-    search: search,
-    clearSearchResult: clearSearchResult,
-    clear: clearSelection,
-    open: openSearchMode,
-    close: closeSearchMode,
-}
-
 export const reducer = getReducer<iSearchFromState, string, tPayloadTypes1>(REDUCER)
 
-export const useSelectFromLogic = ({focusRef, blurRef, items, defaultSelection, onClick}: iSelectFromLogicArgs) => {
+
+export const useMultiSelectFromLogic = ({focusRef, blurRef, items, defaultSelection, onClick}: iSelectFromLogicArgs) => {    
     const [{
         isSearchExpanded,
         selected,
