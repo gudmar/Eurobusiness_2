@@ -15,17 +15,6 @@ const getUseOnEvent = (eventType: string, stopPropagation = false) => <ItemType 
             }
         }
     }, [])
-    // useEffect(() => {
-    //     if (reference?.current) {
-    //         reference?.current.addEventListener(eventType, action);
-    //     }
-    //     const current = reference?.current
-    //     return () => {
-    //         if (current) {
-    //             current.removeEventListener(eventType, action)
-    //         }
-    //     }
-    // }, [reference, action]);
 }
 
 export const useOnBlur = getUseOnEvent("blur");

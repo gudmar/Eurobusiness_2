@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { SelectFromList } from "../../Interactors/SelectFromList/SelectFromList"
+import { SingleSelectFromList } from "../../Interactors/SingleSelectFromList/SingleSelectFromList"
 
 export const GeneralStateEditor = () => {
     const [selected, setSelected] = useState('')
@@ -8,7 +8,7 @@ export const GeneralStateEditor = () => {
             <strong>Selected</strong> 
             {selected}
             <br />
-            <SelectFromList
+            <SingleSelectFromList
                 label={'Test'}
                 items={[
                     'option 1',
@@ -27,7 +27,7 @@ export const GeneralStateEditor = () => {
                 onClick = {setSelected}
             />
 
-            <SelectFromList
+            <SingleSelectFromList
                 label={'Test'}
                 items={[
                     'option 1',
