@@ -54,7 +54,7 @@ export const MultiSelectFromList = ({id, label, items, defaultValue='', onClick}
                                 }}
                             />
                             <SquareButton
-                                label="&times;"
+                                children="&times;"
                                 disabled = {!valueInTextBox}
                                 onClick={clearSelection}
                                 ariaLabel={`clear ${label} selection`}
