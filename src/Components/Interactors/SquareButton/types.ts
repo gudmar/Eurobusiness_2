@@ -1,5 +1,7 @@
+import { ReactNode } from "react";
+
 export interface iSquareButtonArgs {
-    label: string,
+    children: ReactNode,
     disabled: boolean,
     onClick: () => void,
     ariaLabel: string,

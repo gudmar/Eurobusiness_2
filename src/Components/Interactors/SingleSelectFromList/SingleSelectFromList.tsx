@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useThemesAPI } from "../../../Contexts/ThemeContext";
+import { CloseButton } from "../CloseButton/CloseButton";
+import { ExpandButton } from "../ExpandButton/ExpandButton";
 import { SquareButton } from "../SquareButton/SquareButton";
 import { useStyles } from "./styles";
 import { iItemProps, iSelectFromListProps } from "./types";
@@ -53,12 +55,16 @@ export const SingleSelectFromList = ({id, label, items, defaultValue='', onClick
                                     console.log(e)
                                 }}
                             />
-                            <SquareButton
-                                label="&times;"
-                                disabled = {valueInTextBox === ''}
+                            <CloseButton
+                                isDisabled = {valueInTextBox === ''}
                                 onClick={clearSelection}
                                 ariaLabel={`clear ${label} selection`}
                             />
+                            <ExpandButton
+                                isExpanded={isSearchListExpanded}
+                                onClick={() => {isSearchListExpanded ? close() : open()}}
+                            />
+                            
                         {/* </div> */}
                     </div>
                 </fieldset>

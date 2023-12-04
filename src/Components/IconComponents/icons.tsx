@@ -11,6 +11,8 @@ import { ReactComponent as RWIcon} from '../../Icon/railway.svg'
 import { ReactComponent as StIcon} from '../../Icon/Start.svg'
 import { ReactComponent as TIcon } from '../../Icon/tax.svg';
 import { ReactComponent as WPIcon } from '../../Icon/waterPlant.svg';
+import { ReactComponent as ClIcon } from '../../Icon/close.svg';
+import { ReactComponent as ExIcon } from '../../Icon/expand.svg';
 
 export const ElectricPlantIcon = memo(withIcon(EPIcon))
 export const FreeParkIcon = memo(withIcon(FParkIcon))
@@ -23,3 +25,5 @@ export const TaxIcon = memo(withIcon(TIcon));
 export const RailwayIcon = memo(withIcon(RWIcon));
 export const StartIcon = memo(withIcon(StIcon));
 export const WaterPlantIcon = memo(withIcon(WPIcon));
+export const CloseIcon = memo(withIcon(ClIcon));
+export const ExpandIcon = memo(withIcon(ExIcon));

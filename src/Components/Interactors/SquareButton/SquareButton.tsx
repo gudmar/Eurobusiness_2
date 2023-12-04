@@ -2,7 +2,7 @@ import { useThemesAPI } from "../../../Contexts/ThemeContext";
 import { useStyles } from "./styles";
 import { iSquareButtonArgs } from "./types";
 
-export const SquareButton = ({label, disabled, onClick, ariaLabel}: iSquareButtonArgs) => {
+export const SquareButton = ({children, disabled, onClick, ariaLabel}: iSquareButtonArgs) => {
     const { theme } = useThemesAPI();
     const classes: {[key:string]: string} = useStyles(theme as any);
     const conditionalyDisabledOnclick = () => { if (!disabled) onClick()}
@@ -14,7 +14,7 @@ export const SquareButton = ({label, disabled, onClick, ariaLabel}: iSquareButto
             aria-hidden = {!disabled}
             onClick = {conditionalyDisabledOnclick}
         >
-            {label}
+            {children}
         </div>
     )
 }
