@@ -4,15 +4,15 @@ export type tSelectFromStateHandler = (val: string) => void
 
 export interface iItemProps {
     value: string,
-    selectedValue: string,
-    select: tSelectItem,
+    selectedValues: any[],
+    toggleSelection: tSelectItem,
 }
 
 export type tSelectItem = (value: string) => void;
 
 export interface iSelectFromListProps {
     items: string[],
-    defaultValue?: string,
+    defaultValues?: string[],
     label: string,
     id?: string,
     onClick: tSelectFromStateHandler,
@@ -22,74 +22,76 @@ export interface iSelectFromLogicArgs {
     focusRef: RefObject<HTMLInputElement>,
     blurRef:  RefObject<HTMLInputElement>,
     items: string[],
-    defaultSelection: string,
+    defaultSelection: string[],
     onClick: tSelectFromStateHandler,
 }
 
-export interface iSearchFromState {
+export interface iMultiSelectFromState {
     isSearchExpanded: boolean,
-    selected: string,
-    displayed: '',
+    selected: [],
+    displayed: string,
     items: [],
     visibleItems: []
 }
 
 export type tSearchFromPayload = string;
 
-export type tPayloadTypes1 = tSearchFromPayload | boolean | string | undefined
+export type tPayloadTypes = tSearchFromPayload | boolean | string | undefined
 export type tSearchPayloadType = {visibleItems: string[], selected: string}
 
-export enum SelectFromLogicTypes {
+export enum MultiSelectFromLogicTypes {
     open = 'open',
-    select = 'select',
+    toggleSelection = 'toggle selection',
     close = 'close',
     search = 'search',
     clear = 'clear',
     clearSearchResult = 'clearSearchResult'
 }
 
-export type tSelect = {
-    type: SelectFromLogicTypes.select,
+export type tToggleSelection = {
+    type: MultiSelectFromLogicTypes.toggleSelection,
     payload: string
 }
 export type tOpen = {
-    type: SelectFromLogicTypes.open,
+    type: MultiSelectFromLogicTypes.open,
 }
 export type tSearch = {
-    type: SelectFromLogicTypes.search,
+    type: MultiSelectFromLogicTypes.search,
     payload: string
 }
 export type tClose = {
-    type: SelectFromLogicTypes.close
+    type: MultiSelectFromLogicTypes.close
 }
 export type tClear = {
-    type: SelectFromLogicTypes.clear
+    type: MultiSelectFromLogicTypes.clear
 }
 
 export type tClearSearchResult = {
-    type: SelectFromLogicTypes.clearSearchResult
+    type: MultiSelectFromLogicTypes.clearSearchResult
 }
 
-export type tGetSelectFromLogicActions = (dispatch: (arg: tActions) => {}) => {
+export type tGetMultiSelectFromLogicActions = (dispatch: (arg: tActions) => {}) => {
     open: () => {},
     close: () => {},
-    select: (payload: string) => {},
+    toggleSelection: (payload: string) => {},
     search: (payload: string) => {},
+    clear: () => {},
+    clearSearchResult: () => {}
 }
 
 export type tActions = {
-    type: SelectFromLogicTypes.select,
+    type: MultiSelectFromLogicTypes.toggleSelection,
     payload: string
 } | {
-    type: SelectFromLogicTypes.open,
+    type: MultiSelectFromLogicTypes.open,
 } | {
-    type: SelectFromLogicTypes.search,
+    type: MultiSelectFromLogicTypes.search,
     payload: string
 } | { 
-    type: SelectFromLogicTypes.close
+    type: MultiSelectFromLogicTypes.close
 } | { 
-    type: SelectFromLogicTypes.clear
+    type: MultiSelectFromLogicTypes.clear
 } | {
-    type: SelectFromLogicTypes.clearSearchResult
+    type: MultiSelectFromLogicTypes.clearSearchResult
 }
 
