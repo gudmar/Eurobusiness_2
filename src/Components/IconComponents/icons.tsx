@@ -13,6 +13,7 @@ import { ReactComponent as TIcon } from '../../Icon/tax.svg';
 import { ReactComponent as WPIcon } from '../../Icon/waterPlant.svg';
 import { ReactComponent as ClIcon } from '../../Icon/close.svg';
 import { ReactComponent as ExIcon } from '../../Icon/expand.svg';
+import { ReactComponent as Search_Icon } from '../../Icon/search.svg';
 
 export const ElectricPlantIcon = memo(withIcon(EPIcon))
 export const FreeParkIcon = memo(withIcon(FParkIcon))
@@ -27,3 +28,4 @@ export const StartIcon = memo(withIcon(StIcon));
 export const WaterPlantIcon = memo(withIcon(WPIcon));
 export const CloseIcon = memo(withIcon(ClIcon));
 export const ExpandIcon = memo(withIcon(ExIcon));
+export const SearchIcon = memo(withIcon(Search_Icon));

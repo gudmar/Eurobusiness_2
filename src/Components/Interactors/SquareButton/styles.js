@@ -12,7 +12,12 @@ export const useStyles = createUseStyles((theme) => ({
         alignItems: 'center',
         justifyContent: 'center',
         alignContent: 'center',
-        margin: '0.4rem'
+        margin: '0.4rem',
+        // transitionDelay:'0.3s',
+        '&:active': {
+            backgroundColor: 'gray',
+            // transitionDelay:'0.3s'
+        }
     },
     squareButtonDisabled: {
         color: 'transparent',
