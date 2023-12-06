@@ -8,13 +8,13 @@ export const useStyles = createUseStyles((theme) => ({
         display: 'flex',
         borderRadius: '5px',
         backgroundColor: 'white',
+        width: '300px'
     },
     input: {
         display: 'flex',
         alignItems: 'center',
         alignContent: 'center',
         '& input': {
-            padding: '0.5rem',
             borderRadius: '0.5rem',
             border: 'none',
             outline: 'none',
@@ -35,23 +35,22 @@ export const useStyles = createUseStyles((theme) => ({
         maxHeight: '300px',
         transition: '0.3s',
         overflow: 'hidden',
-        // transform: 'scaleY(1)'
     },
     hidden: {
-        // height: '300px',
         height: '0',
         transition: '0.3s',
         overflow: 'hidden',
-        // transform: 'scaleY(0)'
     },
     listWrapper: {
         overflow: 'hidden',
+        position: 'absolute',
     },
     scrollable: {
         maxHeight: '300px',
         overflow: 'auto'
     },
     itemWrapper: {
+        
         padding: '0.3rem',
         transitionDelay: '0.1s',
         '&:hover': {
@@ -75,4 +74,41 @@ export const useStyles = createUseStyles((theme) => ({
         }
     },
 
+    tags: {
+        minHeight: '3rem',
+        maxHeight: '7rem',
+        overflow: 'auto',
+        width: '90%',
+        border: 'solid thin blue',
+        cursor: 'default'
+    },
+    tagWrapper: {
+        position: 'relative',
+        color: 'darkgray',
+        backgroundColor: 'white',
+        height: '1rem',
+        borderRadius: '0.5rem',
+        border: 'solid thin darkgray',
+        padding: '0.2rem',
+        display: 'flex'
+    },
+    tagLabel: {
+        whiteSpace: 'nowrap',
+        display: 'inline-block',
+        width: '70%',
+    },
+    placeholderContainer: {
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        '& span':{
+            marginLeft:'1rem',
+            color: 'lightgray',
+            fontWeight: 'bolder',
+            fontSize: '1.5rem',
+            cursor: 'default'
+        }
+    }
 }));

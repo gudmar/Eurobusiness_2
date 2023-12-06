@@ -8,9 +8,10 @@ interface iCheckboxProps {
     label: string,
     onChange: (val: any) => void,
     checked: boolean,
+    isLeftVersion?: boolean
 }
 
-export const Checkbox = ({id, label, onChange, checked}: iCheckboxProps) => {
+export const Checkbox = ({id, label, onChange, checked, isLeftVersion=false}: iCheckboxProps) => {
     const changeHandler = (e:tCheckEventType) => {
         const val = e?.target?.checked;
         onChange(val)
@@ -20,7 +21,14 @@ export const Checkbox = ({id, label, onChange, checked}: iCheckboxProps) => {
 
     return (
         <div className={classes.container}>
-
+        {isLeftVersion && <div className={classes.input}>
+            <input
+                type="checkbox"
+                id={id || label}
+                onChange={changeHandler}
+                checked={checked}
+            />
+        </div>}
         <div className={classes.label}>
             <label
                 htmlFor={id || label}
@@ -28,14 +36,14 @@ export const Checkbox = ({id, label, onChange, checked}: iCheckboxProps) => {
                 {label}
             </label>
         </div>
-        <div className={classes.input}>
+        {!isLeftVersion && <div className={classes.input}>
             <input
                 type="checkbox"
                 id={id || label}
                 onChange={changeHandler}
                 checked={checked}
             />
-        </div>
+        </div>}
 
     </div>
     )

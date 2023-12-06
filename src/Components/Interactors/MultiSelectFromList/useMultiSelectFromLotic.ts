@@ -1,6 +1,5 @@
 import { useReducer } from "react";
 import { getReducer } from "../../../Functions/reducer";
-import { useOnFocusin } from "../../../hooks/useOnFocusChangers";
 import { useInvoceIfEventOutsideElement } from "../../../hooks/useOnOutsideInsideElement";
 import { iMultiSelectFromState, iSelectFromLogicArgs, MultiSelectFromLogicTypes, tActions, tClear, tClearSearchResult, tClose, tOpen, tPayloadTypes } from "./types";
 
@@ -45,7 +44,7 @@ const toString = (item: any) => {
     }
 }
 
-const toggleSelection = (state: iMultiSelectFromState, {payload}: tAction) => {
+const toggleSelection = (state: iMultiSelectFromState, payload: tAction) => {
     const findInArray = (arr: any[]) => {
         const result = arr.findIndex((item: any) => {
             const asString = toString(item);
@@ -68,33 +67,34 @@ const toggleSelection = (state: iMultiSelectFromState, {payload}: tAction) => {
     return {...state, selection: newSelectoin}
 }
 
-const search = (state: iMultiSelectFromState, {payload, type}: tAction) => {
+const search = (state: iMultiSelectFromState, payload: tAction) => {
     const filteredItems = state.items.filter((item:any) => {
         const asString = toString(item);
-        const isFound = asString === payload;
+        const isFound = asString.toLowerCase().includes((payload as unknown as string).toLowerCase());
+        console.log(asString, payload, asString === payload)
         return isFound;
     })
-    const newState = { ...state, visibleItems: filteredItems }
+    console.log(payload)
+    const newState = { ...state, visibleItems: filteredItems, displayed: payload }
     return newState;
 }
 
 const close = (state: iMultiSelectFromState) => {
-    const newState = { ...state, isSearchexpanded: false }
+    const newState = { ...state, isSearchExpanded: false }
     return newState;
 }
 
 const open = (state: iMultiSelectFromState) => {
-    const newState = { ...state, isSearchexpanded: true }
+    const newState = { ...state, isSearchExpanded: true }
     return newState;
 }
 
 const clear = (state: iMultiSelectFromState ) => {
-    const newState = {...state, isSearchExpanded: false, selected: [], dispalyed: [], visibleItems: state.items, }
+    const newState = {...state, selected: [], dispalyed: [], visibleItems: state.items, }
     return newState;
 }
 
 const REDUCER = {
-    // (state: State, {type, payload}: {type: Type, payload?: Payload})
     [MultiSelectFromLogicTypes.toggleSelection]: toggleSelection,
     [MultiSelectFromLogicTypes.clear]: clear,
     [MultiSelectFromLogicTypes.open]: open,
@@ -106,7 +106,7 @@ const REDUCER = {
 export const reducer = getReducer<iMultiSelectFromState, string, tPayloadTypes>(REDUCER)
 
 
-export const useMultiSelectFromLogic = ({focusRef, blurRef, items, defaultSelection=[], onClick}: iSelectFromLogicArgs) => {
+export const useMultiSelectFromLogic = ({blurRef, items, defaultSelection=[], onClick}: iSelectFromLogicArgs) => {
     const [{
         isSearchExpanded,
         selected,
@@ -114,10 +114,7 @@ export const useMultiSelectFromLogic = ({focusRef, blurRef, items, defaultSelect
         visibleItems,
     }, dispatch] = useReducer(reducer, {...initialState, visibleItems: items, items, selected: defaultSelection});
     const {open, clear, close, search, toggleSelection, clearSearchResult} = getSelectFromLogicActions(dispatch)
-    // useOnBlur(blurRef, () => {clearSearchResult()})
-    useInvoceIfEventOutsideElement({reference: blurRef, mouseEventName: 'click', callback: clearSearchResult})
-    useOnFocusin(blurRef, () => {open()})
-    // useEffect(()=> console.log(textBoxReference), [])
+    useInvoceIfEventOutsideElement({reference: blurRef, mouseEventName: 'mousedown', callback: (() => {clearSearchResult(); close()}) });
     return {
         isSearchListExpanded: isSearchExpanded,
         valueInTextBox: displayed,

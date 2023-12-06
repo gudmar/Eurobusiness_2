@@ -1,10 +1,12 @@
 import { useRef } from "react";
 import { useThemesAPI } from "../../../Contexts/ThemeContext";
 import { Checkbox } from "../Checkbox/Checkbox";
+import { CloseButton } from "../CloseButton/CloseButton";
+import { ExpandButton } from "../ExpandButton/ExpandButton";
 import { SearchButton } from "../SearchButton/SearchButton";
 import { SquareButton } from "../SquareButton/SquareButton";
 import { useStyles } from "./styles";
-import { iItemProps, iSelectFromListProps } from "./types";
+import { iItemProps, iSelectFromListProps, iTagProps } from "./types";
 import { useMultiSelectFromLogic } from "./useMultiSelectFromLotic";
 
 const isSingleConvertableToString = (val: any) => {
@@ -49,7 +51,23 @@ const Item = ({value, selectedValues, toggleSelection}:iItemProps) => {
             label = {valAsString}
             onChange = {toggleSelection}
             checked = {isSelected}
+            isLeftVersion={true}
         />
+    )
+}
+
+const Tag = ({value, toggleSelection}: iTagProps) => {
+    const onClose = () => toggleSelection(value)
+    const classes: {[key:string]: string} = useStyles();
+    return (
+        <div className={classes.tagWrapper}>
+            <span className={classes.tagLabel}>{value}</span>
+            <CloseButton
+                onClick={onClose}
+                ariaLabel={`remove ${value}`}
+                isDisabled={false}
+            />
+        </div>
     )
 }
 
@@ -71,41 +89,57 @@ export const MultiSelectFromList = ({id, label, items, defaultValues=[], onClick
     } = useMultiSelectFromLogic({ focusRef, blurRef,  items, defaultSelection: defaultValues, onClick})
     // useEffect(()=> console.log(textBoxReference.current), [])
     console.log('State', selected, typeof selected)
+    const toggleExpand = () => {
+        if (isSearchListExpanded) {close()} else {open()}
+    }
     return (
-            <div className={classes.selectFromList} ref={blurRef} tabIndex={0}>
+            <div className={classes.selectFromList}  tabIndex={0}>
                 <fieldset className={classes.container}>
                     <legend>{label}</legend>
-                    <div className={classes.input}>
-                        {/* <div className={classes.inputWrapper}> */}
-                            <input
-                                autoComplete={'off'}
-                                type="text"
-                                id={id || label}
-                                ref={focusRef}
-                                value={valueInTextBox}
-                                onChange={(e)=>{
-                                    search(e?.target?.value)
-                                    console.log(e)
-                                }}
-                            />
-                            <SearchButton
-                                isDisabled={false}
-                                onClick={() => {}}
-                                ariaLabel={'Search multiselection'}
-                            />
-                            <SquareButton
-                                children="&times;"
-                                disabled = {!valueInTextBox}
-                                onClick={clearSelection}
-                                ariaLabel={`clear ${label} selection`}
-                            />
-                        {/* </div> */}
+                    <div className={classes.tags}>
+                        {selected.length === 0 && <div className={classes.placeholderContainer}><span>No tags</span></div>}
+                        {selected.map((item:string) => 
+                            <Tag
+                                value={item}
+                                toggleSelection={selectItem}
+                                key={item}
+                            />)
+                        }
                     </div>
+                    <ExpandButton
+                        onClick={toggleExpand}
+                        isExpanded={isSearchListExpanded}
+                    />
                 </fieldset>
                 <div 
                     className={`${classes.listWrapper} ${isSearchListExpanded ? classes.visible : classes.hidden}`}
                     aria-hidden={!isSearchListExpanded}
+                    ref={blurRef}
                 >
+                    <div className={classes.input}>
+                        <input
+                            autoComplete={'off'}
+                            type="text"
+                            id={id || label}
+                            ref={focusRef}
+                            value={valueInTextBox}
+                            onChange={(e)=>{
+                                search(e?.target?.value)
+                                console.log(e)
+                            }}
+                        />
+                        <SearchButton
+                            isDisabled={false}
+                            onClick={() => {}}
+                            ariaLabel={'Search multiselection'}
+                        />
+                        <CloseButton
+                            isDisabled={false}
+                            ariaLabel={`Clear ${label} search result`}
+                            onClick={clearSelection}
+                        />
+                </div>
+
                     <div className={classes.scrollable}>
                         {visibleItems.map((value: string) => 
                             <Item

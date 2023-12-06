@@ -5,12 +5,14 @@ export const useStyles = createUseStyles((theme) => ({
         display: 'flex',
         columnGap: '1rem',
         margin: '1rem',
+        alignItems: 'center'
     },
     input: {
         '& input': {
-            padding: '0.5rem',
-            borderRadius: '0.5rem',
-            border: 'none'
+
+            width: '1.2rem',
+            height: '1.2rem',
+            cursor: 'pointer'
         }
     },
     label: {

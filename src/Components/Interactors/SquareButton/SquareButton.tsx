@@ -12,7 +12,7 @@ export const SquareButton = ({children, disabled, onClick, ariaLabel}: iSquareBu
             aria-label={ariaLabel}
             className={`${classes.squareButton} ${disabled ? classes.squareButtonDisabled : ''}`}
             aria-hidden = {!disabled}
-            onClick = {conditionalyDisabledOnclick}
+            onMouseUp = {conditionalyDisabledOnclick}
         >
             {children}
         </div>
