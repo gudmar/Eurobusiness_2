@@ -95,3 +95,7 @@ export type tActions = {
     type: MultiSelectFromLogicTypes.clearSearchResult
 }
 
+export interface iTagProps {
+    value: string, toggleSelection: (value: string) => void 
+}
+
