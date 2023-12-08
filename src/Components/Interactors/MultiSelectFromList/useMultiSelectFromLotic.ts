@@ -1,7 +1,7 @@
 import { useReducer } from "react";
 import { getReducer } from "../../../Functions/reducer";
-import { useInvoceIfEventOutsideElement } from "../../../hooks/useOnOutsideInsideElement";
-import { iMultiSelectFromState, iSelectFromLogicArgs, MultiSelectFromLogicTypes, tActions, tClear, tClearSearchResult, tClose, tOpen, tPayloadTypes } from "./types";
+import { useOnEventLocationWithExceptions } from "../../../hooks/useOnOutsideInsideElement";
+import { iMultiSelectFromLogicArgs, iMultiSelectFromState, MultiSelectFromLogicTypes, tActions, tClear, tClearSearchResult, tClose, tOpen, tPayloadTypes } from "./types";
 
 export const initialState: iMultiSelectFromState = {
     isSearchExpanded: false,
@@ -32,7 +32,7 @@ type tPayload = any;
 type tAction = {payload: tPayload, type: tPayloadType };
 
 const clearSearchResult = (state: iMultiSelectFromState) => {
-    const newState = {...state, visbleItems: state.items}
+    const newState = {...state, visibleItems: state.items, displayed: ''}
     return newState;
 }
 
@@ -45,6 +45,7 @@ const toString = (item: any) => {
 }
 
 const toggleSelection = (state: iMultiSelectFromState, payload: tAction) => {
+    throw new Error('Unselect does not work')
     const findInArray = (arr: any[]) => {
         const result = arr.findIndex((item: any) => {
             const asString = toString(item);
@@ -53,28 +54,29 @@ const toggleSelection = (state: iMultiSelectFromState, payload: tAction) => {
         })
         return result;
     }
-    const targetIndexInSelected = findInArray(state.visibleItems);
+    const targetIndexInSelected = findInArray(state.selected);
     const targetIndexInItems = findInArray(state.items);
     const getNewSelection = () => {
         if (targetIndexInSelected === -1) {
             return [...state.selected, state.items[targetIndexInItems]]
         } else {
             state.selected.splice(targetIndexInSelected, 1);
+            console.log(targetIndexInSelected, state)
             return state.selected;
         }
     }
     const newSelectoin = getNewSelection();
-    return {...state, selection: newSelectoin}
+    const newState = {...state, selected: newSelectoin};
+    return newState
 }
 
 const search = (state: iMultiSelectFromState, payload: tAction) => {
     const filteredItems = state.items.filter((item:any) => {
         const asString = toString(item);
         const isFound = asString.toLowerCase().includes((payload as unknown as string).toLowerCase());
-        console.log(asString, payload, asString === payload)
         return isFound;
     })
-    console.log(payload)
+    console.log(payload, state)
     const newState = { ...state, visibleItems: filteredItems, displayed: payload }
     return newState;
 }
@@ -89,10 +91,16 @@ const open = (state: iMultiSelectFromState) => {
     return newState;
 }
 
+// const clearSelection = (state: iMultiSelectFromState ) => {
+//     const newState = {...state, selected: [], dispalyed: '', visibleItems: state.items, }
+//     return newState;
+// }
+
 const clear = (state: iMultiSelectFromState ) => {
-    const newState = {...state, selected: [], dispalyed: [], visibleItems: state.items, }
+    const newState = {...state, dispalyed: '', visibleItems: state.items, }
     return newState;
 }
+
 
 const REDUCER = {
     [MultiSelectFromLogicTypes.toggleSelection]: toggleSelection,
@@ -106,20 +114,22 @@ const REDUCER = {
 export const reducer = getReducer<iMultiSelectFromState, string, tPayloadTypes>(REDUCER)
 
 
-export const useMultiSelectFromLogic = ({blurRef, items, defaultSelection=[], onClick}: iSelectFromLogicArgs) => {
+export const useMultiSelectFromLogic = ({keepFocusRef, dontLoseFocusRefs, items, defaultSelection=[], onClick}: iMultiSelectFromLogicArgs) => {
     const [{
         isSearchExpanded,
         selected,
         displayed,
+
         visibleItems,
     }, dispatch] = useReducer(reducer, {...initialState, visibleItems: items, items, selected: defaultSelection});
     const {open, clear, close, search, toggleSelection, clearSearchResult} = getSelectFromLogicActions(dispatch)
-    useInvoceIfEventOutsideElement({reference: blurRef, mouseEventName: 'mousedown', callback: (() => {clearSearchResult(); close()}) });
+    useOnEventLocationWithExceptions({targetReference: keepFocusRef, exceptionReferences: dontLoseFocusRefs, mouseEventName: 'mousedown', callback: () => {clearSearchResult(); close()} })
     return {
         isSearchListExpanded: isSearchExpanded,
         valueInTextBox: displayed,
         selectItem: toggleSelection,
         clearSelection: clear,
+        clearSearchResult,
         search,
         close,
         open,

@@ -49,7 +49,7 @@ const Item = ({value, selectedValues, toggleSelection}:iItemProps) => {
     return (
         <Checkbox
             label = {valAsString}
-            onChange = {toggleSelection}
+            onChange = {() => toggleSelection(value)}
             checked = {isSelected}
             isLeftVersion={true}
         />
@@ -75,7 +75,8 @@ export const MultiSelectFromList = ({id, label, items, defaultValues=[], onClick
     const { theme } = useThemesAPI();
     const classes: {[key:string]: string} = useStyles(theme as any);
     const focusRef = useRef<HTMLInputElement>(null);
-    const blurRef = useRef<HTMLInputElement>(null);
+    const keepFocusRef = useRef<HTMLInputElement>(null);
+    const toggleExpandRef = useRef<HTMLInputElement>(null);
     const {
         isSearchListExpanded,
         valueInTextBox,
@@ -86,7 +87,8 @@ export const MultiSelectFromList = ({id, label, items, defaultValues=[], onClick
         open,
         selected,
         visibleItems,
-    } = useMultiSelectFromLogic({ focusRef, blurRef,  items, defaultSelection: defaultValues, onClick})
+        clearSearchResult,
+    } = useMultiSelectFromLogic({ keepFocusRef, dontLoseFocusRefs: [toggleExpandRef],  items, defaultSelection: defaultValues, onClick})
     // useEffect(()=> console.log(textBoxReference.current), [])
     console.log('State', selected, typeof selected)
     const toggleExpand = () => {
@@ -106,15 +108,19 @@ export const MultiSelectFromList = ({id, label, items, defaultValues=[], onClick
                             />)
                         }
                     </div>
-                    <ExpandButton
-                        onClick={toggleExpand}
-                        isExpanded={isSearchListExpanded}
-                    />
+                    <div
+                        ref={toggleExpandRef}
+                    >
+                        <ExpandButton
+                            onClick={toggleExpand}
+                            isExpanded={isSearchListExpanded}
+                        />
+                    </div>
                 </fieldset>
                 <div 
                     className={`${classes.listWrapper} ${isSearchListExpanded ? classes.visible : classes.hidden}`}
                     aria-hidden={!isSearchListExpanded}
-                    ref={blurRef}
+                    ref={keepFocusRef}
                 >
                     <div className={classes.input}>
                         <input
@@ -136,7 +142,7 @@ export const MultiSelectFromList = ({id, label, items, defaultValues=[], onClick
                         <CloseButton
                             isDisabled={false}
                             ariaLabel={`Clear ${label} search result`}
-                            onClick={clearSelection}
+                            onClick={clearSearchResult}
                         />
                 </div>
 
