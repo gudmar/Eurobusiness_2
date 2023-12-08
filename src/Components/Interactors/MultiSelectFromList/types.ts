@@ -18,9 +18,9 @@ export interface iSelectFromListProps {
     onClick: tSelectFromStateHandler,
 }
 
-export interface iSelectFromLogicArgs {
-    focusRef: RefObject<HTMLInputElement>,
-    blurRef:  RefObject<HTMLInputElement>,
+export interface iMultiSelectFromLogicArgs {
+    keepFocusRef: RefObject<HTMLInputElement>,
+    dontLoseFocusRefs:  RefObject<HTMLInputElement>[],
     items: string[],
     defaultSelection: string[],
     onClick: tSelectFromStateHandler,
