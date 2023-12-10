@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { getReducer } from "../../../Functions/reducer";
 import { useOnEventLocationWithExceptions } from "../../../hooks/useOnOutsideInsideElement";
 import { iMultiSelectFromLogicArgs, iMultiSelectFromState, MultiSelectFromLogicTypes, tActions, tClear, tClearSearchResult, tClose, tOpen, tPayloadTypes } from "./types";
@@ -44,8 +44,15 @@ const toString = (item: any) => {
     }
 }
 
+const getArrayWithRemovedIndex = (arr: unknown[], index: number) => {
+    const newArr = arr.reduce((acc: unknown[], item: unknown, i: number) => {
+        if (index !== i) acc.push(item);
+        return acc;
+    }, [])
+    return newArr;
+}
+
 const toggleSelection = (state: iMultiSelectFromState, payload: tAction) => {
-    throw new Error('Unselect does not work')
     const findInArray = (arr: any[]) => {
         const result = arr.findIndex((item: any) => {
             const asString = toString(item);
@@ -60,9 +67,8 @@ const toggleSelection = (state: iMultiSelectFromState, payload: tAction) => {
         if (targetIndexInSelected === -1) {
             return [...state.selected, state.items[targetIndexInItems]]
         } else {
-            state.selected.splice(targetIndexInSelected, 1);
-            console.log(targetIndexInSelected, state)
-            return state.selected;
+            const newSelected = getArrayWithRemovedIndex(state.selected, targetIndexInSelected)
+            return newSelected;
         }
     }
     const newSelectoin = getNewSelection();
@@ -76,7 +82,6 @@ const search = (state: iMultiSelectFromState, payload: tAction) => {
         const isFound = asString.toLowerCase().includes((payload as unknown as string).toLowerCase());
         return isFound;
     })
-    console.log(payload, state)
     const newState = { ...state, visibleItems: filteredItems, displayed: payload }
     return newState;
 }

@@ -4,7 +4,6 @@ import { Checkbox } from "../Checkbox/Checkbox";
 import { CloseButton } from "../CloseButton/CloseButton";
 import { ExpandButton } from "../ExpandButton/ExpandButton";
 import { SearchButton } from "../SearchButton/SearchButton";
-import { SquareButton } from "../SquareButton/SquareButton";
 import { useStyles } from "./styles";
 import { iItemProps, iSelectFromListProps, iTagProps } from "./types";
 import { useMultiSelectFromLogic } from "./useMultiSelectFromLotic";
@@ -30,7 +29,7 @@ const doesSelectedContainValue = (selected: any[], value: any) => {
     if (!isConvertableToString(selected)) throw new Error('Some items in selected are not string convertable')
     if (!isSingleConvertableToString(value)) throw new Error('Selected item is not convertable to a string')
     const result = selected.find((item: any) =>areEqual(item, value));
-    return result;
+    return !!result;
 }
 
 const runCallbackOnAsString = (callback: (arg: string) => void, val: any) => {
@@ -42,8 +41,6 @@ const runCallbackOnAsString = (callback: (arg: string) => void, val: any) => {
 const getAsString = (val:any) => typeof val === 'string' ? val : val.toString();
 
 const Item = ({value, selectedValues, toggleSelection}:iItemProps) => {
-    // const { theme } = useThemesAPI();
-    // const classes: {[key:string]: string} = useStyles(theme as any);
     const isSelected = doesSelectedContainValue(selectedValues, value);
     const valAsString = getAsString(value);
     return (
@@ -89,8 +86,6 @@ export const MultiSelectFromList = ({id, label, items, defaultValues=[], onClick
         visibleItems,
         clearSearchResult,
     } = useMultiSelectFromLogic({ keepFocusRef, dontLoseFocusRefs: [toggleExpandRef],  items, defaultSelection: defaultValues, onClick})
-    // useEffect(()=> console.log(textBoxReference.current), [])
-    console.log('State', selected, typeof selected)
     const toggleExpand = () => {
         if (isSearchListExpanded) {close()} else {open()}
     }
@@ -131,7 +126,6 @@ export const MultiSelectFromList = ({id, label, items, defaultValues=[], onClick
                             value={valueInTextBox}
                             onChange={(e)=>{
                                 search(e?.target?.value)
-                                console.log(e)
                             }}
                         />
                         <SearchButton
