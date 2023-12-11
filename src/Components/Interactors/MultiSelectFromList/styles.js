@@ -1,25 +1,30 @@
 import { createUseStyles } from "react-jss";
 
 export const useStyles = createUseStyles((theme) => ({
-    selectFromList: {
-        display: 'inline-block',
-    },
     container: {
         display: 'flex',
         borderRadius: '5px',
         backgroundColor: 'white',
-        width: '300px'
+        width: '400px'
     },
     input: {
-        display: 'flex',
+        display: 'inline-flex',
         alignItems: 'center',
         alignContent: 'center',
+        margin: '0.5rem',
+        color: theme.inputForegroundColor,
+        backgroundColor: theme.inputBackgroundColor,
+        borderRadius: '1rem',
+        height: '3rem',
+        lineHeight: '2rem',
+        padding: '0 0.75rem 0 0.75rem',
         '& input': {
-            borderRadius: '0.5rem',
+            height: '2rem',
+            borderRadius: '1.5rem',
             border: 'none',
             outline: 'none',
             fontSize:'1.5rem',
-            padding: '0',
+            padding: '0 0.75rem 0 0.75rem',
             width: '100%'
         },
         border: 'none',
@@ -44,6 +49,10 @@ export const useStyles = createUseStyles((theme) => ({
     listWrapper: {
         overflow: 'hidden',
         position: 'absolute',
+        backgroundColor: theme.selectFromList_notSelectedItemBg,
+        color: theme.selectedFromList_notSelectedItemFg,
+        borderBottomLeftRadius: '1.5rem',
+        borderBottomRightRadius: '1.5rem',
     },
     scrollable: {
         maxHeight: '300px',
@@ -68,6 +77,7 @@ export const useStyles = createUseStyles((theme) => ({
     notSelected: {
         backgroundColor: theme.selectFromList_notSelectedItemBg,
         color: theme.selectedFromList_notSelectedItemFg,
+        margin: '-1rem 0 -1rem 0',
         '&:hover': {
             backgroundColor: theme.notSelectFromList_hoveredNotSelectedItemBg,
             color: theme.notSelectedFromList_hoveredNotSelectedItemFg,    
@@ -77,25 +87,49 @@ export const useStyles = createUseStyles((theme) => ({
     tags: {
         minHeight: '3rem',
         maxHeight: '7rem',
-        overflow: 'auto',
+        overflowX: 'hidden',
+        overflowY: 'auto',
         width: '90%',
-        border: 'solid thin blue',
-        cursor: 'default'
+        // border: 'solid thin blue',
+        backgroundColor: '#eee',
+        cursor: 'default',
+        padding: '0.3rem',
+    },
+    inlineBlock: {
+        display: 'inline-block'
+    },
+    close: {
+        margin: '0.25rem'
     },
     tagWrapper: {
-        position: 'relative',
-        color: 'darkgray',
+        // position: 'relative',
+        // display: 'block',
+        // display: 'table-cell',
+        display: 'inline-flex',
+        margin: '0.1rem',
+        justifyContent: 'space-between',
+        // color: 'darkgray',
+        textAlign: 'center',
         backgroundColor: 'white',
-        height: '1rem',
-        borderRadius: '0.5rem',
+        height: '1.6rem',
+        lineHeight: '1.6rem',
+        borderRadius: '0.8rem',
         border: 'solid thin darkgray',
-        padding: '0.2rem',
-        display: 'flex'
+        padding: '0.1rem',
+        paddingLeft: '0.3rem',
+        // display: 'flex',
+        whiteSpace: 'nowrap',
+        '& div': {
+            margin: 'none'
+        }
     },
     tagLabel: {
         whiteSpace: 'nowrap',
-        display: 'inline-block',
+        // display: 'inline-block',
+        display: 'block',
         width: '70%',
+        lineHeight: '1.3rem',
+        fontSize: '1rem',
     },
     placeholderContainer: {
         position: 'relative',
@@ -105,7 +139,8 @@ export const useStyles = createUseStyles((theme) => ({
         alignItems: 'center',
         '& span':{
             marginLeft:'1rem',
-            color: 'lightgray',
+            // color: 'lightgray',
+            color: 'white',
             fontWeight: 'bolder',
             fontSize: '1.5rem',
             cursor: 'default'

@@ -59,11 +59,13 @@ const Tag = ({value, toggleSelection}: iTagProps) => {
     return (
         <div className={classes.tagWrapper}>
             <span className={classes.tagLabel}>{value}</span>
-            <CloseButton
-                onClick={onClose}
-                ariaLabel={`remove ${value}`}
-                isDisabled={false}
-            />
+            <div className={classes.close}>
+                <CloseButton
+                    onClick={onClose}
+                    ariaLabel={`remove ${value}`}
+                    isDisabled={false}
+                />
+            </div>
         </div>
     )
 }
@@ -118,6 +120,11 @@ export const MultiSelectFromList = ({id, label, items, defaultValues=[], onClick
                     ref={keepFocusRef}
                 >
                     <div className={classes.input}>
+                        <SearchButton
+                            isDisabled={false}
+                            onClick={() => {}}
+                            ariaLabel={'Search multiselection'}
+                        />
                         <input
                             autoComplete={'off'}
                             type="text"
@@ -128,13 +135,8 @@ export const MultiSelectFromList = ({id, label, items, defaultValues=[], onClick
                                 search(e?.target?.value)
                             }}
                         />
-                        <SearchButton
-                            isDisabled={false}
-                            onClick={() => {}}
-                            ariaLabel={'Search multiselection'}
-                        />
                         <CloseButton
-                            isDisabled={false}
+                            isDisabled={valueInTextBox===''}
                             ariaLabel={`Clear ${label} search result`}
                             onClick={clearSearchResult}
                         />
@@ -142,12 +144,14 @@ export const MultiSelectFromList = ({id, label, items, defaultValues=[], onClick
 
                     <div className={classes.scrollable}>
                         {visibleItems.map((value: string) => 
+                        <div className={classes.notSelected}>
                             <Item
                                 value={value}
                                 toggleSelection={selectItem}
                                 selectedValues={selected}
                                 key={value}
                             />
+                        </div>
                         )}
                     </div>
                 </div>
