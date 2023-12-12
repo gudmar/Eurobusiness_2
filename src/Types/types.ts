@@ -11,6 +11,10 @@ export type tAction<PayloadType> = {
     payload: any,
 }
 
+export interface iDictionary {
+    [key: string]: any,
+}
+
 export type tCombineStringUnions<T> = T extends string ? T : never;
 
 // export type tClassFromInterface<Args extends [], Interface> = new (...args: Args) => Interface
