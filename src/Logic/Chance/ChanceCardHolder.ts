@@ -56,20 +56,15 @@ export class ChanceCardHolder {
         delete ChanceCardHolder?.instances?.[this._cardSetName];
     }
     get descriptions() {
-        const index: string = this._language;
-        console.log('index', index)
         const currentDescriptions: tLanguageDescriptionEntry | undefined = this._cardsDescriptions?.find(
             ({languageShortName}: tLanguageDescriptionEntry) => languageShortName === this._language
         )
-        console.log(currentDescriptions?.descriptions)
         const result = currentDescriptions?.descriptions || {}
         return result;
     }
 
     get nrOfActions() {return Object.values(this._cardsActions || {}).length}
     get nrOfDescriptions() {
-        // console.log(this._cardsDescriptions)
-        console.log(this.descriptions)
         return Object.keys(this.descriptions || {}).length
     }
     getDescriptionForCardNr(nr:number) { 
