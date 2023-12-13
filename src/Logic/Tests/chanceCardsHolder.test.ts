@@ -1,8 +1,19 @@
+import { CHANCE_CARDS_BLUE } from "../../Data/chanceCards";
 import { ChanceCardHolder } from "../Chance/ChanceCardHolder";
 
 describe('Testing ChanceCardHolder', () => {
     describe('Uploading cards to the memory', () => {
         it('Should upload all blue cards from data folder, when requested to do so', () => {
+            const instance = new ChanceCardHolder(CHANCE_CARDS_BLUE);
+            const nrOfActions = instance.nrOfActions;
+            const nrOfDescriptions = instance.nrOfDescriptions;
+            const cardNr5Description = instance.getDescriptionForCardNr(5);
+            const expectedNrOfActions = 16;
+            const expectedNrOfDescriptions = 16;
+            const expectedCardDescription = CHANCE_CARDS_BLUE.descriptions.en[5];
+            expect(nrOfActions).toEqual(expectedNrOfActions);
+            expect(nrOfDescriptions).toEqual(expectedNrOfDescriptions);
+            expect(cardNr5Description).toEqual(expectedCardDescription)
         });
     })
     describe('Shuffle cards', () => {

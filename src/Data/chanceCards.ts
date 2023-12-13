@@ -20,6 +20,7 @@ import { tChance } from "../Logic/Chance/types"
 // }
 
 export const CHANCE_CARDS_RED: tChance = {
+    cardSetName: 'red',
     descriptions: {
         pl: {
             0:  "Zobowiązany jesteś zmodernizować swoje miasto, płacisz za każdy dom 80 $,za każdy hotel 230 $",
@@ -167,6 +168,7 @@ export const CHANCE_CARDS_RED: tChance = {
 
 
 export const CHANCE_CARDS_BLUE: tChance = {
+    cardSetName: 'blue',
     descriptions: {
         pl: {
                 0 : "Płacisz na budowę szpitala 400 $.",

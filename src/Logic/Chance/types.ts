@@ -12,6 +12,7 @@ export type iDescription = {
     [key: string]: string
 }
 export type tChance = {
+    cardSetName: string,
     descriptions: {
         [key: string]: iDescription
     }

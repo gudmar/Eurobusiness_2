@@ -35,24 +35,47 @@ const getDescriptionsInLanguages = ({descriptions}: tChance):tLanguageDescriptio
     return descriptionsInLanguages;
 }
 
+type ChanceCardHolderInstance = {[key: string]: ChanceCardHolder};
+
 export class ChanceCardHolder {
+    static instances: ChanceCardHolderInstance;
     private _cardsDescriptions?: tLanguageDescriptionEntry[];
     private _cardsActions?: iActions;
     private _language: string = LanguageNameToShortName.english;
+    private _cardSetName: string = '';
     constructor(cards: tChance) {
-        this.initializeCardsObject(cards)
+        this.initializeCardsObject(cards);
+        if (ChanceCardHolder?.instances?.[cards.cardSetName]) {
+            return ChanceCardHolder.instances[cards.cardSetName]
+        }
+        if (!ChanceCardHolder.instances) { ChanceCardHolder.instances = {} }
+        ChanceCardHolder.instances[cards.cardSetName] = this;
+        this._cardSetName = cards.cardSetName;
+    }
+    selfDestruct() {
+        delete ChanceCardHolder?.instances?.[this._cardSetName];
     }
     get descriptions() {
         const index: string = this._language;
+        console.log('index', index)
         const currentDescriptions: tLanguageDescriptionEntry | undefined = this._cardsDescriptions?.find(
             ({languageShortName}: tLanguageDescriptionEntry) => languageShortName === this._language
         )
-        const result = currentDescriptions?.descriptions?.[index] || []
+        console.log(currentDescriptions?.descriptions)
+        const result = currentDescriptions?.descriptions || {}
         return result;
     }
 
     get nrOfActions() {return Object.values(this._cardsActions || {}).length}
-    get nrOfDescriptions() {return Object.keys(this.descriptions.length)}
+    get nrOfDescriptions() {
+        // console.log(this._cardsDescriptions)
+        console.log(this.descriptions)
+        return Object.keys(this.descriptions || {}).length
+    }
+    getDescriptionForCardNr(nr:number) { 
+        const key: string = `${nr}`;
+        return this.descriptions?.[key]
+    }
 
     private initializeCardsObject(cardsDescriptor: tChance ) {
         this._cardsActions = cardsDescriptor?.computer;
