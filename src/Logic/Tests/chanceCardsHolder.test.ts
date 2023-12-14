@@ -1,4 +1,7 @@
 import { CHANCE_CARDS_BLUE } from "../../Data/chanceCards";
+import { range } from "../../Functions/createRange";
+import { mockMathRandom, zeroRandomGenerator } from "../../Functions/testUtils";
+import { iDictionary } from "../../Types/types";
 import { ChanceCardHolder } from "../Chance/ChanceCardHolder";
 
 describe('Testing ChanceCardHolder', () => {
@@ -16,17 +19,34 @@ describe('Testing ChanceCardHolder', () => {
             expect(cardNr5Description).toEqual(expectedCardDescription)
         });
     })
-    describe('Shuffle cards', () => {
-        it('Should place cards in random order when requested to do so', () => {
-
-        })
-    })
     describe('Delivering cards', () => {
+        const arrToObjectAsKeys = (arr: string[]) => arr.reduce((acc: iDictionary, item: string) => {
+            acc[item] = true;
+            return acc;
+        }, {})
         it('Should draw cards in shuffled order, when requested to draw a card', () => {
-
+            const expectedDescriptions = [...Object.values(CHANCE_CARDS_BLUE.descriptions.en)].reverse();
+            const instance = new ChanceCardHolder(CHANCE_CARDS_BLUE);
+            const result = mockMathRandom(zeroRandomGenerator, () => {
+                instance.shuffle();
+                const shuffledCards = range(expectedDescriptions.length - 1).map((_) => {
+                    return instance.drawACard();
+                })
+                return shuffledCards;
+            })
+            expect(result).toEqual(expectedDescriptions);
         });
         it('Should reshuffle the library when drawn cards come to the end', () => {
-
+            const descriptions = [...Object.values(CHANCE_CARDS_BLUE.descriptions.en)];
+            const descriptionsAsKeys = arrToObjectAsKeys(descriptions);
+            const instance = new ChanceCardHolder(CHANCE_CARDS_BLUE);
+            const cardsBeforeShuffle = range(descriptions.length - 1).map(() => instance.drawACard());
+            const cardsAfterShuffle = range(descriptions.length - 1).map(() => instance.drawACard());
+            const cardsBeforeAsKeys = arrToObjectAsKeys(cardsBeforeShuffle);
+            const cardsAfterAsKeys = arrToObjectAsKeys(cardsAfterShuffle);
+            expect(cardsBeforeShuffle).not.toEqual(cardsAfterShuffle);
+            expect(cardsBeforeAsKeys).toEqual(cardsAfterAsKeys);
+            expect(cardsBeforeAsKeys).toEqual(descriptionsAsKeys);
         });
     });
     describe('Testing if ChanceCarHolder creates a separate constatn instance for each card color', () => {
