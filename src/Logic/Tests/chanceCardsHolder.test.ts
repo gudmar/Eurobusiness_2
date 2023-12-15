@@ -1,8 +1,131 @@
+import { GAIN, GAIN_FROM_EACH_PLAYER, GO_TO_FIELD_CONDITIONALLY_PASS_START, PAY } from "../../Constants/commands";
 import { CHANCE_CARDS_BLUE } from "../../Data/chanceCards";
 import { range } from "../../Functions/createRange";
 import { mockMathRandom, zeroRandomGenerator } from "../../Functions/testUtils";
 import { iDictionary } from "../../Types/types";
 import { ChanceCardHolder } from "../Chance/ChanceCardHolder";
+import { tChance } from "../Chance/types";
+
+export const YELLOW_1: tChance = {
+    cardSetName: 'yellow',
+    descriptions: {
+            en: {
+                0: 'a',
+                1: 'b',
+                2: 'c',
+                3:  "d",
+                4:  'e',
+                5: 'f',
+            },
+        
+    },
+    computer: {
+        0: [{
+            type: PAY,
+            payload: 400,
+        }],
+        1: [{
+            type: GAIN,
+            payload: 200,
+        }],
+        2: [{
+            type: GAIN_FROM_EACH_PLAYER,
+            payload: 20,
+        }],
+        3: [{
+            type: GO_TO_FIELD_CONDITIONALLY_PASS_START,
+        }],
+        4: [{
+            type: GAIN,
+            payload: 400,
+        }],
+        5: [{
+            type: PAY,
+            payload: 20,
+        }]
+    }
+}
+
+export const YELLOW_2: tChance = {
+    cardSetName: 'yellow',
+    descriptions: {
+            en: {
+                0: 'g',
+                1: 'h',
+                2: 'i',
+                3:  "j",
+                4:  'k',
+                5: 'l',
+            },
+        
+    },
+    computer: {
+        0: [{
+            type: PAY,
+            payload: 400,
+        }],
+        1: [{
+            type: GAIN,
+            payload: 200,
+        }],
+        2: [{
+            type: GAIN_FROM_EACH_PLAYER,
+            payload: 20,
+        }],
+        3: [{
+            type: GO_TO_FIELD_CONDITIONALLY_PASS_START,
+        }],
+        4: [{
+            type: GAIN,
+            payload: 400,
+        }],
+        5: [{
+            type: PAY,
+            payload: 20,
+        }]
+    }
+}
+
+export const ORANGE: tChance = {
+    cardSetName: 'orange',
+    descriptions: {
+            en: {
+                0: 'm',
+                1: 'n',
+                2: 'o',
+                3:  "p",
+                4:  'r',
+                5: 's',
+            },
+        
+    },
+    computer: {
+        0: [{
+            type: PAY,
+            payload: 400,
+        }],
+        1: [{
+            type: GAIN,
+            payload: 200,
+        }],
+        2: [{
+            type: GAIN_FROM_EACH_PLAYER,
+            payload: 20,
+        }],
+        3: [{
+            type: GO_TO_FIELD_CONDITIONALLY_PASS_START,
+        }],
+        4: [{
+            type: GAIN,
+            payload: 400,
+        }],
+        5: [{
+            type: PAY,
+            payload: 20,
+        }]
+    }
+}
+
 
 describe('Testing ChanceCardHolder', () => {
     describe('Uploading cards to the memory', () => {
@@ -50,11 +173,15 @@ describe('Testing ChanceCardHolder', () => {
         });
     });
     describe('Testing if ChanceCarHolder creates a separate constatn instance for each card color', () => {
-        it('Should create only one instance for a blue color if an attempt to create a few blue instances', () => {
-
+        it('Should create only one instance for a yellow color if an attempt to create a few yellow instances', () => {
+            const instance1 = new ChanceCardHolder(YELLOW_1);
+            const instance2 = new ChanceCardHolder(YELLOW_2);
+            expect(instance1 === instance2).toBeTruthy()
         });
-        it('Should create only one red instance, that is separate from a blue instance, when attempt to create a blue instance and a few red instances', () => {
-
+        it('Should create only one red instance, that is separate from a yellow instance, when attempt to create a blue instance and a orange instance', () => {
+            const instance1 = new ChanceCardHolder(YELLOW_1);
+            const instance2 = new ChanceCardHolder(ORANGE);
+            expect(instance1 === instance2).toBeFalsy()
         });
     });
     describe('Lending a card to a player', () => {
