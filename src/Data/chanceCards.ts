@@ -59,7 +59,7 @@ export const CHANCE_CARDS_RED: tChance = {
             15: "You get out of prison. Card should be kept for usage or selling"
         },    
     },
-    computer: {
+    actions: {
         0: [
             {
                 type: PAY_EACH_HOUSE,
@@ -163,6 +163,11 @@ export const CHANCE_CARDS_RED: tChance = {
                 collectible: true,
             }
         ]
+    },
+    metadata: {
+        15: {
+            collectable: true,
+        }
     }
 }
 
@@ -208,7 +213,7 @@ export const CHANCE_CARDS_BLUE: tChance = {
             },
         
     },
-    computer: {
+    actions: {
         0: [{
             type: PAY,
             payload: 400,
@@ -272,5 +277,10 @@ export const CHANCE_CARDS_BLUE: tChance = {
             type: PAY,
             payload: 20,
         }],
+    },
+    metadata: {
+        6: {
+            collectable: true
+        }
     }
 }
