@@ -43,7 +43,13 @@ export const YELLOW_1: tChance = {
             type: PAY,
             payload: 20,
         }]
+    },
+    metadata: {
+        2: {
+            collectable: true
+        }
     }
+
 }
 
 export const YELLOW_2: tChance = {
@@ -202,6 +208,9 @@ describe('Testing ChanceCardHolder', () => {
         })
     })
     describe('Lending a card to a player', () => {
+        it('Should not suspend a card when it is not collectable', () => {
+
+        })
         it('Should suspend a card from game operations when player draws a collectible card', () => {
 
         });

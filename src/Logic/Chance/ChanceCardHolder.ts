@@ -1,7 +1,7 @@
 import { range } from "../../Functions/createRange";
 import { shuffle } from "../../Functions/shuffle";
 import { iDictionary } from "../../Types/types";
-import { iActions, iDescription, tBorrowedCards, tCardMetadata, tChance, tPlayerName } from "./types";
+import { iActions, iDescription, tBorrowedCards, tCardMetadata, tCardMetadataBit, tChance, tPlayerName } from "./types";
 
 
 export const LanguageNameToShortName: iDictionary = {
@@ -130,24 +130,60 @@ export class ChanceCardHolder {
         const key: string = `${nr}`;
         return this.actions?.[key]
     }
-    private _getMetadataForCardNr(nr: number) {
+    private _getMetadataForCardNr(nr: number): tCardMetadataBit {
         return this._cardsMetadata?.[`${nr}`] || {}
     }
+    private get _nrOfCards() {
+        const nrOfCards = Object.keys(this._cardsDescriptions![0]).length
+        return nrOfCards;
+    }
+
     get currentCardIndex() {return this._cardsOrder[this._lastDrawnCardIndex]}
+
     get isCurrentCardCollectable() { return !!this._getMetadataForCardNr(this.currentCardIndex) }
 
-    borrowCardToPlayer(playerName: tPlayerName) { this._cardsBorrowedByPlayers[this.currentCardIndex] = playerName}
+    private _isCardCollectable(index: number) {
+        const metadata = this._getMetadataForCardNr(index);
+        return !!(metadata?.collectable);
+    }
 
-    private _getCardIndexByDescriptionInLanguage(description: string, language: string) {
+    suspendCard(description: string) {        
+        const cardIndex = this.getCardIndexByDescription(description);
+        const isCardCollectable = this._isCardCollectable(cardIndex)
+        if (isCardCollectable) {
+            this._cardsBorrowedByPlayers[cardIndex] = true;
+        }
+    }
 
+    unsuspendCard(description: string) {
+        const cardIndex = this.getCardIndexByDescription(description);
+        this._cardsBorrowedByPlayers[cardIndex] = false;        
+    }
+
+    get isSuspended() {
+        return this._cardsBorrowedByPlayers[`${this._lastDrawnCardIndex}`];
     }
     
     shuffle() {
         const newCardOrder = shuffle(this._initalCardOrder) as number[];
         this._cardsOrder = newCardOrder;
     }
-    private * _drawACard (): Generator<string> {
-        while(true){
+
+    private get _areAllCardsSuspended() {
+        const nrOfLockedCards = Object.entries(this._cardsBorrowedByPlayers).reduce((acc: number, entry: any) => {
+            const [key, value] = entry;
+            if (value) acc++;
+            return acc
+        }, 0)
+        const nrOfCards = this._nrOfCards;
+        return nrOfCards === nrOfLockedCards;
+    }
+
+    private _getNextNotSuspendedCard = () => {
+        if (this._areAllCardsSuspended) {
+            throw new Error('Cannot return any card, all cards are suspended')
+        }
+        while (true) {
             const cardIndexMappedToShuffled = this._cardsOrder[this._lastDrawnCardIndex];
             const currentCard = this.getDescriptionForCardNr(cardIndexMappedToShuffled);
             this._lastDrawnCardIndex++;
@@ -155,6 +191,20 @@ export class ChanceCardHolder {
                 this.shuffle();
                 this._lastDrawnCardIndex = 0;
             }
+            if (!this.isSuspended) return currentCard;
+        }
+    }
+
+    private * _drawACard (): Generator<string> {
+        while(true){
+            // const cardIndexMappedToShuffled = this._cardsOrder[this._lastDrawnCardIndex];
+            // const currentCard = this.getDescriptionForCardNr(cardIndexMappedToShuffled);
+            // this._lastDrawnCardIndex++;
+            // if (this._lastDrawnCardIndex >= this._cardsOrder.length) {
+            //     this.shuffle();
+            //     this._lastDrawnCardIndex = 0;
+            // }
+            const currentCard = this._getNextNotSuspendedCard();
             yield currentCard;
         }
     }
