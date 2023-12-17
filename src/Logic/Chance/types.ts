@@ -11,10 +11,13 @@ export type iActions = {
 export type iDescription = {
     [key: string]: string
 }
+
+export type tCardMetadataBit = {
+    collectable?: boolean,
+}
+
 export type tCardMetadata = {
-    [key: tCardIndex]: {
-        collectable: boolean,
-    }
+    [key: tCardIndex]: tCardMetadataBit
 }
 export type tChance = {
     cardSetName: string,
@@ -29,7 +32,7 @@ export type tPlayerName = string;
 export type tCardIndex = number;
 
 export type tBorrowedCards = {
-    [key: tCardIndex]: tPlayerName
+    [key: tCardIndex]: boolean, // cannot hold palyerName as cards may change owner
 }
 
 
