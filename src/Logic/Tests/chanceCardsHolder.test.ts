@@ -19,7 +19,7 @@ export const YELLOW_1: tChance = {
             },
         
     },
-    computer: {
+    actions: {
         0: [{
             type: PAY,
             payload: 400,
@@ -59,7 +59,7 @@ export const YELLOW_2: tChance = {
             },
         
     },
-    computer: {
+    actions: {
         0: [{
             type: PAY,
             payload: 400,
@@ -99,7 +99,7 @@ export const ORANGE: tChance = {
             },
         
     },
-    computer: {
+    actions: {
         0: [{
             type: PAY,
             payload: 400,
@@ -184,6 +184,23 @@ describe('Testing ChanceCardHolder', () => {
             expect(instance1 === instance2).toBeFalsy()
         });
     });
+    describe('Search card index by description', () => {
+        it('Should return -1 when given card description cannot be found in any language', () => {
+            const instance = new ChanceCardHolder(CHANCE_CARDS_BLUE);
+            const englishIndex = instance.getCardIndexByDescription('Not existing description');
+            expect(englishIndex).toBe(-1)
+        })
+        
+        it('Should find a card index, when its description given in any language', () => {
+            const englishDescription = CHANCE_CARDS_BLUE.descriptions.en[5];
+            const polishDescription = CHANCE_CARDS_BLUE.descriptions.pl[5];
+            const instance = new ChanceCardHolder(CHANCE_CARDS_BLUE);
+            const englishIndex = instance.getCardIndexByDescription(englishDescription);
+            const polishIndex = instance.getCardIndexByDescription(polishDescription);
+            expect(englishIndex).toBe(5)
+            expect(polishIndex).toBe(5);
+        })
+    })
     describe('Lending a card to a player', () => {
         it('Should suspend a card from game operations when player draws a collectible card', () => {
 

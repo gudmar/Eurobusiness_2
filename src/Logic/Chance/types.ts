@@ -11,12 +11,25 @@ export type iActions = {
 export type iDescription = {
     [key: string]: string
 }
+export type tCardMetadata = {
+    [key: tCardIndex]: {
+        collectable: boolean,
+    }
+}
 export type tChance = {
     cardSetName: string,
     descriptions: {
         [key: string]: iDescription
-    }
-    computer: iActions
+    },
+    actions: iActions,
+    metadata?: tCardMetadata,
+}
+
+export type tPlayerName = string;
+export type tCardIndex = number;
+
+export type tBorrowedCards = {
+    [key: tCardIndex]: tPlayerName
 }
 
 
