@@ -1,6 +1,7 @@
 import { range } from "../../Functions/createRange";
 import { shuffle } from "../../Functions/shuffle";
 import { iDictionary } from "../../Types/types";
+import { Errors } from "./errors";
 import { iActions, iDescription, tBorrowedCards, tCardMetadata, tCardMetadataBit, tChance, tPlayerName } from "./types";
 
 
@@ -167,6 +168,7 @@ export class ChanceCardHolder {
     shuffle() {
         const newCardOrder = shuffle(this._initalCardOrder) as number[];
         this._cardsOrder = newCardOrder;
+        this._lastDrawnCardIndex = 0;
     }
 
     private get _areAllCardsSuspended() {
@@ -179,6 +181,25 @@ export class ChanceCardHolder {
         return nrOfCards === nrOfLockedCards;
     }
 
+    private _makeOperationOnCard(description: string, callback: (index: number) => void) {
+        const cardIndex = this.getCardIndexByDescription(description);
+        if (cardIndex === -1) {throw new Error(Errors.cardDoesNotExist)}        
+        if (!this._isCardCollectable(cardIndex)) { throw new Error(Errors.cardNotCollectable)};
+        callback(cardIndex);
+
+    }
+    borrowCardToAPlayer(description: string) {
+        const borrow = (index: number) => {
+            if (this._cardsBorrowedByPlayers[`${index}`]) {throw new Error(Errors.cardAlreadyBorrowed)}
+            this._cardsBorrowedByPlayers[`${index}`] = true;
+        }
+        this._makeOperationOnCard(description, borrow);
+    }
+    returnBorrowedCard(description: string) {
+        const borrow = (index: number) => {this._cardsBorrowedByPlayers[`${index}`] = false}
+        this._makeOperationOnCard(description, borrow);
+    }
+
     private _getNextNotSuspendedCard = () => {
         if (this._areAllCardsSuspended) {
             throw new Error('Cannot return any card, all cards are suspended')
@@ -189,7 +210,6 @@ export class ChanceCardHolder {
             this._lastDrawnCardIndex++;
             if (this._lastDrawnCardIndex >= this._cardsOrder.length) {
                 this.shuffle();
-                this._lastDrawnCardIndex = 0;
             }
             if (!this.isSuspended) return currentCard;
         }

@@ -4,6 +4,7 @@ import { range } from "../../Functions/createRange";
 import { mockMathRandom, zeroRandomGenerator } from "../../Functions/testUtils";
 import { iDictionary } from "../../Types/types";
 import { ChanceCardHolder } from "../Chance/ChanceCardHolder";
+import { Errors } from "../Chance/errors";
 import { tChance } from "../Chance/types";
 
 export const YELLOW_1: tChance = {
@@ -134,6 +135,9 @@ export const ORANGE: tChance = {
 
 
 describe('Testing ChanceCardHolder', () => {
+    afterEach(() => {
+        ChanceCardHolder.instances = {};
+    })
     describe('Uploading cards to the memory', () => {
         it('Should upload all blue cards from data folder, when requested to do so', () => {
             const instance = new ChanceCardHolder(CHANCE_CARDS_BLUE);
@@ -207,27 +211,51 @@ describe('Testing ChanceCardHolder', () => {
             expect(polishIndex).toBe(5);
         })
     })
+    const getArrayOfNotRepetingCards = (instance: ChanceCardHolder) => {
+        const cards: string[] = [];
+        while(true) {
+            const card = instance.drawACard();
+            if (cards.includes(card)) { return cards }
+            cards.push(card)
+        }
+    }
     describe('Lending a card to a player', () => {
         it('Should not suspend a card when it is not collectable', () => {
-
+            const instance = new ChanceCardHolder(CHANCE_CARDS_BLUE);
+            instance.suspendCard(CHANCE_CARDS_BLUE.descriptions.en[2]);
+            const allNotRepetingCards = getArrayOfNotRepetingCards(instance);
+            expect(allNotRepetingCards.length).toBe(16)
         })
         it('Should suspend a card from game operations when player draws a collectible card', () => {
+            const instance = new ChanceCardHolder(CHANCE_CARDS_BLUE);
+            instance.suspendCard(CHANCE_CARDS_BLUE.descriptions.en[6]);
+            const allNotRepetingCards = getArrayOfNotRepetingCards(instance);
+            expect(allNotRepetingCards.length).toBe(15)
 
         });
         it('Should throw an error when there is an attempt to lend a non-collectible card to a pleyer', () => {
-
+            const instance = new ChanceCardHolder(CHANCE_CARDS_BLUE);
+            const borrow = () => instance.borrowCardToAPlayer(CHANCE_CARDS_BLUE.descriptions.en[2])
+            expect(borrow).toThrow(Errors.cardNotCollectable)
         });
         it('Should not allow to draw a card, when it is borrowed', () => {
+            const instance = new ChanceCardHolder(CHANCE_CARDS_BLUE);
+            instance.suspendCard(CHANCE_CARDS_BLUE.descriptions.en[6]);
+            const allNotRepetingCards = getArrayOfNotRepetingCards(instance);
+            expect(allNotRepetingCards.length).toBe(15)
 
         })
-        it('Should allow to draw a collectible card when it is not borrowed', () => {
+        it('Should allow to draw a collectible card when it is returned', () => {
+            const instance = new ChanceCardHolder(CHANCE_CARDS_BLUE);
+            const TEST_CARD = CHANCE_CARDS_BLUE.descriptions.en[6]
+            instance.suspendCard(TEST_CARD);
+            const nrOfAllCardsAfterLending = getArrayOfNotRepetingCards(instance).length;
+            instance.returnBorrowedCard(TEST_CARD);
+            instance.shuffle();
+            const nrOfAllCardsAfterReturning = getArrayOfNotRepetingCards(instance).length;
+            expect(nrOfAllCardsAfterLending).toBe(15)
+            expect(nrOfAllCardsAfterReturning).toBe(16)
 
         });
-        it('Should return a borrowed card to a deck when requested to do so', () => {
-
-        });
-        it('Should return the card to the end of the deck, when player requestes to return a borrowed card', () => {
-
-        })
     })
 })
