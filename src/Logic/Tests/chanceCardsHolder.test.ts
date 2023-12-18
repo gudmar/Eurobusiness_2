@@ -228,7 +228,7 @@ describe('Testing ChanceCardHolder', () => {
         })
         it('Should suspend a card from game operations when player draws a collectible card', () => {
             const instance = new ChanceCardHolder(CHANCE_CARDS_BLUE);
-            instance.suspendCard(CHANCE_CARDS_BLUE.descriptions.en[6]);
+            instance.borrowCardToAPlayer(CHANCE_CARDS_BLUE.descriptions.en[6]);
             const allNotRepetingCards = getArrayOfNotRepetingCards(instance);
             expect(allNotRepetingCards.length).toBe(15)
 
@@ -240,7 +240,7 @@ describe('Testing ChanceCardHolder', () => {
         });
         it('Should not allow to draw a card, when it is borrowed', () => {
             const instance = new ChanceCardHolder(CHANCE_CARDS_BLUE);
-            instance.suspendCard(CHANCE_CARDS_BLUE.descriptions.en[6]);
+            instance.borrowCardToAPlayer(CHANCE_CARDS_BLUE.descriptions.en[6]);
             const allNotRepetingCards = getArrayOfNotRepetingCards(instance);
             expect(allNotRepetingCards.length).toBe(15)
 
@@ -248,7 +248,7 @@ describe('Testing ChanceCardHolder', () => {
         it('Should allow to draw a collectible card when it is returned', () => {
             const instance = new ChanceCardHolder(CHANCE_CARDS_BLUE);
             const TEST_CARD = CHANCE_CARDS_BLUE.descriptions.en[6]
-            instance.suspendCard(TEST_CARD);
+            instance.borrowCardToAPlayer(TEST_CARD);
             const nrOfAllCardsAfterLending = getArrayOfNotRepetingCards(instance).length;
             instance.returnBorrowedCard(TEST_CARD);
             instance.shuffle();
