@@ -177,6 +177,20 @@ export class ChanceCardHolder {
     }
     get currentCardIndex() {return this._cardsOrder[this._lastDrawnCardIndex]}
     get isCurrentCardCollectable() { return !!this._getMetadataForCardNr(this.currentCardIndex) }
+    get collectableCards() {
+        const collectableEntries = Object.entries(this._cardsMetadata || {}).filter(([key, value]) => value?.collectable === true);
+        const collectableIndexes = collectableEntries.map(([key]) => parseInt(key));
+        const descriptions = collectableIndexes.map((index) => this.getDescriptionForCardNr(index));
+        return descriptions;
+    }
+    get availableCollectableCards() {
+        const collectableEntries = Object.entries(this._cardsMetadata || {}).filter(([key, value]) => value?.collectable === true);
+        const collectableIndexes = collectableEntries.map(([key]) => parseInt(key));
+        const availableCollectableIndexes = collectableIndexes.filter((index) => this._cardsBorrowedByPlayers[`${index}`] !== true)
+        console.log(availableCollectableIndexes)
+        const descriptions = availableCollectableIndexes.map((index) => this.getDescriptionForCardNr(index));
+        return descriptions;
+    }
 
     getCardIndexByDescription(description: string) {
         const languageShortcut = this._availableLanguageShortcuts.find((shortName: string) => this._getIndexOfCardByDescriptionInLanguage(shortName, description) !== -1);
