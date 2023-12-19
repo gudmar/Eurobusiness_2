@@ -29,7 +29,7 @@ export type tChance = {
 }
 
 export type tPlayerName = string;
-export type tCardIndex = number;
+export type tCardIndex = string;
 
 export type tBorrowedCards = {
     [key: tCardIndex]: boolean, // cannot hold palyerName as cards may change owner

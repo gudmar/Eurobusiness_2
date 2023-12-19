@@ -49,9 +49,12 @@ export class ChanceCardHolder {
     private _cardSetName: string = '';
     private _cardsOrder!: number[];
     private _lastDrawnCardIndex = 0;
-    private _cardsBorrowedByPlayers: tBorrowedCards = {}
+    _cardsBorrowedByPlayers: tBorrowedCards = {}
 
     constructor(cards: tChance) {
+        if (Object.values(ChanceCardHolder?.instances?.[cards.cardSetName] || {}).some(i => i.collectable === true || i.collectable === false) ) {
+            throw new Error('CARD ALREADY BORROWED')
+        }
         if (ChanceCardHolder?.instances?.[cards.cardSetName]) {
             return ChanceCardHolder.instances[cards.cardSetName]
         }
@@ -60,19 +63,47 @@ export class ChanceCardHolder {
         ChanceCardHolder.instances[cards.cardSetName] = this;
         this._cardSetName = cards.cardSetName;
     }
+
+    private get _nrOfCards() {
+        const nrOfCards = Object.keys(this._cardsDescriptions![0]).length
+        return nrOfCards;
+    }
+    private get _availableLanguageShortcuts() {
+        const result = this._cardsDescriptions!.map(({languageShortName}: tLanguageDescriptionEntry) => languageShortName);
+        return result;
+    }
+    private get _areAllCardsSuspended() {
+        const nrOfLockedCards = Object.entries(this._cardsBorrowedByPlayers).reduce((acc: number, entry: any) => {
+            const [key, value] = entry;
+            if (value) acc++;
+            return acc
+        }, 0)
+        const nrOfCards = this._nrOfCards;
+        return nrOfCards === nrOfLockedCards;
+    }
     private get _initalCardOrder() {
         return range(Object.values(this.descriptions).length - 1)
     }
+    private _getMetadataForCardNr(nr: number): tCardMetadataBit {
+        return this._cardsMetadata?.[`${nr}`] || {}
+    }
+    private _makeOperationOnCard(description: string, callback: (index: number) => void) {
+        const cardIndex = this.getCardIndexByDescription(description);
+        if (cardIndex === -1) {throw new Error(Errors.cardDoesNotExist)}        
+        if (!this._isCardCollectable(cardIndex)) { throw new Error(Errors.cardNotCollectable)};
+        callback(cardIndex);
+
+    }
+
+
     private _initializeCardsObject(cardsDescriptor: tChance ) {
         this._cardsActions = cardsDescriptor?.actions;
         this._cardsDescriptions = getDescriptionsInLanguages(cardsDescriptor);
         this._cardsMetadata = cardsDescriptor?.metadata || {};
         this._cardsOrder = this._initalCardOrder;
+        this.shuffle();
     }
 
-    selfDestruct() {
-        delete ChanceCardHolder?.instances?.[this._cardSetName];
-    }
     private _getCardsDescriptionsByShortName(shortName: string) {
         const result: tLanguageDescriptionEntry | undefined = this._cardsDescriptions?.find(
             ({languageShortName}: tLanguageDescriptionEntry) => languageShortName === shortName
@@ -90,10 +121,6 @@ export class ChanceCardHolder {
         return this._getCardsDescriptionsByShortName(languageName) || this._getCardsDescriptionsByLongName(languageName) || {}
     }
 
-    private get _availableLanguageShortcuts() {
-        const result = this._cardsDescriptions!.map(({languageShortName}: tLanguageDescriptionEntry) => languageShortName);
-        return result;
-    }
     private _getIndexOfCardByDescriptionInLanguage(languageName: string, description: string) {
         const descriptions = this._getCardsDescriptionsByLanguage(languageName);
         const result = Object.entries(descriptions).find(([key, value]) => {
@@ -103,103 +130,11 @@ export class ChanceCardHolder {
         return -1;
     }
 
-    getCardIndexByDescription(description: string) {
-        const languageShortcut = this._availableLanguageShortcuts.find((shortName: string) => this._getIndexOfCardByDescriptionInLanguage(shortName, description) !== -1);
-        if (!languageShortcut) return -1
-        const index = this._getIndexOfCardByDescriptionInLanguage(languageShortcut, description);
-        return index;
-    }
-
-    get descriptions() {
-        const result = this._getCardsDescriptionsByLanguage(this._language)
-        return result;
-    }
-
-    get actions() {
-        return this._cardsActions;
-    }
-
-    get nrOfActions() {return Object.values(this._cardsActions || {}).length}
-    get nrOfDescriptions() {
-        return Object.keys(this.descriptions || {}).length
-    }
-    getDescriptionForCardNr(nr:number) { 
-        const key: string = `${nr}`;
-        return this.descriptions?.[key]
-    }
-    getActionsForCardNr(nr:number) { 
-        const key: string = `${nr}`;
-        return this.actions?.[key]
-    }
-    private _getMetadataForCardNr(nr: number): tCardMetadataBit {
-        return this._cardsMetadata?.[`${nr}`] || {}
-    }
-    private get _nrOfCards() {
-        const nrOfCards = Object.keys(this._cardsDescriptions![0]).length
-        return nrOfCards;
-    }
-
-    get currentCardIndex() {return this._cardsOrder[this._lastDrawnCardIndex]}
-
-    get isCurrentCardCollectable() { return !!this._getMetadataForCardNr(this.currentCardIndex) }
-
     private _isCardCollectable(index: number) {
         const metadata = this._getMetadataForCardNr(index);
         return !!(metadata?.collectable);
     }
-
-    suspendCard(description: string) {        
-        const cardIndex = this.getCardIndexByDescription(description);
-        const isCardCollectable = this._isCardCollectable(cardIndex)
-        if (isCardCollectable) {
-            this._cardsBorrowedByPlayers[cardIndex] = true;
-        }
-    }
-
-    unsuspendCard(description: string) {
-        const cardIndex = this.getCardIndexByDescription(description);
-        this._cardsBorrowedByPlayers[cardIndex] = false;        
-    }
-
-    get isSuspended() {
-        return this._cardsBorrowedByPlayers[`${this._lastDrawnCardIndex}`];
-    }
     
-    shuffle() {
-        const newCardOrder = shuffle(this._initalCardOrder) as number[];
-        this._cardsOrder = newCardOrder;
-        this._lastDrawnCardIndex = 0;
-    }
-
-    private get _areAllCardsSuspended() {
-        const nrOfLockedCards = Object.entries(this._cardsBorrowedByPlayers).reduce((acc: number, entry: any) => {
-            const [key, value] = entry;
-            if (value) acc++;
-            return acc
-        }, 0)
-        const nrOfCards = this._nrOfCards;
-        return nrOfCards === nrOfLockedCards;
-    }
-
-    private _makeOperationOnCard(description: string, callback: (index: number) => void) {
-        const cardIndex = this.getCardIndexByDescription(description);
-        if (cardIndex === -1) {throw new Error(Errors.cardDoesNotExist)}        
-        if (!this._isCardCollectable(cardIndex)) { throw new Error(Errors.cardNotCollectable)};
-        callback(cardIndex);
-
-    }
-    borrowCardToAPlayer(description: string) {
-        const borrow = (index: number) => {
-            if (this._cardsBorrowedByPlayers[`${index}`]) {throw new Error(Errors.cardAlreadyBorrowed)}
-            this._cardsBorrowedByPlayers[`${index}`] = true;
-        }
-        this._makeOperationOnCard(description, borrow);
-    }
-    returnBorrowedCard(description: string) {
-        const borrow = (index: number) => {this._cardsBorrowedByPlayers[`${index}`] = false}
-        this._makeOperationOnCard(description, borrow);
-    }
-
     private _getNextNotSuspendedCard = () => {
         if (this._areAllCardsSuspended) {
             throw new Error('Cannot return any card, all cards are suspended')
@@ -211,25 +146,103 @@ export class ChanceCardHolder {
             if (this._lastDrawnCardIndex >= this._cardsOrder.length) {
                 this.shuffle();
             }
-            if (!this.isSuspended) return currentCard;
+            if (!this._isTargetCardSuspended(cardIndexMappedToShuffled)) return currentCard;
         }
     }
 
     private * _drawACard (): Generator<string> {
         while(true){
-            // const cardIndexMappedToShuffled = this._cardsOrder[this._lastDrawnCardIndex];
-            // const currentCard = this.getDescriptionForCardNr(cardIndexMappedToShuffled);
-            // this._lastDrawnCardIndex++;
-            // if (this._lastDrawnCardIndex >= this._cardsOrder.length) {
-            //     this.shuffle();
-            //     this._lastDrawnCardIndex = 0;
-            // }
             const currentCard = this._getNextNotSuspendedCard();
             yield currentCard;
         }
     }
+
+    private _isTargetCardSuspended(index: number) {
+        return this._cardsBorrowedByPlayers[`${index}`];
+    }
+
+    get descriptions() {
+        const result = this._getCardsDescriptionsByLanguage(this._language)
+        return result;
+    }
+    get actions() {
+        return this._cardsActions;
+    }
+    get nrOfActions() {return Object.values(this._cardsActions || {}).length}
+    get nrOfDescriptions() {
+        return Object.keys(this.descriptions || {}).length
+    }
+    get isSuspended() {
+        return this._cardsBorrowedByPlayers[`${this._lastDrawnCardIndex}`];
+    }
+    get currentCardIndex() {return this._cardsOrder[this._lastDrawnCardIndex]}
+    get isCurrentCardCollectable() { return !!this._getMetadataForCardNr(this.currentCardIndex) }
+    get collectableCards() {
+        const collectableEntries = Object.entries(this._cardsMetadata || {}).filter(([key, value]) => value?.collectable === true);
+        const collectableIndexes = collectableEntries.map(([key]) => parseInt(key));
+        const descriptions = collectableIndexes.map((index) => this.getDescriptionForCardNr(index));
+        return descriptions;
+    }
+    get availableCollectableCards() {
+        const collectableEntries = Object.entries(this._cardsMetadata || {}).filter(([key, value]) => value?.collectable === true);
+        const collectableIndexes = collectableEntries.map(([key]) => parseInt(key));
+        const availableCollectableIndexes = collectableIndexes.filter((index) => this._cardsBorrowedByPlayers[`${index}`] !== true)
+        console.log(availableCollectableIndexes)
+        const descriptions = availableCollectableIndexes.map((index) => this.getDescriptionForCardNr(index));
+        return descriptions;
+    }
+
+    getCardIndexByDescription(description: string) {
+        const languageShortcut = this._availableLanguageShortcuts.find((shortName: string) => this._getIndexOfCardByDescriptionInLanguage(shortName, description) !== -1);
+        if (!languageShortcut) return -1
+        const index = this._getIndexOfCardByDescriptionInLanguage(languageShortcut, description);
+        return index;
+    }
+
+    getDescriptionForCardNr(nr:number) { 
+        const key: string = `${nr}`;
+        return this.descriptions?.[key]
+    }
+    getActionsForCardNr(nr:number) { 
+        const key: string = `${nr}`;
+        return this.actions?.[key]
+    }
+
+    suspendCard(description: string) {        
+        const cardIndex = this.getCardIndexByDescription(description);
+        const isCardCollectable = this._isCardCollectable(cardIndex)
+        if (isCardCollectable) {
+            this._cardsBorrowedByPlayers[cardIndex] = true;
+        }
+    }
+
+    // unsuspendCard(description: string) {
+    //     const cardIndex = this.getCardIndexByDescription(description);
+    //     this._cardsBorrowedByPlayers[cardIndex] = false;        
+    // }
+    
+    shuffle() {
+        const newCardOrder = shuffle(this._initalCardOrder) as number[];
+        this._cardsOrder = newCardOrder;
+        this._lastDrawnCardIndex = 0;
+    }
+
+    borrowCardToAPlayer(description: string) {
+        const borrow = (index: number) => {
+            if (this._cardsBorrowedByPlayers[`${index}`]) {throw new Error(Errors.cardAlreadyBorrowed)}
+            this._cardsBorrowedByPlayers[`${index}`] = true;
+        }
+        this._makeOperationOnCard(description, borrow);
+    }
+    returnBorrowedCard(description: string) {
+        const returnCard = (index: number) => {this._cardsBorrowedByPlayers[`${index}`] = false}
+        this._makeOperationOnCard(description, returnCard);
+    }
+
     drawACard() {
         const card: any = this._drawACard().next().value;
         return card
     }
+
+    get cardsOrder() {return this._cardsOrder}
 }
