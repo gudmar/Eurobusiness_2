@@ -45,6 +45,7 @@ type tReduceInstancesCallback = (instance: tChanceCardHolderInstance, index?: nu
 export type tChanceCardHolderInstance = ChanceCardHolder;
 
 export class ChanceCardHolder {
+    
     static instances: ChanceCardHolderInstance;
     private _cardsDescriptions?: tLanguageDescriptionEntry[];
     private _cardsActions?: iActions;
@@ -189,6 +190,14 @@ export class ChanceCardHolder {
         return result;
     }
 
+    get borrowedCardsDescriptions() {
+        const borrowed = Object.keys(this._cardsBorrowedByPlayers).map((i) => parseInt(i));
+        const descriptions: string[] = borrowed.map((id) => descriptions[id]);
+        return descriptions;
+    }
+
+    static clearAllInstances() { ChanceCardHolder.instances = {};}
+
     get descriptions() {
         const result = this._getCardsDescriptionsByLanguage(this._language)
         return result;
@@ -219,6 +228,10 @@ export class ChanceCardHolder {
         const descriptions = availableCollectableIndexes.map((index) => this.getDescriptionForCardNr(index));
         return descriptions;
     }
+    get descriptionsInShufledOrder() {
+        return this._cardsOrder.map((id) => this.descriptions[id]);
+    }
+
 
     getCardIndexByDescription(description: string) {
         const languageShortcut = this._availableLanguageShortcuts.find((shortName: string) => this._getIndexOfCardByDescriptionInLanguage(shortName, description) !== -1);
