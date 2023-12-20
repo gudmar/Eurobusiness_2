@@ -1,7 +1,9 @@
 import { useEffect } from "react";
 import { MONEY_ALLTOGETHER } from "../../../Constants/constants";
 import { useEditPlayer } from "../../../hooks/useEditPlayer/useEditPlayer"
+import { ChanceCardHolder } from "../../../Logic/Chance/ChanceCardHolder";
 import { Checkbox } from "../../Interactors/Checkbox/Checkbox";
+import { MultiSelectFromList } from "../../Interactors/MultiSelectFromList/MultiSelectFromList";
 import { NumberInput } from "../../Interactors/NumberInput/NumberInput";
 import { TextInput } from "../../Interactors/TextInput/TextInput";
 import { tTextEventType } from "../../Interactors/types";
@@ -36,6 +38,11 @@ export const PlayerStateEditor = ({section}: any) => {
                 step={1}
             />
             <div><b>Special cards:</b> {specialCards}</div>
+            <MultiSelectFromList
+                items={Object.values(ChanceCardHolder.collectableCards).flat() as string[]} 
+                label={'Special cards'}
+                onClick={() => {}}
+            />
             <div><b>fieldNr</b>: {fieldNr}</div>
             <NumberInput
                 label={'Field number'}

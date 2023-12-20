@@ -3,6 +3,7 @@
 
 import { FREE_FROM_JAIL, GAIN, GAIN_FROM_EACH_PLAYER, GO_BACK, GO_TO_FIELD, GO_TO_FIELD_CONDITIONALLY_PASS_START, PAY, PAY_EACH_HOTEL, PAY_EACH_HOUSE, PAY_OR_DRAW_FROM_RED, tChanceMessages } from "../Constants/commands"
 import { tChance } from "../Logic/Chance/types"
+import { RED, BLUE } from "./const"
 
 
 // export enum ChanceMessageTypes {
@@ -20,7 +21,7 @@ import { tChance } from "../Logic/Chance/types"
 // }
 
 export const CHANCE_CARDS_RED: tChance = {
-    cardSetName: 'red',
+    cardSetName: RED,
     descriptions: {
         pl: {
             0:  "Zobowiązany jesteś zmodernizować swoje miasto, płacisz za każdy dom 80 $,za każdy hotel 230 $",
@@ -56,7 +57,7 @@ export const CHANCE_CARDS_RED: tChance = {
             12: "Bank pays you $100 interest",
             13: "You go to Eastern Railway (forward). If you pass start field, you gain $400.",
             14: "Bank pays you $300 interest",
-            15: "You get out of prison. Card should be kept for usage or selling"
+            15: "You get out of prison. Card may be kept or sold"
         },    
     },
     actions: {
@@ -173,7 +174,7 @@ export const CHANCE_CARDS_RED: tChance = {
 
 
 export const CHANCE_CARDS_BLUE: tChance = {
-    cardSetName: 'blue',
+    cardSetName: BLUE,
     descriptions: {
         pl: {
                 0 : "Płacisz na budowę szpitala 400 $.",

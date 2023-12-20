@@ -1,4 +1,5 @@
 import { BLUE, GREEN, RED, YELLOW } from "../../Data/const"
+import { useStartChanceCardsHolders } from "../../hooks/starters/useStartChanceCardsHoleders"
 import { iPlayerDescriptor } from "../../Logic/Players/types"
 import { StrategyNames } from "../../Logic/Strategies/types"
 import { Board } from "../Board/Board"
@@ -31,6 +32,7 @@ export const GameStarter = () => {
             strategy: StrategyNames.manual,
         }
     ];
+    useStartChanceCardsHolders();
     return (
         <>
             <Board/>
