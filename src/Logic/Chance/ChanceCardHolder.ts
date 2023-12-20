@@ -40,6 +40,10 @@ const getDescriptionsInLanguages = ({descriptions}: tChance):tLanguageDescriptio
 
 type ChanceCardHolderInstance = {[key: string]: ChanceCardHolder};
 
+type tReduceInstancesCallback = (instance: tChanceCardHolderInstance, index?: number) => any;
+
+export type tChanceCardHolderInstance = ChanceCardHolder;
+
 export class ChanceCardHolder {
     static instances: ChanceCardHolderInstance;
     private _cardsDescriptions?: tLanguageDescriptionEntry[];
@@ -159,6 +163,30 @@ export class ChanceCardHolder {
 
     private _isTargetCardSuspended(index: number) {
         return this._cardsBorrowedByPlayers[`${index}`];
+    }
+
+    
+
+    private static _calculateForEachInstance(callback: tReduceInstancesCallback) {
+        const instanceEntries = Object.entries(ChanceCardHolder.instances);
+        const result = instanceEntries.reduce((acc: any, entry, index) => {
+            const [key, instance] = entry;
+            acc[key] = callback(instance, index);
+            return acc;
+        }, {})
+        return result;
+    }
+
+    static get notBorrowedCards() {
+        const callback = (instance: ChanceCardHolder) => instance.availableCollectableCards;
+        const result = ChanceCardHolder._calculateForEachInstance(callback);
+        return result;
+    }
+
+    static get collectableCards() {
+        const callback = (instance: ChanceCardHolder) => instance.collectableCards;
+        const result = ChanceCardHolder._calculateForEachInstance(callback);
+        return result;
     }
 
     get descriptions() {
