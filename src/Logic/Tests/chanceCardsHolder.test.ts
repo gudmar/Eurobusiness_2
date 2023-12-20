@@ -178,6 +178,51 @@ export const GRAY: tChance = {
     }
 }
 
+export const BLACK: tChance = {
+    cardSetName: 'black',
+    descriptions: {
+            en: {
+                0: 'b',
+                1: 'l',
+                2: 'a',
+                3:  "c",
+                4:  'k',
+            5: '_',
+            },
+        
+    },
+    actions: {
+        0: [{
+            type: PAY,
+            payload: 400,
+        }],
+        1: [{
+            type: GAIN,
+            payload: 200,
+        }],
+        2: [{
+            type: GAIN_FROM_EACH_PLAYER,
+            payload: 20,
+        }],
+        3: [{
+            type: GO_TO_FIELD_CONDITIONALLY_PASS_START,
+        }],
+        4: [{
+            type: GAIN,
+            payload: 400,
+        }],
+        5: [{
+            type: PAY,
+            payload: 20,
+        }]
+    },
+    metadata: {
+        2: {collectable: true},
+        4: {collectable: true},
+        0: {collectable: true},
+    }
+}
+
 
 describe('Testing ChanceCardHolder', () => {
     afterEach(() => {
@@ -314,6 +359,24 @@ describe('Testing ChanceCardHolder', () => {
             instance.borrowCardToAPlayer('y');
             const collectableCards = instance.availableCollectableCards;
             expect(collectableCards).toEqual(['r', 'o']);
+        })
+        it('Should provide a static method making a report of all collectable cards in each pile color', () => {
+            const blackInstance = new ChanceCardHolder(BLACK)
+            const grayInstance = new ChanceCardHolder(GRAY)
+            blackInstance.borrowCardToAPlayer('a');
+            grayInstance.borrowCardToAPlayer('r');
+            const notBorrowedCardsExpectedReport = {
+                black: ['b', 'k'],
+                gray: ['y','o']
+            };
+            const expectedCollectableCardsReport = {
+                black: ['b', 'a', 'k'],
+                gray: ['r','y','o']
+            }
+            const notBorrowedReport = ChanceCardHolder.notBorrowedCards;
+            const collectableReport = ChanceCardHolder.collectableCards;
+            expect(notBorrowedReport).toEqual(notBorrowedCardsExpectedReport);
+            expect(collectableReport).toEqual(expectedCollectableCardsReport);
         })
     })
 })
