@@ -1,11 +1,12 @@
 export interface iBankState {
     nrOfHotels: number,
     nrOfHouses: number,
+    
 }
 
 export interface iBank extends iBankState {
     getHotel(): boolean,
-    getHouse(): boolean, // successfull if there was a hotel
+    getHouses(nrOfHousesToGet: number): boolean, // successfull if there was a hotel
     returnHotel(): boolean,
-    returnHouse(): boolean,
+    returnHouses(nrOfHousesToReturn: number): boolean,
 }

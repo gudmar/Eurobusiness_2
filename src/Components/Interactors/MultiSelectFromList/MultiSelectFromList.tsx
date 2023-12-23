@@ -70,7 +70,10 @@ const Tag = ({value, toggleSelection}: iTagProps) => {
     )
 }
 
-export const MultiSelectFromList = ({id, label, items, defaultValues=[], onClick}: iSelectFromListProps) => {
+export const MultiSelectFromList = ({
+    id, label, items, defaultValues=[], onClick, //onSelected, onCleared
+    // Implement onSelected and onCleared
+}: iSelectFromListProps) => {
     const { theme } = useThemesAPI();
     const classes: {[key:string]: string} = useStyles(theme as any);
     const focusRef = useRef<HTMLInputElement>(null);

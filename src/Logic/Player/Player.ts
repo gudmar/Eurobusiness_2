@@ -56,6 +56,18 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
     set isGameLost(val: boolean) { this._isGameLost = val; this._informAnyChange(); }
     // set strategy(val: string) { this._name = val; this._informAnyChange(); }
 
+    borrowSpecialCard(description: string) {
+        this._specialCards.push(description);
+        this._informAnyChange();
+    }
+    
+    returnSpecialCard(description: string) {
+        const cardIndex = this._specialCards.findIndex(description);
+        if (cardIndex < 0) throw new Error(`I don't have a card with description [${description}]`);
+        this._specialCards.splice(cardIndex, 1);
+        this._informAnyChange();
+    }
+
     static get initialState() {
         return {
             name: 'John Doe',

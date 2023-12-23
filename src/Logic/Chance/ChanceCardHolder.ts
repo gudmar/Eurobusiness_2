@@ -280,6 +280,39 @@ export class ChanceCardHolder {
         this._makeOperationOnCard(description, returnCard);
     }
 
+    private static _getBorrowFunctions(cardDescription: string ) {
+        const borrowFunctions = Object.values(ChanceCardHolder.instances).map((instance: ChanceCardHolder) => {
+            return instance.borrowCardToAPlayer.bind(instance, cardDescription)
+        })
+        return borrowFunctions        
+    }
+
+    private static _getReturnFunctions(cardDescription: string ) {
+        const returnFunctions = Object.values(ChanceCardHolder.instances).map((instance: ChanceCardHolder) => {
+            return instance.borrowCardToAPlayer.bind(instance, cardDescription)
+        })
+        return returnFunctions        
+    }
+
+    private static _makeOperationsOnEachInstatnce(operations: (() => void) []) {
+        const isOperationSuccessfull = operations.some((func: () => void) => {
+            try{ func(); return true }
+            catch(e) {return false}
+        })
+        return isOperationSuccessfull;
+    }
+
+    static borrowCard(description: string) {
+        const borrowOperations = ChanceCardHolder._getBorrowFunctions(description);
+        const result = ChanceCardHolder._makeOperationsOnEachInstatnce(borrowOperations);
+        return result;
+    }
+    static returnCard(description: string) {
+        const returnOperations = ChanceCardHolder._getReturnFunctions(description);
+        const result = ChanceCardHolder._makeOperationsOnEachInstatnce(returnOperations);
+        return result;
+    }
+
     drawACard() {
         const card: any = this._drawACard().next().value;
         return card
