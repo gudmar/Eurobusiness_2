@@ -57,15 +57,25 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
     // set strategy(val: string) { this._name = val; this._informAnyChange(); }
 
     borrowSpecialCard(description: string) {
-        this._specialCards.push(description);
-        this._informAnyChange();
+        try {
+            this._specialCards.push(description);
+            this._informAnyChange();    
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
     
     returnSpecialCard(description: string) {
-        const cardIndex = this._specialCards.findIndex(description);
-        if (cardIndex < 0) throw new Error(`I don't have a card with description [${description}]`);
-        this._specialCards.splice(cardIndex, 1);
-        this._informAnyChange();
+        try {
+            const cardIndex = this._specialCards.findIndex(description);
+            if (cardIndex < 0) throw new Error(`I don't have a card with description [${description}]`);
+            this._specialCards.splice(cardIndex, 1);
+            this._informAnyChange();    
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
 
     static get initialState() {

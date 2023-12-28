@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { MONEY_ALLTOGETHER } from "../../../Constants/constants";
 import { useEditPlayer } from "../../../hooks/useEditPlayer/useEditPlayer"
 import { ChanceCardHolder } from "../../../Logic/Chance/ChanceCardHolder";
+import { Commander } from "../../../Logic/Commander/Commander";
+import { Players } from "../../../Logic/Players/Players";
 import { Checkbox } from "../../Interactors/Checkbox/Checkbox";
 import { MultiSelectFromList } from "../../Interactors/MultiSelectFromList/MultiSelectFromList";
 import { NumberInput } from "../../Interactors/NumberInput/NumberInput";
@@ -16,9 +18,18 @@ export const PlayerStateEditor = ({section}: any) => {
         setNrTurnsToWait, isGameLost, setIsInPrison,
         setIsGameLost,
     } = useEditPlayer(section);
+    const getVisibleCards = (cardsBorrowedByPleyer: string[]) => {
+        const allNotBorrowed = Object.values(ChanceCardHolder.notBorrowedCards).flat() as string[];
+        console.log(allNotBorrowed, cardsBorrowedByPleyer)
+        return [...allNotBorrowed, ...cardsBorrowedByPleyer]
+    }
+    const visibleSpecialCards = getVisibleCards(specialCards)
+    useEffect(() => console.log(visibleSpecialCards), [visibleSpecialCards])
+    
     return (
         <>
             <div><h1>Edit player with color: {section}</h1></div>
+            <button onClick={() => console.log(Players.players)}>log</button>
             <div><b>Name</b>: {name}</div>
             <TextInput
                 label={'Player name'}
@@ -39,9 +50,13 @@ export const PlayerStateEditor = ({section}: any) => {
             />
             <div><b>Special cards:</b> {specialCards}</div>
             <MultiSelectFromList
-                items={Object.values(ChanceCardHolder.collectableCards).flat() as string[]} 
+                items = {visibleSpecialCards}
+                key={color}
                 label={'Special cards'}
                 onClick={() => {}}
+                defaultValues={specialCards}
+                onSelected={(description: string) => Commander.borrowACard({description, playerColor: color})}
+                onUnselected={(description: string) => Commander.returnACard({description, playerColor: color})}
             />
             <div><b>fieldNr</b>: {fieldNr}</div>
             <NumberInput

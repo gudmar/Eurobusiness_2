@@ -71,9 +71,9 @@ const Tag = ({value, toggleSelection}: iTagProps) => {
 }
 
 export const MultiSelectFromList = ({
-    id, label, items, defaultValues=[], onClick, //onSelected, onCleared
-    // Implement onSelected and onCleared
+    id, label, items, defaultValues=[], onClick, onSelected, onUnselected
 }: iSelectFromListProps) => {
+    console.log(items, defaultValues)
     const { theme } = useThemesAPI();
     const classes: {[key:string]: string} = useStyles(theme as any);
     const focusRef = useRef<HTMLInputElement>(null);
@@ -90,7 +90,7 @@ export const MultiSelectFromList = ({
         selected,
         visibleItems,
         clearSearchResult,
-    } = useMultiSelectFromLogic({ keepFocusRef, dontLoseFocusRefs: [toggleExpandRef],  items, defaultSelection: defaultValues, onClick})
+    } = useMultiSelectFromLogic({ keepFocusRef, dontLoseFocusRefs: [toggleExpandRef],  items, defaultSelection: defaultValues, onSelected, onUnselected})
     const toggleExpand = () => {
         if (isSearchListExpanded) {close()} else {open()}
     }

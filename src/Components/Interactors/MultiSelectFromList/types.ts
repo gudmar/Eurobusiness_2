@@ -16,6 +16,8 @@ export interface iSelectFromListProps {
     label: string,
     id?: string,
     onClick: tSelectFromStateHandler,
+    onSelected?: tSelectItem,
+    onUnselected?: tSelectItem,
 }
 
 export interface iMultiSelectFromLogicArgs {
@@ -23,7 +25,8 @@ export interface iMultiSelectFromLogicArgs {
     dontLoseFocusRefs:  RefObject<HTMLInputElement>[],
     items: string[],
     defaultSelection: string[],
-    onClick: tSelectFromStateHandler,
+    onSelected?: tSelectFromStateHandler,
+    onUnselected?: tSelectFromStateHandler,
 }
 
 export interface iMultiSelectFromState {
@@ -36,7 +39,7 @@ export interface iMultiSelectFromState {
 
 export type tSearchFromPayload = string;
 
-export type tPayloadTypes = tSearchFromPayload | boolean | string | undefined
+export type tPayloadTypes = tSearchFromPayload | boolean | string | undefined | string[]
 export type tSearchPayloadType = {visibleItems: string[], selected: string}
 
 export enum MultiSelectFromLogicTypes {
@@ -45,13 +48,19 @@ export enum MultiSelectFromLogicTypes {
     close = 'close',
     search = 'search',
     clear = 'clear',
-    clearSearchResult = 'clearSearchResult'
+    clearSearchResult = 'clearSearchResult',
+    changeItems = 'change items'
 }
 
 export type tToggleSelection = {
     type: MultiSelectFromLogicTypes.toggleSelection,
     payload: string
 }
+export type tChangeItems = {
+    type: MultiSelectFromLogicTypes.toggleSelection,
+    payload: string
+}
+
 export type tOpen = {
     type: MultiSelectFromLogicTypes.open,
 }
@@ -76,7 +85,8 @@ export type tGetMultiSelectFromLogicActions = (dispatch: (arg: tActions) => {}) 
     toggleSelection: (payload: string) => {},
     search: (payload: string) => {},
     clear: () => {},
-    clearSearchResult: () => {}
+    clearSearchResult: () => {},
+    changeItems: (payload: string[]) => {}
 }
 
 export type tActions = {
@@ -93,6 +103,9 @@ export type tActions = {
     type: MultiSelectFromLogicTypes.clear
 } | {
     type: MultiSelectFromLogicTypes.clearSearchResult
+} | {
+    type: MultiSelectFromLogicTypes.changeItems,
+    payload: string[]
 }
 
 export interface iTagProps {
