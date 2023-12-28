@@ -11,6 +11,9 @@ export const NR_TURNS_TO_WAIT = 'nrTurnsToWait';
 export const IS_GAME_LOST = 'isGameLost';
 
 export const PAWN_DIAMETER = 32;
+export const MAX_NR_OF_HOUSES_TO_PURCHASE_IN_ONE_ROW = 4;
+export const INITIAL_NR_HOUSES = 32;
+export const INITIAL_NR_HOTELS = 12;
 
 export const NOTES = {
     '1000': 20,

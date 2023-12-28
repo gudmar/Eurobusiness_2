@@ -68,7 +68,6 @@ export class ChanceCardHolder {
         ChanceCardHolder.instances[cards.cardSetName] = this;
         this._cardSetName = cards.cardSetName;
     }
-
     private get _nrOfCards() {
         const nrOfCards = Object.keys(this._cardsDescriptions![0]).length
         return nrOfCards;
@@ -192,7 +191,7 @@ export class ChanceCardHolder {
 
     get borrowedCardsDescriptions() {
         const borrowed = Object.keys(this._cardsBorrowedByPlayers).map((i) => parseInt(i));
-        const descriptions: string[] = borrowed.map((id) => descriptions[id]);
+        const descriptions: string[] = borrowed.map((id) => this.descriptions[id]);
         return descriptions;
     }
 
@@ -278,6 +277,42 @@ export class ChanceCardHolder {
     returnBorrowedCard(description: string) {
         const returnCard = (index: number) => {this._cardsBorrowedByPlayers[`${index}`] = false}
         this._makeOperationOnCard(description, returnCard);
+    }
+
+    private static _getBorrowFunctions(cardDescription: string ) {
+        const borrowFunctions = Object.values(ChanceCardHolder.instances).map((instance: ChanceCardHolder) => {
+            return instance.borrowCardToAPlayer.bind(instance, cardDescription)
+        })
+        return borrowFunctions        
+    }
+
+    private static _getReturnFunctions(cardDescription: string ) {
+        const returnFunctions = Object.values(ChanceCardHolder.instances).map((instance: ChanceCardHolder) => {
+            return instance.borrowCardToAPlayer.bind(instance, cardDescription)
+        })
+        return returnFunctions        
+    }
+
+    private static _makeOperationsOnEachInstatnce(operations: (() => void) []) {
+        const isOperationSuccessfull = operations.some((func: () => void) => {
+            try{ func(); return true }
+            catch(e) {
+                console.error(e)
+                return false
+            }
+        })
+        return isOperationSuccessfull;
+    }
+
+    static borrowCard(description: string) {
+        const borrowOperations = ChanceCardHolder._getBorrowFunctions(description);
+        const result = ChanceCardHolder._makeOperationsOnEachInstatnce(borrowOperations);
+        return result;
+    }
+    static returnCard(description: string) {
+        const returnOperations = ChanceCardHolder._getReturnFunctions(description);
+        const result = ChanceCardHolder._makeOperationsOnEachInstatnce(returnOperations);
+        return result;
     }
 
     drawACard() {

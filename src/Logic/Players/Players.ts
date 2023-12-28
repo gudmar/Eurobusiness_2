@@ -1,5 +1,6 @@
 import { INITIAL_MONEY } from "../../Data/money";
 import { tColors } from "../../Data/types";
+import { tChanceCardPayload } from "../Commander/types";
 import { iDiceTestModeDecorator } from "../Dice/types";
 import { Messages } from "../Messages/constants";
 import { Player } from "../Player/Player";
@@ -51,6 +52,18 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
         return result; 
     }
     getPlayerByColor(color: tColors) {return this._getPlayerByColor(color)}
+
+    borrowSpecialCard({playerColor, description}: tChanceCardPayload) {
+        const player = this._getPlayerByColor(playerColor);
+        const result = player.borrowSpecialCard(description);
+        return result;
+    }
+
+    returnSpecialCard({playerColor, description}: tChanceCardPayload) {
+        const player = this._getPlayerByColor(playerColor);
+        const result = player.returnSpecialCard(description);
+        return result;
+    }
 
     get colors() {return Players.players.map((player) => player.color)}
 

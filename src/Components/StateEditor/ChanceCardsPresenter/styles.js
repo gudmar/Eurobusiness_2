@@ -72,14 +72,14 @@ export const useStyles = createUseStyles((theme) => ({
         width: HALF_WIDTH,
         height: '9rem',
         // backgroundColor: '#99229988',
-        shapeOutside: PATH_RIGHT,
+        // shapeOutside: PATH_RIGHT,
         clipPath: PATH_RIGHT,
     },
     left: {
         width: HALF_WIDTH,
         height: '9rem',
         // backgroundColor: '#99992288',
-        shapeOutside: PATH_LEFT,
+        // shapeOutside: PATH_LEFT,
         clipPath: PATH_LEFT,
     },
     oval: {
