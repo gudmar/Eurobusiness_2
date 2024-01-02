@@ -54,14 +54,12 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
     static getPlayerByColor(color: tColors) {return Players._getPlayerByColor(color)}
     
     borrowSpecialCard({playerColor, description}: tChanceCardPayload) {
-        console.log('Player color: ', playerColor)
         const player = Players._getPlayerByColor(playerColor);
         const result = player.borrowSpecialCard(description);
         return result;
     }
 
     returnSpecialCard({playerColor, description}: tChanceCardPayload) {
-        console.log('Player color: ', playerColor)
         const player = Players._getPlayerByColor(playerColor);
         const result = player.returnSpecialCard(description);
         return result;
