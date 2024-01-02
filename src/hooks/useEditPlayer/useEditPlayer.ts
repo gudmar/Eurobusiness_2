@@ -2,7 +2,6 @@ import { useCallback, useEffect, useReducer, useRef } from "react";
 import { tColors } from "../../Data/types";
 import { clearArray } from "../../Functions/clearArray";
 import { ANY_CHANGE } from "../../Logic/Messages/constants";
-import { Player } from "../../Logic/Player/Player";
 import { Players } from "../../Logic/Players/Players";
 import { iPlayer } from "../../Logic/Players/types";
 import { iSubscription, tSubscription } from "../../Types/types";
@@ -40,18 +39,13 @@ export const useEditPlayer = (wantedColor: tColors) => {
     const players = Players.players
     const thisPlayer = Players.getPlayerByColor(wantedColor);
     const initialState = {...thisPlayer.getMemento()}
-    console.log(initialState)
     const [{
         name, money, specialCards, color, fieldNr, isInPrison, nrTurnsToWait, isGameLost
     }, dispatch ] = useReducer(reducer, initialState)
     const player = useRef<null | iPlayer>(null)
-
-
-    useEffect(() => console.log(wantedColor))
     useEffect(() => {
         const subscribtions: (()=>void)[] = [];
         const unsubscribtions: (()=>void)[] = [];
-        console.log('Changing subscribtions', players)
         const fillSubscribtions = () => {
             subscribtionsStructure.forEach(({propName, callback}) => {
                 if (player.current) {

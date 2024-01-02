@@ -60,7 +60,6 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
         try {
             this._specialCards.push(description);
             this._informAnyChange();    
-            console.log('%c in Player, borrowing a card', 'background-color: purple')
             return true;
         } catch (e) {
             return false;
@@ -75,7 +74,7 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
             this._informAnyChange();    
             return true;
         } catch (e) {
-            console.log(this._specialCards, description)
+            console.error('Unable to return a card: ', this._specialCards, description)
             return false;
         }
     }

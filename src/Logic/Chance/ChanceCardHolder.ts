@@ -223,7 +223,6 @@ export class ChanceCardHolder {
         const collectableEntries = Object.entries(this._cardsMetadata || {}).filter(([key, value]) => value?.collectable === true);
         const collectableIndexes = collectableEntries.map(([key]) => parseInt(key));
         const availableCollectableIndexes = collectableIndexes.filter((index) => this._cardsBorrowedByPlayers[`${index}`] !== true)
-        console.log(availableCollectableIndexes)
         const descriptions = availableCollectableIndexes.map((index) => this.getDescriptionForCardNr(index));
         return descriptions;
     }
@@ -266,14 +265,12 @@ export class ChanceCardHolder {
         const borrow = (index: number) => {
             if (this._cardsBorrowedByPlayers[`${index}`]) {throw new Error(Errors.cardAlreadyBorrowed)}
             this._cardsBorrowedByPlayers[`${index}`] = true;
-            console.log('Borrowed', index, this._cardsBorrowedByPlayers)
         }
         this._makeOperationOnCard(description, borrow);
     }
     returnBorrowedCard(description: string) {
         const returnCard = (index: number) => {
             this._cardsBorrowedByPlayers[`${index}`] = false
-            console.log('Returned ', index, this._cardsBorrowedByPlayers)
         }
         this._makeOperationOnCard(description, returnCard);
     }
@@ -307,16 +304,13 @@ export class ChanceCardHolder {
     }
 
     static borrowCard(description: string) {
-        console.log('%cStatic borrow', 'color: red')
         const borrowOperations = ChanceCardHolder._getBorrowFunctions(description);
         const result = ChanceCardHolder._makeOperationsOnEachInstatnce(borrowOperations);
         return result;
     }
     static returnCard(description: string) {
-        console.log('%cStatic return', 'color: green')
         const returnOperations = ChanceCardHolder._getReturnFunctions(description);
         const result = ChanceCardHolder._makeOperationsOnEachInstatnce(returnOperations);
-        console.log(ChanceCardHolder.instances)
         return result;
     }
 

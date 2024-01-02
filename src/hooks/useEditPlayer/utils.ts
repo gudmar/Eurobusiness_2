@@ -92,7 +92,7 @@ export const changeTurnsToWaitAction = (turnsToWait: number) => ({type: EditPlay
 export const changeGameLostAction = (isGameLost: string) => ({type: EditPlayerTypes.changeGameLost, payload: isGameLost});
 export const changeStateAction = (state: iPlayerReducerState) => ({type: EditPlayerTypes.changeName, payload: state});
 
-export const getUpdateName = (dispatch: any) => ({name}: any) => { console.log(name); dispatch(changeNameAction(name))};
+export const getUpdateName = (dispatch: any) => ({name}: any) => { dispatch(changeNameAction(name))};
 export const getUpdateMoney = (dispatch: any) => ({money}: any) => { dispatch(changeMoneyAction(money))};
 export const getUpdateSpecialCards = (dispatch: any) => ({specialCards}: any) => { dispatch(changeSpecialCardsAction(specialCards))};
 export const getUpdateFieldNr = (dispatch: any) => ({fieldNr}: any) => { dispatch(changeFieldNrAction(fieldNr))};
