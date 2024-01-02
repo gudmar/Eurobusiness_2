@@ -20,13 +20,9 @@ export const PlayerStateEditor = ({section}: any) => {
     } = useEditPlayer(section);
     const getVisibleCards = (cardsBorrowedByPleyer: string[]) => {
         const allNotBorrowed = Object.values(ChanceCardHolder.notBorrowedCards).flat() as string[];
-        console.log(allNotBorrowed, cardsBorrowedByPleyer)
         return [...allNotBorrowed, ...cardsBorrowedByPleyer]
     }
     const visibleSpecialCards = getVisibleCards(specialCards)
-    useEffect(() => console.log('Color in plyer', color), [])
-    useEffect(() => console.log('Color in plyer', color), [color])
-    useEffect(() => console.log(visibleSpecialCards), [visibleSpecialCards])
     
     return (
         <>

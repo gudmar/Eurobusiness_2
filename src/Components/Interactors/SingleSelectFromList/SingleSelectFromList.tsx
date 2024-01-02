@@ -37,13 +37,11 @@ export const SingleSelectFromList = ({id, label, items, defaultValue='', onClick
         close,
         open
     } = useSelectFromLogic({ focusRef, blurRef,  items, defaultSelection: defaultValue, onClick})
-    useEffect(()=> console.log(`[${valueInTextBox}]`), [valueInTextBox])
     return (
             <div className={classes.selectFromList} ref={blurRef} tabIndex={0}>
                 <fieldset className={classes.container}>
                     <legend>{label}</legend>
                     <div className={classes.input}>
-                        {/* <div className={classes.inputWrapper}> */}
                             <input
                                 autoComplete={'off'}
                                 type="text"
@@ -52,7 +50,6 @@ export const SingleSelectFromList = ({id, label, items, defaultValue='', onClick
                                 value={valueInTextBox}
                                 onChange={(e)=>{
                                     search(e?.target?.value)
-                                    console.log(e)
                                 }}
                             />
                             <CloseButton
@@ -64,8 +61,6 @@ export const SingleSelectFromList = ({id, label, items, defaultValue='', onClick
                                 isExpanded={isSearchListExpanded}
                                 onClick={() => {isSearchListExpanded ? close() : open()}}
                             />
-                            
-                        {/* </div> */}
                     </div>
                 </fieldset>
                 <div 

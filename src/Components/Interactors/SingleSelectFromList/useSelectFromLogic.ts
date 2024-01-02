@@ -2,7 +2,7 @@ import { useReducer } from "react";
 import { getReducer } from "../../../Functions/reducer";
 import { useOnFocusin } from "../../../hooks/useOnFocusChangers";
 import { useInvoceIfEventOutsideElement } from "../../../hooks/useOnOutsideInsideElement";
-import { iSearchFromState, iSelectFromLogicArgs, SelectFromLogicTypes, tActions, tClear, tClearSearchResult, tClose, tGetSelectFromLogicActions, tOpen, tPayloadTypes1 } from "./types";
+import { iSearchFromState, iSelectFromLogicArgs, SelectFromLogicTypes, tActions, tClear, tClearSearchResult, tClose, tOpen, tPayloadTypes1 } from "./types";
 
 export const initialState: iSearchFromState = {
     isSearchExpanded: false,
@@ -57,7 +57,7 @@ const REDUCER = {
 
 export const reducer = getReducer<iSearchFromState, string, tPayloadTypes1>(REDUCER)
 
-export const useSelectFromLogic = ({focusRef, blurRef, items, defaultSelection, onClick}: iSelectFromLogicArgs) => {
+export const useSelectFromLogic = ({ blurRef, items, defaultSelection }: iSelectFromLogicArgs) => {
     const [{
         isSearchExpanded,
         selected,
@@ -65,10 +65,8 @@ export const useSelectFromLogic = ({focusRef, blurRef, items, defaultSelection, 
         visibleItems,
     }, dispatch] = useReducer(reducer, {...initialState, visibleItems: items, items, selected: defaultSelection, displayed: defaultSelection});
     const {open, clear, close, search, select, clearSearchResult} = getSelectFromLogicActions(dispatch)
-    // useOnBlur(blurRef, () => {clearSearchResult()})
     useInvoceIfEventOutsideElement({reference: blurRef, mouseEventName: 'click', callback: clearSearchResult})
     useOnFocusin(blurRef, () => {open()})
-    // useEffect(()=> console.log(textBoxReference), [])
     return {
         isSearchListExpanded: isSearchExpanded,
         valueInTextBox: displayed,

@@ -17,7 +17,6 @@ export const NumberInput = ({
     const changeHandler = (e:tTextEventType) => {
         const val = e?.target?.value;
         const approximated = getApporximatedValue(val, {min, max, step})
-        console.log(approximated)
         onChange(approximated)
     }
     return (

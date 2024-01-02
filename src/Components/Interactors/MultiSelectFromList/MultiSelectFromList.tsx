@@ -81,8 +81,7 @@ export const MultiSelectFromList = ({
     const {
         isSearchListExpanded,
         valueInTextBox,
-        selectItem,
-        clearSelection,
+        toggleSelection,
         search,
         close,
         open,
@@ -102,7 +101,7 @@ export const MultiSelectFromList = ({
                         {selected.map((item:string) => 
                             <Tag
                                 value={item}
-                                toggleSelection={selectItem}
+                                toggleSelection={toggleSelection}
                                 key={item}
                             />)
                         }
@@ -149,7 +148,7 @@ export const MultiSelectFromList = ({
                             <div className={classes.notSelected} key={value}>
                                 <Item
                                     value={value}
-                                    toggleSelection={selectItem}
+                                    toggleSelection={toggleSelection}
                                     selectedValues={selected}
                                 />
                             </div>

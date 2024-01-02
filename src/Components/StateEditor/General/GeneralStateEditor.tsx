@@ -46,26 +46,6 @@ export const GeneralStateEditor = () => {
                 ]}
                 onClick = {setSelected}
             />
-            <MultiSelectFromList
-                label={'Multi select'}
-                key={'test select'}
-                items={[
-                    'option 1',
-                    'other 2',
-                    'Potop',
-                    'Ogniem i Mieczem',
-                    'Pan Wołodyjowski',
-                    'Sami swoi',
-                    'Jak rozpętałem 2 wojnę światową',
-                    'Poranek kojota',
-                    'Chołopaki nie płaczą',
-                    'Nie lubię poniedziałku',
-                    'Miś',
-                    'Vabank'
-                ]}
-                onClick = {setSelected}
-            />
-
         </div>
     )
     
