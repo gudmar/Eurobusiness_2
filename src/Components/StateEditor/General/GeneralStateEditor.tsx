@@ -48,6 +48,7 @@ export const GeneralStateEditor = () => {
             />
             <MultiSelectFromList
                 label={'Multi select'}
+                key={'test select'}
                 items={[
                     'option 1',
                     'other 2',

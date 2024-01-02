@@ -46,21 +46,23 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
         },{})
         return snapshots;
     };
-    private _getPlayerByColor(color: tColors) {
+    private static _getPlayerByColor(color: tColors) {
         const result = Players.players.find((player) => player.color === color);
         if (!result) throw new Error(`No player with color ${color}`)
         return result; 
     }
-    getPlayerByColor(color: tColors) {return this._getPlayerByColor(color)}
-
+    static getPlayerByColor(color: tColors) {return Players._getPlayerByColor(color)}
+    
     borrowSpecialCard({playerColor, description}: tChanceCardPayload) {
-        const player = this._getPlayerByColor(playerColor);
+        console.log('Player color: ', playerColor)
+        const player = Players._getPlayerByColor(playerColor);
         const result = player.borrowSpecialCard(description);
         return result;
     }
 
     returnSpecialCard({playerColor, description}: tChanceCardPayload) {
-        const player = this._getPlayerByColor(playerColor);
+        console.log('Player color: ', playerColor)
+        const player = Players._getPlayerByColor(playerColor);
         const result = player.returnSpecialCard(description);
         return result;
     }
@@ -71,7 +73,7 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
         
         const colors = Object.keys(memento);
         colors.forEach((color) => {
-            const player = this._getPlayerByColor(color as tColors);
+            const player = Players._getPlayerByColor(color as tColors);
             player.restoreState(memento[color as tColors] as iPlayerMemento)
         })
         throw new Error(`This needs:

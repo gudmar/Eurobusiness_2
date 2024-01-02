@@ -60,11 +60,16 @@ const toggleSelection = (state: iMultiSelectFromState, payload: tAction) => {
         const result = arr.findIndex((item: any) => {
             const asString = toString(item);
             const result = asString === payload;
+            console.log(item);
+            console.log(asString); 
+            console.log(payload);
             return result;
         })
         return result;
     }
+    console.log(JSON.stringify(state.selected))
     const targetIndexInSelected = findInArray(state.selected);
+    console.log(JSON.stringify(state.items));
     const targetIndexInItems = findInArray(state.items);
     const getNewSelection = () => {
         if (targetIndexInSelected === -1) {
@@ -76,6 +81,8 @@ const toggleSelection = (state: iMultiSelectFromState, payload: tAction) => {
     }
     const newSelectoin = getNewSelection();
     const newState = {...state, selected: newSelectoin};
+    console.log('New after toggle', newState)
+    console.log(targetIndexInItems, targetIndexInSelected, newSelectoin)
     return newState
 }
 
@@ -142,13 +149,25 @@ export const useMultiSelectFromLogic = ({keepFocusRef, dontLoseFocusRefs, items,
         displayed,
         visibleItems,
     }, dispatch] = useReducer(reducer, initialState);
+    useEffect(() => console.log(defaultSelection), [defaultSelection])
     const {open, clear, close, search, toggleSelection, clearSearchResult} = getSelectFromLogicActions(dispatch)
     useOnEventLocationWithExceptions({targetReference: keepFocusRef, exceptionReferences: dontLoseFocusRefs, mouseEventName: 'mousedown', callback: () => {clearSearchResult(); close()} })
     const decoratedToggle = (val: string) => {
         const isSelected = selected.includes(val);
-       if (isSelected && onUnselected) { onUnselected(val) }
-       else if (!isSelected && onSelected) { onSelected(val) }
-       toggleSelection(val);
+        console.log('%cDecorated toggle execution', 'background-color: black; color: white;')
+        console.log(selected, val, isSelected)
+        console.log(onUnselected);
+        console.log(onSelected)
+
+        // toggleSelection(val);
+        console.error('Here the problem is. This toggle Selection should not be commented. State managed from 2 places')
+
+       if (isSelected && onUnselected) { onUnselected(val); console.log('%cFirst', 'background-color: pink;') }
+       else if (!isSelected && onSelected) { onSelected(val); console.log('%cSecond', 'background-color: orange;')}
+       console.log(selected)
+    //    toggleSelection(val);
+       
+       console.log('%cDecorated toggle', 'background-color: green; color: white;')
     }
     return {
         isSearchListExpanded: isSearchExpanded,

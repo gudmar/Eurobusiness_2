@@ -11,6 +11,7 @@ export const getReducer = <State extends iGenericState, Type extends string, Pay
         (state: State, {type, payload}: {type: Type, payload?: Payload}) => {
     const newStateGetter = reducerLogic[type];
     console.log(type, payload)
+    console.log('State in reducer', JSON.stringify(state))
     const newState = newStateGetter(state, payload);
     return newState;
 };

@@ -73,7 +73,6 @@ const Tag = ({value, toggleSelection}: iTagProps) => {
 export const MultiSelectFromList = ({
     id, label, items, defaultValues=[], onClick, onSelected, onUnselected
 }: iSelectFromListProps) => {
-    console.log(items, defaultValues)
     const { theme } = useThemesAPI();
     const classes: {[key:string]: string} = useStyles(theme as any);
     const focusRef = useRef<HTMLInputElement>(null);
@@ -147,14 +146,13 @@ export const MultiSelectFromList = ({
 
                     <div className={classes.scrollable}>
                         {visibleItems.map((value: string) => 
-                        <div className={classes.notSelected}>
-                            <Item
-                                value={value}
-                                toggleSelection={selectItem}
-                                selectedValues={selected}
-                                key={value}
-                            />
-                        </div>
+                            <div className={classes.notSelected} key={value}>
+                                <Item
+                                    value={value}
+                                    toggleSelection={selectItem}
+                                    selectedValues={selected}
+                                />
+                            </div>
                         )}
                     </div>
                 </div>

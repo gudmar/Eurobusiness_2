@@ -94,7 +94,7 @@ export class ChanceCardHolder {
     private _makeOperationOnCard(description: string, callback: (index: number) => void) {
         const cardIndex = this.getCardIndexByDescription(description);
         if (cardIndex === -1) {throw new Error(Errors.cardDoesNotExist)}        
-        if (!this._isCardCollectable(cardIndex)) { throw new Error(Errors.cardNotCollectable)};
+        if (!this._isCardCollectable(cardIndex)) { throw new Error(`${Errors.cardNotCollectable}: ${this._cardSetName}`)};
         callback(cardIndex);
 
     }
@@ -255,11 +255,6 @@ export class ChanceCardHolder {
             this._cardsBorrowedByPlayers[cardIndex] = true;
         }
     }
-
-    // unsuspendCard(description: string) {
-    //     const cardIndex = this.getCardIndexByDescription(description);
-    //     this._cardsBorrowedByPlayers[cardIndex] = false;        
-    // }
     
     shuffle() {
         const newCardOrder = shuffle(this._initalCardOrder) as number[];
@@ -271,11 +266,15 @@ export class ChanceCardHolder {
         const borrow = (index: number) => {
             if (this._cardsBorrowedByPlayers[`${index}`]) {throw new Error(Errors.cardAlreadyBorrowed)}
             this._cardsBorrowedByPlayers[`${index}`] = true;
+            console.log('Borrowed', index, this._cardsBorrowedByPlayers)
         }
         this._makeOperationOnCard(description, borrow);
     }
     returnBorrowedCard(description: string) {
-        const returnCard = (index: number) => {this._cardsBorrowedByPlayers[`${index}`] = false}
+        const returnCard = (index: number) => {
+            this._cardsBorrowedByPlayers[`${index}`] = false
+            console.log('Returned ', index, this._cardsBorrowedByPlayers)
+        }
         this._makeOperationOnCard(description, returnCard);
     }
 
@@ -288,14 +287,17 @@ export class ChanceCardHolder {
 
     private static _getReturnFunctions(cardDescription: string ) {
         const returnFunctions = Object.values(ChanceCardHolder.instances).map((instance: ChanceCardHolder) => {
-            return instance.borrowCardToAPlayer.bind(instance, cardDescription)
+            return instance.returnBorrowedCard.bind(instance, cardDescription)
         })
         return returnFunctions        
     }
 
     private static _makeOperationsOnEachInstatnce(operations: (() => void) []) {
         const isOperationSuccessfull = operations.some((func: () => void) => {
-            try{ func(); return true }
+            try{ 
+                func(); 
+                return true 
+            }
             catch(e) {
                 console.error(e)
                 return false
@@ -305,13 +307,16 @@ export class ChanceCardHolder {
     }
 
     static borrowCard(description: string) {
+        console.log('%cStatic borrow', 'color: red')
         const borrowOperations = ChanceCardHolder._getBorrowFunctions(description);
         const result = ChanceCardHolder._makeOperationsOnEachInstatnce(borrowOperations);
         return result;
     }
     static returnCard(description: string) {
+        console.log('%cStatic return', 'color: green')
         const returnOperations = ChanceCardHolder._getReturnFunctions(description);
         const result = ChanceCardHolder._makeOperationsOnEachInstatnce(returnOperations);
+        console.log(ChanceCardHolder.instances)
         return result;
     }
 
