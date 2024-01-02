@@ -56,16 +56,6 @@ const BoardEdge = ({direction}: iBoardSide) => {
 export const Board = () => {
     const { theme } = useThemesAPI();
     const classes = useStyles(theme as any);
-    useEffect(()=>{
-    }, [theme])
-    // const boardCaretaker: any = getBoardCaretaker();
-    // useEffect(
-    //     () => {
-    //         if (boardCaretaker) {
-    //             BoardCaretaker.fieldNames.forEach((fieldName: any) => console.log(fieldName, boardCaretaker?.getFieldByName(fieldName) || boardCaretaker))
-    //         }               
-    //     }, [boardCaretaker])
-
     return(
         <div className={classes.board}>
             <BoardEdge direction={TOP} />
