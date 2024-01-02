@@ -60,6 +60,7 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
         try {
             this._specialCards.push(description);
             this._informAnyChange();    
+            console.log('%c in Player, borrowing a card', 'background-color: purple')
             return true;
         } catch (e) {
             return false;
@@ -68,12 +69,13 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
     
     returnSpecialCard(description: string) {
         try {
-            const cardIndex = this._specialCards.findIndex(description);
+            const cardIndex = this._specialCards.findIndex((cardDescription:string) => description === cardDescription);
             if (cardIndex < 0) throw new Error(`I don't have a card with description [${description}]`);
             this._specialCards.splice(cardIndex, 1);
             this._informAnyChange();    
             return true;
         } catch (e) {
+            console.log(this._specialCards, description)
             return false;
         }
     }

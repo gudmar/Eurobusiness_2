@@ -24,6 +24,8 @@ export const PlayerStateEditor = ({section}: any) => {
         return [...allNotBorrowed, ...cardsBorrowedByPleyer]
     }
     const visibleSpecialCards = getVisibleCards(specialCards)
+    useEffect(() => console.log('Color in plyer', color), [])
+    useEffect(() => console.log('Color in plyer', color), [color])
     useEffect(() => console.log(visibleSpecialCards), [visibleSpecialCards])
     
     return (

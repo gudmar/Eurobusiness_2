@@ -38,11 +38,16 @@ const subscribtionsStructure = [
 
 export const useEditPlayer = (wantedColor: tColors) => {
     const players = Players.players
+    const thisPlayer = Players.getPlayerByColor(wantedColor);
+    const initialState = {...thisPlayer.getMemento()}
+    console.log(initialState)
     const [{
         name, money, specialCards, color, fieldNr, isInPrison, nrTurnsToWait, isGameLost
-    }, dispatch ] = useReducer(reducer, Player.initialState)
+    }, dispatch ] = useReducer(reducer, initialState)
     const player = useRef<null | iPlayer>(null)
-    console.log(wantedColor)
+
+
+    useEffect(() => console.log(wantedColor))
     useEffect(() => {
         const subscribtions: (()=>void)[] = [];
         const unsubscribtions: (()=>void)[] = [];
