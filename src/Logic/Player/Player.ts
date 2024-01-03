@@ -43,7 +43,9 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
         this.runAllSubscriptions(ANY_CHANGE, {...this.getSnapshot()})
     }
 
-    private _informAnyChange() { this.runAllSubscriptions(ANY_CHANGE, {...this.getSnapshot()}) }
+    private _informAnyChange() { 
+        this.runAllSubscriptions(ANY_CHANGE, {...this.getSnapshot()}) 
+    }
 
     set name(val: string) { this._name = val; this._informAnyChange(); }
     set money(val: number) { this._money = val; this._informAnyChange(); }

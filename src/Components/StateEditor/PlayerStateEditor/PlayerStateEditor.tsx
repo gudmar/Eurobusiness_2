@@ -10,6 +10,7 @@ import { NumberInput } from "../../Interactors/NumberInput/NumberInput";
 import { TextInput } from "../../Interactors/TextInput/TextInput";
 import { tTextEventType } from "../../Interactors/types";
 
+
 export const PlayerStateEditor = ({section}: any) => {
     const {
         name, setName, money, setMoney,

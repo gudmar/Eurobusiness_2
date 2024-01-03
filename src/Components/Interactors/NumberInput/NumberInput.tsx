@@ -4,8 +4,8 @@ import { iNumberInput, tTextEventType } from "../types";
 import { iTernaryNumberInputSpecificProps } from "./types";
 import { approximateValueToStep } from "./utils";
 
-const getApporximatedValue = ( val: string, {min, max, step}: iTernaryNumberInputSpecificProps) => {
-    if (min === undefined || max === undefined || step === undefined) return val;
+const getApporximatedValue = ( val: string, {min, max, step}: iTernaryNumberInputSpecificProps): number => {
+    if (min === undefined || max === undefined || step === undefined) return parseInt(val);
     return approximateValueToStep(parseInt(val), {min, max, step})
 }
 
