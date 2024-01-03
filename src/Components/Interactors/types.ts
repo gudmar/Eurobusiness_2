@@ -36,7 +36,7 @@ export interface iNumberInput extends iInputProps<'number'>, iNumberInputProps {
 export interface iNumberInputProps {    
     min?: number,
     max?: number,
-    step?: number
+    step?: number, 
 }
 
 export type tInputHOFProps = iTextInputProps | iNumberInputProps | iCheckboxInputProps
