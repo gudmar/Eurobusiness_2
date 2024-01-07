@@ -1,4 +1,6 @@
 import { BOARD_SIZE, GO_TO_JAIL } from "../../Data/const";
+import { ANY_CHANGE, CHANGE_FIELDS_TO_VISIT, CHANGE_NR_THAT_DICE_WILL_THROW, CHANGE_TEST_MODE } from "../Messages/constants";
+import { SubscribtionsHandler } from "../SubscrbtionsHandler";
 import { CHANCE_FIELDS, CITY_FIELDS, NONE, PLANTS, RAILWAYS, TAX_FIELD } from "./const";
 import { iDice, iDiceTestModeDecorator, iJailTestOutcome, iThrowResult, TestModes } from "./types";
 
@@ -63,10 +65,32 @@ export class Dice implements iDice {
 
 type tDiceTestModeDecoratorInstance = DiceTestModeDecorator | null;
 
-export class DiceTestModeDecorator implements iDiceTestModeDecorator {
+const DICE_RESULT = 'diceResult';
+const FIELDS_TO_VISIT = 'fieldsToVisit';
+export type tTestDiceChanged = typeof DICE_RESULT | typeof FIELDS_TO_VISIT | typeof ANY_CHANGE | typeof CHANGE_FIELDS_TO_VISIT | typeof CHANGE_TEST_MODE | typeof CHANGE_NR_THAT_DICE_WILL_THROW;
+interface iTestiDiceMessage {
+    diceResult?: number,
+    fieldsToVisit?: string[],
+}
+
+export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged, iTestiDiceMessage> implements iDiceTestModeDecorator {
     private _testingMode: TestModes = TestModes.none;
     private _dice = new Dice();
     private static _instance: tDiceTestModeDecoratorInstance = null;
+    private _fieldsToVisit: number[] = [];
+
+    set fieldsToVisit(fields: string[]) {
+        const result: number[] = fields.map((val:string) => {
+            const nr = parseInt(val);
+            if (isNaN(nr)) throw new Error(`Not able to covert ${val} to number`);
+            return nr;            
+        })
+        this._fieldsToVisit = result
+    }
+    get fieldsToVisit() {
+        const result = this._fieldsToVisit.map(val=>`${val}`)
+        return result
+    }
     private _getMappingInTestMode(testModeType: TestModes) {
         switch(testModeType){
             case TestModes.chanceFields: return FIELD_INDEXES_FOR_TESTING[CHANCE_FIELDS];
@@ -79,7 +103,17 @@ export class DiceTestModeDecorator implements iDiceTestModeDecorator {
         }
     }
 
+    private _nrThatDiceWillSelectInTestMode: number = 4;
+    set nrThatDiceWillSelectInTestMode(nr: number) {
+        console.log('Setting dices')
+        if (nr < 1) this._nrThatDiceWillSelectInTestMode = 1;
+        else if (nr > 6) this._nrThatDiceWillSelectInTestMode = 6;
+        else this._nrThatDiceWillSelectInTestMode = nr;
+    }
+    get nrThatDiceWillSelectInTestMode() {return this._nrThatDiceWillSelectInTestMode}
+
     constructor() {
+        super();
         if (DiceTestModeDecorator._instance) {
             return DiceTestModeDecorator._instance
         } else {

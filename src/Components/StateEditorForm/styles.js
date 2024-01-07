@@ -1,6 +1,10 @@
 import {createUseStyles} from 'react-jss'
 
 export const useStyles = createUseStyles({
+    title:{
+        fontFamily: 'courier',
+        fontSize: '2.2rem'
+    },
     container: {
         display: 'flex',
         justifyItems: 'center',
@@ -15,7 +19,7 @@ export const useStyles = createUseStyles({
         borderCollapse: 'collapse',
         tableLayout: 'fixed',
         borderSpacing: '0px',
-        '& > tr:nth-child(odd)':{
+        '& > tbody > tr:nth-child(odd)':{
             backgroundColor: '#ffffff88'
         }
     },
@@ -32,7 +36,9 @@ export const useStyles = createUseStyles({
     currentValue: {
         fontStyle: 'italic',
         paddingRight: '1rem',
-        paddingLeft: '1rem'
+        paddingLeft: '1rem',
+        // minWidth: '10rem',
+        width: '12rem'
     },
     editor: {
         padding: '0.5rem',
@@ -45,7 +51,18 @@ export const useStyles = createUseStyles({
         border: 'thin solid #554',
         fontSize: '1.1rem',
         margin: '0.3rem',
-        cursor: 'pointer'
+        cursor: 'pointer',
+        // transitionDuration: '0.1s',
+        '&:hover': {
+            backgroundColor: '#ffffff88',
+            transitionDuration: '0.1s',
+        },
+        '&:active': {
+            backgroundColor: '#33334488',
+            color: '#aaa',
+            border: 'thin solid #aa4',
+            // transitionDuration: '0.1s'
+        }
     }
 
     // screen: theme => ({
