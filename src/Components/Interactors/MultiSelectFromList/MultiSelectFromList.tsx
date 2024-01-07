@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useThemesAPI } from "../../../Contexts/ThemeContext";
 import { Checkbox } from "../Checkbox/Checkbox";
 import { CloseButton } from "../CloseButton/CloseButton";

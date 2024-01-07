@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import { FC, useEffect } from "react";
-import { MONEY_ALLTOGETHER } from "../../../Constants/constants";
+import { MAX_PLAYER_NAME_LENGTH, MONEY_ALLTOGETHER } from "../../../Constants/constants";
 import { useEditPlayer } from "../../../hooks/useEditPlayer/useEditPlayer"
 import { ChanceCardHolder } from "../../../Logic/Chance/ChanceCardHolder";
 import { Commander } from "../../../Logic/Commander/Commander";
@@ -29,7 +29,7 @@ export const PlayerStateEditor = ({section}: any) => {
     
     return (
         <StateEditorForm
-            headline={`player state editor for color : ${color}`}
+            headline={`Player state editor for color : ${color}`}
             logAction={() => console.log(Players.players)}
             formName={`player state editor for color : ${color}`}
         >
@@ -37,6 +37,7 @@ export const PlayerStateEditor = ({section}: any) => {
                     <TextInput
                         label={''}
                         value={name}
+                        maxLength={MAX_PLAYER_NAME_LENGTH}
                         onChange={(e: tTextEventType) => {
                                 setName(e.target.value)
                             }

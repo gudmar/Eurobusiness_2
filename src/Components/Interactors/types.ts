@@ -31,7 +31,7 @@ export interface iCheckboxInputProps {
 }
 
 export interface iTextInput extends iInputProps<'text'>, iTextInputProps {}
-export interface iNumberInput extends iInputProps<'number'>, iNumberInputProps {}
+export interface iNumberInput extends iInputProps<number>, iNumberInputProps {}
 
 export interface iNumberInputProps {    
     min?: number,

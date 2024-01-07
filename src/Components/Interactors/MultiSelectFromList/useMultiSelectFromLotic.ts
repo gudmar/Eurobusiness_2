@@ -115,14 +115,17 @@ const REDUCER = {
 
 export const reducer = getReducer<iMultiSelectFromState, string, tPayloadTypes>(REDUCER)
 
-export const useMultiSelectFromLogic = ({keepFocusRef, dontLoseFocusRefs, items, defaultSelection=[], onSelected, onUnselected}: iMultiSelectFromLogicArgs) => {   
+export const useMultiSelectFromLogic = ({keepFocusRef, dontLoseFocusRefs, items, defaultSelection=[], onSelected, onUnselected}: iMultiSelectFromLogicArgs) => {
+    console.log('default selection in hook', defaultSelection)
     const initialState = {...getInitialState(), visibleItems: items, items, selected: defaultSelection}
+    console.log(initialState)
     const [{
         isSearchExpanded,
         selected,
         displayed,
         visibleItems,
     }, dispatch] = useReducer(reducer, initialState);
+    console.log('selection in hook after using useReducer', selected)
     const {open, close, search, clearSearchResult} = getSelectFromLogicActions(dispatch)
     useOnEventLocationWithExceptions({targetReference: keepFocusRef, exceptionReferences: dontLoseFocusRefs, mouseEventName: 'mousedown', callback: () => {clearSearchResult(); close()} })
     const toggleSelection = (val: string) => {
@@ -130,6 +133,7 @@ export const useMultiSelectFromLogic = ({keepFocusRef, dontLoseFocusRefs, items,
             if (isSelected && onUnselected) { onUnselected(val);}
             else if (!isSelected && onSelected) { onSelected(val);}
     }
+    console.log('Selected after toggle', selected)
     return {
         isSearchListExpanded: isSearchExpanded,
         valueInTextBox: displayed,
@@ -138,7 +142,7 @@ export const useMultiSelectFromLogic = ({keepFocusRef, dontLoseFocusRefs, items,
         search,
         close,
         open,
-        selected,
+        selected: defaultSelection,
         visibleItems,
     }
 }

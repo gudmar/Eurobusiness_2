@@ -13,7 +13,7 @@ export const NumberInput = ({
     value, label, onChange, id, isRequired, min, max, step
 }: iNumberInput ) => {
     const NumberInputComponent = useMemo( () => getInput('number', {min, max, step}), [])
-    const approximatedValue = getApporximatedValue(value, {min, max, step});
+    const approximatedValue = getApporximatedValue(`${value}`, {min, max, step});
     const changeHandler = (e:tTextEventType) => {
         const val = e?.target?.value;
         const approximated = getApporximatedValue(val, {min, max, step})
