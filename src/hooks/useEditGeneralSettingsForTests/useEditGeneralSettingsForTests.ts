@@ -1,5 +1,6 @@
 import { useEffect, useReducer } from "react"
 import { getReducer } from "../../Functions/reducer"
+import { Commander } from "../../Logic/Commander/Commander"
 import { DiceTestModeDecorator, tTestDiceChanged } from "../../Logic/Dice/Dice"
 import { TestModes } from "../../Logic/Dice/types"
 import { ANY_CHANGE, CHANGE_FIELDS_TO_VISIT, CHANGE_NR_THAT_DICE_WILL_THROW, CHANGE_TEST_MODE } from "../../Logic/Messages/constants"
@@ -160,14 +161,17 @@ export const useGeneralSettingsForTests = (): tUseGeneralSettingsForTests => {
         removeFieldToVisit
     } = getSelectFromLogicActions(dispatch);
     return {
-        nrToBeSelectedForDicesThrow,
-        testMode,
-        setNrToBeSelectedForDicesThrow,
-        setTestMode,
-        addFieldToVisit,
-        removeFieldToVisit,
-        selectedFields,
+        nrToBeSelectedForDicesThrow: testDice.nrThatDiceWillSelectInTestMode,
+        testMode: testDice.testingMode,
+        setNrToBeSelectedForDicesThrow: Commander.changeNrToBeSelectedOnDicesThrow,
+        setTestMode: Commander.changeTestMode,
+        addFieldToVisit: (item: string) => Commander.addFieldsToVisit([item]),
+        removeFieldToVisit: (item: string) => Commander.removeFieldsToVisit([item]),
+        selectedFields: testDice.fieldsToVisit,
         possibleTestModes: Object.values(TestModes),
-        log: () => {console.log(state)},
+        log: () => {
+            console.error('useEtitGeneralSettingsForTests: reconsider state of the hook')
+            Commander.logTestDiceState();
+        },
     }
 }

@@ -12,6 +12,10 @@
     * Hook has to subscribe to Logic class fields change,
     * Hooking has to be done via subscribtion, in `useEffect` with `[]` deps
     * Good to writhe a reducer for custom hook:
+    * **!** Avoid duplicating the state. Hook should NOT have the state, instead it should subscribe to class and return getter from class
+    In this case perhaps REDUCER is not needed very much...
+    * Use **Commander** even when communication with only one class
+
 
 ## Writhing a reducer for the custom hook
 */home/witold/Pulpit/Notatki/Refactoring/Eurobusiness_2/eurobusiness_2/src/Components/Interactors/MultiSelectFromList/useMultiSelectFromLotic.ts*

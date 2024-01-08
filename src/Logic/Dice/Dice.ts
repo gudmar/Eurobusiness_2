@@ -86,6 +86,7 @@ export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged
             return nr;            
         })
         this._fieldsToVisit = result
+        console.log(this._fieldsToVisit, result)
     }
     get fieldsToVisit() {
         const result = this._fieldsToVisit.map(val=>`${val}`)
@@ -111,14 +112,21 @@ export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged
         else this._nrThatDiceWillSelectInTestMode = nr;
     }
     get nrThatDiceWillSelectInTestMode() {return this._nrThatDiceWillSelectInTestMode}
+    logState() {
+        const toLog = {
+            testMode: this._testingMode,
+            fieldsToVisit: this._fieldsToVisit,
+            nrToAppearOnDice: this._nrThatDiceWillSelectInTestMode,
+        }
+        console.log(toLog);
+    }
 
     constructor() {
         super();
-        if (DiceTestModeDecorator._instance) {
-            return DiceTestModeDecorator._instance
-        } else {
-            return this;
+        if (!DiceTestModeDecorator._instance) {
+            DiceTestModeDecorator._instance = this;
         }
+        return DiceTestModeDecorator._instance;
     }
 
     // getThrowForGetOutOfPrisonResult(): iJailTestOutcome {
