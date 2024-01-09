@@ -58,8 +58,10 @@ export class Commander {
     }
 
     static removeFieldsToVisit(fieldsToRemove: string[])  {
+        console.log(fieldsToRemove)
         const listCp = [...Commander._testDice.fieldsToVisit];
         const newList = listCp.reduce((acc: string[], item) => {
+            console.log(item, fieldsToRemove, listCp)
             if (fieldsToRemove.includes(item)) return acc;
             acc.push(item);
             return acc;

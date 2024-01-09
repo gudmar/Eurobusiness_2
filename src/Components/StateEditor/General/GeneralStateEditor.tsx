@@ -1,23 +1,17 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { range } from "../../../Functions/createRange"
 import { useGeneralSettingsForTests } from "../../../hooks/useEditGeneralSettingsForTests/useEditGeneralSettingsForTests"
-import { Dice, DiceTestModeDecorator } from "../../../Logic/Dice/Dice"
+import { DiceTestModeDecorator } from "../../../Logic/Dice/Dice"
 import { Checkbox } from "../../Interactors/Checkbox/Checkbox"
 import { MultiSelectFromList } from "../../Interactors/MultiSelectFromList/MultiSelectFromList"
 import { NumberInput } from "../../Interactors/NumberInput/NumberInput"
-import { SingleSelectFromList } from "../../Interactors/SingleSelectFromList/SingleSelectFromList"
 import { StateEditorForm } from "../../StateEditorForm/StateEditorForm"
 import { StateEditorEntry } from "../../StateEditorForm/StateEditorFormEntry"
 
 
 export const GeneralStateEditor = () => {
-    const [selected, setSelected] = useState('')
     const dice = new DiceTestModeDecorator();
     const {
-        nrToBeSelectedForDicesThrow,
-        setTestMode,
-        testMode,
-        possibleTestModes,
         selectedFields,
         addFieldToVisit,
         removeFieldToVisit,

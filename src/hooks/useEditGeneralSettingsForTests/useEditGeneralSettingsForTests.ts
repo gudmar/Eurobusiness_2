@@ -1,11 +1,10 @@
 import { useEffect, useReducer } from "react"
 import { getReducer } from "../../Functions/reducer"
 import { Commander } from "../../Logic/Commander/Commander"
-import { DiceTestModeDecorator, tTestDiceChanged } from "../../Logic/Dice/Dice"
+import { DiceTestModeDecorator } from "../../Logic/Dice/Dice"
 import { TestModes } from "../../Logic/Dice/types"
-import { ANY_CHANGE, CHANGE_FIELDS_TO_VISIT, CHANGE_NR_THAT_DICE_WILL_THROW, CHANGE_TEST_MODE } from "../../Logic/Messages/constants"
-import { SubscribtionsHandler } from "../../Logic/SubscrbtionsHandler"
-import { iSubscription, tSubscription } from "../../Types/types"
+import { CHANGE_FIELDS_TO_VISIT, CHANGE_NR_THAT_DICE_WILL_THROW, CHANGE_TEST_MODE } from "../../Logic/Messages/constants"
+import { tSubscription } from "../../Types/types"
 import { EditGeneralSettingsForTestsTypes, iEditGeneralSettingsState, tEditGeneralSettingPayload, tUseGeneralSettingsForTests } from "./types"
 
 
@@ -39,6 +38,10 @@ const removeField = (state: iEditGeneralSettingsState, payload: string) => {
     const newState = {...state, selectedFields: fieldsCp};
     return newState;
 }
+const setFieldsToVisit = (state: iEditGeneralSettingsState, payload: string[]) => {
+    const newState = {...state, selectedFields: payload}
+    return newState;
+}
 
 export type tActions = {
     type: EditGeneralSettingsForTestsTypes.setDiceNumber
@@ -66,7 +69,10 @@ const changeFieldsToVisitAction = (payload: string[]): tActions => ({type: EditG
 type tDispach = (arg: tActions) => void;
 
 export const getSelectFromLogicActions = (dispatch: tDispach) => ({
-    setNrToBeSelectedForDicesThrow: (payload: number) => dispatch(setNrOnDiceAction(payload)),
+    setNrToBeSelectedForDicesThrow: (payload: number) => {
+        console.log(payload)
+        dispatch(setNrOnDiceAction(payload))
+    },
     setTestMode: (payload: TestModes) => dispatch(setTestModeAction(payload)),
     addFieldToVisit: (palylad: string) => dispatch(addFieldToVisitAction(palylad)),
     removeFieldToVisit: (palyoad: string) => dispatch(removeFieldToVisitAction(palyoad)),
@@ -78,6 +84,7 @@ const REDUCER = {
     [EditGeneralSettingsForTestsTypes.setTestMode]:setTestMode,
     [EditGeneralSettingsForTestsTypes.removeOneOfNumbers]: removeField,
     [EditGeneralSettingsForTestsTypes.setOneOfNumbers]: addField,
+    [EditGeneralSettingsForTestsTypes.setFieldsToVisit]: setFieldsToVisit,
 }
 
 const reducer = getReducer(REDUCER);
@@ -91,7 +98,10 @@ interface iSubscribeArgs {
 
 const getSubscribtion = ({id, callback, instance, messageType } : iSubscribeArgs) => {
     const subscribtion = { callback, id, messageType }
-    const subscribe = () => {instance.subscribe(subscribtion)}
+    const subscribe = () => {
+        console.log('Subscribing', id, messageType)
+        instance.subscribe(subscribtion)
+    }
     const unsubscribe = () => {instance.unsubscribe(messageType, id)};
     return {subscribe, unsubscribe}
 }
@@ -104,70 +114,52 @@ const useSubscribtion = (subscribtionProps : iSubscribeArgs) => {
     }, [])
 }
 
-const useSubscribtions = (diceInstane: DiceTestModeDecorator) => {
+const useSubscribtions = (diceInstane: DiceTestModeDecorator, dispatch: tDispach) => {
     const id = 'dice-test-link';
     useSubscribtion({
         id,
         messageType: CHANGE_FIELDS_TO_VISIT,
-        callback: subscribtionsStructure['fieldsToVisit'],
+        callback: subscribtionsStructure.fieldsToVisit(dispatch),
         instance: diceInstane,
     });
     useSubscribtion({
         id,
-        messageType: CHANGE_FIELDS_TO_VISIT,
-        callback: subscribtionsStructure['testMode'],
+        messageType: CHANGE_TEST_MODE,
+        callback: subscribtionsStructure.testingMode(dispatch),
         instance: diceInstane,
     });
     useSubscribtion({
         id,
-        messageType: CHANGE_FIELDS_TO_VISIT,
-        callback: subscribtionsStructure['nrOnDice'],
+        messageType: CHANGE_NR_THAT_DICE_WILL_THROW,
+        callback: subscribtionsStructure.nrThatDiceWillSelectInTestMode(dispatch),
         instance: diceInstane,
     });
 
 }
 
-// const getSubscribtions = ({ propName, callback, diceInstance } : iSubscribeArgs) => {
-//     const id = 'dice-test-link';
-//     const messageType_fieldsToVisit = CHANGE_FIELDS_TO_VISIT;
-//     const messageType_testMode = CHANGE_TEST_MODE;
-//     const messageType_nrOnDice = CHANGE_NR_THAT_DICE_WILL_THROW;
-//     const subscribtion_fieldsToVisit: iSubscription<tTestDiceChanged> = { callback, id, messageType: messageType_fieldsToVisit }
-//     const subscribtion_testMode: iSubscription<tTestDiceChanged> = { callback, id, messageType: messageType_testMode }
-//     const subscribtion_nrOnDice: iSubscription<tTestDiceChanged> = { callback, id, messageType: messageType_nrOnDice }
-//     const subscribe_fieldsToVisit = () => {diceInstance.subscribe(subscribtion_fieldsToVisit)}
-//     const subscribe_testMode = () => {diceInstance.subscribe(subscribtion_testMode)}
-//     const subscribe_nrOnDice = () => {diceInstance.subscribe(subscribtion_nrOnDice)}
-//     const unsubscribe_fieldsToVisit = () => {diceInstance.unsubscribe(messageType_fieldsToVisit, id)};
-//     const unsubscribe_testMode = () => {diceInstance.unsubscribe(messageType_testMode, id)};
-//     const unsubscribe_nrOnDice = () => {diceInstance.unsubscribe(messageType_nrOnDice, id)};
-//     return {subscribe_fieldsToVisit, subscribe_nrOnDice, subscribe_testMode, unsubscribe_fieldsToVisit, unsubscribe_nrOnDice, unsubscribe_testMode}
-// }
-const subscribtionsStructure: any = [
-    { propName: 'fieldsToVisit', callback: (dispatch: tDispach) => getSelectFromLogicActions(dispatch)['changeFieldsToVisit']},
-    { propName: 'testingMode', callback: (dispatch: tDispach) => getSelectFromLogicActions(dispatch)['setTestMode']},
-    { propName: 'nrThatDiceWillSelectInTestMode', callback: (dispatch: tDispach) => getSelectFromLogicActions(dispatch)['setNrToBeSelectedForDicesThrow']},
-]
+const subscribtionsStructure: {[key:string]: (dispatch: tDispach) => (payload: any) => void} = {
+    fieldsToVisit: (dispatch: tDispach) => getSelectFromLogicActions(dispatch)['changeFieldsToVisit'],
+    testingMode: (dispatch: tDispach) => getSelectFromLogicActions(dispatch)['setTestMode'],
+    nrThatDiceWillSelectInTestMode: (dispatch: tDispach) => {
+        console.log('Giving subscribe function')
+        return getSelectFromLogicActions(dispatch)['setNrToBeSelectedForDicesThrow']
+    }
+}
 
 export const useGeneralSettingsForTests = (): tUseGeneralSettingsForTests => {
     const testDice = new DiceTestModeDecorator();
     const [state, dispatch] = useReducer(reducer, initState);
     const {nrToBeSelectedForDicesThrow, testMode, selectedFields} = state;
-    useSubscribtions(testDice);
-    const {
-        setNrToBeSelectedForDicesThrow,
-        setTestMode,
-        addFieldToVisit,
-        removeFieldToVisit
-    } = getSelectFromLogicActions(dispatch);
+    useSubscribtions(testDice, dispatch);
+    
     return {
-        nrToBeSelectedForDicesThrow: testDice.nrThatDiceWillSelectInTestMode,
-        testMode: testDice.testingMode,
+        nrToBeSelectedForDicesThrow,
+        testMode: testMode,
         setNrToBeSelectedForDicesThrow: Commander.changeNrToBeSelectedOnDicesThrow,
         setTestMode: Commander.changeTestMode,
         addFieldToVisit: (item: string) => Commander.addFieldsToVisit([item]),
         removeFieldToVisit: (item: string) => Commander.removeFieldsToVisit([item]),
-        selectedFields: testDice.fieldsToVisit,
+        selectedFields: selectedFields,
         possibleTestModes: Object.values(TestModes),
         log: () => {
             console.error('useEtitGeneralSettingsForTests: reconsider state of the hook')

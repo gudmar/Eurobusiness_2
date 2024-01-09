@@ -68,12 +68,9 @@ type tDiceTestModeDecoratorInstance = DiceTestModeDecorator | null;
 const DICE_RESULT = 'diceResult';
 const FIELDS_TO_VISIT = 'fieldsToVisit';
 export type tTestDiceChanged = typeof DICE_RESULT | typeof FIELDS_TO_VISIT | typeof ANY_CHANGE | typeof CHANGE_FIELDS_TO_VISIT | typeof CHANGE_TEST_MODE | typeof CHANGE_NR_THAT_DICE_WILL_THROW;
-interface iTestiDiceMessage {
-    diceResult?: number,
-    fieldsToVisit?: string[],
-}
+type tTestiDiceMessage = number | string[] | string;
 
-export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged, iTestiDiceMessage> implements iDiceTestModeDecorator {
+export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged, tTestiDiceMessage> implements iDiceTestModeDecorator {
     private _testingMode: TestModes = TestModes.none;
     private _dice = new Dice();
     private static _instance: tDiceTestModeDecoratorInstance = null;
@@ -86,6 +83,7 @@ export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged
             return nr;            
         })
         this._fieldsToVisit = result
+        this.runAllSubscriptions(CHANGE_FIELDS_TO_VISIT, this._fieldsToVisit.map(i=>`${i}`))
         console.log(this._fieldsToVisit, result)
     }
     get fieldsToVisit() {
@@ -110,6 +108,7 @@ export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged
         if (nr < 1) this._nrThatDiceWillSelectInTestMode = 1;
         else if (nr > 6) this._nrThatDiceWillSelectInTestMode = 6;
         else this._nrThatDiceWillSelectInTestMode = nr;
+        this.runAllSubscriptions(CHANGE_NR_THAT_DICE_WILL_THROW, this._nrThatDiceWillSelectInTestMode)
     }
     get nrThatDiceWillSelectInTestMode() {return this._nrThatDiceWillSelectInTestMode}
     logState() {

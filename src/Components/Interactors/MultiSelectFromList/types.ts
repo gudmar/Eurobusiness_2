@@ -31,7 +31,6 @@ export interface iMultiSelectFromLogicArgs {
 
 export interface iMultiSelectFromState {
     isSearchExpanded: boolean,
-    selected: [],
     displayed: string,
     items: [],
     visibleItems: []
