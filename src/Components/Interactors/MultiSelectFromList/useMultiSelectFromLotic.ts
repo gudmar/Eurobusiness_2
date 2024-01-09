@@ -1,11 +1,10 @@
-import { useEffect, useReducer } from "react";
+import { useReducer } from "react";
 import { getReducer } from "../../../Functions/reducer";
 import { useOnEventLocationWithExceptions } from "../../../hooks/useOnOutsideInsideElement";
 import { iMultiSelectFromLogicArgs, iMultiSelectFromState, MultiSelectFromLogicTypes, tActions, tClear, tClearSearchResult, tClose, tOpen, tPayloadTypes } from "./types";
 
 const getInitialState = (): iMultiSelectFromState => ({
     isSearchExpanded: false,
-    selected: [],
     displayed: '',
     items: [],
     visibleItems: []
@@ -46,38 +45,6 @@ const toString = (item: any) => {
     }
 }
 
-const getArrayWithRemovedIndex = (arr: unknown[], index: number) => {
-    const newArr = arr.reduce((acc: unknown[], item: unknown, i: number) => {
-        if (index !== i) acc.push(item);
-        return acc;
-    }, [])
-    return newArr;
-}
-
-const toggleSelection = (state: iMultiSelectFromState, payload: tAction) => {
-    const findInArray = (arr: any[]) => {
-        const result = arr.findIndex((item: any) => {
-            const asString = toString(item);
-            const result = asString === payload;
-            return result;
-        })
-        return result;
-    }
-    const targetIndexInSelected = findInArray(state.selected);
-    const targetIndexInItems = findInArray(state.items);
-    const getNewSelection = () => {
-        if (targetIndexInSelected === -1) {
-            return [...state.selected, state.items[targetIndexInItems]]
-        } else {
-            const newSelected = getArrayWithRemovedIndex(state.selected, targetIndexInSelected)
-            return newSelected;
-        }
-    }
-    const newSelectoin = getNewSelection();
-    const newState = {...state, selected: newSelectoin};
-    return newState
-}
-
 const search = (state: iMultiSelectFromState, payload: tAction) => {
     const filteredItems = state.items.filter((item:any) => {
         const asString = toString(item);
@@ -105,7 +72,7 @@ const changeItems = (state: iMultiSelectFromLogicArgs, payload: string[]) => {
 
 
 const REDUCER = {
-    [MultiSelectFromLogicTypes.toggleSelection]: toggleSelection,
+    // [MultiSelectFromLogicTypes.toggleSelection]: toggleSelection,
     [MultiSelectFromLogicTypes.open]: open,
     [MultiSelectFromLogicTypes.close]: close,
     [MultiSelectFromLogicTypes.search]: search,
@@ -116,24 +83,19 @@ const REDUCER = {
 export const reducer = getReducer<iMultiSelectFromState, string, tPayloadTypes>(REDUCER)
 
 export const useMultiSelectFromLogic = ({keepFocusRef, dontLoseFocusRefs, items, defaultSelection=[], onSelected, onUnselected}: iMultiSelectFromLogicArgs) => {
-    console.log('default selection in hook', defaultSelection)
     const initialState = {...getInitialState(), visibleItems: items, items, selected: defaultSelection}
-    console.log(initialState)
     const [{
         isSearchExpanded,
-        selected,
         displayed,
         visibleItems,
     }, dispatch] = useReducer(reducer, initialState);
-    console.log('selection in hook after using useReducer', selected)
     const {open, close, search, clearSearchResult} = getSelectFromLogicActions(dispatch)
     useOnEventLocationWithExceptions({targetReference: keepFocusRef, exceptionReferences: dontLoseFocusRefs, mouseEventName: 'mousedown', callback: () => {clearSearchResult(); close()} })
     const toggleSelection = (val: string) => {
-            const isSelected = selected.includes(val);
+            const isSelected = defaultSelection.includes(val)
             if (isSelected && onUnselected) { onUnselected(val);}
             else if (!isSelected && onSelected) { onSelected(val);}
     }
-    console.log('Selected after toggle', selected)
     return {
         isSearchListExpanded: isSearchExpanded,
         valueInTextBox: displayed,
