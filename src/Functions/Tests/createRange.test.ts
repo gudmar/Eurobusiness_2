@@ -74,4 +74,8 @@ describe('Create range', () => {
         const result = range(0, 1.5, 0.5);
         expect(result).toEqual([0, 0.5, 1, 1.5])
     })
+    it('Should produce [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] when range(1, 10)', () => {
+        const result = range(1, 20);
+        expect(result).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
+    })
 })
