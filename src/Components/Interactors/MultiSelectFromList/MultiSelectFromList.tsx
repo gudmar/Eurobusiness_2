@@ -92,6 +92,8 @@ export const MultiSelectFromList = ({
     const toggleExpand = () => {
         if (isSearchListExpanded) {close()} else {open()}
     }
+    useEffect(() => console.log(selected), [selected])
+    useEffect(() => console.log(items), [items])
     return (
             <div className={classes.selectFromList}  tabIndex={0}>
                 <fieldset className={classes.container}>

@@ -51,11 +51,15 @@ export const useStyles = createUseStyles((theme) => ({
         position: 'absolute',
         backgroundColor: theme.selectFromList_notSelectedItemBg,
         color: theme.selectedFromList_notSelectedItemFg,
-        borderBottomLeftRadius: '1.5rem',
-        borderBottomRightRadius: '1.5rem',
+        borderBottomLeftRadius: '0.5rem',
+        borderBottomRightRadius: '0.5rem',
+        // height: 'calc(300px + 24px)',
+        // height: '370px'
     },
     scrollable: {
-        maxHeight: '300px',
+        maxHeight: 'calc(300px - 4rem)',
+        marginTop: '0',
+        marginBottom: '0',
         overflow: 'auto'
     },
     itemWrapper: {

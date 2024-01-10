@@ -1,3 +1,6 @@
+export const FIRST_FIELD_INDEX = 1;
+export const LAST_FIELD_INDEX = 40;
+
 export const NR_OF_HOTELS = 'nrOfHotels';
 export const NR_OF_HOUSES = 'nrOfHouses';
 

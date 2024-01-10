@@ -23,6 +23,7 @@ const setNrToBeSelectedForDicesThrow = (state: iEditGeneralSettingsState, payloa
 }
 
 const setTestMode = (state: iEditGeneralSettingsState, payload: tEditGeneralSettingPayload) => {
+    console.log('Setting test mode: ', payload)
     const newState = {...state, testMode: payload};
     return newState;
 }
@@ -69,11 +70,11 @@ const changeFieldsToVisitAction = (payload: string[]): tActions => ({type: EditG
 type tDispach = (arg: tActions) => void;
 
 export const getSelectFromLogicActions = (dispatch: tDispach) => ({
-    setNrToBeSelectedForDicesThrow: (payload: number) => {
+    setNrToBeSelectedForDicesThrow: (payload: number) => dispatch(setNrOnDiceAction(payload)),
+    setTestMode: (payload: TestModes) => {
         console.log(payload)
-        dispatch(setNrOnDiceAction(payload))
+        dispatch(setTestModeAction(payload))
     },
-    setTestMode: (payload: TestModes) => dispatch(setTestModeAction(payload)),
     addFieldToVisit: (palylad: string) => dispatch(addFieldToVisitAction(palylad)),
     removeFieldToVisit: (palyoad: string) => dispatch(removeFieldToVisitAction(palyoad)),
     changeFieldsToVisit: (payload: string[]) => dispatch(changeFieldsToVisitAction(payload)),
@@ -99,7 +100,7 @@ interface iSubscribeArgs {
 const getSubscribtion = ({id, callback, instance, messageType } : iSubscribeArgs) => {
     const subscribtion = { callback, id, messageType }
     const subscribe = () => {
-        console.log('Subscribing', id, messageType)
+        console.log('Subscribing', id, messageType, callback)
         instance.subscribe(subscribtion)
     }
     const unsubscribe = () => {instance.unsubscribe(messageType, id)};
@@ -134,14 +135,16 @@ const useSubscribtions = (diceInstane: DiceTestModeDecorator, dispatch: tDispach
         callback: subscribtionsStructure.nrThatDiceWillSelectInTestMode(dispatch),
         instance: diceInstane,
     });
-
 }
 
 const subscribtionsStructure: {[key:string]: (dispatch: tDispach) => (payload: any) => void} = {
     fieldsToVisit: (dispatch: tDispach) => getSelectFromLogicActions(dispatch)['changeFieldsToVisit'],
-    testingMode: (dispatch: tDispach) => getSelectFromLogicActions(dispatch)['setTestMode'],
+    testingMode: (dispatch: tDispach) => {
+        const cb = getSelectFromLogicActions(dispatch)['setTestMode'];
+        console.log(cb)
+        return cb
+    },
     nrThatDiceWillSelectInTestMode: (dispatch: tDispach) => {
-        console.log('Giving subscribe function')
         return getSelectFromLogicActions(dispatch)['setNrToBeSelectedForDicesThrow']
     }
 }
@@ -151,12 +154,12 @@ export const useGeneralSettingsForTests = (): tUseGeneralSettingsForTests => {
     const [state, dispatch] = useReducer(reducer, initState);
     const {nrToBeSelectedForDicesThrow, testMode, selectedFields} = state;
     useSubscribtions(testDice, dispatch);
-    
+    useEffect(() => console.log(testMode), [testMode])
     return {
         nrToBeSelectedForDicesThrow,
-        testMode: testMode,
+        testMode,
         setNrToBeSelectedForDicesThrow: Commander.changeNrToBeSelectedOnDicesThrow,
-        setTestMode: Commander.changeTestMode,
+        setTestMode: (item : string) => Commander.changeTestMode(item as TestModes),
         addFieldToVisit: (item: string) => Commander.addFieldsToVisit([item]),
         removeFieldToVisit: (item: string) => Commander.removeFieldsToVisit([item]),
         selectedFields: selectedFields,

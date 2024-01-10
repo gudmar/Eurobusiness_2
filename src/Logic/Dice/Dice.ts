@@ -84,12 +84,12 @@ export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged
         })
         this._fieldsToVisit = result
         this.runAllSubscriptions(CHANGE_FIELDS_TO_VISIT, this._fieldsToVisit.map(i=>`${i}`))
-        console.log(this._fieldsToVisit, result)
     }
     get fieldsToVisit() {
         const result = this._fieldsToVisit.map(val=>`${val}`)
         return result
     }
+
     private _getMappingInTestMode(testModeType: TestModes) {
         switch(testModeType){
             case TestModes.chanceFields: return FIELD_INDEXES_FOR_TESTING[CHANCE_FIELDS];
@@ -103,14 +103,16 @@ export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged
     }
 
     private _nrThatDiceWillSelectInTestMode: number = 4;
+
     set nrThatDiceWillSelectInTestMode(nr: number) {
-        console.log('Setting dices')
         if (nr < 1) this._nrThatDiceWillSelectInTestMode = 1;
         else if (nr > 6) this._nrThatDiceWillSelectInTestMode = 6;
         else this._nrThatDiceWillSelectInTestMode = nr;
         this.runAllSubscriptions(CHANGE_NR_THAT_DICE_WILL_THROW, this._nrThatDiceWillSelectInTestMode)
     }
+
     get nrThatDiceWillSelectInTestMode() {return this._nrThatDiceWillSelectInTestMode}
+
     logState() {
         const toLog = {
             testMode: this._testingMode,
@@ -136,7 +138,11 @@ export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged
     //     }
     //     return this._dice.getThrowForGetOutOfPrisonResult();
     // }
-    set testingMode (nextValue: TestModes) { this._testingMode = nextValue }
+    set testingMode (nextValue: TestModes) { 
+        this._testingMode = nextValue
+        this.runAllSubscriptions(CHANGE_TEST_MODE, nextValue)
+    }
+    get testingMode () { return this._testingMode}
 
     private _findNextFieldNumberToVisitInTestMode(currentPlayerPosition: number, listOfFieldNumbers: number[]){
         const orderedIndexes = listOfFieldNumbers.sort((a, b) => {
@@ -148,6 +154,7 @@ export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged
         const result = indexOfNextFieldNumber === -1 ? listOfFieldNumbers[0] : listOfFieldNumbers[indexOfNextFieldNumber];
         return result;
     }
+
     private _getDeltaMove(currentPlayerPosition: number, plannedPlayerPosition: number) {
         if (plannedPlayerPosition > currentPlayerPosition) {
             return plannedPlayerPosition - currentPlayerPosition;
@@ -156,6 +163,7 @@ export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged
             return distanceFromBoardEnd + plannedPlayerPosition;
         }
     }
+
     private _calculateThrowResultInTestMode(currentPlayerPosition: number, listOfFieldNumbers: number[]){
         const plannedPosition = this._findNextFieldNumberToVisitInTestMode(currentPlayerPosition, listOfFieldNumbers);
         const throwResult = this._getDeltaMove(currentPlayerPosition, plannedPosition);
