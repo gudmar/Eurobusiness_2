@@ -69,6 +69,8 @@ export const useStyles = createUseStyles((theme) => ({
     },
     listWrapper: {
         overflow: 'hidden',
+        zIndex: '100',
+        width: '21rem',
     },
     scrollable: {
         maxHeight: '300px',
@@ -76,6 +78,7 @@ export const useStyles = createUseStyles((theme) => ({
     },
     itemWrapper: {
         padding: '0.3rem',
+        
         transitionDelay: '0.1s',
         '&:hover': {
             cursor: 'pointer',
