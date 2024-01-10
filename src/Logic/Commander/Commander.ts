@@ -41,6 +41,7 @@ export class Commander {
     private static get _testDice() {return new DiceTestModeDecorator() }
 
     static changeTestMode(newMode: TestModes) {
+        console.log(newMode)
         Commander._testDice.testingMode = newMode;
     }
     static changeNrToBeSelectedOnDicesThrow(nr: number) {

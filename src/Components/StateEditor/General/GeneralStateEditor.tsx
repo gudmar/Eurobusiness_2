@@ -29,12 +29,13 @@ export const GeneralStateEditor = () => {
             logAction={log}
             formName={'general settings for manual tests'}
         >
-            <StateEditorEntry title='Test mode' currentValue={'false'}>
+            <StateEditorEntry title='Test mode' currentValue={testMode}>
                 <SingleSelectFromList 
                     id = {'test-mode-selection'}
                     label={'Test mode'}
                     items={Object.values(TestModes)}
-                    onClick={setTestMode as (val: string) => void}
+                    onSelect={setTestMode as (val: string) => void}
+                    defaultValue = {testMode}
                 />
                 {/* <Checkbox
                     label={''}

@@ -15,7 +15,8 @@ export interface iSelectFromListProps {
     defaultValue?: string,
     label: string,
     id?: string,
-    onClick: tSelectFromStateHandler,
+    // onClick: tSelectFromStateHandler,
+    onSelect: tSelectItem,
 }
 
 export interface iSelectFromLogicArgs {
@@ -23,7 +24,8 @@ export interface iSelectFromLogicArgs {
     blurRef:  RefObject<HTMLInputElement>,
     items: string[],
     defaultSelection: string,
-    onClick: tSelectFromStateHandler,
+    onSelect: tSelectItem,
+    // onClick: tSelectFromStateHandler,
 }
 
 export interface iSearchFromState {

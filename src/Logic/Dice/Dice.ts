@@ -84,7 +84,6 @@ export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged
         })
         this._fieldsToVisit = result
         this.runAllSubscriptions(CHANGE_FIELDS_TO_VISIT, this._fieldsToVisit.map(i=>`${i}`))
-        console.log(this._fieldsToVisit, result)
     }
     get fieldsToVisit() {
         const result = this._fieldsToVisit.map(val=>`${val}`)
@@ -106,7 +105,6 @@ export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged
     private _nrThatDiceWillSelectInTestMode: number = 4;
 
     set nrThatDiceWillSelectInTestMode(nr: number) {
-        console.log('Setting dices')
         if (nr < 1) this._nrThatDiceWillSelectInTestMode = 1;
         else if (nr > 6) this._nrThatDiceWillSelectInTestMode = 6;
         else this._nrThatDiceWillSelectInTestMode = nr;
@@ -141,9 +139,10 @@ export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged
     //     return this._dice.getThrowForGetOutOfPrisonResult();
     // }
     set testingMode (nextValue: TestModes) { 
-        console.log('Tesgint mode' , this.testingMode)
-        this._testingMode = nextValue 
+        this._testingMode = nextValue
+        this.runAllSubscriptions(CHANGE_TEST_MODE, nextValue)
     }
+    get testingMode () { return this._testingMode}
 
     private _findNextFieldNumberToVisitInTestMode(currentPlayerPosition: number, listOfFieldNumbers: number[]){
         const orderedIndexes = listOfFieldNumbers.sort((a, b) => {

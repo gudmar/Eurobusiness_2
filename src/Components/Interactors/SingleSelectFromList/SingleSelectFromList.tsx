@@ -21,7 +21,8 @@ const Item = ({value, selectedValue, select}:iItemProps) => {
     )
 }
 
-export const SingleSelectFromList = ({id, label, items, defaultValue='', onClick}: iSelectFromListProps) => {
+// export const SingleSelectFromList = ({id, label, items, defaultValue='', onClick}: iSelectFromListProps) => {
+export const SingleSelectFromList = ({id, label, items, onSelect, defaultValue=''}: iSelectFromListProps) => {
     const { theme } = useThemesAPI();
     const classes: {[key:string]: string} = useStyles(theme as any);
     const focusRef = useRef<HTMLInputElement>(null);
@@ -36,7 +37,7 @@ export const SingleSelectFromList = ({id, label, items, defaultValue='', onClick
         search,
         close,
         open
-    } = useSelectFromLogic({ focusRef, blurRef,  items, defaultSelection: defaultValue, onClick})
+    } = useSelectFromLogic({ focusRef, blurRef,  items, defaultSelection: defaultValue, onSelect })
     return (
             <div className={classes.selectFromList} ref={blurRef} tabIndex={0}>
                 <fieldset className={classes.container}>
