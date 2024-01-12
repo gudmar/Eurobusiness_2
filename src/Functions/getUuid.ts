@@ -1,4 +1,4 @@
-const NR_SYMBOLS = 10;
+const NR_SYMBOLS = 100000000000;
 const LEVEL_OF_SIGNIFICANCE = 0.1
 
 const removeZeros = (n: number): number => {

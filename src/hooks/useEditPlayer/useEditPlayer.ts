@@ -7,6 +7,8 @@ import { iPlayer } from "../../Logic/Players/types";
 import { iSubscription, tSubscription } from "../../Types/types";
 import { changeStateAction, getUpdateFieldNr, getUpdateGameLost, getUpdateIsInPrison, getUpdateMoney, getUpdateName, getUpdateSpecialCards, getUpdateState, getUpdateTurnsToWait, reducer,} from "./utils";
 
+const PRISON_FIELD_NR_INDEXED_FROM_0 = 10;
+
 const getPlayerInstance = (instances: iPlayer[], color: tColors) => (instances.find((instance: iPlayer) => instance.color === color) || null)
 
 interface iSubscribeArgs {
@@ -86,8 +88,10 @@ export const useEditPlayer = (wantedColor: tColors) => {
         }
     }, [wantedColor])
     const setIsInPrison = useCallback((val: boolean) => {
-        if (player && player.current) {
+        if (player && player.current && player.current.fieldNr === PRISON_FIELD_NR_INDEXED_FROM_0) {
             player.current.isInPrison = val
+        } else {
+            
         }
     }, [wantedColor])
     const setIsGameLost = useCallback((val: boolean) => {
