@@ -8,10 +8,6 @@ export const useStyles = createUseStyles((theme) => ({
         display: 'flex',
         borderRadius: '5px',
         backgroundColor: 'white',
-        // padding: '0.3rem',
-        // justifyContent: 'center'
-        // columnGap: '1rem',
-        // margin: '1rem',
     },
     squareButton: {
         width: '1rem',

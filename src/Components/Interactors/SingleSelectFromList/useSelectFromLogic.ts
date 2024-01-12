@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { getReducer } from "../../../Functions/reducer";
 import { useOnFocusin } from "../../../hooks/useOnFocusChangers";
 import { useInvoceIfEventOutsideElement } from "../../../hooks/useOnOutsideInsideElement";
@@ -73,7 +73,7 @@ export const useSelectFromLogic = ({ blurRef, items, defaultSelection, onSelect 
         visibleItems,
     }, dispatch] = useReducer(reducer, {
         ...initialState, visibleItems: items, items,
-        // selected: defaultSelection,
+        selected: defaultSelection,
         displayed: defaultSelection
     });
     const {open, clear, close, search, 
@@ -86,6 +86,7 @@ export const useSelectFromLogic = ({ blurRef, items, defaultSelection, onSelect 
         onSelect(newSelecion);
         select(newSelecion)
     }
+    useEffect(() => console.log('DfSel', defaultSelection, displayed))
     return {
         isSearchListExpanded: isSearchExpanded,
         valueInTextBox: displayed,

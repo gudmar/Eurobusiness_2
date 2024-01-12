@@ -37,6 +37,7 @@ export const MONEY_ALLTOGETHER = (() => {
 })();
 
 //=========================
+export const INFORMATION_TIMEOUT = 3000;
 export const MAX_PLAYER_NAME_LENGTH = 20;
 
 

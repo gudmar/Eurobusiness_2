@@ -151,7 +151,12 @@ const subscribtionsStructure: {[key:string]: (dispatch: tDispach) => (payload: a
 
 export const useGeneralSettingsForTests = (): tUseGeneralSettingsForTests => {
     const testDice = new DiceTestModeDecorator();
-    const [state, dispatch] = useReducer(reducer, initState);
+    const [state, dispatch] = useReducer(reducer, {
+        ...initState,
+        testMode: testDice.testingMode,
+        nrToBeSelectedForDicesThrow: testDice.nrThatDiceWillSelectInTestMode,
+        selectedFields: testDice.fieldsToVisit,
+    });
     const {nrToBeSelectedForDicesThrow, testMode, selectedFields} = state;
     useSubscribtions(testDice, dispatch);
     useEffect(() => console.log(testMode), [testMode])
