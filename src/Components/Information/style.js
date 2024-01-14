@@ -6,10 +6,10 @@ export const useStyles = createUseStyles((theme) => ({
         display: 'flex',
         flexDirection: 'column',
         position: "absolute",
-        zIndex: '10',
+        zIndex: '100',
         width: '100%',
-        top: '50%',
-        transform: 'translateY(-50%)',
+        top: '5%',
+        // transform: 'translateY(-50%)',
         // height: '100%'
         
     },
@@ -22,9 +22,9 @@ export const useStyles = createUseStyles((theme) => ({
         left: '50%',
         right: '50%',
         width: '50%',
-        transform: 'translate(50%, 50%)',
+        transform: 'translate(50%, 0%)',
         padding: '1rem',
-        // marginTop: '6rem'
+        marginTop: '1rem'
     },
     closeButton: {
         backgroundColor: 'transparent',
@@ -37,11 +37,11 @@ export const useStyles = createUseStyles((theme) => ({
     closeBar: {
     },
     [Severity.information]: {
-        backgroundColor: 'green',
+        backgroundColor: '#009933',
         color: 'white',
     },
     [Severity.error]: {
-        backgroundColor: 'red',
+        backgroundColor: '#ff3333',
         color: 'white',
     },
     [Severity.warning]: {

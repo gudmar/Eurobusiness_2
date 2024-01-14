@@ -2,21 +2,19 @@ import { useEffect, useState } from "react";
 import { INFORMATION_TIMEOUT } from "../../Constants/constants";
 import { useThemesAPI } from "../../Contexts/ThemeContext";
 import { getUuid } from "../../Functions/getUuid";
+import { useIsTimeout } from "../../hooks/useIsTimeout";
 import { Informator } from "./Infromator";
 import { useStyles } from "./style";
-import { iInformationArgs, iInformationData, iInformationWithCloseArgs, INFORMATION_MESSAGE, Severity } from "./types";
+import { iInformationData, iInformationWithCloseArgs, INFORMATION_MESSAGE, Severity } from "./types";
 
-const useDelay = (time: number, callback: () => void) => {
-    useEffect(() => {
-        const timeout = setTimeout(callback, time);
-        return () => clearTimeout(timeout);
-    }, [])
-}
 
 const Information = ({title, message, close, severity}: iInformationWithCloseArgs) => {
     const { theme } = useThemesAPI();
     const classes: {[key:string]: string} = useStyles(theme as any);
-    // useDelay(INFORMATION_TIMEOUT, close)
+    const isTimeout = useIsTimeout(INFORMATION_TIMEOUT);
+    useEffect(()=>{
+        if (isTimeout) {close()}
+    }, [isTimeout, close])
     return (
         <div className={`${classes.dialog} ${classes[severity]}`}>
             <div className={classes.closeBar}>
@@ -33,51 +31,67 @@ const Information = ({title, message, close, severity}: iInformationWithCloseArg
 
 const INFORMATION_ID = 'information id for subscribtion'
 
+interface iMessage { message: string, title: string, id: string, severity: Severity }
+
 const useInformationStack = () => {
-    const [messages, setMessages ]: [iInformationWithCloseArgs[], (args: iInformationWithCloseArgs[]) => void] =  useState<iInformationWithCloseArgs[]>([])
-    const closeMessageHOF = (idToDelete: string) => () => {
+    
+    const [messages, setMessages] = useState<iMessage[]>([])
+
+
+    const getMessagesAfterClose = (idToDelete: string) => {
         const index = messages.findIndex(({id}) => {return (id === idToDelete)});
-        const newArr = [...messages];
-        newArr.splice(index, 1);
-        setMessages(newArr)
+        const newMessages = [...messages];
+        newMessages.splice(index, 1);
+        return newMessages;
     }
-    const addMessageHOF = ({title, message, severity}: iInformationData) => {
-        const uuid = getUuid();
-        const newMessage = { message, title, id: uuid, severity, close: closeMessageHOF(uuid) }
-        const newMessages = messages.map(i=>i);
-        newMessages.push(newMessage);
-        console.log(newMessages)
-        setMessages(newMessages)
+    const closeMessage = (id: string) => {
+        const messages = getMessagesAfterClose(id);
+        setMessages( messages )
     }
+
     useEffect(() => {
+        const getMessagesAfterAdd = ({title, message, severity}: iInformationData) => {
+            const uuid = getUuid();
+            const newMessage = { message, title, id: uuid, severity }
+            const newMessages = messages.map((i: any)=>i);
+            newMessages.push(newMessage);
+            return newMessages
+        }
+    
+        const addMessage = (args: iMessage) => {
+            const messages = getMessagesAfterAdd(args);
+            setMessages( messages )
+        }    
+    
         const informatorInstance = new Informator();
         informatorInstance.subscribe({
-            callback: addMessageHOF,
+            callback: addMessage,
             id: INFORMATION_ID,
             messageType: INFORMATION_MESSAGE,
         })
         return () => informatorInstance.unsubscribe(INFORMATION_MESSAGE, INFORMATION_ID )
 
-    }, [])
-    return messages
+    }, [messages])
+    return {
+        messages, closeMessage
+    }
 }
 
 export const InformationStack = () => {
     const { theme } = useThemesAPI();
     const classes: {[key:string]: string} = useStyles(theme as any);
-    const messages = useInformationStack();
-    useEffect(() => console.log(messages), [messages])
+    const { messages, closeMessage } = useInformationStack();
     return (
         <aside className={classes.informationStack}>
             {
-                messages.map(({title, message, id, severity, close}) => (
+                messages.map(({title, message, id, severity }) => (
                     <Information
                         key={id}
                         title={title}
                         message={message}
                         id={id}
                         severity={severity}
-                        close={close}
+                        close={() => closeMessage(id)}
                     />
                 ))
             }
