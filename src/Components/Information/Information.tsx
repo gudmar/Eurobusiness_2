@@ -28,19 +28,25 @@ type tUseAnimationClassesArgs = {
 const getClassesRelatedToAnimationNames = (animationDefinition: tAnimationClasses, clockValue: number) => {
     const allAnimationClassNames = Object.keys(animationDefinition);
     const resultClasses = allAnimationClassNames.filter((className: string) => {
+
         const isEnded = animationDefinition[className].end <= clockValue;
         const isStarted = animationDefinition[className].start <= clockValue;
         const result = !isEnded && isStarted;
         return result;
     })
+    console.log(animationDefinition, resultClasses, clockValue)
     return resultClasses;
 }
 
 const getReturnValue = (currentAnimationClasses: string[], classesFromUseStyles: tClasses) => {
     const returnValue = currentAnimationClasses.reduce((acc, item) => {
-        const newAcc = `${acc} ${classesFromUseStyles[item]}`
+        console.log(item)
+        const newAcc: string = `${acc} ${item}`
+        // console.log(newAcc)
         return newAcc;
     }, '')
+    // console.log(currentAnimationClasses)
+    // console.log(returnValue)
     return returnValue;
 }
 
@@ -49,11 +55,10 @@ const didAnimationClassesChange = (previousClasses: string[], currentClasses: st
 const GRADE = 10;
 
 const useClock = (interval: number) => {
-    const [time, setTime] = useState<number>(-1);
+    const [time, setTime] = useState<number>(0);
     useEffect(() => {
         const i = setInterval(() => {
-            const t = time > 100000000000 ? 0 : time;
-            // console.log(t)
+            const t = time > Number.MAX_SAFE_INTEGER ? 0 : time;
             setTime(t + interval);
         }, interval)
         return () => clearInterval(i);
@@ -62,22 +67,30 @@ const useClock = (interval: number) => {
     return { time, reset: () => setTime(0) }
 }
 
+const useSwitchableClock = (interval: number) => {
+    const [grade, setGrade] = useState<number>(0);
+    const [isOn, setOn] = useState<boolean>(false);
+    useEffect(() => { if (isOn) setGrade(interval); }, [isOn, setGrade, interval])
+    const {time} = useClock(grade);
+    return {time, setOn: () => setOn(true)}
+}
+
 export const useAnimationClasses = ({
     animationDefinition, classes, runAfterDone, classesNotToBeChanged = []
 }: tUseAnimationClassesArgs) => {
     const [isAnimating, setIsAnimating] = useState<boolean>(false);
     const [classesString, setClassesString] = useState<string>('');
     const lastAnimationFrame = useRef<string[]>();
-    const {time, reset} = useClock(GRADE)
-
+    const {time, setOn} = useSwitchableClock(GRADE)
+    // useEffect(() => console.log('Classes', classes), [classes]);
     useEffect(() => { lastAnimationFrame.current = [] }, [])
-
-    useEffect(() => console.log(time), [time])
+    useEffect(()=> console.log('AS string ', classesString), [classesString])
 
     useEffect(() => {
         if (isAnimating) {
-            console.log('In is animating', time)
+            // console.log('In is animating', time)
             const currentClasses = getClassesRelatedToAnimationNames(animationDefinition, time)
+            // console.log(currentClasses)
             const previousClasses = lastAnimationFrame.current;
             const didChange = didAnimationClassesChange(currentClasses, previousClasses as string[]);
             if (didChange) {
@@ -91,21 +104,24 @@ export const useAnimationClasses = ({
     return {
         classesString,
         animate: () => {
-            console.log('Animation started')
-            reset();
+            // console.log('Animation started')
+            setOn();
             setIsAnimating(true);
-        }
+        },
+        time
     }
 }
 
 const informationCloseAnimation = {
         fadeToBlack: {
             start: 0,
-            end: 500,
+            // end: 500,
+            end: 20000,
         },
         shrink: {
             start: 500,
-            end: 1000,
+            // end: 1000,
+            end: 40000,
         }
 }
 
@@ -113,7 +129,7 @@ const Information = ({title, message, close, severity}: iInformationWithCloseArg
     const { theme } = useThemesAPI();
     const classes: {[key:string]: string} = useStyles(theme as any);
     const isTimeout = useIsTimeout(INFORMATION_TIMEOUT);
-    const {classesString, animate} = useAnimationClasses({
+    const {classesString, animate, time} = useAnimationClasses({
         animationDefinition: informationCloseAnimation,
         classes,
         classesNotToBeChanged: [`${classes.dialog}`, `${classes[severity]}`],
@@ -127,10 +143,8 @@ const Information = ({title, message, close, severity}: iInformationWithCloseArg
     useEffect(()=>{
         if (isTimeout) {animate()}
     }, [isTimeout, animate])
-    // useEffect(()=>{
-    //     if (isTimeout) {close()}
-    // }, [isTimeout, close])
 
+    // const { time } = useClock(GRADE);
     return (
         // <div className={`${classes.dialog} ${classes[severity]}`}>
         <div className={classesString}>
@@ -142,6 +156,7 @@ const Information = ({title, message, close, severity}: iInformationWithCloseArg
             </div>
             
             <p>{message}</p>
+            <p>{time}</p>
         </div>
     )
 }
