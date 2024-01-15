@@ -26,3 +26,5 @@ export type tToBeImplemented = any;
 export interface iAny {
     [key: string] : any,
 }
+
+export interface iProps { [key: string]: unknown }
