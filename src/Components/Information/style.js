@@ -36,6 +36,14 @@ export const useStyles = createUseStyles((theme) => ({
     },
     closeBar: {
     },
+    fadeToBlack: {
+        opacity: '100%',
+        transition: '0.5s',
+    },
+    shrink: {
+        width: 0,
+        transition: '0.5s',
+    },
     [Severity.information]: {
         backgroundColor: '#009933',
         color: 'white',
@@ -47,5 +55,5 @@ export const useStyles = createUseStyles((theme) => ({
     [Severity.warning]: {
         backgroundColor: 'orange',
         color: 'black',
-    }
+    },
 }));
