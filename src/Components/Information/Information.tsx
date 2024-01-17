@@ -39,9 +39,7 @@ const Information = ({title, message, close, severity}: iInformationWithCloseArg
                     &times;
                 </button>
             </div>
-            
             <p>{message}</p>
-            <p>{time}</p>
         </div>
     )
 }
