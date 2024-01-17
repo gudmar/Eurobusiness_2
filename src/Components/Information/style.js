@@ -1,4 +1,5 @@
 import { createUseStyles } from "react-jss";
+import { ZIndexes } from "../../Constants/styleConstants";
 import { Severity } from "./types";
 
 export const useStyles = createUseStyles((theme) => ({
@@ -7,7 +8,7 @@ export const useStyles = createUseStyles((theme) => ({
         flexDirection: 'column',
         alignItems: 'center',
         position: "absolute",
-        zIndex: '100',
+        zIndex: ZIndexes.userInformation,
         width: '100%',
         top: '5%',
     },
