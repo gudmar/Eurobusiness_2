@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { INFORMATION_TIMEOUT } from "../../Constants/constants";
 import { useThemesAPI } from "../../Contexts/ThemeContext";
 import { getUuid } from "../../Functions/getUuid";
 import { haveArraysSameElements } from "../../Functions/haveArraysSameElements";
-import { useIsTimeout } from "../../hooks/useIsTimeout";
 import { Informator } from "./Infromator";
 import { useStyles } from "./style";
 import { iInformationData, iInformationWithCloseArgs, INFORMATION_MESSAGE, Severity } from "./types";
@@ -13,11 +11,25 @@ type tAnimationDescriptor = {
 }
 type tClasses = {[key: string]: string};
 type tAnimationClasses = {[key: string]: tAnimationDescriptor}
-// type tUseAnimationClassesReturn = {
-//     classesString: string,
-//     animate: () => void,
-// }
-// type tRunAfterDone = () => void;
+
+
+const informationCloseAnimation = {
+    fadeToBlack: {
+        start: 1,
+        end: 1000,
+    },
+    shrink: {
+        start: 1,
+        end: 1000,
+    }
+}
+
+const isDone = (animationDescriptor: tAnimationClasses, time: number) => {
+    const endValues = Object.values(animationDescriptor).map(({end}) => end);
+    const maxEndValue = Math.max(...endValues);
+    return maxEndValue <= time
+}
+
 type tUseAnimationClassesArgs = {
     animationDefinition: tAnimationClasses,
     classes: tClasses,
@@ -34,23 +46,19 @@ const getClassesRelatedToAnimationNames = (animationDefinition: tAnimationClasse
         const result = !isEnded && isStarted;
         return result;
     })
-    console.log(animationDefinition, resultClasses, clockValue)
     return resultClasses;
 }
 
 const getReturnValue = (currentAnimationClasses: string[], classesFromUseStyles: tClasses) => {
     const returnValue = currentAnimationClasses.reduce((acc, item) => {
-        console.log(item)
-        const newAcc: string = `${acc} ${item}`
-        // console.log(newAcc)
+        const element = classesFromUseStyles[item] || item;
+        const newAcc: string = `${acc} ${element}`
         return newAcc;
     }, '')
-    // console.log(currentAnimationClasses)
-    // console.log(returnValue)
     return returnValue;
 }
 
-const didAnimationClassesChange = (previousClasses: string[], currentClasses: string[]) => haveArraysSameElements(previousClasses, currentClasses);
+const didAnimationClassesChange = (previousClasses: string[], currentClasses: string[]) => !haveArraysSameElements(previousClasses, currentClasses);
 
 const GRADE = 10;
 
@@ -82,29 +90,32 @@ export const useAnimationClasses = ({
     const [classesString, setClassesString] = useState<string>('');
     const lastAnimationFrame = useRef<string[]>();
     const {time, setOn} = useSwitchableClock(GRADE)
-    // useEffect(() => console.log('Classes', classes), [classes]);
-    useEffect(() => { lastAnimationFrame.current = [] }, [])
-    useEffect(()=> console.log('AS string ', classesString), [classesString])
+    useEffect(() => { 
+        lastAnimationFrame.current = classesNotToBeChanged;
+        const currentClasses = getClassesRelatedToAnimationNames(animationDefinition, time)
+        const newClassesReturnValue = getReturnValue([...currentClasses, ...classesNotToBeChanged], classes);
+        setClassesString(newClassesReturnValue);
+    },
+    [])
 
     useEffect(() => {
         if (isAnimating) {
-            // console.log('In is animating', time)
+            
             const currentClasses = getClassesRelatedToAnimationNames(animationDefinition, time)
-            // console.log(currentClasses)
             const previousClasses = lastAnimationFrame.current;
             const didChange = didAnimationClassesChange(currentClasses, previousClasses as string[]);
             if (didChange) {
                 lastAnimationFrame.current = currentClasses;
                 const newClassesReturnValue = getReturnValue([...currentClasses, ...classesNotToBeChanged], classes)
                 setClassesString(newClassesReturnValue);
-            }    
+            }
+            if (isDone(animationDefinition, time)) {runAfterDone()}
         }
     }, [time, animationDefinition, classes, classesNotToBeChanged, isAnimating])
 
     return {
         classesString,
         animate: () => {
-            // console.log('Animation started')
             setOn();
             setIsAnimating(true);
         },
@@ -112,23 +123,10 @@ export const useAnimationClasses = ({
     }
 }
 
-const informationCloseAnimation = {
-        fadeToBlack: {
-            start: 0,
-            // end: 500,
-            end: 20000,
-        },
-        shrink: {
-            start: 500,
-            // end: 1000,
-            end: 40000,
-        }
-}
 
 const Information = ({title, message, close, severity}: iInformationWithCloseArgs) => {
     const { theme } = useThemesAPI();
     const classes: {[key:string]: string} = useStyles(theme as any);
-    const isTimeout = useIsTimeout(INFORMATION_TIMEOUT);
     const {classesString, animate, time} = useAnimationClasses({
         animationDefinition: informationCloseAnimation,
         classes,
@@ -136,21 +134,11 @@ const Information = ({title, message, close, severity}: iInformationWithCloseArg
         runAfterDone: close,
     })
 
-    useEffect(() => {
-        console.log(classesString)
-    }, [classesString])
-
-    useEffect(()=>{
-        if (isTimeout) {animate()}
-    }, [isTimeout, animate])
-
-    // const { time } = useClock(GRADE);
     return (
-        // <div className={`${classes.dialog} ${classes[severity]}`}>
         <div className={classesString}>
             <div className={classes.closeBar}>
                 <h3 className={classes.title}>{title}</h3>
-                <button className={`${classes.closeButton} ${classes[severity]}`} onClick={close}>
+                <button className={`${classes.closeButton} ${classes[severity]}`} onClick={animate}>
                     &times;
                 </button>
             </div>

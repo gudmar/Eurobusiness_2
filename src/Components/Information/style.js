@@ -5,24 +5,20 @@ export const useStyles = createUseStyles((theme) => ({
     informationStack: {
         display: 'flex',
         flexDirection: 'column',
+        alignItems: 'center',
         position: "absolute",
         zIndex: '100',
         width: '100%',
         top: '5%',
-        // transform: 'translateY(-50%)',
-        // height: '100%'
-        
     },
     title: {
         display: 'inline'
     },
     dialog: {
         borderRadius: '0.7rem',
+        position: 'relative',
         border: 'none',
-        left: '50%',
-        right: '50%',
         width: '50%',
-        transform: 'translate(50%, 0%)',
         padding: '1rem',
         marginTop: '1rem'
     },
@@ -37,12 +33,13 @@ export const useStyles = createUseStyles((theme) => ({
     closeBar: {
     },
     fadeToBlack: {
-        opacity: '100%',
-        transition: '0.5s',
+        opacity: '0',
+        transition: '1s',
     },
     shrink: {
-        width: 0,
-        transition: '0.5s',
+        transform: 'scale(0.01)',
+        overflow: 'hidden',
+        transition: '1s'
     },
     [Severity.information]: {
         backgroundColor: '#009933',
