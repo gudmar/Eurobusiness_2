@@ -1,4 +1,5 @@
 import {createUseStyles} from 'react-jss'
+import { ZIndexes } from '../../Constants/styleConstants';
 import { useThemesAPI } from '../../Contexts/ThemeContext';
 import { CustomTheme } from '../../Types/themes'
 
@@ -14,7 +15,7 @@ export const useStyles = createUseStyles((theme: CustomTheme) => ({
         ...CENTER,
         width: '100vw',
         height: '100vh',
-        zIndex: '100000',
+        zIndex: ZIndexes.modal,
         position: 'absolute',
         top: '0',
         left: '0',

@@ -10,3 +10,8 @@ export const useIsTimeout = (time: number) => {
     [])
     return isTimeout
 }
+export type tDoAfterTimeout = () => void
+export const useDoAfterTimeout = (time: number, callback: tDoAfterTimeout) => {
+    const isTimeout = useIsTimeout(time);
+    useEffect(() => { if (isTimeout) callback();}, [isTimeout, callback])
+}
