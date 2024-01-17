@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useReducer, useRef } from "react";
+import { Informator } from "../../Components/Information/Infromator";
 import { tColors } from "../../Data/types";
 import { clearArray } from "../../Functions/clearArray";
 import { ANY_CHANGE } from "../../Logic/Messages/constants";
@@ -38,6 +39,7 @@ const subscribtionsStructure = [
 ]
 
 export const useEditPlayer = (wantedColor: tColors) => {
+    const infromator = new Informator();
     const players = Players.players
     const thisPlayer = Players.getPlayerByColor(wantedColor);
     const initialState = {...thisPlayer.getMemento()}
@@ -73,8 +75,15 @@ export const useEditPlayer = (wantedColor: tColors) => {
         }
     }, [wantedColor])
     const setFieldNr = useCallback((val: string) => {
-        if (player && player.current) {
+        if (player && player.current && !player.current.isInPrison) {
             player.current.fieldNr = parseInt(val)
+        } else {
+            infromator.displayError(
+                {
+                    title: 'Operation not allowed',
+                    message: 'Player cannot be moved as long as he is in prison'
+                }
+            )
         }
     }, [wantedColor])
     const setMoney = useCallback((val: string) => {
@@ -91,7 +100,7 @@ export const useEditPlayer = (wantedColor: tColors) => {
         if (player && player.current && player.current.fieldNr === PRISON_FIELD_NR_INDEXED_FROM_0) {
             player.current.isInPrison = val
         } else {
-            
+           infromator.displayError({title: 'Operation not allowed', message: 'Player may be marked as prisoner, only when he is on the "Jail" field (nr 11)'})
         }
     }, [wantedColor])
     const setIsGameLost = useCallback((val: boolean) => {
