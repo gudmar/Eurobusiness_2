@@ -1,5 +1,6 @@
 import { SubscribtionsHandler } from "../../Logic/SubscrbtionsHandler";
-import { iInformationArgs, iInformationData, INFORMATION_MESSAGE, Severity, tInformationMessage } from "./types";
+import { iMessage } from "../../Types/types";
+import { iInformationData, INFORMATION_MESSAGE, Severity, tInformationMessage } from "./types";
 
 export class Informator extends SubscribtionsHandler<tInformationMessage, iInformationData> {
     private static _instance: Informator;
@@ -14,13 +15,13 @@ export class Informator extends SubscribtionsHandler<tInformationMessage, iInfor
         }
     }
 
-    displayError({title, message}: iInformationArgs) {
+    displayError({title, message}: iMessage) {
         this.runAllSubscriptions(INFORMATION_MESSAGE, { severity: Severity.error, title, message })
     }
-    displayWarning({title, message}: iInformationArgs) {
+    displayWarning({title, message}: iMessage) {
         this.runAllSubscriptions(INFORMATION_MESSAGE, {severity: Severity.warning, title, message})
     }
-    displayInfo({title, message}: iInformationArgs) {
+    displayInfo({title, message}: iMessage) {
         this.runAllSubscriptions(INFORMATION_MESSAGE, {severity: Severity.information, title, message})
     }
     log() {this.logSubscribtions()}

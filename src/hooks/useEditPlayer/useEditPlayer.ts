@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useReducer, useRef } from "react";
 import { Informator } from "../../Components/Information/Infromator";
+import { PRISON_FIELD_NR_INDEXED_FROM_0 } from "../../Constants/constants";
 import { tColors } from "../../Data/types";
 import { clearArray } from "../../Functions/clearArray";
 import { ANY_CHANGE } from "../../Logic/Messages/constants";
@@ -7,8 +8,6 @@ import { Players } from "../../Logic/Players/Players";
 import { iPlayer } from "../../Logic/Players/types";
 import { iSubscription, tSubscription } from "../../Types/types";
 import { changeStateAction, getUpdateFieldNr, getUpdateGameLost, getUpdateIsInPrison, getUpdateMoney, getUpdateName, getUpdateSpecialCards, getUpdateState, getUpdateTurnsToWait, reducer,} from "./utils";
-
-const PRISON_FIELD_NR_INDEXED_FROM_0 = 10;
 
 const getPlayerInstance = (instances: iPlayer[], color: tColors) => (instances.find((instance: iPlayer) => instance.color === color) || null)
 

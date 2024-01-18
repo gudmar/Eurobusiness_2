@@ -11,9 +11,4 @@ export interface iInformationData {
     message: string,
 }
 
-export interface iInformationArgs {
-    title: string,
-    message: string,
-}
-
 export interface iInformationWithCloseArgs extends iInformationData {close: () => void, id: string}

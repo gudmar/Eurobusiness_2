@@ -36,6 +36,9 @@ export const MONEY_ALLTOGETHER = (() => {
     return result;
 })();
 
+export const PRISON_FIELD_NR_INDEXED_FROM_0 = 10;
+export const TURNS_TO_WAIT_TO_GET_OUT_OF_JAIL = 2;
+
 //=========================
 export const INFORMATION_TIMEOUT = 5000;
 export const MAX_PLAYER_NAME_LENGTH = 20;

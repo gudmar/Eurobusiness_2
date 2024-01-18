@@ -171,6 +171,7 @@ export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged
     }
 
     throwToMove(currentPlayerPosition: number): iThrowResult{
+        // Calculate exact nr of fields player should move to reach desired destiny
         if (this._testingMode === TestModes.none) {
             return this._dice.throwToMove();
         } else {

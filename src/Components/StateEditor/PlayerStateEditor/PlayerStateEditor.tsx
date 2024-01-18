@@ -1,5 +1,3 @@
-import React, { ReactNode } from "react";
-import { FC, useEffect } from "react";
 import { MAX_PLAYER_NAME_LENGTH, MONEY_ALLTOGETHER } from "../../../Constants/constants";
 import { useEditPlayer } from "../../../hooks/useEditPlayer/useEditPlayer"
 import { ChanceCardHolder } from "../../../Logic/Chance/ChanceCardHolder";

@@ -1,5 +1,8 @@
 import { useThemesAPI } from '../../Contexts/ThemeContext';
+import { YELLOW } from '../../Data/const';
+import { displayError, displayInfo, displayWarning } from '../../Functions/displayMessage';
 import { useModal } from '../../hooks/useModal';
+import { Commander } from '../../Logic/Commander/Commander';
 import { DARK_THEME } from '../../Themes/darkTheme';
 import { GREY_THEME } from '../../Themes/greyTheme';
 import { Button } from '../Button/Button';
@@ -10,24 +13,21 @@ import { GameStarter } from './GameStarter';
 import { useStyles } from './styles';
 
 const displayTestInfo = () => {
-    const informator = new Informator();
-    informator.displayInfo({
+    displayInfo({
         title: 'Sample infromation',
         message: 'This is a message that should read like it was something interesting'
     })
 }
 
 const displayTestWarn = () => {
-    const informator = new Informator();
-    informator.displayWarning({
+    displayWarning({
         title: 'Sample warning',
         message: 'This is a message that should read like it was something worring'
     })
 }
 
 const displayTestError = () => {
-    const informator = new Informator();
-    informator.displayError({
+    displayError({
         title: 'Sample error',
         message: 'This is a message that should read like it was something really bad'
     })
@@ -38,6 +38,9 @@ const logSubscribtions = () => {
     informator.logSubscribtions();
 }
 
+const moveYellowPlayer = () => {
+    Commander.movePlayer(YELLOW)
+}
 
 const Game = () => {
     const { theme, setThemeName } = useThemesAPI();
@@ -53,6 +56,10 @@ const Game = () => {
             <Button 
                 action = {() => setThemeName(GREY_THEME.name)}
                 label = {GREY_THEME.name}
+            />
+            <Button
+                action = {moveYellowPlayer}
+                label = {'Move yellow'}
             />
             <Button
                 action = {openStateEditor}

@@ -1,4 +1,9 @@
+import { title } from "process";
+import { PRISON_FIELD_NR_INDEXED_FROM_0, TURNS_TO_WAIT_TO_GET_OUT_OF_JAIL } from "../../Constants/constants";
+import { BOARD_SIZE } from "../../Data/const";
+import { tColors } from "../../Data/types";
 import { addUniqueArrayItems } from "../../Functions/addArrayUniqueItems";
+import { displayError, displayInfo } from "../../Functions/displayMessage";
 import { Bank } from "../Bank/Bank";
 import { ChanceCardHolder } from "../Chance/ChanceCardHolder";
 import { DiceTestModeDecorator } from "../Dice/Dice";
@@ -11,6 +16,14 @@ export class Commander {
 
     private static get _players() {return Players.instance};
     private static get _chanceCardHolders() {return ChanceCardHolder.instances}
+    private static _getPlayerByColor(playerColor: tColors) {
+        const player = Players.getPlayerByColor(playerColor);
+        if (!player) {
+            displayError({title: 'Not allowed', message: `Player with color ${playerColor} not found`});
+        }
+        return player;
+    }
+
 
     // ============= Chance cards ===========================
     static borrowACard({description, playerColor}: tChanceCardPayload) {
@@ -71,5 +84,29 @@ export class Commander {
     }
     static logTestDiceState() {Commander._testDice.logState()}
     // Write handlers for DiceForTests
+
+    // ===================  Move player ===========================
+
+    static movePlayer(playerColor: tColors) {
+        const player = Commander._getPlayerByColor(playerColor);
+        if (!player) return;
+        const fieldNr = player.fieldNr;
+        const {result, doublets} = Commander._testDice.throwToMove(fieldNr);
+        if (doublets >=2) Commander.putPlayerToJail(playerColor)
+        const nextFieldNr = (result + player.fieldNr) % BOARD_SIZE;
+        displayInfo({title: 'Dice throw result:', message: `Dice throw shows: ${result}. Moving ${playerColor} player to field nr ${nextFieldNr}`})
+        player.fieldNr = nextFieldNr;
+    }
+
+    // ====================  Put player to jail ======================
+
+    static putPlayerToJail(playerColor: tColors) {
+        const player = Commander._getPlayerByColor(playerColor);
+        if (!player) return;
+        displayInfo({title: 'You messed somthing up', message: 'You go to jail'});
+        player.fieldNr = PRISON_FIELD_NR_INDEXED_FROM_0;
+        player.isInPrison = true;
+        player.nrTurnsToWait = TURNS_TO_WAIT_TO_GET_OUT_OF_JAIL;
+    }
 
 }
