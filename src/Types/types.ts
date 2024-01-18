@@ -28,3 +28,8 @@ export interface iAny {
 }
 
 export interface iProps { [key: string]: unknown }
+
+export interface iMessage {
+    title: string,
+    message: string,
+}
