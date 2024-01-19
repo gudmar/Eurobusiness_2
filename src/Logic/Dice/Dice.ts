@@ -2,7 +2,7 @@ import { BOARD_SIZE, GO_TO_JAIL } from "../../Data/const";
 import { ANY_CHANGE, CHANGE_FIELDS_TO_VISIT, CHANGE_NR_THAT_DICE_WILL_THROW, CHANGE_TEST_MODE } from "../Messages/constants";
 import { SubscribtionsHandler } from "../SubscrbtionsHandler";
 import { CHANCE_FIELDS, CITY_FIELDS, NONE, PLANTS, RAILWAYS, TAX_FIELD } from "./const";
-import { iDice, iDiceTestModeDecorator, iJailTestOutcome, iThrowResult, TestModes } from "./types";
+import { iDice, iDiceTestModeDecorator, iJailTestOutcome, iThrowResult, iThrowResultRecursive, TestModes } from "./types";
 
 // DICE USES BOARD INDEX, NOT FROM 0 BuT FROM 1
 
@@ -17,13 +17,13 @@ const FIELD_INDEXES_FOR_TESTING = {
 }
 
 
-const getRandomGenerator = (min:number, max:number) => ():number => {
-    const result = Math.floor(Math.random() * max) + min
+export const getRandomGenerator = (min:number, max:number) => ():number => {
+    const result = Math.floor(Math.random() * (max- min)) + min
     return result
 }
 
 export class Dice implements iDice {
-    private _generate = getRandomGenerator(0, 6);
+    private _generate = getRandomGenerator(1, 6);
     private _throw(){
         return this._generate();
     }
@@ -32,33 +32,38 @@ export class Dice implements iDice {
     }
 
     getThrowForGetOutOfPrisonResult(): iJailTestOutcome {
-        const [ firstThrowResult, secondThrowResult ] = this._getTwoThrows();
-        if (firstThrowResult === 12 && secondThrowResult === 12) {
-            return iJailTestOutcome.pass
-        } else {
-            return iJailTestOutcome.fail
-        }
+        const throws = this._getTwoThrows();
+        const isDoublet  = throws[0] === throws[1];
+        const result = { throws, result: isDoublet };
+        return result;
     }
-    private _getSingleThrowResultForMove(): iThrowResult {
-        const [ firstThrowResult, secondThrowResult ] = this._getTwoThrows();
-        const isDublet = firstThrowResult === secondThrowResult;
-        if (!isDublet) {
-            return {result: firstThrowResult, doublets: 0}
-        } else {
-            return {result: firstThrowResult + secondThrowResult, doublets: 1}
+
+    private _getSingleThrowResultForMove(args: iThrowResultRecursive): iThrowResultRecursive {
+        const {throws, doublets, sum, iteration} = args;
+        if (iteration >= 2) return args;
+        const throwings = this._getTwoThrows();
+        const isDublet = throwings[0] === throwings[1];
+        const outcome = {
+            throws: [...throws, throwings],
+            doublets: isDublet ? doublets + 1 : doublets,
+            sum: sum + throwings[0] + throwings[1],
+            iteration: iteration + 1,
         }
+        return outcome;
     }
+
+    private _getThrowToMove(): iThrowResult {
+        const {throws, doublets, sum} = this._getSingleThrowResultForMove({ throws: [], doublets: 0, sum: 0, iteration: 0 })
+        return {throws, doublets, sum}
+    }
+
     throwToMove(): iThrowResult{
-        const firstThrowResult = this._getSingleThrowResultForMove();
-        if ( firstThrowResult.doublets === 0) return firstThrowResult;
-        const secondThrowResult = this._getSingleThrowResultForMove();
-        return {
-            result: firstThrowResult.result + secondThrowResult.result,
-            doublets: firstThrowResult.doublets + secondThrowResult.doublets,
-        }
+        const result = this._getThrowToMove()
+        return result;
     }
+
     throwToPay():number{
-        const [result, _] = this._getTwoThrows();
+        const [result] = this._getTwoThrows();
         return result;
     }
 }
@@ -180,8 +185,10 @@ export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged
                 this._getMappingInTestMode(this._testingMode)
             )
             return {
-                result: throwResult,
+                // result: throwResult,
+                throws: [[3, 3]],
                 doublets: 0,
+                sum: throwResult // CORRECT THIS FUNCTION
             }
         }
     }
@@ -190,11 +197,16 @@ export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged
         return this._dice.throwToPay()
     }
     
+    // shouldPlayerLeaveJail(): iJailTestOutcome {
+    //     switch(this._testingMode){
+    //         case TestModes.getGetAwayFromJailPass: return (iJailTestOutcome.pass);
+    //         case TestModes.getGetAwayFromJailFail: return (iJailTestOutcome.fail);
+    //         default: return this._dice.getThrowForGetOutOfPrisonResult();
+    //     }
+    // }
     shouldPlayerLeaveJail(): iJailTestOutcome {
-        switch(this._testingMode){
-            case TestModes.getGetAwayFromJailPass: return (iJailTestOutcome.pass);
-            case TestModes.getGetAwayFromJailFail: return (iJailTestOutcome.fail);
-            default: return this._dice.getThrowForGetOutOfPrisonResult();
+        return {
+            throws: [1,1], result: true
         }
     }
 }
