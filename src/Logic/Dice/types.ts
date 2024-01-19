@@ -16,12 +16,22 @@ export enum TestModes {
 }
 
 export interface iThrowResult {
-    result: number,
+    throws: number[][],
+    sum: number,
     doublets: number,
 }
 
-export enum iJailTestOutcome {
-    pass = 'pass', fail = 'fail'
+export interface iThrowResultRecursive extends iThrowResult {
+    iteration: number,
+}
+
+// export enum iJailTestOutcome {
+//     pass = 'pass', fail = 'fail'
+// }
+
+export interface iJailTestOutcome {
+    throws: number[],
+    result: boolean,
 }
 
 export interface iDice {
