@@ -131,9 +131,21 @@ describe('Testing DiceTestModeDecorator', () => {
         dice.testingMode = TestModes.taxField;
         dice.nrThatDiceWillSelectInTestMode = 2;
         const startPositions = [0, 10, 15, 39];
-        const expectedSums = [39, 29, 24, 40];
+        const expectedSums = [38, 28, 23, 39];
         const results = startPositions.map((startFieldIndex) => dice.throwToMove(startFieldIndex).sum);
         console.log('RESULT ', results)
         expect(results).toEqual(expectedSums);
+    })
+    it('Sould return 2 doublets of nrThatDiceWillSelectInTestMode when dice test mode is set to dubletTwice', () => {
+        const dice = new DiceTestModeDecorator();
+        dice.testingMode = TestModes.dubletTwice;
+        dice.nrThatDiceWillSelectInTestMode = 2;
+        const expected = {
+            throws: [[2, 2], [2, 2]],
+            sum: 8,
+            doublets: 2,
+        }
+        const result = dice.throwToMove(9);
+        expect(result).toEqual(expected);
     })
 })
