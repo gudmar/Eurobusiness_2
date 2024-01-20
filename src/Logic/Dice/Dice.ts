@@ -5,6 +5,7 @@ import { CHANCE_FIELDS, CITY_FIELDS, NONE, PLANTS, RAILWAYS, TAX_FIELD } from ".
 import { iDice, iDiceTestModeDecorator, iJailTestOutcome, iThrowResult, iThrowResultRecursive, TestModes } from "./types";
 
 // DICE USES BOARD INDEX, NOT FROM 0 BuT FROM 1
+const BOARD_INDEX_STARTS_FROM_1_OFFSET = 1
 
 const FIELD_INDEXES_FOR_TESTING = {
     [NONE]: [],
@@ -19,6 +20,7 @@ const FIELD_INDEXES_FOR_TESTING = {
 
 export const getRandomGenerator = (min:number, max:number) => ():number => {
     const result = Math.floor(Math.random() * (max- min)) + min
+    console.log('getRandomGeneraotr ', result)
     return result
 }
 
@@ -40,15 +42,16 @@ export class Dice implements iDice {
 
     private _getSingleThrowResultForMove(args: iThrowResultRecursive): iThrowResultRecursive {
         const {throws, doublets, sum, iteration} = args;
-        if (iteration >= 2) return args;
+        if (iteration >= 2 || (doublets === 0 && iteration > 0)) return args;
         const throwings = this._getTwoThrows();
+        console.log(throwings, 'THROWINGS')
         const isDublet = throwings[0] === throwings[1];
-        const outcome = {
+        const outcome = this._getSingleThrowResultForMove({
             throws: [...throws, throwings],
             doublets: isDublet ? doublets + 1 : doublets,
             sum: sum + throwings[0] + throwings[1],
             iteration: iteration + 1,
-        }
+        })
         return outcome;
     }
 
@@ -74,12 +77,26 @@ const DICE_RESULT = 'diceResult';
 const FIELDS_TO_VISIT = 'fieldsToVisit';
 export type tTestDiceChanged = typeof DICE_RESULT | typeof FIELDS_TO_VISIT | typeof ANY_CHANGE | typeof CHANGE_FIELDS_TO_VISIT | typeof CHANGE_TEST_MODE | typeof CHANGE_NR_THAT_DICE_WILL_THROW;
 type tTestiDiceMessage = number | string[] | string;
+type tDictionary = {[key: string]: unknown}
+
+const testModeFieldsDictionary: tDictionary = {
+    [TestModes.chanceFields]: FIELD_INDEXES_FOR_TESTING[CHANCE_FIELDS],
+    [TestModes.cityFields]: FIELD_INDEXES_FOR_TESTING[CITY_FIELDS],
+    [TestModes.plants]: FIELD_INDEXES_FOR_TESTING[PLANTS],
+    [TestModes.railways]: FIELD_INDEXES_FOR_TESTING[RAILWAYS],
+    [TestModes.goToJailField]: FIELD_INDEXES_FOR_TESTING[GO_TO_JAIL],
+    [TestModes.taxField]: FIELD_INDEXES_FOR_TESTING[TAX_FIELD],
+}
+
 
 export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged, tTestiDiceMessage> implements iDiceTestModeDecorator {
     private _testingMode: TestModes = TestModes.none;
     private _dice = new Dice();
     private static _instance: tDiceTestModeDecoratorInstance = null;
     private _fieldsToVisit: number[] = [];
+    private _nrThatDiceWillSelectInTestMode: number = 4;
+
+    static delete() {DiceTestModeDecorator._instance = null}
 
     set fieldsToVisit(fields: string[]) {
         const result: number[] = fields.map((val:string) => {
@@ -95,19 +112,12 @@ export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged
         return result
     }
 
-    private _getMappingInTestMode(testModeType: TestModes) {
-        switch(testModeType){
-            case TestModes.chanceFields: return FIELD_INDEXES_FOR_TESTING[CHANCE_FIELDS];
-            case TestModes.cityFields:   return FIELD_INDEXES_FOR_TESTING[CITY_FIELDS];
-            case TestModes.plants:       return FIELD_INDEXES_FOR_TESTING[PLANTS];
-            case TestModes.railways:     return FIELD_INDEXES_FOR_TESTING[RAILWAYS];
-            case TestModes.goToJailField: return FIELD_INDEXES_FOR_TESTING[GO_TO_JAIL];
-            case TestModes.taxField:     return FIELD_INDEXES_FOR_TESTING[TAX_FIELD];
-            default: throw new Error(`${testModeType} test mode type is not defined`)
-        }
+    private _getMappingInTestMode(testModeType: TestModes):number[] {
+        const fields = testModeFieldsDictionary[testModeType] as number[];
+        return fields;
     }
 
-    private _nrThatDiceWillSelectInTestMode: number = 4;
+    
 
     set nrThatDiceWillSelectInTestMode(nr: number) {
         if (nr < 1) this._nrThatDiceWillSelectInTestMode = 1;
@@ -155,9 +165,9 @@ export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged
             if (a < b) return -1;
             return 0;
         });
-        const indexOfNextFieldNumber = orderedIndexes.findIndex((boardFieldNumber) => boardFieldNumber > currentPlayerPosition)
+        const indexOfNextFieldNumber = orderedIndexes.findIndex((boardFieldNumber) => boardFieldNumber > currentPlayerPosition + BOARD_INDEX_STARTS_FROM_1_OFFSET)
         const result = indexOfNextFieldNumber === -1 ? listOfFieldNumbers[0] : listOfFieldNumbers[indexOfNextFieldNumber];
-        return result;
+        return result - BOARD_INDEX_STARTS_FROM_1_OFFSET;
     }
 
     private _getDeltaMove(currentPlayerPosition: number, plannedPlayerPosition: number) {
@@ -169,7 +179,9 @@ export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged
         }
     }
 
-    private _calculateThrowResultInTestMode(currentPlayerPosition: number, listOfFieldNumbers: number[]){
+    private _calculateThrowResultInTestMode(currentPlayerPosition: number){
+        if (this._testingMode === TestModes.constantNumber) return this._nrThatDiceWillSelectInTestMode;
+        const listOfFieldNumbers = this._getMappingInTestMode(this._testingMode)
         const plannedPosition = this._findNextFieldNumberToVisitInTestMode(currentPlayerPosition, listOfFieldNumbers);
         const throwResult = this._getDeltaMove(currentPlayerPosition, plannedPosition);
         return throwResult;
@@ -180,10 +192,7 @@ export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged
         if (this._testingMode === TestModes.none) {
             return this._dice.throwToMove();
         } else {
-            const throwResult = this._calculateThrowResultInTestMode(
-                currentPlayerPosition,
-                this._getMappingInTestMode(this._testingMode)
-            )
+            const throwResult = this._calculateThrowResultInTestMode(currentPlayerPosition)
             return {
                 // result: throwResult,
                 throws: [[3, 3]],

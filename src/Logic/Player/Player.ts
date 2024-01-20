@@ -169,7 +169,7 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
         }
     }
     async move():Promise<boolean> {
-        const {result: nrOfFields, doublets} = this._diceInstance.throwToMove(this._fieldNr);
+        const {sum: nrOfFields, doublets} = this._diceInstance.throwToMove(this._fieldNr);
         if (doublets > 1) {
             console.error('Implement go to jail here')
         }

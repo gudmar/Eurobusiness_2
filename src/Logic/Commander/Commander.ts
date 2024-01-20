@@ -91,10 +91,22 @@ export class Commander {
         const player = Commander._getPlayerByColor(playerColor);
         if (!player) return;
         const fieldNr = player.fieldNr;
-        const {result, doublets} = Commander._testDice.throwToMove(fieldNr);
+        const {throws, sum, doublets} = Commander._testDice.throwToMove(fieldNr);
         if (doublets >=2) Commander.putPlayerToJail(playerColor)
-        const nextFieldNr = (result + player.fieldNr) % BOARD_SIZE;
-        displayInfo({title: 'Dice throw result:', message: `Dice throw shows: ${result}. Moving ${playerColor} player to field nr ${nextFieldNr}`})
+        const testMode = Commander._testDice.testingMode;
+        const nextFieldNr = (sum + player.fieldNr) % BOARD_SIZE;
+        if (testMode === TestModes.none) {
+            displayInfo({title: 'Dice throw result:', message: `Dice throws shows: [${throws.flat().join(', ')}]. Moving ${playerColor} player to field nr ${nextFieldNr}`})
+        } else {
+            displayInfo({
+                title: 'Dice throw result:',
+                message: `
+                    Game in test mode [${testMode}]. Doublets 0, dice result [${sum}], going to field [${nextFieldNr}]
+                `
+            })
+        }
+        
+        
         player.fieldNr = nextFieldNr;
     }
 
