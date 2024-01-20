@@ -1,11 +1,13 @@
 import { BOARD_SIZE, GO_TO_JAIL } from "../../Data/const";
+import { range } from "../../Functions/createRange";
 import { ANY_CHANGE, CHANGE_FIELDS_TO_VISIT, CHANGE_NR_THAT_DICE_WILL_THROW, CHANGE_TEST_MODE } from "../Messages/constants";
 import { SubscribtionsHandler } from "../SubscrbtionsHandler";
 import { CHANCE_FIELDS, CITY_FIELDS, NONE, PLANTS, RAILWAYS, TAX_FIELD } from "./const";
 import { iDice, iDiceTestModeDecorator, iJailTestOutcome, iThrowResult, iThrowResultRecursive, TestModes } from "./types";
 
 // DICE USES BOARD INDEX, NOT FROM 0 BuT FROM 1
-const BOARD_INDEX_STARTS_FROM_1_OFFSET = 1
+const BOARD_INDEX_STARTS_FROM_1_OFFSET = 1;
+const NOT_POSSIBLE_DICE_RESULT= -1;
 
 const FIELD_INDEXES_FOR_TESTING = {
     [NONE]: [],
@@ -20,7 +22,6 @@ const FIELD_INDEXES_FOR_TESTING = {
 
 export const getRandomGenerator = (min:number, max:number) => ():number => {
     const result = Math.floor(Math.random() * (max- min)) + min
-    console.log('getRandomGeneraotr ', result)
     return result
 }
 
@@ -44,7 +45,6 @@ export class Dice implements iDice {
         const {throws, doublets, sum, iteration} = args;
         if (iteration >= 2 || (doublets === 0 && iteration > 0)) return args;
         const throwings = this._getTwoThrows();
-        console.log(throwings, 'THROWINGS')
         const isDublet = throwings[0] === throwings[1];
         const outcome = this._getSingleThrowResultForMove({
             throws: [...throws, throwings],
@@ -145,14 +145,6 @@ export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged
         return DiceTestModeDecorator._instance;
     }
 
-    // getThrowForGetOutOfPrisonResult(): iJailTestOutcome {
-    //     if (this._testingMode === TestModes.getGetAwayFromJailPass) {
-    //         return iJailTestOutcome.pass
-    //     } else if (this._testingMode === TestModes.getGetAwayFromJailFail) {
-    //         return iJailTestOutcome.fail
-    //     }
-    //     return this._dice.getThrowForGetOutOfPrisonResult();
-    // }
     set testingMode (nextValue: TestModes) { 
         this._testingMode = nextValue
         this.runAllSubscriptions(CHANGE_TEST_MODE, nextValue)
@@ -179,26 +171,34 @@ export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged
         }
     }
 
+    private _getDoubletResult = () => {
+        const diceResult = this._nrThatDiceWillSelectInTestMode;
+        const singleDice = range(1).map(() => diceResult);
+        const throws = range(1).map(() => singleDice);
+        const sum = 4 * diceResult;
+        return { sum, throws, doublets: 2 }
+    }
+
     private _calculateThrowResultInTestMode(currentPlayerPosition: number){
         if (this._testingMode === TestModes.constantNumber) return this._nrThatDiceWillSelectInTestMode;
+        
         const listOfFieldNumbers = this._getMappingInTestMode(this._testingMode)
         const plannedPosition = this._findNextFieldNumberToVisitInTestMode(currentPlayerPosition, listOfFieldNumbers);
         const throwResult = this._getDeltaMove(currentPlayerPosition, plannedPosition);
         return throwResult;
     }
 
+
     throwToMove(currentPlayerPosition: number): iThrowResult{
         // Calculate exact nr of fields player should move to reach desired destiny
-        if (this._testingMode === TestModes.none) {
-            return this._dice.throwToMove();
-        } else {
-            const throwResult = this._calculateThrowResultInTestMode(currentPlayerPosition)
-            return {
-                // result: throwResult,
-                throws: [[3, 3]],
-                doublets: 0,
-                sum: throwResult // CORRECT THIS FUNCTION
-            }
+        if (this._testingMode === TestModes.none) { return this._dice.throwToMove();}
+        if (this._testingMode === TestModes.dubletTwice) return this._getDoubletResult();
+        const throwResult = this._calculateThrowResultInTestMode(currentPlayerPosition)
+        return {
+            // result: throwResult,
+            throws: [[NOT_POSSIBLE_DICE_RESULT, NOT_POSSIBLE_DICE_RESULT]],
+            doublets: 0,
+            sum: throwResult // CORRECT THIS FUNCTION
         }
     }
 

@@ -5,17 +5,17 @@ const START_INDEX = 1;
 
 const testData = [
     {
-        expected: 2,
+        expected: 1,
         currentPlayerPosition: START_INDEX,
         testMode: TestModes.chanceFields
     },
     {
-        expected: 2,
+        expected: 1,
         currentPlayerPosition: 17,
         testMode: TestModes.cityFields
     },
     {
-        expected: 10,
+        expected: 9,
         currentPlayerPosition: 36,
         testMode: TestModes.railways
     },

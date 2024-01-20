@@ -89,11 +89,15 @@ export class Commander {
 
     static movePlayer(playerColor: tColors) {
         const player = Commander._getPlayerByColor(playerColor);
+        const testMode = Commander._testDice.testingMode;
+        if ([TestModes.getGetAwayFromJailFail, TestModes.getGetAwayFromJailPass].includes(testMode)) {
+            displayError({title: 'Unpossible operation', message: `Dices are in test mode [${testMode}]. This mode is not designed to allow player move`})
+            return;
+        }
         if (!player) return;
         const fieldNr = player.fieldNr;
         const {throws, sum, doublets} = Commander._testDice.throwToMove(fieldNr);
         if (doublets >=2) Commander.putPlayerToJail(playerColor)
-        const testMode = Commander._testDice.testingMode;
         const nextFieldNr = (sum + player.fieldNr) % BOARD_SIZE;
         if (testMode === TestModes.none) {
             displayInfo({title: 'Dice throw result:', message: `Dice throws shows: [${throws.flat().join(', ')}]. Moving ${playerColor} player to field nr ${nextFieldNr}`})
@@ -105,7 +109,6 @@ export class Commander {
                 `
             })
         }
-        
         
         player.fieldNr = nextFieldNr;
     }
