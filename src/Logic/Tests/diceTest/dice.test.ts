@@ -13,11 +13,10 @@ class MockRandom {
 
 class MockNotSymetricalRandom {
     static throwNr = 0;
-    static reset() { MockRandom.throwNr = 0;}
+    static reset() { MockNotSymetricalRandom.throwNr = 0;}
     static random() {
-        MockRandom.throwNr++;
-        console.log('Random', MockRandom.throwNr, MockRandom.throwNr % 4)
-        return MockRandom.throwNr % 4 === 0 ? 1 : 0
+        MockNotSymetricalRandom.throwNr++;
+        return MockNotSymetricalRandom.throwNr % 4 === 0 ? 1 : 0
     }
 }
 
@@ -133,7 +132,6 @@ describe('Testing DiceTestModeDecorator', () => {
         const startPositions = [0, 10, 15, 39];
         const expectedSums = [38, 28, 23, 39];
         const results = startPositions.map((startFieldIndex) => dice.throwToMove(startFieldIndex).sum);
-        console.log('RESULT ', results)
         expect(results).toEqual(expectedSums);
     })
     it('Should return 2 doublets of nrThatDiceWillSelectInTestMode when dice test mode is set to dubletTwice', () => {
@@ -186,5 +184,43 @@ type tGetVisitAllFieldsFromListArgs = { startFromField: number, listToVisit: str
         })
         expect(result).toEqual(expectedSums);
     })
+})
+
+describe('Testing shouldPlayerLeaveJail functionality', () => {
+    it('Should return true when in getAwayFromJailPass mode', () => {
+        const dice = new DiceTestModeDecorator();
+        dice.testingMode = TestModes.getGetAwayFromJailPass;
+        const {result} = dice.shouldPlayerLeaveJail();
+        expect(result).toBeTruthy()
+    })
+    it('Should return false when in getAwayFromJailPass mode', () => {
+        const dice = new DiceTestModeDecorator();
+        dice.testingMode = TestModes.getGetAwayFromJailFail;
+        const {result} = dice.shouldPlayerLeaveJail();
+        expect(result).toBeFalsy()
+    })
+    it('Should return true when not in test mode and dice result is a doublet', () => {
+        const dice = new DiceTestModeDecorator();
+        jest.spyOn(global.Math, 'random').mockReturnValue(1);
+        dice.testingMode = TestModes.getGetAwayFromJailPass;
+        const {result} = dice.shouldPlayerLeaveJail();
+        jest.spyOn(global.Math, 'random').mockRestore();
+        expect(result).toBeTruthy()
+    })
+    it('Sould return false when not in test mode and dice result is not a doublet', () => {
+        MockRandom.reset();
+        const r = MockRandom.random;
+        jest.spyOn(global.Math, 'random').mockImplementation(r)
+        const dice = new DiceTestModeDecorator();
+        const {result} = dice.shouldPlayerLeaveJail();
+        MockRandom.reset();
+        jest.spyOn(global.Math, 'random').mockRestore();
+        expect(result).toBeFalsy();
+
+    })
+
+
+
 
 })
+
