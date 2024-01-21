@@ -94,6 +94,7 @@ export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged
     private _dice = new Dice();
     private static _instance: tDiceTestModeDecoratorInstance = null;
     private _fieldsToVisit: number[] = [];
+    private _indexOfNextFieldToVisit = 0;
     private _nrThatDiceWillSelectInTestMode: number = 4;
 
     static delete() {DiceTestModeDecorator._instance = null}
@@ -101,10 +102,11 @@ export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged
     set fieldsToVisit(fields: string[]) {
         const result: number[] = fields.map((val:string) => {
             const nr = parseInt(val);
-            if (isNaN(nr)) throw new Error(`Not able to covert ${val} to number`);
+            if (isNaN(nr)) throw new Error(`Not able to convert ${val} to number`);
             return nr;            
         })
-        this._fieldsToVisit = result
+        this._fieldsToVisit = result;
+        this._indexOfNextFieldToVisit = 0;
         this.runAllSubscriptions(CHANGE_FIELDS_TO_VISIT, this._fieldsToVisit.map(i=>`${i}`))
     }
     get fieldsToVisit() {
@@ -179,9 +181,29 @@ export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged
         return { sum, throws, doublets: 2 }
     }
 
+private _increamentIndexOfNextFieldToVisit = () => {
+    this._indexOfNextFieldToVisit++;
+    if (this._indexOfNextFieldToVisit >= this._fieldsToVisit.length) this._indexOfNextFieldToVisit = 0;
+}
+
+private _getNrFieldsToMoveWhenVisitListMode = (currentField: number) => {
+    const nextFieldToVisit = this._fieldsToVisit[this._indexOfNextFieldToVisit];
+    if (currentField >= nextFieldToVisit) {
+        const interval = currentField - nextFieldToVisit;
+        const result = BOARD_SIZE - interval;
+        return result
+    }
+    const result = nextFieldToVisit - currentField;
+    return result;
+}
+
     private _calculateThrowResultInTestMode(currentPlayerPosition: number){
         if (this._testingMode === TestModes.constantNumber) return this._nrThatDiceWillSelectInTestMode;
-        
+        if (this._testingMode === TestModes.visitFieldsFromList) {
+            const nrOfFieldsToMove = this._getNrFieldsToMoveWhenVisitListMode(currentPlayerPosition);
+            this._increamentIndexOfNextFieldToVisit();
+            return nrOfFieldsToMove;
+        }
         const listOfFieldNumbers = this._getMappingInTestMode(this._testingMode)
         const plannedPosition = this._findNextFieldNumberToVisitInTestMode(currentPlayerPosition, listOfFieldNumbers);
         const throwResult = this._getDeltaMove(currentPlayerPosition, plannedPosition);

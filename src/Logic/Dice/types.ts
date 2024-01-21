@@ -11,7 +11,8 @@ export enum TestModes {
     taxField = 'taxField',
     getGetAwayFromJailPass = 'getAwayFromJailPass',
     getGetAwayFromJailFail = 'getAwayFromJailFail',
-    constantNumber = 'constantNumber'
+    constantNumber = 'constantNumber',
+    visitFieldsFromList = 'visitFieldsFromList'
 }
 
 export interface iThrowResult {
