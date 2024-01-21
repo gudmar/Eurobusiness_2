@@ -136,7 +136,7 @@ describe('Testing DiceTestModeDecorator', () => {
         console.log('RESULT ', results)
         expect(results).toEqual(expectedSums);
     })
-    it('Sould return 2 doublets of nrThatDiceWillSelectInTestMode when dice test mode is set to dubletTwice', () => {
+    it('Should return 2 doublets of nrThatDiceWillSelectInTestMode when dice test mode is set to dubletTwice', () => {
         const dice = new DiceTestModeDecorator();
         dice.testingMode = TestModes.dubletTwice;
         dice.nrThatDiceWillSelectInTestMode = 2;
@@ -148,4 +148,43 @@ describe('Testing DiceTestModeDecorator', () => {
         const result = dice.throwToMove(9);
         expect(result).toEqual(expected);
     })
+
+type tGetVisitAllFieldsFromListArgs = { startFromField: number, listToVisit: string[], nrOfMoves: number, dice: DiceTestModeDecorator, nrOfMove: number, result: number[]}
+
+    const visitAllFieldsFromList = (args: tGetVisitAllFieldsFromListArgs) => {
+        const {listToVisit, nrOfMoves, dice, nrOfMove, result, startFromField} = args;
+        if (nrOfMove > nrOfMoves - 1) return args;
+        const nextIndex = nrOfMove % listToVisit.length;
+        const currentIndex = nextIndex === 0 ? listToVisit.length - 1 : nextIndex - 1
+        const currentFieldIndex = nrOfMove === 0 ? startFromField : parseInt(listToVisit[currentIndex])
+        const {sum} = dice.throwToMove(currentFieldIndex);
+        result.push(sum);
+        visitAllFieldsFromList({...args, nrOfMove: nrOfMove + 1})
+        return args;
+
+    } 
+
+    it('Should visit all fields specified in a list of fields in given order when set to visitFieldsFromList', () => {
+        const dice = new DiceTestModeDecorator();
+        dice.testingMode = TestModes.visitFieldsFromList;
+        const toVisit = ['13', '24', '33', '32'];
+        dice.fieldsToVisit = toVisit;
+        const expectedSums = [13, 11, 9, 39, 21];
+        const { result } = visitAllFieldsFromList({
+            listToVisit: dice.fieldsToVisit, nrOfMoves: 5, dice, nrOfMove: 0, result: [], startFromField: 0
+        })
+        expect(result).toEqual(expectedSums);
+    })
+    it('Should visit 3, 2, 4 felds if they are specified in visitFieldsFromList', () => {
+        const dice = new DiceTestModeDecorator();
+        dice.testingMode = TestModes.visitFieldsFromList;
+        const toVisit = ['3', '2', '4'];
+        dice.fieldsToVisit = toVisit;
+        const expectedSums = [3, 39, 2, 39];
+        const { result } = visitAllFieldsFromList({
+            listToVisit: dice.fieldsToVisit, nrOfMoves: 4, dice, nrOfMove: 0, result: [], startFromField: 0
+        })
+        expect(result).toEqual(expectedSums);
+    })
+
 })
