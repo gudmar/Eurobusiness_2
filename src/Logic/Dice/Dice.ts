@@ -36,6 +36,7 @@ export class Dice implements iDice {
 
     getThrowForGetOutOfPrisonResult(): iJailTestOutcome {
         const throws = this._getTwoThrows();
+        console.log('Throws', throws)
         const isDoublet  = throws[0] === throws[1];
         const result = { throws, result: isDoublet };
         return result;
@@ -209,10 +210,11 @@ private _getNrFieldsToMoveWhenVisitListMode = (currentField: number) => {
         const throwResult = this._getDeltaMove(currentPlayerPosition, plannedPosition);
         return throwResult;
     }
-
+    private _NOT_POSSIBLE_TO_MOVE = [TestModes.getGetAwayFromJailFail, TestModes.getGetAwayFromJailPass]
 
     throwToMove(currentPlayerPosition: number): iThrowResult{
         // Calculate exact nr of fields player should move to reach desired destiny
+        if (this._NOT_POSSIBLE_TO_MOVE.includes(this._testingMode)) throw new Error(`Not possible to move in test mode [${this._testingMode}]`)
         if (this._testingMode === TestModes.none) { return this._dice.throwToMove();}
         if (this._testingMode === TestModes.dubletTwice) return this._getDoubletResult();
         const throwResult = this._calculateThrowResultInTestMode(currentPlayerPosition)
@@ -228,16 +230,23 @@ private _getNrFieldsToMoveWhenVisitListMode = (currentField: number) => {
         return this._dice.throwToPay()
     }
     
-    // shouldPlayerLeaveJail(): iJailTestOutcome {
-    //     switch(this._testingMode){
-    //         case TestModes.getGetAwayFromJailPass: return (iJailTestOutcome.pass);
-    //         case TestModes.getGetAwayFromJailFail: return (iJailTestOutcome.fail);
-    //         default: return this._dice.getThrowForGetOutOfPrisonResult();
-    //     }
-    // }
     shouldPlayerLeaveJail(): iJailTestOutcome {
-        return {
-            throws: [1,1], result: true
+        switch(this._testingMode){
+            case TestModes.getGetAwayFromJailPass: return ({
+                throws: [NOT_POSSIBLE_DICE_RESULT, NOT_POSSIBLE_DICE_RESULT],
+                result: true,
+            });
+            case TestModes.getGetAwayFromJailFail: return ({
+                throws: [NOT_POSSIBLE_DICE_RESULT - 1, NOT_POSSIBLE_DICE_RESULT],
+                result: false,
+            });
+            default: return this._dice.getThrowForGetOutOfPrisonResult();
         }
     }
+
+    // shouldPlayerLeaveJail(): iJailTestOutcome {
+    //     return {
+    //         throws: [1,1], result: true
+    //     }
+    // }
 }
