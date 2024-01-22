@@ -22,7 +22,6 @@ class MockNotSymetricalRandom {
 
 
 describe('Testing dice throw with getThrowForGetOutOfPrisonResult', () => {
-        
     it('Should return throws: [1, 6], result: fail, when randomly selected 1 and 6', () => {
         const r = MockRandom.random;
         jest.spyOn(global.Math, 'random').mockImplementation(r)
@@ -98,7 +97,13 @@ describe('Testing dice throwToMove', () => {
 })
 
 describe('Testing DiceTestModeDecorator', () => {
-    afterEach(() => DiceTestModeDecorator.delete())
+    // afterEach(() => DiceTestModeDecorator.delete())
+    afterEach(() => {
+        const dice = new DiceTestModeDecorator();
+        dice.testingMode = TestModes.getGetAwayFromJailPass;
+        DiceTestModeDecorator.delete()
+    })
+
     it ('Should return the same instance when constructor called twice' , () => {
         const testDice1 = new DiceTestModeDecorator();
         const testDice2 = new DiceTestModeDecorator();
@@ -187,6 +192,12 @@ type tGetVisitAllFieldsFromListArgs = { startFromField: number, listToVisit: str
 })
 
 describe('Testing shouldPlayerLeaveJail functionality', () => {
+    afterEach(() => {
+        const dice = new DiceTestModeDecorator();
+        dice.testingMode = TestModes.getGetAwayFromJailPass;
+        DiceTestModeDecorator.delete()
+    })
+
     it('Should return true when in getAwayFromJailPass mode', () => {
         const dice = new DiceTestModeDecorator();
         dice.testingMode = TestModes.getGetAwayFromJailPass;
