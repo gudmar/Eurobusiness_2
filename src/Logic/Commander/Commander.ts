@@ -8,7 +8,9 @@ import { Bank } from "../Bank/Bank";
 import { ChanceCardHolder } from "../Chance/ChanceCardHolder";
 import { DiceTestModeDecorator } from "../Dice/Dice";
 import { TestModes } from "../Dice/types";
+import { Player } from "../Player/Player";
 import { Players } from "../Players/Players";
+import { iPlayer } from "../Players/types";
 import { tChanceCardPayload } from "./types";
 
 
@@ -87,7 +89,48 @@ export class Commander {
 
     // ===================  Move player ===========================
 
-    static movePlayer(playerColor: tColors) {
+
+    static doAfterTimenout(timeout: number, cb: () => void) {
+        const result = new Promise((resolve) => {
+            const t = setTimeout(() => {
+                cb();
+                clearTimeout(t)
+                resolve(true)
+            }, timeout)    
+        })
+        return result;
+    }
+
+    static async animateMovingPlayerWithRecursion(player: iPlayer, desiredPosition: number) {
+        // const currentPosition = player.fieldNr;
+        // console.log('Positions', currentPosition, desiredPosition)
+        // if (currentPosition === desiredPosition) return Promise.resolve(true);
+        // const nextDesiredPosition = desiredPosition + 1 >= BOARD_SIZE ? 0 : currentPosition + 1;
+        // const isDone = await this.doAfterTimenout(500, () => {player.fieldNr = nextDesiredPosition})
+        // console.log('Is done', isDone, nextDesiredPosition)
+        // await Commander.animateMovingPlayer(player, desiredPosition)
+        // return isDone;
+    }
+    static async step(player: iPlayer, nrOfSteps: number) {
+        const currentPosition = player.fieldNr;
+        console.log('Positions', currentPosition, nrOfSteps)
+        if (nrOfSteps <= 0) return Promise.resolve(true);
+        const nextDesiredPosition = currentPosition + 1 < BOARD_SIZE ? currentPosition + 1 : 0;
+        const isDone = await this.doAfterTimenout(500, () => {player.fieldNr = nextDesiredPosition})
+        console.log('Is done', isDone, nextDesiredPosition)
+        await Commander.step(player, nrOfSteps - 1)
+        return isDone;
+
+    }
+
+    static async animateMovingPlayer(player: iPlayer, desiredPosition: number) {
+        const currentPosition = player.fieldNr;
+        const nrOfSteps = desiredPosition > currentPosition ? desiredPosition - currentPosition - 1: BOARD_SIZE - currentPosition + desiredPosition + 1;
+        const isDone = await Commander.step(player, nrOfSteps)
+        return isDone;
+    }
+
+    static async movePlayer(playerColor: tColors) {
         const player = Commander._getPlayerByColor(playerColor);
         const testMode = Commander._testDice.testingMode;
         if ([TestModes.getGetAwayFromJailFail, TestModes.getGetAwayFromJailPass].includes(testMode)) {
@@ -109,8 +152,11 @@ export class Commander {
                 `
             })
         }
+        if (![TestModes.none, TestModes.visitFieldsFromList].includes(testMode)) { player.fieldNr = nextFieldNr; }
+        else {
+            await Commander.animateMovingPlayer(player, nextFieldNr)
+        }
         
-        player.fieldNr = nextFieldNr;
     }
 
     // ====================  Put player to jail ======================

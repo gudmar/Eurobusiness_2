@@ -61,7 +61,7 @@ export interface iAllPlayers extends iSubscribtionHandler<Messages, iPlayer> {
     allPlayersStates: iPlayerState[],
     getPlayerFieldIndex(color:tColors): number,
     currentPlayer: iPlayer,
-    makeMove(): Promise<boolean>,
+    // makeMove(): Promise<boolean>,
 }
 
 // export interface iAllPlayersReturn {

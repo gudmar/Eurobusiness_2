@@ -10,7 +10,8 @@ export const useStyles = createUseStyles((theme) => ({
         position: "absolute",
         zIndex: ZIndexes.userInformation,
         width: '100%',
-        top: '5%',
+        // top: '5%',
+        top: '25%'
     },
     title: {
         display: 'inline'
