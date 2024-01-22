@@ -95,10 +95,10 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
         return result;
     }
 
-    async makeMove(): Promise<boolean> {
-        const result = await this.currentPlayer.move();
-        return result;
-    }
+    // async makeMove(): Promise<boolean> {
+    //     const result = await this.currentPlayer.move();
+    //     return result;
+    // }
 
     get currentPlayer(): iPlayer { return Players.players[this._currentPlayerIndex] }
 

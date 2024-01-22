@@ -168,20 +168,20 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
             promise: promiseToAwait,
         }
     }
-    async move():Promise<boolean> {
-        const {sum: nrOfFields, doublets} = this._diceInstance.throwToMove(this._fieldNr);
-        if (doublets > 1) {
-            console.error('Implement go to jail here')
-        }
-        const result = await this.movePawn(nrOfFields);
-        return result;
-    }
+    // async move():Promise<boolean> {
+    //     const {sum: nrOfFields, doublets} = this._diceInstance.throwToMove(this._fieldNr);
+    //     if (doublets > 1) {
+    //         console.error('Implement go to jail here')
+    //     }
+    //     const result = await this.movePawn(nrOfFields);
+    //     return result;
+    // }
 
-    private async movePawn(nrOfFields: number) {
-        const {resolve, promise} = this.getDoneFunction();
-        this.runAllSubscriptions(MOVE, {nrOfFields, done: resolve!});
-        await promise;
-        return Promise.resolve(true);
-    }
+    // private async movePawn(nrOfFields: number) {
+    //     const {resolve, promise} = this.getDoneFunction();
+    //     this.runAllSubscriptions(MOVE, {nrOfFields, done: resolve!});
+    //     await promise;
+    //     return Promise.resolve(true);
+    // }
 
 }

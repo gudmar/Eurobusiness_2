@@ -218,7 +218,7 @@ describe('Testing shouldPlayerLeaveJail functionality', () => {
         jest.spyOn(global.Math, 'random').mockRestore();
         expect(result).toBeTruthy()
     })
-    it('Sould return false when not in test mode and dice result is not a doublet', () => {
+    it('Should return false when not in test mode and dice result is not a doublet', () => {
         MockRandom.reset();
         const r = MockRandom.random;
         jest.spyOn(global.Math, 'random').mockImplementation(r)

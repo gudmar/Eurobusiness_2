@@ -9,7 +9,8 @@ export const useStyles = createUseStyles((theme: CustomTheme) => ({
         borderRadius: '50%',
         position: 'absolute',
         border: 'solid thin #aaaaaa',
-        boxShadow: 'inset 0px 0px 43px -26px rgba(66, 68, 90, 1)'
+        boxShadow: 'inset 0px 0px 43px -26px rgba(66, 68, 90, 1)',
+        transition: '0.3s'
     }
 })
 );
