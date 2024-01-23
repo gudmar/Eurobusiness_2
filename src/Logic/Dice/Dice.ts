@@ -1,11 +1,16 @@
 import { BOARD_SIZE, GO_TO_JAIL } from "../../Data/const";
 import { range } from "../../Functions/createRange";
+import { shiftBoardIndexByNeg1 } from "../../Functions/shiftIndex";
 import { ANY_CHANGE, CHANGE_FIELDS_TO_VISIT, CHANGE_NR_THAT_DICE_WILL_THROW, CHANGE_TEST_MODE } from "../Messages/constants";
 import { SubscribtionsHandler } from "../SubscrbtionsHandler";
 import { CHANCE_FIELDS, CITY_FIELDS, NONE, PLANTS, RAILWAYS, TAX_FIELD } from "./const";
 import { iDice, iDiceTestModeDecorator, iJailTestOutcome, iThrowResult, iThrowResultRecursive, TestModes } from "./types";
 
 // DICE USES BOARD INDEX, NOT FROM 0 BuT FROM 1
+// DESIGN ERROR: Logic should not know about the fact, that indexing in GUI starts from 1. In Logic folder, indexing should be from 0
+// but dices know about this fact and they shift dice result
+// Shifting should happen in GUI layer
+
 const BOARD_INDEX_STARTS_FROM_1_OFFSET = 1;
 const NOT_POSSIBLE_DICE_RESULT= -1;
 
@@ -201,7 +206,7 @@ private _getNrFieldsToMoveWhenVisitListMode = (currentField: number) => {
     private _calculateThrowResultInTestMode(currentPlayerPosition: number){
         if (this._testingMode === TestModes.constantNumber) return this._nrThatDiceWillSelectInTestMode;
         if (this._testingMode === TestModes.visitFieldsFromList) {
-            const nrOfFieldsToMove = this._getNrFieldsToMoveWhenVisitListMode(currentPlayerPosition);
+            const nrOfFieldsToMove = shiftBoardIndexByNeg1(this._getNrFieldsToMoveWhenVisitListMode(currentPlayerPosition));
             this._increamentIndexOfNextFieldToVisit();
             return nrOfFieldsToMove;
         }

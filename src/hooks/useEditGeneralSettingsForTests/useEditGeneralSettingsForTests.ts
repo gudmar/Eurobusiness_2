@@ -1,5 +1,6 @@
 import { useEffect, useReducer } from "react"
 import { getReducer } from "../../Functions/reducer"
+import { shiftBoardIndexByNeg1 } from "../../Functions/shiftIndex"
 import { Commander } from "../../Logic/Commander/Commander"
 import { DiceTestModeDecorator } from "../../Logic/Dice/Dice"
 import { TestModes } from "../../Logic/Dice/types"
@@ -165,8 +166,16 @@ export const useGeneralSettingsForTests = (): tUseGeneralSettingsForTests => {
         testMode,
         setNrToBeSelectedForDicesThrow: Commander.changeNrToBeSelectedOnDicesThrow,
         setTestMode: (item : string) => Commander.changeTestMode(item as TestModes),
-        addFieldToVisit: (item: string) => Commander.addFieldsToVisit([item]),
-        removeFieldToVisit: (item: string) => Commander.removeFieldsToVisit([item]),
+        addFieldToVisit: (item: string) => {
+            // const shiftedItem = shiftBoardIndexByNeg1(parseInt(item));
+            // Commander.addFieldsToVisit([`${shiftedItem}`])
+            Commander.addFieldsToVisit([item])
+        },
+        removeFieldToVisit: (item: string) => {
+            // const shiftedItem = shiftBoardIndexByNeg1(parseInt(item));
+            // Commander.removeFieldsToVisit([`${shiftedItem}`])
+            Commander.removeFieldsToVisit([item])
+        },
         selectedFields: selectedFields,
         possibleTestModes: Object.values(TestModes),
         log: () => {

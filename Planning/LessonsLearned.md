@@ -1,2 +1,3 @@
 1. Putting logic to some classes and handling state in those classes causes need to write subscribtions and complicated hooks that 'duplicate' state. It also causes need to write logic that would bind classes together (like `Commander`). This approach is too much work and too much code. This is an **antypattern**
 2. Beware of generic types. If there are too many of them, and there are types that extend other types taking generic types (like in subscribe), using functions that have those types is extremaly difficult and time consumming
+3. **Indexing board from 1, but in arrays index starts from 0** - tough boundry should be drawn. logic folder classes should not know about the fact that index starts from 1 in any possible place. This information should exist only in GUI

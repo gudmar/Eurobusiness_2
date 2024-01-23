@@ -3,7 +3,6 @@ import { iPawnPosition } from "../../Components/Pawns/types";
 import { tColors } from "../../Data/types";
 import { usePawnFieldIndex } from "../../hooks/usePawnFieldIndex";
 import { useThemeConverter } from "../../hooks/useThemeConverter";
-import { useThemesAPI } from "../ThemeContext";
 import { useFieldSizeGetters } from "./useFieldLocation";
 
 const NOT_VALID_POSITION = {top: 0, left: 0}
