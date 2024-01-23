@@ -4,6 +4,7 @@ import { BOARD_SIZE } from "../../Data/const";
 import { tColors } from "../../Data/types";
 import { addUniqueArrayItems } from "../../Functions/addArrayUniqueItems";
 import { displayError, displayInfo } from "../../Functions/displayMessage";
+import { shiftBoardIndexBy1 } from "../../Functions/shiftIndex";
 import { Bank } from "../Bank/Bank";
 import { ChanceCardHolder } from "../Chance/ChanceCardHolder";
 import { DiceTestModeDecorator } from "../Dice/Dice";
@@ -125,7 +126,7 @@ export class Commander {
 
     static async animateMovingPlayer(player: iPlayer, desiredPosition: number) {
         const currentPosition = player.fieldNr;
-        const nrOfSteps = desiredPosition > currentPosition ? desiredPosition - currentPosition - 1: BOARD_SIZE - currentPosition + desiredPosition + 1;
+        const nrOfSteps = desiredPosition > currentPosition ? desiredPosition - currentPosition - 1: BOARD_SIZE - currentPosition + desiredPosition - 1;
         const isDone = await Commander.step(player, nrOfSteps)
         return isDone;
     }
@@ -141,7 +142,8 @@ export class Commander {
         const fieldNr = player.fieldNr;
         const {throws, sum, doublets} = Commander._testDice.throwToMove(fieldNr);
         if (doublets >=2) Commander.putPlayerToJail(playerColor)
-        const nextFieldNr = (sum + player.fieldNr) % BOARD_SIZE;
+        // const nextFieldNr = (sum + player.fieldNr) % BOARD_SIZE;
+        const nextFieldNr = shiftBoardIndexBy1(sum+player.fieldNr);
         if (testMode === TestModes.none) {
             displayInfo({title: 'Dice throw result:', message: `Dice throws shows: [${throws.flat().join(', ')}]. Moving ${playerColor} player to field nr ${nextFieldNr}`})
         } else {
