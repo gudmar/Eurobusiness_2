@@ -11,9 +11,15 @@ export const useStyles = createUseStyles((theme) => ({
         overflowX: 'auto',
         overflowY: 'hidden',
         whiteSpace: 'nowrap',
+        // height: '2.5rem'
     },
     container: {
         paddingTop: '2rem',
-        position : 'relative'
+        position : 'relative',
+        height: '100%',
+    },
+    edit: {
+        // height: 'calc( 100% - 3rem )'
+        height: '100%'
     }
 }));
