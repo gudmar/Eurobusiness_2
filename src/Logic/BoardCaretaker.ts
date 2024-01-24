@@ -1,7 +1,8 @@
 import { tPlayerName } from "../Components/Pawns/types";
 import { NR_OF_HOTELS, NR_OF_HOUSES } from "../Constants/constants";
+import { boardInOrder, descriptors } from "../Data/boardFields";
 import { CHANCE_BLUE, CHANCE_RED, CITY, FREE_PARK, GO_TO_JAIL, GUARDED_PARKING, JAIL, PLANT, POWER_STATION, RAILWAY, START, TAX } from "../Data/const";
-import { iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, iNonCityEstates, iOtherFieldTypes, tBoard, tBoardField, tChanceTypes, tNamedBoardField, } from "../Data/types";
+import { iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, iNonCityEstates, iOtherFieldTypes, tBoard, tBoardField, tChanceTypes, tColors, tNamedBoardField, } from "../Data/types";
 import { iBoardCaretaker, tEstateField, tField } from "./boardTypes";
 import { ChanceField, CityField, NonCityEstatesField, NullishField, OtherFieldTypesField } from "./FieldCreators";
 import { createBoardDescriptor } from "./Utils/createBoardDescriptor";
@@ -89,20 +90,28 @@ export class BoardCaretaker extends FieldCreator implements iBoardCaretaker {
         return field;
     }
 
-    getPlayersEstates(playerName: tPlayerName) {
+    getPlayersEstates(playerColor: tColors) {
         const ownedEstates = BoardCaretaker.fieldInstances.filter((instance: tField) => {
             if ( [CITY, RAILWAY, PLANT].includes(instance.type)) {
-                return (instance as tEstateField).owner === playerName
+                return (instance as tEstateField).owner === playerColor
             }
             return false;
         });
         return ownedEstates;
     }
 
-    getNrPlayerHouses(playerName: tPlayerName) {
+    get estates() {
+        const result = BoardCaretaker.fieldInstances.filter((instance: tField) => {
+            const result = ([CITY, RAILWAY, PLANT]).includes(instance.type)
+            return result;
+        });
+        return result;
+    }
+
+    getNrPlayerHouses(playerColor: tColors) {
         const nrOfHouses = BoardCaretaker.fieldInstances.reduce((nr: number, instance: tField) => {
             if (instance.type === CITY) {
-                if (instance.owner === playerName) {
+                if (instance.owner === playerColor) {
                     nr += (instance as CityField).nrOfHouses
                 }
             }
@@ -111,10 +120,10 @@ export class BoardCaretaker extends FieldCreator implements iBoardCaretaker {
         return nrOfHouses;
     }
 
-    private getNrOfBuildings(playerName: tPlayerName, buildingProp: tNrOfBuildings ) {
+    private getNrOfBuildings(playerColor: tColors, buildingProp: tNrOfBuildings ) {
         const nrOfBuildings: number = BoardCaretaker.fieldInstances.reduce((nr: number, instance: tField) => {
             if (instance.type === CITY) {
-                if (instance.owner === playerName) {
+                if (instance.owner === playerColor) {
                     nr += (instance as CityField)[buildingProp]
                 }
             }
@@ -124,10 +133,10 @@ export class BoardCaretaker extends FieldCreator implements iBoardCaretaker {
 
     }
 
-    getNrPlayerHotels(playerName: tPlayerName) {
+    getNrPlayerHotels(playerColor: tColors) {
         const nrOfHouses = BoardCaretaker.fieldInstances.reduce((nr: number, instance: tField) => {
             if (instance.type === CITY) {
-                if (instance.owner === playerName) {
+                if (instance.owner === playerColor) {
                     nr += (instance as CityField).nrOfHotels
                 }
             }
@@ -136,6 +145,11 @@ export class BoardCaretaker extends FieldCreator implements iBoardCaretaker {
         return nrOfHouses;
     }
 
+}
+
+export const getBoard = () => {
+    const result = new BoardCreator(boardInOrder, descriptors);
+    return result;
 }
 
 export class BoardCreator {
@@ -158,6 +172,7 @@ export class BoardCreator {
         BoardCreator.instance = this;
         return this;
     }
+    get estates() {return this.caretaker.estates}
     get fields() {return this._fields}
 
     provideCaretaker() { return this.caretaker}

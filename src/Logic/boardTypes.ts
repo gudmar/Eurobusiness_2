@@ -1,5 +1,5 @@
 import { tPlayerName } from "../Components/Pawns/types";
-import { tChanceType, tCountries, tEstateTypes, tIcon, tOtherTypes, tVisitPayment } from "../Data/types";
+import { tChanceType, tColors, tCountries, tEstateTypes, tIcon, tOtherTypes, tVisitPayment } from "../Data/types";
 import { ChanceField, CityField, NonCityEstatesField, OtherFieldTypesField } from "./FieldCreators";
 
 export type tEstateCreateors = CityField | NonCityEstatesField;
@@ -74,7 +74,7 @@ export interface iCityFieldClass extends iCityFieldState {
 export interface iBoardCaretaker {
     registerField(fieldInstance: any): void,
     getFieldByName(name: string): tField | undefined,
-    getPlayersEstates(playerName: tPlayerName): tField[],
-    getNrPlayerHouses(playerName: tPlayerName): number,
-    getNrPlayerHotels(playerName: tPlayerName): number,
+    getPlayersEstates(playerColor: tColors): tField[],
+    getNrPlayerHouses(playerColor: tColors): number,
+    getNrPlayerHotels(playerColor: tColors): number,
 }
