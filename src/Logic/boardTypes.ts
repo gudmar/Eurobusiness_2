@@ -74,7 +74,7 @@ export interface iCityFieldClass extends iCityFieldState {
 export interface iBoardCaretaker {
     registerField(fieldInstance: any): void,
     getFieldByName(name: string): tField | undefined,
-    getPlayersEstates(playerColor: tColors): tField[],
+    getPlayersEstates(playerColor: tColors): tEstateField[],
     getNrPlayerHouses(playerColor: tColors): number,
     getNrPlayerHotels(playerColor: tColors): number,
 }

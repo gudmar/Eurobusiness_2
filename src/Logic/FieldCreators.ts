@@ -2,7 +2,7 @@ import {
     BANK,
     CITY
 } from '../Data/const'
-import { iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, tAnyState, tBoardField, tChanceType, tCity, tCountries, tEstateTypes, tFlattenedFieldTypes, tIcon, tNonCityEstates, tOtherTypes, tVisitPayment } from '../Data/types';
+import { iCityField, iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, tAnyState, tBoardField, tChanceType, tCity, tCountries, tEstateTypes, tFlattenedFieldTypes, tIcon, tNonCityEstates, tOtherTypes, tVisitPayment } from '../Data/types';
 import { iChanceField, iChanceFieldState, iCityFieldClass, iCityFieldState, iNonCityEstatesField, iNonCityEstatesFieldState, iOtherFieldTypesField, iOtherFieldTypesFieldState } from './boardTypes';
 import { SubscribtionsHandler } from './SubscrbtionsHandler';
 import { iCityMemento, iNonCityEstatesMemento } from './types';
@@ -98,7 +98,7 @@ export class CityField extends SubscribtionsHandler<tFlattenedFieldTypes, tAnySt
             isPlegded: this._isPlegded,
         })
     }
-    get state(): iCityFieldClass {
+    get state(): iCityFieldState {
         return ({
             name: this._name,
             type: this._type,

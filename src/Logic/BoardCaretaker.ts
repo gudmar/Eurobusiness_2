@@ -97,7 +97,7 @@ export class BoardCaretaker extends FieldCreator implements iBoardCaretaker {
             }
             return false;
         });
-        return ownedEstates;
+        return ownedEstates as tEstateField[];
     }
 
     get estates() {
