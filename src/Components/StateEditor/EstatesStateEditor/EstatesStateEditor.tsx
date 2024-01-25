@@ -4,22 +4,10 @@ import { CITY, PLANT, RAILWAY } from "../../../Data/const";
 import { tBoardField, tColors, tEstateTypes } from "../../../Data/types";
 import { usePlayersColors } from "../../../hooks/usePlayersColors";
 import { BoardCreator, getBoard } from "../../../Logic/BoardCaretaker";
-import { tField } from "../../../Logic/boardTypes";
+import { tEstateField } from "../../../Logic/boardTypes";
 import { useStyles } from "./styles";
-
-type tSelectedEstate = tField | null;
-type tSetSelectEstateFunction = (estate: tSelectedEstate) => void
-
-
-type tEstateArgs = {
-    estate: tField,
-    selectedEstateName: string,
-    setSelectEstate: tSetSelectEstateFunction,
-}
-
-type tGetEstateClassesArgs = {
-    type: tEstateTypes, isSelected: boolean, classes: {[key:string]: string}
-}
+import { iEditEstateArgs, tEditEstate, tEstateArgs, tGetEstateClassesArgs, tSelectedEstate, tSetSelectEstateFunction } from "./types";
+import { useEstatesEditor } from "./useEstatesEditor";
 
 const getEstateClasses = (args: tGetEstateClassesArgs) => {
     const {type, isSelected, classes} = args;
@@ -64,13 +52,11 @@ const EstatesList = ({estates, selectedEstate, setSelectEstate }: iEditEstateArg
     )
 }
 
-interface iEditEstateArgs {
-    estates: tField[],
-    selectedEstate: tSelectedEstate,
-    setSelectEstate: tSetSelectEstateFunction,
-}
+const EditEstate = ({selectedEstate}: tEditEstate) => {
+    console.log(selectedEstate)
+    const {
+    } = useEstatesEditor(selectedEstate);
 
-const EditEstate = ({}) => {
     return (
         <>
         </>
@@ -86,9 +72,9 @@ const useSelectEstate = () => {
     const boardEndpoint = getBoard();
     
     const boardCaretaker = boardEndpoint.provideCaretaker();
-    const estates = boardEndpoint.estates;
+    const estates = boardEndpoint.estates.filter(({type}) => [CITY, PLANT, RAILWAY].includes(type)) as tEstateField[];
     const playersColors = usePlayersColors();
-    const [selectedEstate, setSelectedEstate] = useState<tField | null>(null);
+    const [selectedEstate, setSelectedEstate] = useState<tSelectedEstate>(null);
     const selectEstate = (estate: tSelectedEstate) => estate?.name ? setSelectedEstate(estate) : null;
     const setSearchPattern = (pattern:string) => {};
     const togglePlayerColorForFilter = (color: tColors) => {}
@@ -106,15 +92,6 @@ const useSelectEstate = () => {
     }
 }
 
-const useEstatesEditor = (editedEstate: tField | null) => {
-
-    const boardEndpoint = getBoard();    
-    const boardCaretaker = boardEndpoint.provideCaretaker();
-    const estates = boardEndpoint.estates;
-    return {
-        estates,
-    }
-}
 
 export const EstatesStateEditor = ({name, setActive, currentActiveSection}: any) => {
     const { theme } = useThemesAPI();
@@ -130,8 +107,6 @@ export const EstatesStateEditor = ({name, setActive, currentActiveSection}: any)
         toggleEstatesTypeForFilter,
         togglePlayerColorForFilter,
     } = useSelectEstate()
-    const {
-    } = useEstatesEditor(selectedEstate);
     return (
         <div className={classes.rows}>
             <h2 className={classes.headline}>Estates editor</h2>
@@ -166,7 +141,7 @@ export const EstatesStateEditor = ({name, setActive, currentActiveSection}: any)
             </div>
             <div className={classes.columns}>
                 <EstatesList estates = {filteredEstates} selectedEstate={selectedEstate} setSelectEstate={selectEstate}/>
-                <EditEstate />
+                <EditEstate selectedEstate={selectedEstate}/>
             </div>
         </div>
     )
