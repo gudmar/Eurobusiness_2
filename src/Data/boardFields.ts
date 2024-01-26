@@ -225,7 +225,7 @@ export const descriptors: tBoard = {
         // nrOfHotelsToSell: 0,
         // nrOfHotelsToBuy: 0,        
         visit: [ 20, 100, 300, 900, 1250, 1500 ], // 0 houses, 1 house, 2 houses...
-        owner: 'bank',
+        owner: BANK,
         nrOfHouses: 0,
         nrOfHotels: 0,
         // nrInSet: 3,

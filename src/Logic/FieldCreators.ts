@@ -2,7 +2,7 @@ import {
     BANK,
     CITY
 } from '../Data/const'
-import { iCityField, iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, tAnyState, tBoardField, tChanceType, tCity, tCountries, tEstateTypes, tFlattenedFieldTypes, tIcon, tNonCityEstates, tOtherTypes, tVisitPayment } from '../Data/types';
+import { iCityField, iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, tAnyState, tBoardField, tChanceType, tCity, tCountries, tEstateTypes, tFlattenedFieldTypes, tIcon, tNonCityEstates, tOtherTypes, tOwner, tVisitPayment } from '../Data/types';
 import { iChanceField, iChanceFieldState, iCityFieldClass, iCityFieldState, iNonCityEstatesField, iNonCityEstatesFieldState, iOtherFieldTypesField, iOtherFieldTypesFieldState } from './boardTypes';
 import { SubscribtionsHandler } from './SubscrbtionsHandler';
 import { iCityMemento, iNonCityEstatesMemento } from './types';
@@ -27,7 +27,7 @@ export class CityField extends SubscribtionsHandler<tFlattenedFieldTypes, tAnySt
     private _housePrice: number = 0;
     private _hotelPrice: number = 0;
     private _visit: tVisitPayment = [0];
-    private _owner: string = BANK;
+    private _owner: tOwner = BANK;
     private _nrOfHouses: number = 0;
     private _isPlegded: boolean = false;
     private _nrOfHotels: number = 0;
@@ -87,8 +87,13 @@ export class CityField extends SubscribtionsHandler<tFlattenedFieldTypes, tAnySt
     get color() { return this._color}
     get index() { return this._index }
     set nrOfHouses(val: number) {
-        if (val > 5 || val < 0) throw new Error('Nr of houses has to be > 0 and < 6')
+        if (val > 4 || val < 0) throw new Error('Nr of houses has to be > 0 and < 5')
         this._nrOfHouses = val
+    }
+    set nrOfHotels(val: number) {
+        if (val > 1 || val < 0) throw new Error('Nr of hotels has to be > 0 and < 1')
+        if (this.nrOfHouses !== 0) throw new Error('You cannot build a hotel before selling all houses on this estate')
+        this._nrOfHotels = val;
     }
     getMemento(): iCityMemento {
         return ({
@@ -115,7 +120,7 @@ export class CityField extends SubscribtionsHandler<tFlattenedFieldTypes, tAnySt
             index: this._index,
         })
     }
-    set owner(val: string) { this._owner = val}
+    set owner(val: tOwner) { this._owner = val}
     set isPlegded(val: boolean) { this._isPlegded = val}
 }
 
