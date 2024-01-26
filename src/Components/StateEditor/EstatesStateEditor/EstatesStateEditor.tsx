@@ -1,10 +1,14 @@
 import { useState } from "react";
+import { NR_OF_HOTELS } from "../../../Constants/constants";
 import { useThemesAPI } from "../../../Contexts/ThemeContext";
 import { CITY, PLANT, RAILWAY } from "../../../Data/const";
 import { tBoardField, tColors, tEstateTypes } from "../../../Data/types";
 import { usePlayersColors } from "../../../hooks/usePlayersColors";
 import { BoardCreator, getBoard } from "../../../Logic/BoardCaretaker";
 import { tEstateField } from "../../../Logic/boardTypes";
+import { StateEditorForm } from "../../StateEditorForm/StateEditorForm";
+import { StateEditorEntry } from "../../StateEditorForm/StateEditorFormEntry";
+import { EstateEditorFieldNames } from "./const";
 import { useStyles } from "./styles";
 import { iEditEstateArgs, tEditEstate, tEstateArgs, tGetEstateClassesArgs, tSelectedEstate, tSetSelectEstateFunction } from "./types";
 import { useEstatesEditor } from "./useEstatesEditor";
@@ -52,15 +56,81 @@ const EstatesList = ({estates, selectedEstate, setSelectEstate }: iEditEstateArg
     )
 }
 
+const EstatesTestFieldEdit = ({title, value, handler}: tEstatesTestFieldEditArgs ) => {
+    
+    return (
+        <></>
+    )
+}
+
+
 const EditEstate = ({selectedEstate}: tEditEstate) => {
     console.log(selectedEstate)
     const {
+        estateColor,
+        country,
+        hotelPrice,
+        housePrice,
+        index,
+        isPlegded,
+        mortgage,
+        name,
+        nrOfHouse,
+        nrOfHotels,
+        owner,
+        price,
+        type,
+        visit,
+        setIsPlegded,
+        setNrOfHotels,
+        setNrOfHouses,
+        setOwner,
     } = useEstatesEditor(selectedEstate);
 
+    const fieldsOrder = [
+        { title: EstateEditorFieldNames.name, value: name, },
+        { title: EstateEditorFieldNames.type, value: type, },
+        { title: EstateEditorFieldNames.owner, value: owner, handler: setOwner },
+        { title: EstateEditorFieldNames.price, value: price, },
+        { title: EstateEditorFieldNames.visit, value: visit, },
+        { title: EstateEditorFieldNames.mortgage, value: mortgage, },
+        { title: EstateEditorFieldNames.isPlegded, value: isPlegded, handler: setIsPlegded},
+        { title: EstateEditorFieldNames.country, value: country, },
+        { title: EstateEditorFieldNames.nrOfHouses, value: nrOfHouse, handler: setNrOfHouses},
+        { title: EstateEditorFieldNames.housePrice, value: housePrice,},
+        { title: EstateEditorFieldNames.nrOfHotels, value: nrOfHotels, handler: setNrOfHotels},
+        { title: EstateEditorFieldNames.hotelPrice, value: hotelPrice },
+    ]
+
+    const {
+    } = useEstatesEditor(selectedEstate);
+
+    if (!selectedEstate) return <></>
     return (
-        <>
-        </>
+        <StateEditorForm
+            headline = {`Edit ${selectedEstate.name}`} 
+            logAction = {() => {}}
+        >
+            {fieldsOrder.map(({title, value, handler}) =>
+                    <StateEditorEntry
+                        title = {title}
+                        currentValue = {(value || '').toString()}
+                    >{}</StateEditorEntry>
+            )
+            }
+        </StateEditorForm>
+        // <ul>
+        //     {
+        //         fieldsOrder.map(({title, value, handler}) => <EstatesTestFieldEdit title={title} value={value} handler={handler} />)
+        //     }
+        // </ul>
     )
+}
+
+type tEstateFieldType = any;
+
+type tEstatesTestFieldEditArgs = {
+    title: string, value: tEstateFieldType, handler?: (val: tEstateFieldType) => void
 }
 
 const useSelectEstate = () => {

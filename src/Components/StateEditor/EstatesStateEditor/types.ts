@@ -1,4 +1,5 @@
-import { tEstateTypes } from "../../../Data/types";
+import { BANK } from "../../../Data/const";
+import { tColors, tEstateTypes } from "../../../Data/types";
 import { tEstateField } from "../../../Logic/boardTypes";
 
 export type tEditEstate = {selectedEstate: tSelectedEstate}

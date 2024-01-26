@@ -51,6 +51,20 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
         if (!result) throw new Error(`No player with color ${color}`)
         return result; 
     }
+    private static _getPlayerByName(name: string) {
+        const result = Players.players.find((player) => player.name === name);
+        if (!result) throw new Error(`No player named ${name}`)
+        return result; 
+    }
+    static playerColorToPlayerName(color: tColors) {
+        const player = Players._getPlayerByColor(color);
+        return player.name;
+    }
+    static playerNameToPlayerColor(name: string) {
+        const player = Players._getPlayerByName(name)
+        return player.color;
+    }
+
     static getPlayerByColor(color: tColors) {return Players._getPlayerByColor(color)}
     
     borrowSpecialCard({playerColor, description}: tChanceCardPayload) {
