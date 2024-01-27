@@ -18,6 +18,8 @@ export interface iSelectFromListProps {
     onClick: tSelectFromStateHandler,
     onSelected?: tSelectItem,
     onUnselected?: tSelectItem,
+    disabledTooltip?: string,
+    enableConditionFunction?: ()=>boolean,
 }
 
 export interface iMultiSelectFromLogicArgs {
@@ -27,6 +29,7 @@ export interface iMultiSelectFromLogicArgs {
     defaultSelection: string[],
     onSelected?: tSelectFromStateHandler,
     onUnselected?: tSelectFromStateHandler,
+    isEnabled: boolean,
 }
 
 export interface iMultiSelectFromState {

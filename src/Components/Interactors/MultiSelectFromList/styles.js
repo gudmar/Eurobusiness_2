@@ -5,7 +5,19 @@ export const useStyles = createUseStyles((theme) => ({
         display: 'flex',
         borderRadius: '5px',
         backgroundColor: 'white',
-        width: '400px'
+        width: '400px',
+        '&:hover>div' : {
+            // display: 'inline-block'
+            visibility: 'visible',
+        },
+    },
+    tooltip: {
+        position: 'absolute',
+        visibility: 'hidden',
+        transform: 'translateY(2rem)',
+        backgroundColor: '#eeee44',
+        padding: '2px',
+        zIndex: '3'
     },
     input: {
         display: 'inline-flex',
@@ -25,7 +37,14 @@ export const useStyles = createUseStyles((theme) => ({
             outline: 'none',
             fontSize:'1.5rem',
             padding: '0 0.75rem 0 0.75rem',
-            width: '100%'
+            width: '100%',
+            '&:disabled': {
+                // border: 'solid #bbb thin',
+            },    
+        },
+        '&:hover>div' : {
+            // display: 'inline-block'
+            visibility: 'visible'
         },
         border: 'none',
     },
@@ -33,6 +52,15 @@ export const useStyles = createUseStyles((theme) => ({
         padding: '0.5rem',
         '& label': {
             // padding: '0.5rem',
+        }
+    },
+    disabledFieldset: {
+        backgroundColor: '#ccc'
+    },
+    disabledInput: {
+        backgroundColor: '#eee',
+        '& input':{
+            backgroundColor: '#eee',
         }
     },
 
@@ -149,5 +177,13 @@ export const useStyles = createUseStyles((theme) => ({
             fontSize: '1.5rem',
             cursor: 'default'
         }
-    }
+    },
+    disabledTags: {
+        '& span':{
+            backgroundColor: '#eee',
+            color: '#888'
+        },
+        backgroundColor: '#eee',
+        color: '#343'
+    },
 }));

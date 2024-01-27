@@ -1,6 +1,10 @@
 import { createUseStyles } from "react-jss";
 
 export const useStyles = createUseStyles((theme) => ({
+    tooltip: {
+        position: 'absolute',
+        display: 'none'
+    },
     container: {
         display: 'flex',
         columnGap: '1rem',
@@ -10,7 +14,13 @@ export const useStyles = createUseStyles((theme) => ({
         '& input': {
             padding: '0.5rem',
             borderRadius: '0.5rem',
-            border: 'none'
+            border: 'none',
+            '&:disabled': {
+                border: 'solid #bbb thin',
+            },    
+        },
+        '&:hover>div' : {
+            display: 'inline-block'
         }
     },
     label: {
@@ -18,5 +28,5 @@ export const useStyles = createUseStyles((theme) => ({
         '& label': {
             // padding: '0.5rem',
         }
-    }
+    },
 }));

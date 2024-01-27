@@ -71,10 +71,11 @@ const Tag = ({value, toggleSelection}: iTagProps) => {
 }
 
 export const MultiSelectFromList = ({
-    id, label, items, defaultValues=[], onClick, onSelected, onUnselected
+    id, label, items, defaultValues=[], onClick, onSelected, onUnselected, disabledTooltip='Input disabled for some reason', enableConditionFunction=()=>false
 }: iSelectFromListProps) => {
     const { theme } = useThemesAPI();
     const classes: {[key:string]: string} = useStyles(theme as any);
+    const isEnabled = enableConditionFunction();
     const focusRef = useRef<HTMLInputElement>(null);
     const keepFocusRef = useRef<HTMLInputElement>(null);
     const toggleExpandRef = useRef<HTMLInputElement>(null);
@@ -88,18 +89,18 @@ export const MultiSelectFromList = ({
         selected,
         visibleItems,
         clearSearchResult,
-    } = useMultiSelectFromLogic({ keepFocusRef, dontLoseFocusRefs: [toggleExpandRef],  items, defaultSelection: defaultValues, onSelected, onUnselected})
+    } = useMultiSelectFromLogic({ isEnabled, keepFocusRef, dontLoseFocusRefs: [toggleExpandRef],  items, defaultSelection: defaultValues, onSelected, onUnselected})
     const toggleExpand = () => {
         if (isSearchListExpanded) {close()} else {open()}
     }
-    useEffect(() => console.log(selected), [selected])
-    useEffect(() => console.log(items), [items])
     return (
             <div className={classes.selectFromList}  tabIndex={0}>
-                <fieldset className={classes.container}>
+                <fieldset className={`${classes.container} ${ isEnabled?'':classes.disabledFieldset}`}>
+                    { !isEnabled && <div className={classes.tooltip}>{disabledTooltip}</div> }
                     <legend>{label}</legend>
-                    <div className={classes.tags}>
-                        {selected.length === 0 && <div className={classes.placeholderContainer}><span>No tags</span></div>}
+                    
+                    <div className={`${classes.tags} ${isEnabled?'':classes.disabledTags}`}>
+                        {selected.length === 0 && <div className={`${classes.placeholderContainer} ${isEnabled?'':classes.disabledTags}`}><span>No tags</span></div>}
                         {selected.map((item:string) => 
                             <Tag
                                 value={item}
@@ -122,7 +123,8 @@ export const MultiSelectFromList = ({
                     aria-hidden={!isSearchListExpanded}
                     ref={keepFocusRef}
                 >
-                    <div className={classes.input}>
+                    <div className={`${classes.input} ${isEnabled?'':classes.disabledInput}`}>
+                        
                         <SearchButton
                             isDisabled={false}
                             onClick={() => {}}

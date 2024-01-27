@@ -17,9 +17,12 @@ export interface iSelectFromListProps {
     id?: string,
     // onClick: tSelectFromStateHandler,
     onSelect: tSelectItem,
+    enableConditionFunction?: () => boolean,
+    disabledTooltip?: string,
 }
 
 export interface iSelectFromLogicArgs {
+    isEnabled: boolean,
     focusRef: RefObject<HTMLInputElement>,
     blurRef:  RefObject<HTMLInputElement>,
     items: string[],

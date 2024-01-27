@@ -3,6 +3,7 @@ import { NR_OF_HOTELS } from "../../../Constants/constants";
 import { useThemesAPI } from "../../../Contexts/ThemeContext";
 import { CITY, PLANT, RAILWAY } from "../../../Data/const";
 import { tBoardField, tColors, tEstateTypes } from "../../../Data/types";
+import { isDefined } from "../../../Functions/isDefined";
 import { usePlayersColors } from "../../../hooks/usePlayersColors";
 import { BoardCreator, getBoard } from "../../../Logic/BoardCaretaker";
 import { tEstateField } from "../../../Logic/boardTypes";
@@ -100,7 +101,7 @@ const EditEstate = ({selectedEstate}: tEditEstate) => {
         { title: EstateEditorFieldNames.housePrice, value: housePrice,},
         { title: EstateEditorFieldNames.nrOfHotels, value: nrOfHotels, handler: setNrOfHotels},
         { title: EstateEditorFieldNames.hotelPrice, value: hotelPrice },
-    ]
+    ].filter(({value}) => isDefined(value) )
 
     const {
     } = useEstatesEditor(selectedEstate);
@@ -114,7 +115,7 @@ const EditEstate = ({selectedEstate}: tEditEstate) => {
             {fieldsOrder.map(({title, value, handler}) =>
                     <StateEditorEntry
                         title = {title}
-                        currentValue = {(value || '').toString()}
+                        currentValue = {(value ?? '').toString()}
                     >{}</StateEditorEntry>
             )
             }

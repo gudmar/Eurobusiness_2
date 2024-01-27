@@ -5,8 +5,9 @@ import { useStyles } from "./styles.js";
 
 
 export const getInput = <InputType extends tProbableInputTypes>(type: tGenericInputTypes, props: tInputHOFProps) => 
-        ({id, label, value, onChange, isRequired=false}: iInputProps<InputType>) => 
+        ({id, label, value, onChange, disabledTooltip="Input disabled for some reason", enableConditionFunction=() => true, isRequired=false}: iInputProps<InputType>) => 
 {
+    const isEnabled = enableConditionFunction();
     const { theme } = useThemesAPI();
     const classes: {[key:string]: string} = useStyles(theme as any);    
     return (
@@ -26,8 +27,10 @@ export const getInput = <InputType extends tProbableInputTypes>(type: tGenericIn
                         id={id || label}
                         required={isRequired}
                         onChange={onChange}
+                        disabled={!isEnabled}
                         {...props}
                     />
+                    { !isEnabled && <div className={classes.tooltip}>{disabledTooltip}</div> }
                 </div>
 
         </div>
