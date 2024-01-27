@@ -18,6 +18,8 @@ export interface iInputProps<InputType extends tProbableInputTypes> {
     onChange: (val: any) => void,
     id?: string,
     isRequired?: boolean,
+    enableConditionFunction?: () => boolean,
+    disabledTooltip?: string,
 }
 
 export interface iTextInputProps {

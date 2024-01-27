@@ -21,9 +21,9 @@ const Item = ({value, selectedValue, select}:iItemProps) => {
     )
 }
 
-// export const SingleSelectFromList = ({id, label, items, defaultValue='', onClick}: iSelectFromListProps) => {
-export const SingleSelectFromList = ({id, label, items, onSelect, defaultValue=''}: iSelectFromListProps) => {
+export const SingleSelectFromList = ({id, label, items, onSelect, defaultValue='', disabledTooltip='Input disabled for some reason', enableConditionFunction=()=>true}: iSelectFromListProps) => {
     const { theme } = useThemesAPI();
+    const isEnabled = enableConditionFunction();
     const classes: {[key:string]: string} = useStyles(theme as any);
     const focusRef = useRef<HTMLInputElement>(null);
     const blurRef = useRef<HTMLInputElement>(null);
@@ -37,18 +37,20 @@ export const SingleSelectFromList = ({id, label, items, onSelect, defaultValue='
         search,
         close,
         open
-    } = useSelectFromLogic({ focusRef, blurRef,  items, defaultSelection: defaultValue, onSelect })
+    } = useSelectFromLogic({ focusRef, blurRef,  items, isEnabled, defaultSelection: defaultValue, onSelect })
     return (
-            <div className={classes.selectFromList} ref={blurRef} tabIndex={0}>
-                <fieldset className={classes.container}>
+            <div className={`${classes.selectFromList}`} ref={blurRef} tabIndex={0}>
+                <fieldset className={`${classes.container}  ${!isEnabled ? classes.disabledFieldset : ''}`}>
                     <legend>{label}</legend>
-                    <div className={classes.input}>
+                    <div className={`${classes.input} ${isEnabled?'':classes.disabledInput}`}>
+                            { !isEnabled && <div className={classes.tooltip}>{disabledTooltip}</div> }
                             <input
                                 autoComplete={'off'}
                                 type="text"
                                 id={id || label}
                                 ref={focusRef}
                                 value={valueInTextBox}
+                                disabled={!isEnabled}
                                 onChange={(e)=>{
                                     search(e?.target?.value)
                                 }}
@@ -62,6 +64,7 @@ export const SingleSelectFromList = ({id, label, items, onSelect, defaultValue='
                                 isExpanded={isSearchListExpanded}
                                 onClick={() => {isSearchListExpanded ? close() : open()}}
                             />
+                            
                     </div>
                 </fieldset>
                 <div 

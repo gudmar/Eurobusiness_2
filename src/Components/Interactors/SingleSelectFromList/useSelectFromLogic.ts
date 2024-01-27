@@ -65,7 +65,7 @@ const REDUCER = {
 
 export const reducer = getReducer<iSearchFromState, string, tPayloadTypes1>(REDUCER)
 
-export const useSelectFromLogic = ({ blurRef, items, defaultSelection, onSelect }: iSelectFromLogicArgs) => {
+export const useSelectFromLogic = ({ blurRef, isEnabled, items, defaultSelection, onSelect }: iSelectFromLogicArgs) => {
     const [{
         isSearchExpanded,
         selected,
@@ -76,12 +76,17 @@ export const useSelectFromLogic = ({ blurRef, items, defaultSelection, onSelect 
         selected: defaultSelection,
         displayed: defaultSelection
     });
+    useEffect(() => {
+        if (!isEnabled) {close()}
+    }, [isEnabled])
     const {open, clear, close, search, 
         select, 
         clearSearchResult
     } = getSelectFromLogicActions(dispatch)
+    const openIfEnabled = () => {if (isEnabled) open()}
+    const clearIfEnabled = () => {if (isEnabled) clear()}
     useInvoceIfEventOutsideElement({reference: blurRef, mouseEventName: 'click', callback: clearSearchResult})
-    useOnFocusin(blurRef, () => {open()})
+    useOnFocusin(blurRef, () => {openIfEnabled()})
     const selectWithExternalEffect = (newSelecion: string) => {
         onSelect(newSelecion);
         select(newSelecion)
@@ -90,12 +95,11 @@ export const useSelectFromLogic = ({ blurRef, items, defaultSelection, onSelect 
     return {
         isSearchListExpanded: isSearchExpanded,
         valueInTextBox: displayed,
-        // selectItem: select,
         selectItem: selectWithExternalEffect,
-        clearSelection: clear,
+        clearSelection: clearIfEnabled,
         search,
         close,
-        open,
+        open: openIfEnabled,
         selected: defaultSelection,
         visibleItems,
     }

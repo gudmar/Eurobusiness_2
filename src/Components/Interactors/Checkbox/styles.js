@@ -1,6 +1,11 @@
 import { createUseStyles } from "react-jss";
 
 export const useStyles = createUseStyles((theme) => ({
+    tooltip: {
+        position: 'absolute',
+        display: 'none',
+        cursor: 'default'
+    },
     container: {
         display: 'flex',
         columnGap: '1rem',
@@ -13,6 +18,9 @@ export const useStyles = createUseStyles((theme) => ({
             width: '1.2rem',
             height: '1.2rem',
             cursor: 'pointer'
+        },
+        '&:hover>div' : {
+            display: 'inline-block'
         }
     },
     label: {

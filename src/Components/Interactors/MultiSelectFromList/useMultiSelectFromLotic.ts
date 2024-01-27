@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { getReducer } from "../../../Functions/reducer";
 import { useOnEventLocationWithExceptions } from "../../../hooks/useOnOutsideInsideElement";
 import { iMultiSelectFromLogicArgs, iMultiSelectFromState, MultiSelectFromLogicTypes, tActions, tClear, tClearSearchResult, tClose, tOpen, tPayloadTypes } from "./types";
@@ -83,7 +83,7 @@ const REDUCER = {
 
 export const reducer = getReducer<iMultiSelectFromState, string, tPayloadTypes>(REDUCER)
 
-export const useMultiSelectFromLogic = ({keepFocusRef, dontLoseFocusRefs, items, defaultSelection=[], onSelected, onUnselected}: iMultiSelectFromLogicArgs) => {
+export const useMultiSelectFromLogic = ({keepFocusRef, isEnabled, dontLoseFocusRefs, items, defaultSelection=[], onSelected, onUnselected}: iMultiSelectFromLogicArgs) => {
     const initialState = {...getInitialState(), visibleItems: items, items, selected: defaultSelection}
     const [{
         isSearchExpanded,
@@ -91,6 +91,8 @@ export const useMultiSelectFromLogic = ({keepFocusRef, dontLoseFocusRefs, items,
         visibleItems,
     }, dispatch] = useReducer(reducer, initialState);
     const {open, close, search, clearSearchResult} = getSelectFromLogicActions(dispatch)
+    const openIfEnabled = () => {if (isEnabled) open()}
+    useEffect(() => {if (!isEnabled) close()}, [isEnabled])
     useOnEventLocationWithExceptions({targetReference: keepFocusRef, exceptionReferences: dontLoseFocusRefs, mouseEventName: 'mousedown', callback: () => {clearSearchResult(); close()} })
     const toggleSelection = (val: string) => {
             const isSelected = defaultSelection.includes(val)
@@ -104,7 +106,7 @@ export const useMultiSelectFromLogic = ({keepFocusRef, dontLoseFocusRefs, items,
         clearSearchResult,
         search,
         close,
-        open,
+        open: openIfEnabled,
         selected: defaultSelection,
         visibleItems,
     }

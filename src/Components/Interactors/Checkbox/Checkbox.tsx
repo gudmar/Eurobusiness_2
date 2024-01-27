@@ -8,10 +8,17 @@ interface iCheckboxProps {
     label: string,
     onChange: (val: any) => void,
     checked: boolean,
-    isLeftVersion?: boolean
+    isLeftVersion?: boolean,
+    enableConditionFunction?: () => boolean,
+    disabledTooltip?: string,
 }
 
-export const Checkbox = ({id, label, onChange, checked, isLeftVersion=false}: iCheckboxProps) => {
+export const Checkbox = (
+        {
+            id, label, onChange, checked, isLeftVersion=false, enableConditionFunction=(() => true), disabledTooltip='Disabled for some reason'
+        }: iCheckboxProps
+    ) => {
+    const isEnabled = enableConditionFunction();
     const changeHandler = (e:tCheckEventType) => {
         const val = e?.target?.checked;
         onChange(val)
@@ -27,7 +34,9 @@ export const Checkbox = ({id, label, onChange, checked, isLeftVersion=false}: iC
                 id={id || label}
                 onChange={changeHandler}
                 checked={checked}
+                disabled={!isEnabled}
             />
+            { !isEnabled && <div className={classes.tooltip}>{disabledTooltip}</div> }
         </div>}
         <div className={classes.label}>
             <label
@@ -37,12 +46,15 @@ export const Checkbox = ({id, label, onChange, checked, isLeftVersion=false}: iC
             </label>
         </div>
         {!isLeftVersion && <div className={classes.input}>
+            { !isEnabled && <div className={classes.tooltip}>{disabledTooltip}</div> }
             <input
                 type="checkbox"
                 id={id || label}
                 onChange={changeHandler}
                 checked={checked}
+                disabled={!isEnabled}
             />
+            
         </div>}
 
     </div>

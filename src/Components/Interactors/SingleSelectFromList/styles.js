@@ -3,6 +3,14 @@ import { createUseStyles } from "react-jss";
 export const useStyles = createUseStyles((theme) => ({
     selectFromList: {
         display: 'inline-block',
+        
+    },
+    tooltip: {
+        position: 'absolute',
+        visibility: 'hidden',
+        transform: 'translateY(2rem)',
+        backgroundColor: '#eeee44',
+        padding: '2px'
     },
     container: {
         display: 'flex',
@@ -23,16 +31,17 @@ export const useStyles = createUseStyles((theme) => ({
         alignItems: 'center',
         alignContent: 'center',
         '& input': {
-            padding: '0.5rem',
+            padding: '0.15rem',
             borderRadius: '0.5rem',
             border: 'none',
             outline: 'none',
             fontSize:'1.5rem',
-            padding: '0',
             width: '100%',
             color: theme.inputForegroundColor,
             backgroundColor: theme.inputBackgroundColor,
-
+            '&:disabled': {
+                // border: 'solid #bbb thin',
+            },    
         },
         border: 'none',
         // padding: '0.5rem',
@@ -55,6 +64,15 @@ export const useStyles = createUseStyles((theme) => ({
         overflow: 'hidden',
         position :'absolute',
         // transform: 'scaleY(1)'
+    },
+    disabledFieldset: {
+        backgroundColor: '#ccc'
+    },
+    disabledInput: {
+        backgroundColor: '#eee',
+        '& input':{
+            backgroundColor: '#eee',
+        }
     },
     hidden: {
         // height: '300px',
