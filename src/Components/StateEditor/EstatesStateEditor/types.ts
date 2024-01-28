@@ -1,5 +1,5 @@
 import { BANK } from "../../../Data/const";
-import { tColors, tEstateTypes } from "../../../Data/types";
+import { tColors, tEstateTypes, tOwner } from "../../../Data/types";
 import { tEstateField } from "../../../Logic/boardTypes";
 
 export type tEditEstate = {selectedEstate: tSelectedEstate}
@@ -23,3 +23,16 @@ export interface iEditEstateArgs {
     selectedEstate: tSelectedEstate,
     setSelectEstate: tSetSelectEstateFunction,
 }
+
+type tEstateFieldType = any;
+
+export type tEstatesTestFieldEditArgs = {
+    title: string,
+    value: tEstateFieldType, 
+    handler?: (val: tEstateFieldType) => void,
+    nrOfHouses: number,
+    nrOfHotels: number,
+    owner: tOwner,
+    isPlegeded: boolean,
+}
+
