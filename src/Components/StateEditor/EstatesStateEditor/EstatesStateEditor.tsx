@@ -1,17 +1,17 @@
-import { useState } from "react";
-import { NR_OF_HOTELS } from "../../../Constants/constants";
+import { FC, useState } from "react";
 import { useThemesAPI } from "../../../Contexts/ThemeContext";
 import { CITY, PLANT, RAILWAY } from "../../../Data/const";
-import { tBoardField, tColors, tEstateTypes } from "../../../Data/types";
+import { tColors, tEstateTypes } from "../../../Data/types";
 import { isDefined } from "../../../Functions/isDefined";
 import { usePlayersColors } from "../../../hooks/usePlayersColors";
-import { BoardCreator, getBoard } from "../../../Logic/BoardCaretaker";
+import { getBoard } from "../../../Logic/BoardCaretaker";
 import { tEstateField } from "../../../Logic/boardTypes";
 import { StateEditorForm } from "../../StateEditorForm/StateEditorForm";
 import { StateEditorEntry } from "../../StateEditorForm/StateEditorFormEntry";
 import { EstateEditorFieldNames } from "./const";
+import { EditIsPlegded, EditNrHotels, EditNrHouses, EditOwner } from "./EditFields";
 import { useStyles } from "./styles";
-import { iEditEstateArgs, tEditEstate, tEstateArgs, tGetEstateClassesArgs, tSelectedEstate, tSetSelectEstateFunction } from "./types";
+import { iEditEstateArgs, tEditEstate, tEstateArgs, tEstatesTestFieldEditArgs, tGetEstateClassesArgs, tSelectedEstate, tSetSelectEstateFunction } from "./types";
 import { useEstatesEditor } from "./useEstatesEditor";
 
 const getEstateClasses = (args: tGetEstateClassesArgs) => {
@@ -57,11 +57,24 @@ const EstatesList = ({estates, selectedEstate, setSelectEstate }: iEditEstateArg
     )
 }
 
-const EstatesTestFieldEdit = ({title, value, handler}: tEstatesTestFieldEditArgs ) => {
-    
-    return (
-        <></>
-    )
+const EstatesTestFieldEdit = (args: tEstatesTestFieldEditArgs ) => {
+    const title = args.title;
+    switch (title) {
+        case EstateEditorFieldNames.owner: return (
+            <EditOwner {...args}/>
+        )
+        case EstateEditorFieldNames.nrOfHotels: return (
+            <EditNrHotels {...args}/>
+        )
+        case EstateEditorFieldNames.nrOfHouses: return (
+            <EditNrHouses {...args}/>
+        )
+        case EstateEditorFieldNames.isPlegded: return (
+            <EditIsPlegded {...args}/>
+        )
+        default: return <></>
+    }
+
 }
 
 
@@ -112,13 +125,29 @@ const EditEstate = ({selectedEstate}: tEditEstate) => {
             headline = {`Edit ${selectedEstate.name}`} 
             logAction = {() => {}}
         >
-            {fieldsOrder.map(({title, value, handler}) =>
-                    <StateEditorEntry
-                        title = {title}
-                        currentValue = {(value ?? '').toString()}
-                    >{}</StateEditorEntry>
+            {fieldsOrder.map(({title, value, handler}) => {
+                // const EstatesTestFieldEdit = withEstatesTestFieldEdit(title, handler)
+                return (
+                        <StateEditorEntry
+                            title = {title}
+                            currentValue = {(value ?? '').toString()}
+                        >
+                            <EstatesTestFieldEdit
+                                title={title}
+                                value={(value ?? '').toString()}
+                                handler={handler}
+                                owner={owner}
+                                nrOfHotels={nrOfHotels}
+                                nrOfHouses={nrOfHouse}
+                                isPlegeded={isPlegded}
+                            />
+            
+                        </StateEditorEntry>
+                    )
+                }
             )
-            }
+        }
+        
         </StateEditorForm>
         // <ul>
         //     {
@@ -126,12 +155,6 @@ const EditEstate = ({selectedEstate}: tEditEstate) => {
         //     }
         // </ul>
     )
-}
-
-type tEstateFieldType = any;
-
-type tEstatesTestFieldEditArgs = {
-    title: string, value: tEstateFieldType, handler?: (val: tEstateFieldType) => void
 }
 
 const useSelectEstate = () => {

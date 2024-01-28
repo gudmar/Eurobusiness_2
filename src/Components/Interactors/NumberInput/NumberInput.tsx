@@ -10,7 +10,8 @@ const getApporximatedValue = ( val: string, {min, max, step}: iTernaryNumberInpu
 }
 
 export const NumberInput = ({
-    value, label, onChange, id, isRequired, min, max, step
+    value, label, onChange, id, isRequired, min, max, step,
+    enableConditionFunction, disabledTooltip,
 }: iNumberInput ) => {
     const NumberInputComponent = useMemo( () => getInput('number', {min, max, step}), [])
     const approximatedValue = getApporximatedValue(`${value}`, {min, max, step});
@@ -26,6 +27,8 @@ export const NumberInput = ({
             value={approximatedValue}
             isRequired={isRequired}
             onChange={changeHandler}
+            enableConditionFunction={enableConditionFunction}
+            disabledTooltip={disabledTooltip}
         />
     )
 }
