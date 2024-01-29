@@ -21,7 +21,7 @@ const Item = ({value, selectedValue, select}:iItemProps) => {
     )
 }
 
-export const SingleSelectFromList = ({id, label, items, onSelect, defaultValue='', disabledTooltip='Input disabled for some reason', enableConditionFunction=()=>true}: iSelectFromListProps) => {
+export const SingleSelectFromList = ({id, label, items, onSelect, defaultValue='', disabledTooltip='Input disabled for some reason', enableConditionFunction=()=>true, small=false}: iSelectFromListProps) => {
     const { theme } = useThemesAPI();
     const isEnabled = enableConditionFunction();
     const classes: {[key:string]: string} = useStyles(theme as any);
@@ -40,8 +40,8 @@ export const SingleSelectFromList = ({id, label, items, onSelect, defaultValue='
     } = useSelectFromLogic({ focusRef, blurRef,  items, isEnabled, defaultSelection: defaultValue, onSelect })
     return (
             <div className={`${classes.selectFromList}`} ref={blurRef} tabIndex={0}>
-                <fieldset className={`${classes.container}  ${!isEnabled ? classes.disabledFieldset : ''}`}>
-                    <legend>{label}</legend>
+                <fieldset className={`${classes.container}  ${!isEnabled ? classes.disabledFieldset : ''} ${small ? classes.smallContainer : ''}`}>
+                    {!small ?? <legend>{label}</legend>}
                     <div className={`${classes.input} ${isEnabled?'':classes.disabledInput}`}>
                             { !isEnabled && <div className={classes.tooltip}>{disabledTooltip}</div> }
                             <input
@@ -68,7 +68,7 @@ export const SingleSelectFromList = ({id, label, items, onSelect, defaultValue='
                     </div>
                 </fieldset>
                 <div 
-                    className={`${classes.listWrapper} ${isSearchListExpanded ? classes.visible : classes.hidden}`}
+                    className={`${classes.listWrapper} ${small ? classes.listWrapperSmall : ''} ${isSearchListExpanded ? classes.visible : classes.hidden}`}
                     aria-hidden={!isSearchListExpanded}
                 >
                     <div className={classes.scrollable}>

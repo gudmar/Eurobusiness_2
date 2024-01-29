@@ -30,11 +30,6 @@ const initialState: iEstatesState = {
 }
 
 export const useEstatesEditor = (editedEstate: tSelectedEstate) => {
-    if (!editedEstate) {
-        return {
-            ...initialState,
-        }
-    }
     useEffect(() => {
         console.error('FieldCreators need runAllSubscribtions implementation')
     }, [])
@@ -44,6 +39,11 @@ export const useEstatesEditor = (editedEstate: tSelectedEstate) => {
         setEstatesState(newState);
 
     }, [editedEstate])
+    if (!editedEstate) {
+        return {
+            ...initialState,
+        }
+    }
     const setIsPlegded = (newValue: boolean) => editedEstate?.isPlegded
     const setNrOfHouses = (newValue: number) => {
         if (Object.values(editedEstate || {}).includes('nrOfHouses')){

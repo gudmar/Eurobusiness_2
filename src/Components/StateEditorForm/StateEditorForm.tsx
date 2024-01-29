@@ -8,15 +8,17 @@ export const StateEditorForm = ({children, headline, logAction, formName}: tStat
     
     return (
         <div className={classes.scrollArea}>
-            <form className={classes.container} autoComplete="off" name={formName || headline}>
-                <h1 className={classes.title}>{headline}</h1>
-                {logAction && <div className={classes.logButton} onClick={logAction} role={'button'}>Log state in console</div>}
-                {/* <button className={classes.logButton} onClick={logHandler}>Log state in console</button> */}
-                    <table className={classes.entriesContainer}>
-                        <tbody>
-                            {children}
-                        </tbody>
-                    </table>
+            <form className={classes.center} autoComplete="off" name={formName || headline}>
+                <div className={`${classes.container} ${classes.center}`}>
+                    <h1 className={classes.title}>{headline}</h1>
+                    {logAction && <div className={classes.logButton} onClick={logAction} role={'button'}>Log state in console</div>}
+                    {/* <button className={classes.logButton} onClick={logHandler}>Log state in console</button> */}
+                        <table className={classes.entriesContainer}>
+                            <tbody>
+                                {children}
+                            </tbody>
+                        </table>
+                </div>
             </form>
         </div>
     )

@@ -14,8 +14,13 @@ export const useStyles = createUseStyles((theme) => ({
     },
     container: {
         display: 'flex',
-        borderRadius: '5px',
+        borderRadius: '0.5rem',
         backgroundColor: 'white',
+        margin: '0',
+    },
+    smallContainer: {
+        padding: '0',
+        maxWidth: '200px'
     },
     squareButton: {
         width: '1rem',
@@ -63,7 +68,6 @@ export const useStyles = createUseStyles((theme) => ({
         transition: '0.3s',
         overflow: 'hidden',
         position :'absolute',
-        // transform: 'scaleY(1)'
     },
     disabledFieldset: {
         backgroundColor: '#ccc'
@@ -79,12 +83,8 @@ export const useStyles = createUseStyles((theme) => ({
         height: '0',
         transition: '0.3s',
         overflow: 'hidden',
+        position: 'absolute'
         // transform: 'scaleY(0)'
-    },
-    listWrapper: {
-        overflow: 'hidden',
-        zIndex: '100',
-        width: '21rem',
     },
     scrollable: {
         maxHeight: '300px',
@@ -114,5 +114,13 @@ export const useStyles = createUseStyles((theme) => ({
             color: theme.notSelectedFromList_hoveredNotSelectedItemFg,    
         }
     },
-
+    listWrapper: {
+        overflow: 'hidden',
+        zIndex: '100',
+        width: '21rem',
+        maxHeight: '300px'
+    },
+    listWrapperSmall: {
+        maxHeight: '200px'
+    }
 }));

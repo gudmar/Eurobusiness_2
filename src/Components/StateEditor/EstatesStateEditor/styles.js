@@ -19,6 +19,9 @@ export const useStyles = createUseStyles((theme) => ({
         // maxHeight: '100%',
         marginBottom: '1rem'
     },
+    limitWidth: {
+        width: '60%',
+    },
     scrollContainer: {
         width: '40%',
         maxHeight: '90%',

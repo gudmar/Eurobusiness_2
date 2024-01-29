@@ -11,6 +11,7 @@ export interface iItemProps {
 export type tSelectItem = (value: string) => void;
 
 export interface iSelectFromListProps {
+    small?: boolean,
     items: string[],
     defaultValue?: string,
     label: string,

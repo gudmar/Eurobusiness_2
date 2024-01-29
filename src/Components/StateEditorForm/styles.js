@@ -3,19 +3,26 @@ import {createUseStyles} from 'react-jss'
 export const useStyles = createUseStyles({
     title:{
         fontFamily: 'courier',
-        fontSize: '2.2rem'
+        fontSize: '2.2rem',
+        margin: '0rem'
     },
-    container: {
+    center: {
         display: 'flex',
         justifyItems: 'center',
         flexDirection: 'column',
-        alignItems: 'center'
+        alignItems: 'center',
+    },
+    container: {
+        width: '100%',
+        padding: '2rem'
     },
     scrollArea: {
         // overflow: 'auto',
         // height: '100%',
+        width: '100%'
     },
     entriesContainer: {
+        width: '100%',
         borderCollapse: 'collapse',
         tableLayout: 'fixed',
         borderSpacing: '0px',
@@ -46,12 +53,15 @@ export const useStyles = createUseStyles({
         paddingRight: '2rem'
     },
     logButton: {
+        display: 'inline-block',
         padding: '0.3rem',
         borderRadius: '0.5rem',
         border: 'thin solid #554',
         fontSize: '1.1rem',
         margin: '0.3rem',
+        marginBottom: '1rem',
         cursor: 'pointer',
+
         // transitionDuration: '0.1s',
         '&:hover': {
             backgroundColor: '#ffffff88',

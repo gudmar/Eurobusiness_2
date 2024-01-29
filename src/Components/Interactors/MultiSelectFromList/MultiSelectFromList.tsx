@@ -71,7 +71,7 @@ const Tag = ({value, toggleSelection}: iTagProps) => {
 }
 
 export const MultiSelectFromList = ({
-    id, label, items, defaultValues=[], onClick, onSelected, onUnselected, disabledTooltip='Input disabled for some reason', enableConditionFunction=()=>false
+    id, label, items, defaultValues=[], onClick, onSelected, onUnselected, disabledTooltip='Input disabled for some reason', enableConditionFunction=()=>true
 }: iSelectFromListProps) => {
     const { theme } = useThemesAPI();
     const classes: {[key:string]: string} = useStyles(theme as any);
