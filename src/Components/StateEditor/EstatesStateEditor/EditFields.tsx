@@ -91,6 +91,7 @@ export const EditOwner = (args: tEstatesTestFieldEditArgs ) => {
     const isEnabled = tooltip === '';
     return (
         <SingleSelectFromList
+            small={true}
             defaultValue={owner}
             label={"Owner"}
             onSelect={handler || (() => {})}

@@ -7,7 +7,7 @@ import { usePlayersColors } from "../../../hooks/usePlayersColors";
 import { getBoard } from "../../../Logic/BoardCaretaker";
 import { tEstateField } from "../../../Logic/boardTypes";
 import { StateEditorForm } from "../../StateEditorForm/StateEditorForm";
-import { StateEditorEntry } from "../../StateEditorForm/StateEditorFormEntry";
+import { CollapsedEditorEntry, StateEditorEntry } from "../../StateEditorForm/StateEditorFormEntry";
 import { EstateEditorFieldNames } from "./const";
 import { EditIsPlegded, EditNrHotels, EditNrHouses, EditOwner } from "./EditFields";
 import { useStyles } from "./styles";
@@ -79,7 +79,9 @@ const EstatesTestFieldEdit = (args: tEstatesTestFieldEditArgs ) => {
 
 
 const EditEstate = ({selectedEstate}: tEditEstate) => {
-    console.log(selectedEstate)
+    const { theme } = useThemesAPI();
+    const classes: {[key:string]: string} = useStyles(theme as any);
+
     const {
         estateColor,
         country,
@@ -116,23 +118,18 @@ const EditEstate = ({selectedEstate}: tEditEstate) => {
         { title: EstateEditorFieldNames.hotelPrice, value: hotelPrice },
     ].filter(({value}) => isDefined(value) )
 
-    const {
-    } = useEstatesEditor(selectedEstate);
+    const {} = useEstatesEditor(selectedEstate);
 
     if (!selectedEstate) return <></>
     return (
-        <StateEditorForm
-            headline = {`Edit ${selectedEstate.name}`} 
-            logAction = {() => {}}
-        >
-            {fieldsOrder.map(({title, value, handler}) => {
-                // const EstatesTestFieldEdit = withEstatesTestFieldEdit(title, handler)
-                return (
-                        <StateEditorEntry
-                            title = {title}
-                            currentValue = {(value ?? '').toString()}
-                        >
-                            <EstatesTestFieldEdit
+        <div className={classes.limitWidth}>
+            <StateEditorForm
+                headline = {`Edit ${selectedEstate.name}`} 
+                logAction = {() => {}}
+            >
+                {fieldsOrder.map(({title, value, handler}) => {
+                        // const EstatesTestFieldEdit = withEstatesTestFieldEdit(title, handler)
+                        const child = <EstatesTestFieldEdit
                                 title={title}
                                 value={(value ?? '').toString()}
                                 handler={handler}
@@ -141,20 +138,20 @@ const EditEstate = ({selectedEstate}: tEditEstate) => {
                                 nrOfHouses={nrOfHouse}
                                 isPlegeded={isPlegded}
                             />
-            
-                        </StateEditorEntry>
+                        return (
+                                <CollapsedEditorEntry
+                                    title = {title}
+                                    currentValue = {(value ?? '').toString()}
+                                >
+                                    {handler && child }
+                                </CollapsedEditorEntry>
+                            )
+                        }
                     )
                 }
-            )
-        }
-        
-        </StateEditorForm>
-        // <ul>
-        //     {
-        //         fieldsOrder.map(({title, value, handler}) => <EstatesTestFieldEdit title={title} value={value} handler={handler} />)
-        //     }
-        // </ul>
-    )
+            </StateEditorForm>
+        </div>
+    )    
 }
 
 const useSelectEstate = () => {

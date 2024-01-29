@@ -1,13 +1,13 @@
-import { ReactNode } from "react";
+import { ReactElement, ReactNode } from "react";
 
 export type tStateEditorEntryArgs = {
-    children: ReactNode,
+    children: ReactElement,
     title: string,
     currentValue: string | number | null | undefined
 }
 
 export type tStateEditorArgs = {
-    children: ReactNode[],
+    children: ReactElement[],
     headline: string,
     logAction?: () => void,
     formName?: string,
