@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useThemesAPI } from "../../../Contexts/ThemeContext";
 import { CITY, PLANT, RAILWAY } from "../../../Data/const";
 import { tColors, tEstateTypes } from "../../../Data/types";
@@ -59,6 +59,7 @@ const EstatesList = ({estates, selectedEstate, setSelectEstate }: iEditEstateArg
 
 const EstatesTestFieldEdit = (args: tEstatesTestFieldEditArgs ) => {
     const title = args.title;
+    useEffect(() => console.log('Args changed',args), [args])
     switch (title) {
         case EstateEditorFieldNames.owner: return (
             <EditOwner {...args}/>
@@ -81,7 +82,10 @@ const EstatesTestFieldEdit = (args: tEstatesTestFieldEditArgs ) => {
 const EditEstate = ({selectedEstate}: tEditEstate) => {
     const { theme } = useThemesAPI();
     const classes: {[key:string]: string} = useStyles(theme as any);
-
+    const logSelectedEstatesState = () => {
+        const state = selectedEstate?.state;
+        console.log(state)
+    }
     const {
         estateColor,
         country,
@@ -119,13 +123,14 @@ const EditEstate = ({selectedEstate}: tEditEstate) => {
     ].filter(({value}) => isDefined(value) )
 
     const {} = useEstatesEditor(selectedEstate);
+    useEffect(() => console.log('Owner in component', owner), [owner])
 
     if (!selectedEstate) return <></>
     return (
         <div className={classes.limitWidth}>
             <StateEditorForm
-                headline = {`Edit ${selectedEstate.name}`} 
-                logAction = {() => {}}
+                headline = {`Edit ${selectedEstate.name}`}
+                logAction = {logSelectedEstatesState}
             >
                 {fieldsOrder.map(({title, value, handler}) => {
                         // const EstatesTestFieldEdit = withEstatesTestFieldEdit(title, handler)

@@ -1,11 +1,9 @@
 import { useThemesAPI } from "../../Contexts/ThemeContext";
 import { useStyles } from "./styles";
 import { tStateEditorEntryArgs } from "./types"
-import { Children, ReactNode } from "react";
-import ReactDOMServer from 'react-dom/server';
 
 export const StateEditorEntry = ({children, title, currentValue}: tStateEditorEntryArgs) => {
-    const { theme, setThemeName } = useThemesAPI();
+    const { theme } = useThemesAPI();
     const classes = useStyles(theme as any);
     return (
         <tr>
@@ -21,8 +19,7 @@ export const StateEditorEntry = ({children, title, currentValue}: tStateEditorEn
 }
 
 export const CollapsedEditorEntry = ({children, title, currentValue}: tStateEditorEntryArgs) => {
-    const { theme, setThemeName } = useThemesAPI();
-    console.log('Children', children)
+    const { theme } = useThemesAPI();
     const classes = useStyles(theme as any);
     return (
         <tr>

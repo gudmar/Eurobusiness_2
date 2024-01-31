@@ -52,6 +52,9 @@ export const useStyles = createUseStyles({
         // paddingLeft: '3rem',
         paddingRight: '2rem'
     },
+    logPanel: {
+        display: 'flex',
+    },
     logButton: {
         display: 'inline-block',
         padding: '0.3rem',

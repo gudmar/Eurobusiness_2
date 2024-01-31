@@ -22,6 +22,7 @@ const Item = ({value, selectedValue, select}:iItemProps) => {
 }
 
 export const SingleSelectFromList = ({id, label, items, onSelect, defaultValue='', disabledTooltip='Input disabled for some reason', enableConditionFunction=()=>true, small=false}: iSelectFromListProps) => {
+    useEffect(() => console.log(defaultValue), [defaultValue])
     const { theme } = useThemesAPI();
     const isEnabled = enableConditionFunction();
     const classes: {[key:string]: string} = useStyles(theme as any);
@@ -38,6 +39,7 @@ export const SingleSelectFromList = ({id, label, items, onSelect, defaultValue='
         close,
         open
     } = useSelectFromLogic({ focusRef, blurRef,  items, isEnabled, defaultSelection: defaultValue, onSelect })
+    useEffect(() => console.log('Selected in SSFormList', selected), [selected])
     return (
             <div className={`${classes.selectFromList}`} ref={blurRef} tabIndex={0}>
                 <fieldset className={`${classes.container}  ${!isEnabled ? classes.disabledFieldset : ''} ${small ? classes.smallContainer : ''}`}>
