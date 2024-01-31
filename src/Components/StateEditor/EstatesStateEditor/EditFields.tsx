@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { BANK } from "../../../Data/const";
+import { tOwner } from "../../../Data/types";
 import { usePlayersColors } from "../../../hooks/usePlayersColors";
 import { Checkbox } from "../../Interactors/Checkbox/Checkbox";
 import { NumberInput } from "../../Interactors/NumberInput/NumberInput";
@@ -84,16 +86,28 @@ const getOwnerTooltip = (args: tEstatesTestFieldEditArgs ) => {
     return ''
 }
 export const EditOwner = (args: tEstatesTestFieldEditArgs ) => {
-    const {title, value, handler, owner, nrOfHotels, nrOfHouses, isPlegeded} = args
+    // const {title, value, handler, nrOfHotels, nrOfHouses, isPlegeded} = args
+    const [owner, setOwner] = useState<any>(null);
+    const [handler, setHandler] = useState<any>(null);
+    useEffect(() => {
+        const {title, value, handler, owner, nrOfHotels, nrOfHouses, isPlegeded} = args
+        console.log('Args of EditNrHotels changed',handler, owner);
+        // const owner = args.owner;
+        setHandler(handler)
+        setOwner(owner)
+    }, [args])
+    useEffect(() => console.log('Handler changd', handler, [handler]))
     const playersColors = usePlayersColors();
     const players = [...playersColors, BANK];
     const tooltip = getOwnerTooltip(args);
     const isEnabled = tooltip === '';
+    useEffect(() => console.log('Owner in EditOwner', owner), [owner])
     return (
         <SingleSelectFromList
             small={true}
+            key={owner}
             defaultValue={owner}
-            label={"Owner"}
+            label={`Owner ${owner}`}
             onSelect={handler || (() => {})}
             items={players}
             disabledTooltip={tooltip}

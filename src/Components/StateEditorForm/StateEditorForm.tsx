@@ -11,8 +11,13 @@ export const StateEditorForm = ({children, headline, logAction, formName}: tStat
             <form className={classes.center} autoComplete="off" name={formName || headline}>
                 <div className={`${classes.container} ${classes.center}`}>
                     <h1 className={classes.title}>{headline}</h1>
-                    {logAction && <div className={classes.logButton} onClick={logAction} role={'button'}>Log state in console</div>}
-                    {/* <button className={classes.logButton} onClick={logHandler}>Log state in console</button> */}
+                    {
+                        logAction &&
+                            <div className={classes.logPanel}>
+                                <div className={classes.logButton} onClick={logAction} role={'button'}>Log state in console</div>
+                                <div className={classes.logButton} onClick={() => setTimeout(() => console.clear())}>Clear console</div>
+                            </div>
+                    }
                         <table className={classes.entriesContainer}>
                             <tbody>
                                 {children}
