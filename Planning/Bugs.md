@@ -32,3 +32,8 @@ MultiSelct component should not be changed as it is a library like component
 * Think how to fix this
 
 
+### Board editor
+#### Owner does not change
+1. Problem seems to be in EditFields -> EditOwner component, here args change as expected, but for some reason owner and handler do not change
+
+

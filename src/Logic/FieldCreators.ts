@@ -18,7 +18,7 @@ export class NullishField {
     }
 }
 
-export class CityField extends SubscribtionsHandler<tFlattenedFieldTypes, tAnyState> implements iCityFieldClass {
+export class CityField extends SubscribtionsHandler<tFlattenedFieldTypes, iCityFieldState> implements iCityFieldClass {
     private _name!: string;
     private _type: tEstateTypes = CITY;
     private _country!: tCountries;
@@ -88,12 +88,15 @@ export class CityField extends SubscribtionsHandler<tFlattenedFieldTypes, tAnySt
     get index() { return this._index }
     set nrOfHouses(val: number) {
         if (val > 4 || val < 0) throw new Error('Nr of houses has to be > 0 and < 5')
-        this._nrOfHouses = val
+        this._nrOfHouses = val;
+        this.runAllSubscriptions(this.name as tFlattenedFieldTypes, this.state);
     }
     set nrOfHotels(val: number) {
         if (val > 1 || val < 0) throw new Error('Nr of hotels has to be > 0 and < 1')
-        if (this.nrOfHouses !== 0) throw new Error('You cannot build a hotel before selling all houses on this estate')
+        if (this.nrOfHouses !== 0) throw new Error('You cannot build a hotel before selling all houses on this estate');
+        
         this._nrOfHotels = val;
+        this.runAllSubscriptions(this.name as tFlattenedFieldTypes, this.state);
     }
     getMemento(): iCityMemento {
         return ({
@@ -117,14 +120,21 @@ export class CityField extends SubscribtionsHandler<tFlattenedFieldTypes, tAnySt
             nrOfHouses: this._nrOfHouses,
             isPlegded: this._isPlegded,
             color: this._color,
+            nrOfHotels: this._nrOfHotels,
             index: this._index,
         })
     }
-    set owner(val: tOwner) { this._owner = val}
-    set isPlegded(val: boolean) { this._isPlegded = val}
+    set owner(val: tOwner) { 
+        this._owner = val;
+        this.runAllSubscriptions(this.name as tFlattenedFieldTypes, this.state);
+    }
+    set isPlegded(val: boolean) {
+        this._isPlegded = val;
+        this.runAllSubscriptions(this.name as tFlattenedFieldTypes, this.state);
+    }
 }
 
-export class NonCityEstatesField extends SubscribtionsHandler<tFlattenedFieldTypes, tAnyState> implements iNonCityEstatesField{
+export class NonCityEstatesField extends SubscribtionsHandler<tFlattenedFieldTypes, iNonCityEstatesFieldState> implements iNonCityEstatesField{
     private _type!: tEstateTypes;
     private _country!: tCountries;
     private _price!: number;
@@ -183,8 +193,14 @@ export class NonCityEstatesField extends SubscribtionsHandler<tFlattenedFieldTyp
     get owner() {return this._owner}
     get isPlegded() {return this._isPlegded}
     get Icon() {return this._icon}
-    set isPlegded(val: boolean) { this._isPlegded = val}
-    set owner(val: string) {this._owner = val}
+    set isPlegded(val: boolean) {
+        this._isPlegded = val;
+        this.runAllSubscriptions(this.name as tFlattenedFieldTypes, this.state);
+    }
+    set owner(val: string) {
+        this._owner = val;
+        this.runAllSubscriptions(this.name as tFlattenedFieldTypes, this.state);
+    }
     get index() { return this._index }
     get state(): iNonCityEstatesFieldState {
         return {

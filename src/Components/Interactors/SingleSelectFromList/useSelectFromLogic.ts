@@ -68,7 +68,6 @@ export const reducer = getReducer<iSearchFromState, string, tPayloadTypes1>(REDU
 export const useSelectFromLogic = ({ blurRef, isEnabled, items, defaultSelection, onSelect }: iSelectFromLogicArgs) => {
     const [{
         isSearchExpanded,
-        selected,
         displayed,
         visibleItems,
     }, dispatch] = useReducer(reducer, {
