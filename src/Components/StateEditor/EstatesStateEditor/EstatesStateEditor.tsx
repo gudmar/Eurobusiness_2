@@ -7,7 +7,7 @@ import { usePlayersColors } from "../../../hooks/usePlayersColors";
 import { getBoard } from "../../../Logic/BoardCaretaker";
 import { tEstateField } from "../../../Logic/boardTypes";
 import { StateEditorForm } from "../../StateEditorForm/StateEditorForm";
-import { CollapsedEditorEntry, StateEditorEntry } from "../../StateEditorForm/StateEditorFormEntry";
+import { CollapsedEditorEntry } from "../../StateEditorForm/StateEditorFormEntry";
 import { EstateEditorFieldNames } from "./const";
 import { EditIsPlegded, EditNrHotels, EditNrHouses, EditOwner } from "./EditFields";
 import { useStyles } from "./styles";
@@ -133,7 +133,6 @@ const EditEstate = ({selectedEstate}: tEditEstate) => {
                 logAction = {logSelectedEstatesState}
             >
                 {fieldsOrder.map(({title, value, handler}) => {
-                        // const EstatesTestFieldEdit = withEstatesTestFieldEdit(title, handler)
                         const child = <EstatesTestFieldEdit
                                 title={title}
                                 value={(value ?? '').toString()}
@@ -167,7 +166,6 @@ const useSelectEstate = () => {
     ]
     const boardEndpoint = getBoard();
     
-    const boardCaretaker = boardEndpoint.provideCaretaker();
     const estates = boardEndpoint.estates.filter(({type}) => [CITY, PLANT, RAILWAY].includes(type)) as tEstateField[];
     const playersColors = usePlayersColors();
     const [selectedEstate, setSelectedEstate] = useState<tSelectedEstate>(null);
@@ -189,7 +187,7 @@ const useSelectEstate = () => {
 }
 
 
-export const EstatesStateEditor = ({name, setActive, currentActiveSection}: any) => {
+export const EstatesStateEditor = () => {
     const { theme } = useThemesAPI();
     const classes: {[key:string]: string} = useStyles(theme as any);
     const {

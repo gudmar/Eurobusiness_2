@@ -47,12 +47,6 @@ export interface iCityField {
     nrOfHouses: number,
     nrOfHotels: number,
 
-    // nrOfCitiesInCountry: number,
-    // nrOfHousesToPurchase?: number,
-    // nrOfHousesToSell?: number,
-    // nrOfHotelsToSell?: number, 
-    // nrOfHotelsToBuy?: number,
-    // boardFieldNumber: number,
     isPlegded: boolean,
 }
 
@@ -63,12 +57,11 @@ export interface iNamedCityField extends iCityField {
 
 export type tIcon = FC;  // PRECISE this type,
 
-// export type tChanceType = tChanceFieldNameType | typeof CHANCE_RED | typeof CHANCE_BLUE;
 export type tChanceType = typeof CHANCE_BLUE_BOTTOM | typeof CHANCE_BLUE_LEFT | typeof CHANCE_BLUE_RIGHT | typeof CHANCE_RED_BOTTOM | typeof CHANCE_RED_TOP | typeof CHANCE_RED_TOP | typeof CHANCE_RED | typeof CHANCE_BLUE;
 
 export type tChanceFieldNameType = typeof CHANCE_BLUE_BOTTOM | typeof CHANCE_BLUE_LEFT | typeof CHANCE_BLUE_RIGHT | typeof CHANCE_RED_BOTTOM | typeof CHANCE_RED_TOP | typeof CHANCE_RED_TOP
 
-export type tFieldTypes =  tCity | tNonCityEstates | tOtherTypes | tChanceType;
+export type tFieldTypes =  tCity | tNonCityEstates | tOtherTypes | tChanceType ;
 export type tFlattenedFieldTypes = tCombineStringUnions<tFieldTypes> 
 
 export type tAnyState = iNamedChance | iNamedCityField | iNamedNonCityEstates | iNamedOtherField

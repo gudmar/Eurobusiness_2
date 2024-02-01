@@ -25,7 +25,7 @@ export const EditNrHouses = (args: tEstatesTestFieldEditArgs ) => {
             onChange={handler || (() => {})}
             isRequired={false}
             min={0}
-            max={0}
+            max={4}
             step={1}
             disabledTooltip={tooltip}
             enableConditionFunction={() => isEnabled}
@@ -51,7 +51,7 @@ export const EditNrHotels = (args: tEstatesTestFieldEditArgs ) => {
             onChange={handler || (() => {})}
             isRequired={false}
             min={0}
-            max={0}
+            max={1}
             step={1}
             disabledTooltip={tooltip}
             enableConditionFunction={() => isEnabled}
@@ -61,14 +61,19 @@ export const EditNrHotels = (args: tEstatesTestFieldEditArgs ) => {
 
 const getIsPlegdedTooltip = (args: tEstatesTestFieldEditArgs ) => {
     const { owner, nrOfHotels, nrOfHouses, isPlegeded } = args;
-    if (owner === BANK) return 'Cannot plegde estate owned by the bank'
+    if (owner === BANK) return 'Cannot plegde estate owned by the bank';
+    if (nrOfHouses != 0) return 'Cannot plegde estate with houses';
+    if (nrOfHotels != 0) return 'Cannot plegde estate with hotels';
     return ''
 }
 
 export const EditIsPlegded = (args: tEstatesTestFieldEditArgs ) => {
     const {title, value, handler, owner, nrOfHotels, nrOfHouses, isPlegeded} = args
     const tooltip = getIsPlegdedTooltip(args);
-    const isEnabled = tooltip === '';
+    const isEnabled = () => {
+        const result = owner != BANK && nrOfHotels === 0 && nrOfHouses === 0;
+        return result;
+    };
     const checked = value === 'false' ? false : true;
     return (
         <Checkbox
@@ -76,7 +81,7 @@ export const EditIsPlegded = (args: tEstatesTestFieldEditArgs ) => {
             label={"Is plegded"}
             onChange={handler || (() => {})}
             disabledTooltip={tooltip}
-            enableConditionFunction={() => isEnabled}
+            enableConditionFunction={isEnabled}
         />
     )    
 }
@@ -86,22 +91,11 @@ const getOwnerTooltip = (args: tEstatesTestFieldEditArgs ) => {
     return ''
 }
 export const EditOwner = (args: tEstatesTestFieldEditArgs ) => {
-    // const {title, value, handler, nrOfHotels, nrOfHouses, isPlegeded} = args
-    const [owner, setOwner] = useState<any>(null);
-    const [handler, setHandler] = useState<any>(null);
-    useEffect(() => {
-        const {title, value, handler, owner, nrOfHotels, nrOfHouses, isPlegeded} = args
-        console.log('Args of EditNrHotels changed',handler, owner);
-        // const owner = args.owner;
-        setHandler(handler)
-        setOwner(owner)
-    }, [args])
-    useEffect(() => console.log('Handler changd', handler, [handler]))
+    const {title, value, handler, owner, nrOfHotels, nrOfHouses, isPlegeded} = args
     const playersColors = usePlayersColors();
     const players = [...playersColors, BANK];
     const tooltip = getOwnerTooltip(args);
     const isEnabled = tooltip === '';
-    useEffect(() => console.log('Owner in EditOwner', owner), [owner])
     return (
         <SingleSelectFromList
             small={true}

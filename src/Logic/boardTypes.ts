@@ -62,6 +62,7 @@ export interface iCityFieldState {
     visit: tVisitPayment,
     owner: string,
     nrOfHouses: number,
+    nrOfHotels: number,
     isPlegded: boolean,
     color: string,
     index: number,
