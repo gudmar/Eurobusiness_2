@@ -13,6 +13,7 @@ import { EditIsPlegded, EditNrHotels, EditNrHouses, EditOwner } from "./EditFiel
 import { useStyles } from "./styles";
 import { iEditEstateArgs, tEditEstate, tEstateArgs, tEstatesTestFieldEditArgs, tGetEstateClassesArgs, tSelectedEstate, tSetSelectEstateFunction } from "./types";
 import { useEstatesEditor } from "./useEstatesEditor";
+import { useSelectEstate } from "./useSelectEstate";
 
 const getEstateClasses = (args: tGetEstateClassesArgs) => {
     const {type, isSelected, classes} = args;
@@ -122,8 +123,6 @@ const EditEstate = ({selectedEstate}: tEditEstate) => {
         { title: EstateEditorFieldNames.hotelPrice, value: hotelPrice },
     ].filter(({value}) => isDefined(value) )
 
-    const {} = useEstatesEditor(selectedEstate);
-    useEffect(() => console.log('Owner in component', owner), [owner])
 
     if (!selectedEstate) return <></>
     return (
@@ -157,35 +156,6 @@ const EditEstate = ({selectedEstate}: tEditEstate) => {
         </div>
     )    
 }
-
-const useSelectEstate = () => {
-    const estateTypes = [
-        {type: CITY},
-        {type: PLANT},
-        {type: RAILWAY},
-    ]
-    const boardEndpoint = getBoard();
-    
-    const estates = boardEndpoint.estates.filter(({type}) => [CITY, PLANT, RAILWAY].includes(type)) as tEstateField[];
-    const playersColors = usePlayersColors();
-    const [selectedEstate, setSelectedEstate] = useState<tSelectedEstate>(null);
-    const selectEstate = (estate: tSelectedEstate) => estate?.name ? setSelectedEstate(estate) : null;
-    const setSearchPattern = (pattern:string) => {};
-    const togglePlayerColorForFilter = (color: tColors) => {}
-    const toggleEstatesTypeForFilter = (estateType: tEstateTypes) => {}
-    return {
-        estateTypes,
-        selectEstate,
-        selectedEstate,
-        selectedEstateName: selectEstate?.name || '',
-        filteredEstates: estates,
-        playersColors,
-        setSearchPattern,
-        toggleEstatesTypeForFilter,
-        togglePlayerColorForFilter,
-    }
-}
-
 
 export const EstatesStateEditor = () => {
     const { theme } = useThemesAPI();

@@ -140,7 +140,7 @@ export class NonCityEstatesField extends SubscribtionsHandler<tFlattenedFieldTyp
     private _price!: number;
     private _mortgage!: number;
     private _visit!: tVisitPayment;
-    private _owner: string = BANK;
+    private _owner: tOwner = BANK;
     private _isPlegded: boolean = false;
     private _icon!: tIcon;
     private _name!: string;
@@ -197,7 +197,7 @@ export class NonCityEstatesField extends SubscribtionsHandler<tFlattenedFieldTyp
         this._isPlegded = val;
         this.runAllSubscriptions(this.name as tFlattenedFieldTypes, this.state);
     }
-    set owner(val: string) {
+    set owner(val: tOwner) {
         this._owner = val;
         this.runAllSubscriptions(this.name as tFlattenedFieldTypes, this.state);
     }

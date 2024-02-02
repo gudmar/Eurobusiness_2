@@ -98,7 +98,7 @@ export interface iNonCityEstates {
     price: number,
     mortgage: number,
     visit: tVisitPayment,
-    owner: string,
+    owner: tOwner,
     isPlegded: boolean,
     Icon: FC,
 }
