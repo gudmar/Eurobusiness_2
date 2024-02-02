@@ -170,7 +170,12 @@ export const EstatesStateEditor = () => {
         setSearchPattern,
         toggleEstatesTypeForFilter,
         togglePlayerColorForFilter,
+        searchPattern,
+        ownersFilter,
+        estateTypesFilter,
     } = useSelectEstate()
+
+
     return (
         <div className={classes.rows}>
             <h2 className={classes.headline}>Estates editor</h2>
