@@ -1,6 +1,6 @@
 import { useReducer, useState } from "react";
 import { CITY, PLANT, RAILWAY } from "../../../Data/const";
-import { tColors, tEstateTypes, tOwner } from "../../../Data/types";
+import { tColors, tEstateTypes, tFieldTypes, tOwner } from "../../../Data/types";
 import { getReducer } from "../../../Functions/reducer";
 import { usePlayersColors } from "../../../hooks/usePlayersColors";
 import { getBoard } from "../../../Logic/BoardCaretaker";
@@ -86,10 +86,36 @@ const applySearchByOwner = (state: tUseSelectEstateState, payload: tOwner[] ): t
     return {...state, filteredEstates, ownersFilter: payload}
 }
 
+const ACTIONS = {
+    [SelectEstateActions.searchByName]: (payload: string) => ({type: SelectEstateActions.searchByName, payload}),
+    [SelectEstateActions.filterOwners]: (payload: tOwner[]) => ({type: SelectEstateActions.searchByName, payload}),
+    [SelectEstateActions.filterTypes] : (payload: tEstateTypes[]) => ({type: SelectEstateActions.filterTypes, payload}),
+}
+
 const REDUCER = {
     [SelectEstateActions.searchByName]: applySearchByName,
     [SelectEstateActions.filterOwners]: applySearchByOwner,
     [SelectEstateActions.filterTypes]: applySearchByType,
+}
+type tPayload = string | tOwner[] | tEstateTypes[]
+type tActionType = {type: SelectEstateActions, payload: tPayload}
+
+const getThingsDone = (dispatch: ({type, payload}: tActionType) => void) => {
+    const setSearchPattern = (pattern: string) => {
+        const action = ACTIONS[SelectEstateActions.searchByName](pattern);
+        dispatch(action);
+    }
+    const toggleEstatesTypeForFilter = (typesFilter: tEstateTypes[]) => {
+        const action = ACTIONS[SelectEstateActions.filterTypes](typesFilter);
+        dispatch(action)
+    }
+    const togglePlayerColorForFilter = (ownersFilter: tOwner[]) => {
+        const action = ACTIONS[SelectEstateActions.filterOwners](ownersFilter);
+        dispatch(action)
+    }
+    return {
+        setSearchPattern, toggleEstatesTypeForFilter, togglePlayerColorForFilter
+    }
 }
 
 const reducer = getReducer(REDUCER);
@@ -114,15 +140,19 @@ export const useSelectEstate = () => {
 
     const [selectedEstate, setSelectedEstate] = useState<tSelectedEstate>(null);
     const selectEstate = (estate: tSelectedEstate) => estate?.name ? setSelectedEstate(estate) : null;
-    const setSearchPattern = (pattern:string) => {};
-    const togglePlayerColorForFilter = (color: tColors) => {}
-    const toggleEstatesTypeForFilter = (estateType: tEstateTypes) => {}
+    // const setSearchPattern = (pattern:string) => {};
+    // const togglePlayerColorForFilter = (color: tColors) => {}
+    // const toggleEstatesTypeForFilter = (estateType: tEstateTypes) => {}
+    const { setSearchPattern, toggleEstatesTypeForFilter, togglePlayerColorForFilter } = getThingsDone(dispatch);
     return {
         estateTypes,
         selectEstate,
         selectedEstate,
         selectedEstateName: selectEstate?.name || '',
-        filteredEstates: estates,
+        filteredEstates,
+        searchPattern,
+        ownersFilter,
+        estateTypesFilter,
         playersColors,
         setSearchPattern,
         toggleEstatesTypeForFilter,
