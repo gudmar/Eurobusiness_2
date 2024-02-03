@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { useThemesAPI } from "../../../Contexts/ThemeContext";
 import { CITY, PLANT, RAILWAY } from "../../../Data/const";
-import { tColors, tEstateTypes } from "../../../Data/types";
+import { tColors, tEstateTypes, tOwner } from "../../../Data/types";
 import { isDefined } from "../../../Functions/isDefined";
 import { usePlayersColors } from "../../../hooks/usePlayersColors";
 import { getBoard } from "../../../Logic/BoardCaretaker";
@@ -166,10 +166,11 @@ export const EstatesStateEditor = () => {
         selectedEstate,
         selectedEstateName,
         filteredEstates,
-        playersColors,
+        // playersColors,
+        estateOwners,
         setSearchPattern,
-        toggleEstatesTypeForFilter,
-        togglePlayerColorForFilter,
+        toggleEstateType,
+        toggleOwner,
         searchPattern,
         ownersFilter,
         estateTypesFilter,
@@ -182,15 +183,25 @@ export const EstatesStateEditor = () => {
             <div className={classes.estatesFiltering}>
                 <fieldset>
                     <legend>Search estates</legend>
-                    <input className={classes.searchBox} type='text'></input>
+                    <input
+                        className={classes.searchBox}
+                        type='text'
+                        value={searchPattern}
+                        onChange={(e) => setSearchPattern(e.target.value)}
+                    />
                 </fieldset>
                 <fieldset>
                     <legend>Owned by player</legend>
                     <ul>
                         {
-                            playersColors.map((color: tColors) => <li key={color}>
-                                <input id={`${color}`} type='checkbox' />
-                                <label htmlFor={`${color}`}>{color}</label>
+                            estateOwners.map((estateOwner: tOwner) => <li key={estateOwner}>
+                                <input 
+                                    id={`${estateOwner}`} 
+                                    type='checkbox' 
+                                    onClick={() => toggleOwner(estateOwner)}
+                                    checked={ ownersFilter.includes(estateOwner) }
+                                />
+                                <label htmlFor={`${estateOwner}`}>{estateOwner}</label>
 
                             </li>)
                         }
@@ -200,8 +211,13 @@ export const EstatesStateEditor = () => {
                     <legend>Estate types</legend>
                     <ul>
                         {
-                            estateTypes.map(({type}) => <li key={type}>
-                                <input id = {`${type}`} type='checkbox'/>
+                            estateTypes.map((type) => <li key={type}>
+                                <input 
+                                    id = {`${type}`} 
+                                    type='checkbox' 
+                                    onClick={() => toggleEstateType(type)}
+                                    checked={estateTypesFilter.includes(type)}
+                                />
                                 <label htmlFor={`${type}`}>{type}</label>
                             </li>)
                         }
