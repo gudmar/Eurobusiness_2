@@ -1,7 +1,9 @@
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { CITY, PLANT, RAILWAY } from "../../../Data/const";
 import { tColors, tEstateTypes, tFieldTypes, tOwner } from "../../../Data/types";
 import { getReducer } from "../../../Functions/reducer";
+import { toggleArrayItem } from "../../../Functions/toggleArrayItem";
+import { useEstateOwners } from "../../../hooks/useEstateOwners";
 import { usePlayersColors } from "../../../hooks/usePlayersColors";
 import { getBoard } from "../../../Logic/BoardCaretaker";
 import { tEstateField } from "../../../Logic/boardTypes";
@@ -22,13 +24,16 @@ const initialState: tUseSelectEstateState = {
     filteredEstates: [],
     searchPattern: '',
     ownersFilter: [],
-    estateTypesFilter: [CITY, PLANT, RAILWAY],
+    estateTypesFilter: []
+    // estateTypesFilter: [CITY, PLANT, RAILWAY],
 }
 
 enum SelectEstateActions {
     searchByName = 'searchByName',
     filterOwners = 'fliter by owners',
-    filterTypes = 'filter by estate types'
+    filterTypes = 'filter by estate types',
+    toggleType = 'toggle type',
+    toggleOwner = 'toggle owner'
 }
 
 const getSearchByName = (filter: string) => (estates: tEstateField[]): tEstateField[] => {
@@ -86,16 +91,34 @@ const applySearchByOwner = (state: tUseSelectEstateState, payload: tOwner[] ): t
     return {...state, filteredEstates, ownersFilter: payload}
 }
 
+const applySearchAfterOwnerToggle = (state: tUseSelectEstateState, payload: tOwner): tUseSelectEstateState => {
+    const owners = state.ownersFilter;
+    const newOwners = toggleArrayItem(owners, payload) as tOwner[];
+    const newState = applySearchByOwner(state, newOwners)
+    return newState;
+}
+
+const applySearchAfterTypeToggle = (state: tUseSelectEstateState, payload: tEstateTypes): tUseSelectEstateState => {
+    const types = state.estateTypesFilter;
+    const newTypes = toggleArrayItem(types, payload) as tEstateTypes[];
+    const newState = applySearchByType(state, newTypes)
+    return newState;
+}
+
 const ACTIONS = {
     [SelectEstateActions.searchByName]: (payload: string) => ({type: SelectEstateActions.searchByName, payload}),
-    [SelectEstateActions.filterOwners]: (payload: tOwner[]) => ({type: SelectEstateActions.searchByName, payload}),
+    [SelectEstateActions.filterOwners]: (payload: tOwner[]) => ({type: SelectEstateActions.filterOwners, payload}),
     [SelectEstateActions.filterTypes] : (payload: tEstateTypes[]) => ({type: SelectEstateActions.filterTypes, payload}),
+    [SelectEstateActions.toggleOwner] : (payload: tOwner) => ({type: SelectEstateActions.toggleOwner, payload}),
+    [SelectEstateActions.toggleType]  : (payload: tEstateTypes) => ({type: SelectEstateActions.toggleType, payload}),
 }
 
 const REDUCER = {
     [SelectEstateActions.searchByName]: applySearchByName,
     [SelectEstateActions.filterOwners]: applySearchByOwner,
     [SelectEstateActions.filterTypes]: applySearchByType,
+    [SelectEstateActions.toggleOwner]: applySearchAfterOwnerToggle,
+    [SelectEstateActions.toggleType]: applySearchAfterTypeToggle,
 }
 type tPayload = string | tOwner[] | tEstateTypes[]
 type tActionType = {type: SelectEstateActions, payload: tPayload}
@@ -105,32 +128,42 @@ const getThingsDone = (dispatch: ({type, payload}: tActionType) => void) => {
         const action = ACTIONS[SelectEstateActions.searchByName](pattern);
         dispatch(action);
     }
-    const toggleEstatesTypeForFilter = (typesFilter: tEstateTypes[]) => {
+    const setEstatesTypeForFilter = (typesFilter: tEstateTypes[]) => {
         const action = ACTIONS[SelectEstateActions.filterTypes](typesFilter);
         dispatch(action)
     }
-    const togglePlayerColorForFilter = (ownersFilter: tOwner[]) => {
+    const toggleEstateType = (estateType: tEstateTypes) => {
+        const action = ACTIONS[SelectEstateActions.toggleType](estateType);
+        dispatch(action)
+    }
+
+    const setOwnersForFilter = (ownersFilter: tOwner[]) => {
         const action = ACTIONS[SelectEstateActions.filterOwners](ownersFilter);
         dispatch(action)
     }
+    const toggleOwner = (owner: tOwner) => {
+        const action = ACTIONS[SelectEstateActions.toggleOwner](owner);
+        dispatch(action)
+    }
+
     return {
-        setSearchPattern, toggleEstatesTypeForFilter, togglePlayerColorForFilter
+        setSearchPattern, toggleEstateType, toggleOwner, setOwnersForFilter,setEstatesTypeForFilter
     }
 }
 
 const reducer = getReducer(REDUCER);
 
 export const useSelectEstate = () => {
-    const estateTypes = [
-        {type: CITY},
-        {type: PLANT},
-        {type: RAILWAY},
-    ]
+    const estateTypes: tEstateTypes[] = [ CITY, PLANT, RAILWAY ]
     const boardEndpoint = getBoard();
     
     const estates = boardEndpoint.estates.filter(({type}) => [CITY, PLANT, RAILWAY].includes(type)) as tEstateField[];
-    const playersColors = usePlayersColors();
-    const [state, dispatch] = useReducer( reducer, { ...initialState, estates });
+    const estateOwners = useEstateOwners();
+    const [state, dispatch] = useReducer( reducer, { ...initialState, estates, ownersFilter:  estateOwners, estateTypesFilter: estateTypes});
+    const { setSearchPattern, toggleEstateType, toggleOwner, setOwnersForFilter,setEstatesTypeForFilter } = getThingsDone(dispatch);
+    useEffect(() => {
+        setSearchPattern('')
+    }, [])
     const {
         filteredEstates,
         searchPattern,
@@ -140,10 +173,7 @@ export const useSelectEstate = () => {
 
     const [selectedEstate, setSelectedEstate] = useState<tSelectedEstate>(null);
     const selectEstate = (estate: tSelectedEstate) => estate?.name ? setSelectedEstate(estate) : null;
-    // const setSearchPattern = (pattern:string) => {};
-    // const togglePlayerColorForFilter = (color: tColors) => {}
-    // const toggleEstatesTypeForFilter = (estateType: tEstateTypes) => {}
-    const { setSearchPattern, toggleEstatesTypeForFilter, togglePlayerColorForFilter } = getThingsDone(dispatch);
+    
     return {
         estateTypes,
         selectEstate,
@@ -153,9 +183,10 @@ export const useSelectEstate = () => {
         searchPattern,
         ownersFilter,
         estateTypesFilter,
-        playersColors,
+        // playersColors,
+        estateOwners,
         setSearchPattern,
-        toggleEstatesTypeForFilter,
-        togglePlayerColorForFilter,
+        toggleEstateType,
+        toggleOwner,
     }
 }
