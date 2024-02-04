@@ -5,9 +5,11 @@ import { useModal } from '../../hooks/useModal';
 import { Commander } from '../../Logic/Commander/Commander';
 import { DARK_THEME } from '../../Themes/darkTheme';
 import { GREY_THEME } from '../../Themes/greyTheme';
-import { Button } from '../Button/Button';
+import { Button, ButtonColorScheme } from '../Button/Button';
 import { InformationStack } from '../Information/Information';
 import { Informator } from '../Information/Infromator';
+import { LoadGameWindow } from '../SaveLoadGameWindow/LoadGameWindow';
+import { SaveGameWindow } from '../SaveLoadGameWindow/SaveGameWindow';
 import { PlayerEditor } from '../StateEditor/StateEditor/StateEditor';
 import { GameStarter } from './GameStarter';
 import { useStyles } from './styles';
@@ -46,43 +48,60 @@ const Game = () => {
     const { theme, setThemeName } = useThemesAPI();
     const classes = useStyles(theme as any);
     const {Component: StateEditor, setOpen: openStateEditor, setIsOpen: setIsOpenStateEditor} = useModal(PlayerEditor)
+    const {Component: SaveGameDialog, setOpen: openSaveGameWindow, setIsOpen: setIsOpenSaveGameDialog} = useModal(SaveGameWindow)
+    const {Component: LoadGameDialog, setOpen: openLoadGameWindow, setIsOpen: setIsOpenLoadGameDialog} = useModal(LoadGameWindow)
     return (
         <div className = {classes.screen}>
             <InformationStack />
-            <Button 
-                action = {() => setThemeName(DARK_THEME.name)}
-                label = {DARK_THEME.name}
-            />
-            <Button 
-                action = {() => setThemeName(GREY_THEME.name)}
-                label = {GREY_THEME.name}
-            />
-            <Button
-                action = {moveYellowPlayer}
-                label = {'Move yellow'}
-            />
-            <Button
-                action = {openStateEditor}
-                label = {'State Editor'}
-            />
-            <Button
-                action = {displayTestInfo}
-                label = {'Test info'}
-            />
-            <Button
-                action = {displayTestWarn}
-                label = {'Test warn'}
-            />
-            <Button
-                action = {displayTestError}
-                label = {'Test error'}
-            />
-            <Button
-                action = {logSubscribtions}
-                label = {'Log subscribtions'}
-            />
+            <nav className={classes.navigations}>
+                <Button 
+                    action = {() => setThemeName(DARK_THEME.name)}
+                    label = {DARK_THEME.name}
+                />
+                <Button 
+                    action = {() => setThemeName(GREY_THEME.name)}
+                    label = {GREY_THEME.name}
+                />
+                <Button
+                    action = {moveYellowPlayer}
+                    label = {'Move yellow'}
+                />
+                <Button
+                    action = {openStateEditor}
+                    label = {'State Editor'}
+                />
+                <Button
+                    action = {displayTestInfo}
+                    label = {'Test info'}
+                />
+                <Button
+                    action = {displayTestWarn}
+                    label = {'Test warn'}
+                />
+                <Button
+                    action = {displayTestError}
+                    label = {'Test error'}
+                />
+                <Button
+                    action = {logSubscribtions}
+                    label = {'Log subscribtions'}
+                />
+                <Button
+                    action = {openSaveGameWindow}
+                    label = {'Save game'}
+                    colorVariant = {ButtonColorScheme.success}
+                />
+                <Button
+                    action = {openLoadGameWindow}
+                    label = {'Load game'}
+                    colorVariant = {ButtonColorScheme.success}
+                />
+
+            </nav>
 
             {StateEditor ? StateEditor: null}
+            {SaveGameDialog ? SaveGameDialog: null}
+            {LoadGameDialog ? LoadGameDialog: null}
             <GameStarter/>
         </div>
     )

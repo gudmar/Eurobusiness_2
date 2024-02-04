@@ -1,0 +1,1 @@
+export type deleteMeType = any

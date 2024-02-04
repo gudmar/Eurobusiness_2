@@ -32,7 +32,7 @@ export interface iCheckboxInputProps {
     checked: boolean,
 }
 
-export interface iTextInput extends iInputProps<'text'>, iTextInputProps {}
+export interface iTextInput extends iInputProps<string>, iTextInputProps {}
 export interface iNumberInput extends iInputProps<number>, iNumberInputProps {}
 
 export interface iNumberInputProps {    

@@ -11,6 +11,7 @@ export interface iButton {
     label?: string,
     action?: () => void,
     colorVariant?: ButtonColorScheme,
+    disabledTooltip?: string,
 }
 
 export const Button = ({
@@ -18,6 +19,7 @@ export const Button = ({
     label = 'Button',
     action = () => {},
     colorVariant = ButtonColorScheme.info,
+    disabledTooltip = 'Button is disabled for some reason'
 }: iButton) => {
     const classes = useClasses();
     const getCalculatedClass = (): string => {
@@ -30,6 +32,7 @@ export const Button = ({
     const onActication = () => { if (!disabled) action() }
     return (
         <div className={classes.housing}>
+            {disabled && <div className={classes.tooltip}>{disabledTooltip}</div> }
             <div className={getCalculatedClass()} onClick = {onActication}>
                 { label }
             </div>
