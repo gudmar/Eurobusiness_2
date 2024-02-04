@@ -6,7 +6,12 @@ export const useStyles = createUseStyles({
         color: theme.penColor,
         fontFamily: theme.fontStyles,
         width: '100vw',
-        height: '100vh'
-    })
+        height: '100vh', 
+        display: 'flex'
+    }),
+    navigations: {
+        display: 'flex',
+        flexDirection: 'column'
+    }
 })
 

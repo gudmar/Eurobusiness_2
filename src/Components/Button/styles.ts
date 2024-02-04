@@ -1,6 +1,7 @@
 import {createUseStyles} from 'react-jss'
 import { useThemesAPI } from '../../Contexts/ThemeContext';
-import { CustomTheme } from '../../Types/themes'
+import { CustomTheme } from '../../Types/themes';
+import { ZIndexes } from "../../Constants/styleConstants";
 
 const CENTER = {
     display: 'flex',
@@ -19,7 +20,10 @@ export const useStyles = createUseStyles((theme: CustomTheme) => ({
         fontFamily: 'Arial',
         borderRadius: '5px',
         margin: '0.2rem',
-        overflow: 'hidden'
+        // overflow: 'hidden',
+        '&:hover > div': {
+            visibility: 'visible'
+        }
     },
     center: {
         ...CENTER,
@@ -43,7 +47,7 @@ export const useStyles = createUseStyles((theme: CustomTheme) => ({
 
     success: {
         cursor: 'pointer',
-        backgroundColor: '#55ff55',
+        backgroundColor: '#33aa33',
         color: 'white',
         transition: '0.3s',
         '&:hover':{
@@ -76,8 +80,19 @@ export const useStyles = createUseStyles((theme: CustomTheme) => ({
     disabled: {
         backgroundColor: '#555555',
         color: '#777777'
+    },
+    tooltip: {
+        position: 'absolute',
+        visibility: 'hidden',
+        overflow: 'visible',
+        textWeight: 'normal',
+        left: '3rem',
+        backgroundColor: 'yellow',
+        padding: '0.3rem',
+        borderRadius: '0.2rem',
+        zIndex: ZIndexes.tooltip,
+        cursor: 'default'
     }
-
 
 
 
