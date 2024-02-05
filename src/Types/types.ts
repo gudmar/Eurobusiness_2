@@ -1,3 +1,10 @@
+import { tColors } from "../Data/types";
+import { tBankState } from "../Logic/Bank/types";
+import { tField } from "../Logic/boardTypes";
+import { tChanceCardState } from "../Logic/Chance/ChanceCardHolder";
+import { tDiceState, TestModes } from "../Logic/Dice/types";
+import { iPlayerSnapshot } from "../Logic/Player/types";
+
 export type tSubscription = (state: any) => void
 
 export interface iSubscription<MessageType extends string> {

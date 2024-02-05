@@ -44,6 +44,17 @@ type tReduceInstancesCallback = (instance: tChanceCardHolderInstance, index?: nu
 
 export type tChanceCardHolderInstance = ChanceCardHolder;
 
+export type tChanceCardState = {
+    cardsDescriptions?: tLanguageDescriptionEntry[],
+    cardsActions?: iActions,
+    cardsMetaData?: tCardMetadata,
+    language: string,
+    cardSetName: string,
+    cardsOrder: number[],
+    lastDrawnCardIndex: number,
+    cardsBorrewedByPlayers: tBorrowedCards,
+}
+
 export class ChanceCardHolder {
     
     static instances: ChanceCardHolderInstance;
@@ -55,6 +66,21 @@ export class ChanceCardHolder {
     private _cardsOrder!: number[];
     private _lastDrawnCardIndex = 0;
     _cardsBorrowedByPlayers: tBorrowedCards = {}
+
+    get state(): tChanceCardState {
+        // TO set this state : delete instances, and build this from the scratch
+        return {
+            cardsDescriptions: this._cardsDescriptions,
+            cardsActions: this._cardsActions,
+            cardsMetaData: this._cardsMetadata,
+            language: this._language,
+            cardSetName: this._cardSetName,
+            cardsOrder: this.cardsOrder,
+            lastDrawnCardIndex: this._lastDrawnCardIndex,
+            cardsBorrewedByPlayers: this._cardsBorrowedByPlayers,
+        
+        }
+    }
 
     constructor(cards: tChance) {
         if (Object.values(ChanceCardHolder?.instances?.[cards.cardSetName] || {}).some(i => i.collectable === true || i.collectable === false) ) {

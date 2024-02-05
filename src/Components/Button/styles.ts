@@ -85,7 +85,7 @@ export const useStyles = createUseStyles((theme: CustomTheme) => ({
         position: 'absolute',
         visibility: 'hidden',
         overflow: 'visible',
-        textWeight: 'normal',
+        fontWeight: 'normal',
         left: '3rem',
         backgroundColor: 'yellow',
         padding: '0.3rem',

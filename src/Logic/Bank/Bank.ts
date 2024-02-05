@@ -1,5 +1,5 @@
 import { INITIAL_NR_HOTELS, INITIAL_NR_HOUSES, MAX_NR_OF_HOUSES_TO_PURCHASE_IN_ONE_ROW } from "../../Constants/constants";
-import { iBank } from "./types";
+import { iBank, tBankState } from "./types";
 
 export class Bank implements iBank {
 
@@ -15,6 +15,18 @@ export class Bank implements iBank {
         if (!this._instance) throw new Error('Cannot get a not existing Bank instance')
         return this._instance
     }
+
+    get state(): tBankState {
+        return {
+            nrOfHotels: this._nrOfHotels,
+            nrOfHouses: this._nrOfHouses,
+        }
+    }
+
+    set state(state: tBankState) {
+            this._nrOfHotels = state.nrOfHotels;
+            this._nrOfHouses = state.nrOfHouses;
+        }
 
     get nrOfHotels(): number {return this._nrOfHotels}
     get nrOfHouses(): number {return this._nrOfHouses}

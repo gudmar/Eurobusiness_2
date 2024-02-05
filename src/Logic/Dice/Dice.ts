@@ -4,7 +4,7 @@ import { shiftBoardIndexByNeg1 } from "../../Functions/shiftIndex";
 import { ANY_CHANGE, CHANGE_FIELDS_TO_VISIT, CHANGE_NR_THAT_DICE_WILL_THROW, CHANGE_TEST_MODE } from "../Messages/constants";
 import { SubscribtionsHandler } from "../SubscrbtionsHandler";
 import { CHANCE_FIELDS, CITY_FIELDS, NONE, PLANTS, RAILWAYS, TAX_FIELD } from "./const";
-import { iDice, iDiceTestModeDecorator, iJailTestOutcome, iThrowResult, iThrowResultRecursive, TestModes } from "./types";
+import { iDice, iDiceTestModeDecorator, iJailTestOutcome, iThrowResult, iThrowResultRecursive, tDiceState, TestModes } from "./types";
 
 // DICE USES BOARD INDEX, NOT FROM 0 BuT FROM 1
 // DESIGN ERROR: Logic should not know about the fact, that indexing in GUI starts from 1. In Logic folder, indexing should be from 0
@@ -105,6 +105,11 @@ export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged
 
     static delete() {DiceTestModeDecorator._instance = null}
 
+    static get instance() { 
+        if (!DiceTestModeDecorator._instance) throw new Error('DiceTestModeDecorator instance does not work')
+        return DiceTestModeDecorator._instance
+    }
+
     set fieldsToVisit(fields: string[]) {
         const result: number[] = fields.map((val:string) => {
             const nr = parseInt(val);
@@ -143,6 +148,22 @@ export class DiceTestModeDecorator extends SubscribtionsHandler<tTestDiceChanged
             nrToAppearOnDice: this._nrThatDiceWillSelectInTestMode,
         }
         console.log(toLog);
+    }
+
+    get state(): tDiceState {
+        return {
+            testingMode: this._testingMode,
+            fieldsToVisit: this._fieldsToVisit,
+            indexOnNextFieldToVisit: this._indexOfNextFieldToVisit,
+            nrThatDiceWillSelectInTestMode: this.nrThatDiceWillSelectInTestMode,
+        }
+    }
+
+    set state(state: tDiceState) {
+        this._testingMode = state.testingMode;
+        this._fieldsToVisit = state.fieldsToVisit;
+        this._indexOfNextFieldToVisit = state.indexOnNextFieldToVisit;
+        this.nrThatDiceWillSelectInTestMode = state.nrThatDiceWillSelectInTestMode;
     }
 
     constructor() {
