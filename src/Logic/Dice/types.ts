@@ -49,3 +49,10 @@ export interface iDiceTestModeDecorator {
 
 export type tDiceTestModeDecorator = tClassFromInterface<null, iDiceTestModeDecorator>
 export type tDiceTestModeDecoratorInstance = iDiceTestModeDecorator;
+
+export type tDiceState = {
+    testingMode: TestModes,
+    fieldsToVisit: number[],
+    indexOnNextFieldToVisit: number,
+    nrThatDiceWillSelectInTestMode: number,
+}
