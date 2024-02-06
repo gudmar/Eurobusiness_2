@@ -1,5 +1,5 @@
 import { tPlayerName } from "../Components/Pawns/types";
-import { tChanceType, tColors, tCountries, tEstateTypes, tIcon, tOtherTypes, tVisitPayment } from "../Data/types";
+import { tChanceType, tColors, tCountries, tEstateTypes, tIcon, tOtherTypes, tOwner, tVisitPayment } from "../Data/types";
 import { ChanceField, CityField, NonCityEstatesField, OtherFieldTypesField } from "./FieldCreators";
 
 export type tEstateCreateors = CityField | NonCityEstatesField;
@@ -41,7 +41,7 @@ export interface iNonCityEstatesFieldState {
     price: number,
     mortgage: number,
     visit: tVisitPayment,
-    owner: string,
+    owner: tOwner,
     isPlegded: boolean,
     Icon: tIcon,
     name: string,
@@ -60,7 +60,7 @@ export interface iCityFieldState {
     housePrice: number,
     hotelPrice: number,
     visit: tVisitPayment,
-    owner: string,
+    owner: tOwner,
     nrOfHouses: number,
     nrOfHotels: number,
     isPlegded: boolean,

@@ -1,8 +1,12 @@
 import BoardField from "../../Components/Board/BoardField/BoardFiled"
+import { CITY, PLANT, RAILWAY } from "../../Data/const"
+import { tColors } from "../../Data/types"
 import { Bank } from "../../Logic/Bank/Bank"
 import { BoardCaretaker } from "../../Logic/BoardCaretaker"
+import { tField } from "../../Logic/boardTypes"
 import { ChanceCardHolder } from "../../Logic/Chance/ChanceCardHolder"
 import { DiceTestModeDecorator } from "../../Logic/Dice/Dice"
+import { ChanceField, CityField, NonCityEstatesField, OtherFieldTypesField } from "../../Logic/FieldCreators"
 import { Players } from "../../Logic/Players/Players"
 import { tGameState } from "./types"
 
@@ -110,6 +114,71 @@ export const getAllSavedGameNames = () => {
     return names;
 }
 
-export const loadGame = () => {
+const throwIfNoGame = (name: string) => {
+    const isGame = isStateNameTaken(name);
+    if (!isGame) throw new Error(`Game named ${name} does not exist`)
+}
 
+const setChanceCardsState = (state: tGameState) => {
+    const stateTemplates = Object.entries(state.chanceCards)
+    const newInstances = stateTemplates.map(([key, val]) => ([key, new ChanceCardHolder(val)]))
+    const instances = Object.fromEntries(newInstances);
+    ChanceCardHolder.instances = instances;
+}
+
+const setPlayersState = (state: tGameState) => {
+    const stateTemplates = Object.entries(state.players);
+    Players.deleteAllPlayers();
+    const playersConstructorArgs = stateTemplates.map(([color, state]) => (state));
+    new Players({DiceClass: DiceTestModeDecorator, players: playersConstructorArgs});
+    Players.players.forEach((player) => {
+        const color = player.color;
+        player.state = state.players[color as tColors]
+    })
+}
+
+const getFieldInstance = (boardField: tField): CityField | NonCityEstatesField => {
+    const result = BoardCaretaker.fieldInstances.find(({name}) => boardField.name === name);
+    if (!result) throw new Error(`Cannot find estate named ${boardField.name}`)
+    if (result instanceof OtherFieldTypesField || result instanceof ChanceField) throw new Error('Field of not proper type')
+    return result;
+}
+
+const setBoardFieldsStates = (state: tGameState) => {
+    throw new Error ('Problem with type guards here')
+    const { boardFields } = state;
+    boardFields.forEach((boardField) => {
+        const fieldInstance = getFieldInstance(boardField);
+        if (fieldInstance) fieldInstance.state = boardField;
+        // if ('owner' in fieldInstance) {
+        // if (!(fieldInstance instanceof OtherFieldTypesField) || !(fieldInstance instanceof ChanceField)){
+        if ((fieldInstance instanceof CityField) || (fieldInstance instanceof NonCityEstatesField)){
+            (fieldInstance as CityField | NonCityEstatesField).state = boardField;
+            // (fieldInstance as CityField | NonCityEstatesField).state = boardField;
+        }
+        
+    })
+    throw new Error('Implement this')
+    const fields = BoardCaretaker.fieldInstances;
+    const states = fields.map((field) => field.state);
+    return states
+}
+const setDiceState = () => {
+    throw new Error('Implement this')
+    const dice = DiceTestModeDecorator.instance;
+    const state = dice?.state;
+    return state
+}
+
+const setBankState = () => {
+    throw new Error('Implement this')
+    const bank = Bank.instance;
+    const state = bank.state;
+    return state;
+}
+
+export const loadGame = (name: string) => {
+    throwIfNoGame(name);
+    const games = getGames();
+    const state = games[name];
 }

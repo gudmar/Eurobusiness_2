@@ -3,7 +3,7 @@ import { iAny, tToBeImplemented } from "../../Types/types";
 import { iDiceTestModeDecorator } from "../Dice/types";
 import { iPlayerArgs, iPlayerState, iPlayer, iMoveMessage, tPlayerChanged, iAnyChange } from "../Players/types";
 import { INITIAL_MONEY } from "../../Data/money";
-import { iStrategy } from "../Strategies/types";
+import { iStrategy, StrategyNames } from "../Strategies/types";
 import { SubscribtionsHandler } from "../SubscrbtionsHandler";
 import { ANY_CHANGE, MOVE } from "../Messages/constants";
 import { getStrategyProvider } from "../Strategies/getStrategyProvider";
@@ -11,7 +11,7 @@ import { iStateHandler } from "../types";
 import { iPlayerMemento, iPlayerSnapshot } from "./types";
 import { YELLOW } from "../../Data/const";
 
-export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | iAnyChange> implements iPlayer, iStateHandler<iPlayerSnapshot, iPlayerMemento> {
+export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | iAnyChange> implements iPlayer {//, iStateHandler<iPlayerSnapshot, iPlayerMemento> {
     private _diceInstance: iDiceTestModeDecorator;
     private _name: string;
     private _money: number;
@@ -22,6 +22,7 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
     private _nrTurnsToWait: number;
     private _isGameLost: boolean;
     private _strategy: iStrategy;
+    private _strategyName: StrategyNames;
 
     private _initialState: iPlayerState;
     constructor({
@@ -37,6 +38,7 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
         this._isInPrison = false;
         this._nrTurnsToWait = 0;
         this._isGameLost = false;
+        this._strategyName = strategy;
         this._strategy = getStrategyProvider(strategy);
 
         this._initialState = this.getSnapshot()
@@ -56,6 +58,9 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
     // this is a part of more complicated transaction
     set nrTurnsToWait(val: number) { this._nrTurnsToWait = val; this._informAnyChange(); }
     set isGameLost(val: boolean) { this._isGameLost = val; this._informAnyChange(); }
+    set strategy(val: StrategyNames) {this._strategyName = val; this._strategy = getStrategyProvider(val)}
+    get strategy() {return this._strategyName}
+    
     // set strategy(val: string) { this._name = val; this._informAnyChange(); }
 
     borrowSpecialCard(description: string) {
@@ -91,7 +96,7 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
             isInPrison: false,
             nrTurnsToWait: 0,
             isGameLost: false,
-
+            strategy: StrategyNames.manual
         }
     }
 
@@ -105,13 +110,13 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
             isInPrison: this._isInPrison,
             nrTurnsToWait: this._nrTurnsToWait,
             isGameLost: this._isGameLost,
-            strategy: this._strategy,
+            strategy: this._strategyName,
         })
     }
 
-    getMemento() {
-        return {...this.getSnapshot()};
-    }
+    // getMemento() {
+    //     return {...this.getSnapshot()};
+    // }
 
     restoreState(newState: iPlayerMemento) {
         const setters: iAny = {
@@ -153,6 +158,7 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
             isInPrison: this._isInPrison,
             nrTurnsToWait: this._nrTurnsToWait,
             isGameLost: this._isGameLost,
+            strategy: this._strategyName,
         }
     }
     getDoneFunction() {

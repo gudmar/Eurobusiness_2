@@ -1,7 +1,7 @@
 import { tColors } from "../../Data/types";
 import { tToBeImplemented } from "../../Types/types";
 import { iEditableState, iPlayerState } from "../Players/types";
-import { iStrategy } from "../Strategies/types";
+import { iStrategy, StrategyNames } from "../Strategies/types";
 
 export interface iPlayerSnapshot {
     name: string,
@@ -12,7 +12,7 @@ export interface iPlayerSnapshot {
     isInPrison: boolean,
     nrTurnsToWait: number,
     isGameLost: boolean,
-    strategy: iStrategy,
+    strategy: StrategyNames,
 }
 
 export interface iPlayerMemento extends iEditableState, iPlayerState {}
