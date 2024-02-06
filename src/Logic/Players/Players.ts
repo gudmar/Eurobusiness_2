@@ -11,6 +11,7 @@ import { iAllPlayers, iAllPlayersArgs,  iPlayer, iPlayerDescriptor, iPlayersMeme
 
 export class Players extends SubscribtionsHandler<Messages, iPlayer> implements iAllPlayers, iStateHandler<iPlayersSnapshot, iPlayersMemento> {
     private static _instance: Players;
+    
     private _diceClassInstance!: iDiceTestModeDecorator;
     static players: iPlayer[] = [];
     private _currentPlayerIndex: number = 0;
@@ -31,6 +32,7 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
         })
         }
     }
+    static deleteAllPlayers () { Players.players = [] }
 
     private _addNewPlayer({color, name, strategy}: iPlayerDescriptor) {
         const nextPlayer = this._createPlayer({color, name, strategy});

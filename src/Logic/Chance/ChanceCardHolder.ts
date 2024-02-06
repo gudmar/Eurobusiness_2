@@ -81,8 +81,28 @@ export class ChanceCardHolder {
         
         }
     }
+    constructor(state: tChanceCardState);
+    constructor(cards: tChance);
+    public constructor(args: tChance | tChanceCardState) {
+        if ('descriptions' in args) {
+            this._constructFromCards(args)
+        } else {
+            this._constructFromState(args)
+        }
+    }
 
-    constructor(cards: tChance) {
+    private _constructFromState (cards: tChanceCardState) {
+        this._cardsDescriptions       = cards.cardsDescriptions;
+        this._cardsActions            = cards.cardsActions;
+        this._cardsMetadata           = cards.cardsMetaData;
+        this._language                = cards.language;
+        this._cardSetName             = cards.cardSetName;
+        this._cardsOrder              = cards.cardsOrder;
+        this._lastDrawnCardIndex      = cards.lastDrawnCardIndex; 
+        this._cardsBorrowedByPlayers = cards.cardsBorrewedByPlayers;
+    }
+
+    private _constructFromCards (cards: tChance) {
         if (Object.values(ChanceCardHolder?.instances?.[cards.cardSetName] || {}).some(i => i.collectable === true || i.collectable === false) ) {
             throw new Error('CARD ALREADY BORROWED')
         }
@@ -94,6 +114,7 @@ export class ChanceCardHolder {
         ChanceCardHolder.instances[cards.cardSetName] = this;
         this._cardSetName = cards.cardSetName;
     }
+
     private get _nrOfCards() {
         const nrOfCards = Object.keys(this._cardsDescriptions![0]).length
         return nrOfCards;

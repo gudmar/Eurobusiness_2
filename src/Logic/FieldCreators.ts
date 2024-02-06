@@ -124,6 +124,12 @@ export class CityField extends SubscribtionsHandler<tFlattenedFieldTypes, iCityF
             index: this._index,
         })
     }
+    set state(val) {
+        this._owner = val.owner;
+        this.nrOfHotels = val.nrOfHotels;
+        this.nrOfHouses = val.nrOfHouses;
+        this.isPlegded = val.isPlegded;
+    }
     set owner(val: tOwner) { 
         this._owner = val;
         this.runAllSubscriptions(this.name as tFlattenedFieldTypes, this.state);
@@ -215,6 +221,10 @@ export class NonCityEstatesField extends SubscribtionsHandler<tFlattenedFieldTyp
             name: this._name,
             index: this._index,
         }
+    }
+    set state(val) {
+        this._owner = val.owner;
+        this._isPlegded = val.isPlegded;
     }
 }
 
