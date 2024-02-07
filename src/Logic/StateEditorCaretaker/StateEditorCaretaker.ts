@@ -1,54 +1,54 @@
 import { BoardCaretaker } from "../BoardCaretaker"
 
 
-export class StateCaretaker {
+// export class StateCaretaker {
 
-    private _boardFields = BoardCaretaker.fieldInstances;
+//     private _boardFields = BoardCaretaker.fieldInstances;
 
 
-    getMemento() {
+//     getMemento() {
         
-    }
-}
+//     }
+// }
 
-// =====================================
+// // =====================================
 
-export type tPrivateInstance = iPrivateHolder
+// export type tPrivateInstance = iPrivateHolder
 
-export interface iPrivateHolder {
-    log: () => void,
-    accept: (visitor: iVisitor) => void,
-    property: number
-}
+// export interface iPrivateHolder {
+//     log: () => void,
+//     accept: (visitor: iVisitor) => void,
+//     property: number
+// }
 
-export class PrivateHolder {
-    private _property: number = 0
+// export class PrivateHolder {
+//     private _property: number = 0
 
-    log() {
-        console.log('Logging private : ', this._property)
-    }
+//     log() {
+//         console.log('Logging private : ', this._property)
+//     }
 
-    accept(visitor: iVisitor) {
-        const setters = {
-            setProperty: (newVal:number) => {
-                this._property = newVal;
-            }    
-        }
-        visitor.alterProperty(setters)
-    }
-}
+//     accept(visitor: iVisitor) {
+//         const setters = {
+//             setProperty: (newVal:number) => {
+//                 this._property = newVal;
+//             }    
+//         }
+//         visitor.alterProperty(setters)
+//     }
+// }
 
-interface iSetters {
-    [key: string]: (val: any) => void
-}
+// interface iSetters {
+//     [key: string]: (val: any) => void
+// }
 
-interface iVisitor {
-    alterProperty : (setters:iSetters) => void
-}
+// interface iVisitor {
+//     alterProperty : (setters:iSetters) => void
+// }
 
-export class Visior implements iVisitor{
+// export class Visior implements iVisitor{
 
-    alterProperty(setters: iSetters) {
-        setters.setProperty(5);
-    }
-}
+//     alterProperty(setters: iSetters) {
+//         setters.setProperty(5);
+//     }
+// }

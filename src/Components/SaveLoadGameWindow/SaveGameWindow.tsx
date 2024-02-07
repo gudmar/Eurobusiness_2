@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useThemesAPI } from "../../Contexts/ThemeContext";
+import { getGames, getSavedGameNames } from "../../Functions/PersistRetrieveGameState/localStorageOperations";
+import { getAllSavedGameNames, saveCurrentGameState } from "../../Functions/PersistRetrieveGameState/PersistGame";
+import { loadGameStateFromLocalStorage } from "../../Functions/PersistRetrieveGameState/RetrieveGame";
 import { Button, ButtonColorScheme } from "../Button/Button";
 import { Checkbox } from "../Interactors/Checkbox/Checkbox";
 import { TextInput } from "../Interactors/TextInput/TextInput";
@@ -11,10 +14,16 @@ const getDefaultName = () => {
     return name;
 }
 
-const useSaveLoadGameLogic = () => {
+const useSaveLoadGameLogic = (savedGamesGetter = getAllSavedGameNames) => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-    const [isSetDefault, setIsSetDefault] = useState(false)
+    const [isSetDefault, setIsSetDefault] = useState(false);
+    const [savedGameNames, setSavedGameNames] = useState<string[]>([])
+    const [selectedGame, setSelectedGame] = useState<string>('');
+    const refreshSavedGamesList = () => { setSavedGameNames(savedGamesGetter()) };
+    useEffect(() => {refreshSavedGamesList()}, [])
+    useEffect(() => {setName(selectedGame)}, [selectedGame, setName])
+
     return {
         name,
         setName: ((e: React.ChangeEvent<HTMLInputElement>) => setName(e?.target?.value)),
@@ -22,8 +31,12 @@ const useSaveLoadGameLogic = () => {
             setIsSetDefault(!isSetDefault)
             setName(!isSetDefault ? getDefaultName() : '')
         },
+        savedGameNames,
         isSetDefault,
         description,
+        selectedGame,
+        setSelectedGame,
+        savedGamesList: savedGameNames,
         setDescription:  ((e: React.ChangeEvent<HTMLInputElement>) => setDescription(e?.target?.value)),
     }
 }
@@ -31,13 +44,19 @@ const useSaveLoadGameLogic = () => {
 export const SaveGameWindow = () => {
     const { theme, setThemeName } = useThemesAPI();
     const classes = useStyles(theme as any);
-    const {name, setName, description, setDescription, isSetDefault, toggleSetDefault} = useSaveLoadGameLogic();
+    const {name, selectedGame, setSelectedGame, savedGamesList, setName, description, setDescription, isSetDefault, toggleSetDefault} = useSaveLoadGameLogic();
+    
     return (
         <>
             <h1 className={classes.headline}>Save Game</h1>
-            <div className={classes.savedGames}>
-
-            </div>
+            <ul className={classes.savedGames}>
+                {
+                    savedGamesList.map((game) => <li className={`${classes.savedGameEntry} ${selectedGame === game ? classes.chosenOne : ''}`} onClick={() => setSelectedGame(game)}>
+                        {game}
+                    </li>)
+                }
+                
+            </ul>
             <div className={classes.row}>
                 <TextInput
                     value={name}
@@ -60,13 +79,17 @@ export const SaveGameWindow = () => {
             </div>
             <Button
                 label={'Save'}
-                action={() => {}}
+                action={() => {
+                    saveCurrentGameState({name, description})
+                }}
                 disabled={name === ''}
                 disabledTooltip={'Name cannot be empty'}
             />
             <Button
                 label={'Load'}
-                action={() => {}}
+                action={() => {
+                    loadGameStateFromLocalStorage(name)
+                }}
                 disabled={name === ''}
                 disabledTooltip={'Name cannot be empty, and must exist'}
             />

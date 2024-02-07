@@ -1,5 +1,7 @@
+import { useEffect } from "react"
 import { BLUE, GREEN, RED, YELLOW } from "../../Data/const"
 import { useStartChanceCardsHolders } from "../../hooks/starters/useStartChanceCardsHoleders"
+import { Bank } from "../../Logic/Bank/Bank"
 import { iPlayerDescriptor } from "../../Logic/Players/types"
 import { StrategyNames } from "../../Logic/Strategies/types"
 import { Board } from "../Board/Board"
@@ -33,6 +35,7 @@ export const GameStarter = () => {
         }
     ];
     useStartChanceCardsHolders();
+    useEffect(() => {new Bank()}, [])
     return (
         <>
             <Board/>

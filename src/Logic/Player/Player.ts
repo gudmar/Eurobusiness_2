@@ -7,7 +7,6 @@ import { iStrategy, StrategyNames } from "../Strategies/types";
 import { SubscribtionsHandler } from "../SubscrbtionsHandler";
 import { ANY_CHANGE, MOVE } from "../Messages/constants";
 import { getStrategyProvider } from "../Strategies/getStrategyProvider";
-import { iStateHandler } from "../types";
 import { iPlayerMemento, iPlayerSnapshot } from "./types";
 import { YELLOW } from "../../Data/const";
 

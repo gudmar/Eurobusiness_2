@@ -15,4 +15,12 @@ export type tGameState = {
     boardFields: tField[]
 }
 
+export type tSavedGameDescription = { name: string, description?: string }
+
+export type tSavedGame = tGameState & tSavedGameDescription;
+
+export type tSavedGames = { [key: string] : tSavedGame }
+
 export type tSaves = { [key: string]: tGameState }
+
+export type tAllSavedGamesGetter = () => string[]

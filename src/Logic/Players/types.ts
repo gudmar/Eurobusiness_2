@@ -4,7 +4,7 @@ import { iDiceTestModeDecorator, tDiceTestModeDecorator } from "../Dice/types";
 import { ANY_CHANGE, Messages, MOVE, SWITCH_PLAYER } from "../Messages/constants";
 import { iPlayerMemento, iPlayerSnapshot } from "../Player/types";
 import { iStrategy, StrategyNames } from "../Strategies/types";
-import { iStateHandler, iSubscribtionHandler } from "../types";
+import { iSubscribtionHandler } from "../types";
 
 export interface iPlayerDescriptor {
     name: string,

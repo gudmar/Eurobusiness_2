@@ -12,8 +12,8 @@ export class Bank implements iBank {
         Bank._instance = this;
     }
     static get instance(): Bank {
-        if (!this._instance) throw new Error('Cannot get a not existing Bank instance')
-        return this._instance
+        if (!Bank._instance) throw new Error('Cannot get a not existing Bank instance')
+        return Bank._instance
     }
 
     get state(): tBankState {

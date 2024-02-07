@@ -98,14 +98,14 @@ export class CityField extends SubscribtionsHandler<tFlattenedFieldTypes, iCityF
         this._nrOfHotels = val;
         this.runAllSubscriptions(this.name as tFlattenedFieldTypes, this.state);
     }
-    getMemento(): iCityMemento {
-        return ({
-            owner: this._owner,
-            name: this._name,
-            nrOfHouses: this._nrOfHouses,
-            isPlegded: this._isPlegded,
-        })
-    }
+    // getMemento(): iCityMemento {
+    //     return ({
+    //         owner: this._owner,
+    //         name: this._name,
+    //         nrOfHouses: this._nrOfHouses,
+    //         isPlegded: this._isPlegded,
+    //     })
+    // }
     get state(): iCityFieldState {
         return ({
             name: this._name,
@@ -182,13 +182,13 @@ export class NonCityEstatesField extends SubscribtionsHandler<tFlattenedFieldTyp
         return this;
     }
 
-    getMemento(): iNonCityEstatesMemento {
-        return ({
-            name: this._name,
-            owner: this._owner,
-            isPlegded: this._isPlegded,
-        })
-    }
+    // getMemento(): iNonCityEstatesMemento {
+    //     return ({
+    //         name: this._name,
+    //         owner: this._owner,
+    //         isPlegded: this._isPlegded,
+    //     })
+    // }
 
     get name() { return this._name}
     get type() { return this._type}

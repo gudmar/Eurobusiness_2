@@ -1,27 +1,28 @@
-import { tColors } from "../../Data/types"
-import { Bank } from "../../Logic/Bank/Bank"
-import { BoardCaretaker } from "../../Logic/BoardCaretaker"
-import { tField } from "../../Logic/boardTypes"
-import { ChanceCardHolder } from "../../Logic/Chance/ChanceCardHolder"
-import { DiceTestModeDecorator } from "../../Logic/Dice/Dice"
-import { ChanceField, CityField, NonCityEstatesField, OtherFieldTypesField } from "../../Logic/FieldCreators"
 import { getGames, overwritteGames, throwErrorIfNameTaken } from "./localStorageOperations"
+import { tAllSavedGamesGetter, tSavedGameDescription } from "./types";
 import { getGameState } from "./utils"
 
-export const overwritteCurrentGameState = (name: string) => {
-    const gameState = getGameState();
+export const overwritteCurrentGameState = ({name, description}: tSavedGameDescription) => {
+    const gameState = { ...getGameState(), name, description };
     const saves = getGames();
-    const newSaves = {...saves, [name]: gameState}
+    const newSaves = {...saves, [name]: gameState }
     overwritteGames(newSaves);
 }
 
-export const saveCurrentGameState = (name: string) => {
+export const saveCurrentGameState = ({name, description}: tSavedGameDescription) => {
     throwErrorIfNameTaken(name);
-    overwritteCurrentGameState(name);
+    overwritteCurrentGameState({name, description});
 }
 
-export const getAllSavedGameNames = () => {
+export const getAllSavedGameNames: tAllSavedGamesGetter = () => {
     const games = getGames();
     const names = Object.keys(games);
     return names;
+}
+
+export const getSavedGameDescription = (gameName: string) => {
+    const games = getGames();
+    const game = games[gameName];
+    const description = game?.description || '';
+    return description;
 }

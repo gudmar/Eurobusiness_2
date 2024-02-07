@@ -6,10 +6,9 @@ import { Messages } from "../Messages/constants";
 import { Player } from "../Player/Player";
 import { iPlayerMemento } from "../Player/types";
 import { SubscribtionsHandler } from "../SubscrbtionsHandler";
-import { iStateHandler } from "../types";
 import { iAllPlayers, iAllPlayersArgs,  iPlayer, iPlayerDescriptor, iPlayersMemento, iPlayersSnapshot, iPlayerState, tSwitchPlayer } from "./types";
 
-export class Players extends SubscribtionsHandler<Messages, iPlayer> implements iAllPlayers, iStateHandler<iPlayersSnapshot, iPlayersMemento> {
+export class Players extends SubscribtionsHandler<Messages, iPlayer> implements iAllPlayers {
     private static _instance: Players;
     
     private _diceClassInstance!: iDiceTestModeDecorator;
@@ -40,14 +39,6 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
         this.runAllSubscriptions( Messages.playerAddedDeleted, Players.players )
     }
 
-    getMemento(): iPlayersSnapshot {
-        const snapshots = Players.players.reduce((acc: any, player: iPlayer) => {
-            const color = player.color;
-            acc[color] = player.getMemento();
-            return acc;
-        },{})
-        return snapshots;
-    };
     private static _getPlayerByColor(color: tColors) {
         const result = Players.players.find((player) => player.color === color);
         if (!result) throw new Error(`No player with color ${color}`)
