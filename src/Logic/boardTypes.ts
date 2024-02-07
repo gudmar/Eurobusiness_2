@@ -1,4 +1,3 @@
-import { tPlayerName } from "../Components/Pawns/types";
 import { tChanceType, tColors, tCountries, tEstateTypes, tIcon, tOtherTypes, tOwner, tVisitPayment } from "../Data/types";
 import { ChanceField, CityField, NonCityEstatesField, OtherFieldTypesField } from "./FieldCreators";
 
