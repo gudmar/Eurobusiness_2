@@ -44,7 +44,7 @@ export const DARK_THEME: NamedTheme = {
         selectFromList_notSelectedItemBg: '#333',
         selectFromList_notSelectedItemFg: '#aaa',
         notSelectFromList_hoveredNotSelectedItemBg: '#656',
-        notSelectFromList_hoveredNotSelectedItemFg: '#ccc',    
+        notSelectFromList_hoveredNotSelectedItemFg: '#ccc',
         
         inputBackgroundColor: '#555', 
         inputIconColor:       '#ddd',

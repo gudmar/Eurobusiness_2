@@ -83,5 +83,5 @@ export const loadGameStateFromLocalStorage = (name: string) => {
     throwIfNoGame(name);
     const games = getGames();
     const state = games[name];
-
+    loadGameStateWithResume(state);
 }

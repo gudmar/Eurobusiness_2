@@ -17,8 +17,29 @@ export const useStyles = createUseStyles({
         flexWrap: 'wrap'
     }),
     savedGameEntry: theme => ({
-        width: '5rem',
-        textOverflow: 'ellipsis'
+        // display: 'inline-block',
+        width: '10rem',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        listStyle: 'none',
+        padding: '0.3rem',
+        cursor: 'pointer',
+        transitionDelay: '0.1s',
+        transitionTimingFunction: 'ease-in',
+        '&:hover': {
+            transitionDelay: '0.1s',
+            transitionTimingFunction: 'ease-in',
+            backgroundColor: theme.notSelectFromList_hoveredNotSelectedItemBg,
+            color: theme.notSelectFromList_hoveredNotSelectedItemFg,
+            
+        }
+    }),
+    chosenOne: theme => ({
+        transitionDelay: '0.1s',
+        transitionTimingFunction: 'ease-in',
+        backgroundColor: theme.selectFromList_selectedItemBg,
+        color: theme.selectedFromList_selectedItemFg,
+        cursor: 'default',
     }),
     row: {
         display: 'flex',

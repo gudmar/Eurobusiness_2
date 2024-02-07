@@ -21,11 +21,6 @@ export interface iNonCityEstatesMemento {
     isPlegded: boolean,
 }
 
-export interface iStateHandler<Snapshot, Memento> {
-    restoreState: (newState: Memento) => void,
-    getMemento: () => Snapshot
-}
-
 export interface iAction<Type, Payload> {
     type: Type,
     payload: Payload

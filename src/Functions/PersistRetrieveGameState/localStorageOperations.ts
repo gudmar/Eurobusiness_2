@@ -1,6 +1,5 @@
 import { STATE_LOCATION } from "./const";
-import { tSaves } from "./types";
-import { getGameState } from "./utils";
+import { tSavedGames, tSaves } from "./types";
 
 export const isStateNameTaken = (name:string) => {
     const gamesAsString = window.localStorage.getItem(STATE_LOCATION);
@@ -13,10 +12,17 @@ export const throwErrorIfNameTaken = (name: string) => {
     if (isStateNameTaken(name)) throw new Error(`Game name ${name} already taken`)
 }
 
-export const getGames = () => {
+
+export const getGames = (): tSavedGames => {
     const gamesAsString = window.localStorage.getItem(STATE_LOCATION);
     if (gamesAsString === null) return {};
     return JSON.parse(gamesAsString);
+}
+
+export const getSavedGameNames = (): string[] => {
+    const games = getGames();
+    const names = Object.values(games).map(({name}) => name)
+    return names;
 }
 
 

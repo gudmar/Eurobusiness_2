@@ -3,7 +3,7 @@ import Game from './Components/Game/Game';
 import { useStartGameLogic } from './hooks/useStartGameLogic';
 
 function App() {
-  useStartGameLogic();
+  // useStartGameLogic();
   return (
     <Game />
     

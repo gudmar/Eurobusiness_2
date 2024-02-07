@@ -41,7 +41,7 @@ export const useEditPlayer = (wantedColor: tColors) => {
     const infromator = new Informator();
     const players = Players.players
     const thisPlayer = Players.getPlayerByColor(wantedColor);
-    const initialState = {...thisPlayer.getMemento()}
+    const initialState = {...thisPlayer.state }
     const [{
         name, money, specialCards, color, fieldNr, isInPrison, nrTurnsToWait, isGameLost
     }, dispatch ] = useReducer(reducer, initialState)
