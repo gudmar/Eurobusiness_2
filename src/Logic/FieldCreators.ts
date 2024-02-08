@@ -93,7 +93,8 @@ export class CityField extends SubscribtionsHandler<tFlattenedFieldTypes, iCityF
     }
     set nrOfHotels(val: number) {
         if (val > 1 || val < 0) throw new Error('Nr of hotels has to be > 0 and < 1')
-        if (this.nrOfHouses !== 0) throw new Error('You cannot build a hotel before selling all houses on this estate');
+        if (this.nrOfHouses !== 0 && val !== 0) throw new Error('You cannot build a hotel before selling all houses on this estate');
+
         
         this._nrOfHotels = val;
         this.runAllSubscriptions(this.name as tFlattenedFieldTypes, this.state);

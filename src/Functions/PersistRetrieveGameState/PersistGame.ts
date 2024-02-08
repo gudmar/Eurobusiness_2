@@ -3,8 +3,10 @@ import { tAllSavedGamesGetter, tSavedGameDescription } from "./types";
 import { getGameState } from "./utils"
 
 export const overwritteCurrentGameState = ({name, description}: tSavedGameDescription) => {
-    const gameState = { ...getGameState(), name, description };
+    const state = getGameState();
+    const gameState = { ...state, name, description };
     const saves = getGames();
+    console.log(gameState)
     const newSaves = {...saves, [name]: gameState }
     overwritteGames(newSaves);
 }

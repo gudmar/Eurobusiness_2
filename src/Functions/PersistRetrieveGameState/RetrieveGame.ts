@@ -22,6 +22,7 @@ const setPlayersState = (state: tGameState) => {
     const stateTemplates = Object.entries(state.players);
     Players.deleteAllPlayers();
     const playersConstructorArgs = stateTemplates.map(([color, state]) => (state));
+    console.log(playersConstructorArgs, stateTemplates)
     new Players({DiceClass: DiceTestModeDecorator, players: playersConstructorArgs});
     Players.players.forEach((player) => {
         const color = player.color;
@@ -29,10 +30,13 @@ const setPlayersState = (state: tGameState) => {
     })
 }
 
-const getFieldInstance = (boardField: tField): CityField | NonCityEstatesField => {
+const getFieldInstance = (boardField: tField): CityField | NonCityEstatesField | null => {
     const result = BoardCaretaker.fieldInstances.find(({name}) => boardField.name === name);
     if (!result) throw new Error(`Cannot find estate named ${boardField.name}`)
-    if (result instanceof OtherFieldTypesField || result instanceof ChanceField) throw new Error('Field of not proper type')
+    if (result instanceof OtherFieldTypesField || result instanceof ChanceField) {
+        // throw new Error('Field of not proper type')
+        return null;
+    }
     return result;
 }
 
@@ -41,9 +45,9 @@ const setBoardFieldsStates = (state: tGameState) => {
     boardFields.forEach((boardField) => {
         if (boardField instanceof OtherFieldTypesField || boardField instanceof ChanceField) return;
         const fieldInstance = getFieldInstance(boardField);
+        if (!fieldInstance) return;
         if (fieldInstance) fieldInstance.state = boardField;
     })
-    throw new Error('Implement this')
 }
 const setDiceState = (state: tGameState) => {
     const {dice} = state;

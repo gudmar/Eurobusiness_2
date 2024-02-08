@@ -11,7 +11,7 @@ const getChanceCardsState = () => {
     const state = instances.reduce((acc, instance) => {
         const [key, chanceCardInstance] = instance;
         const newAcc = {...acc, [key]: chanceCardInstance.state}
-        return acc
+        return newAcc
     }, {})
     return state
 }
@@ -54,7 +54,7 @@ export const getGameState = (): tGameState => {
     const stateGetters = Object.entries(STATE_PROVIDERS);
     const state = stateGetters.reduce((acc, stateGetter) => {
         const [key, getter] = stateGetter;
-        const newAcc = {...acc, [key]: getter}
+        const newAcc = {...acc, [key]: getter()}
         return newAcc;
     }, {})
     return state as unknown as tGameState;
