@@ -160,6 +160,17 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
             strategy: this._strategyName,
         }
     }
+    set state(val) {
+        this._name = val.name;
+        this._money = val.money;
+        this._specialCards = val.specialCards;
+        this._color = val.color;
+        this._fieldNr = val.fieldNr;
+        this._isInPrison = val.isInPrison;
+        this._nrTurnsToWait = val.nrTurnsToWait;
+        this._isGameLost = val.isGameLost;
+        this._strategyName = val.strategy;   
+    }
     getDoneFunction() {
         let outsideResolve;
         let outsideReject;

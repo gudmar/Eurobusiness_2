@@ -51,7 +51,7 @@ export const SaveGameWindow = () => {
             <h1 className={classes.headline}>Save Game</h1>
             <ul className={classes.savedGames}>
                 {
-                    savedGamesList.map((game) => <li className={`${classes.savedGameEntry} ${selectedGame === game ? classes.chosenOne : ''}`} onClick={() => setSelectedGame(game)}>
+                    savedGamesList.map((game) => <li key={game} className={`${classes.savedGameEntry} ${selectedGame === game ? classes.chosenOne : ''}`} onClick={() => setSelectedGame(game)}>
                         {game}
                     </li>)
                 }

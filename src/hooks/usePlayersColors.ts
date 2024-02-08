@@ -12,7 +12,7 @@ export const usePlayersColors = () => {
             const colors = players.map(({color}) => color );
             setColors(colors);
         }
-        Players.instance.subscribe({
+        Players.instance!.subscribe({
             callback: subscribtionCallback,
             id: USE_PLAYERS,
             messageType: Messages.playerAddedDeleted,

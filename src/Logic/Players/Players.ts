@@ -22,16 +22,24 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
     constructor({DiceClass, players}: iAllPlayersArgs){
         super();
         if (Players._instance) {
+            if (!Players._instance._diceClassInstance) {
+                Players._instance._diceClassInstance = new DiceClass!();
+            }
+            if (Players.players?.length === 0) {
+                console.log(players)
+                players!.forEach((player) => { this._addNewPlayer(player); })
+            }    
             return Players._instance
         } else {
-            this._diceClassInstance = new DiceClass!();
-            players!.forEach((player) => {
-                this._addNewPlayer(player);
             Players._instance = this
-        })
+        }
+        if (!this._diceClassInstance) this._diceClassInstance = new DiceClass!();
+        if (Players.players?.length === 0) {
+            console.log(players)
+            players!.forEach((player) => { this._addNewPlayer(player); })
         }
     }
-    static deleteAllPlayers () { Players.players = [] }
+    static deleteAllPlayers () { Players.players = [];}
 
     private _addNewPlayer({color, name, strategy}: iPlayerDescriptor) {
         const nextPlayer = this._createPlayer({color, name, strategy});

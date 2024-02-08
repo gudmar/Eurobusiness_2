@@ -32,6 +32,7 @@ export class Commander {
     static borrowACard({description, playerColor}: tChanceCardPayload) {
         const isBorrowed = ChanceCardHolder.borrowCard(description);
         if (!isBorrowed) throw new Error(`Card [${description}] could not be reserved in chance cards holder`);
+        if (!Commander._players) throw new Error('Players instance does not exist')
         try {
             const result = Commander._players.borrowSpecialCard({description, playerColor});
             if (!result) {
@@ -45,6 +46,7 @@ export class Commander {
     static returnACard({description, playerColor}: tChanceCardPayload) {
         const isReturned = ChanceCardHolder.returnCard(description);
         if (!isReturned) throw new Error(`Card [${description}] could not be returned in chance cards holder`);
+        if (!Commander._players) throw new Error('Players instance does not exist')
         try {
             const result = Commander._players.returnSpecialCard({description, playerColor});
             if (!result) throw new Error('Did not succeed in getting the card from the player')
