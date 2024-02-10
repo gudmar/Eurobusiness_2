@@ -6,7 +6,8 @@ import { tSubscription } from "../Types/types";
 export const getUseSubscribtion = <SubscribtionType extends SubscribtionsHandler<any, unknown>>(messageType: string) => (observationTarget: SubscribtionType, callback: tSubscription) => {
     useEffect(() => {
         const uuid = getUuid();
+        // console.log('Observerd', observationTarget)
         observationTarget.subscribe({ messageType, id: uuid, callback });
         return () => observationTarget.unsubscribe(messageType, uuid);
-    })
+    }, [observationTarget, callback])
 } 

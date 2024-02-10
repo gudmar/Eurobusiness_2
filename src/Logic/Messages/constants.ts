@@ -13,5 +13,6 @@ export const PLAYER_ADDED_DELETED = 'player-added-or-deleted';
 export enum Messages {
     playerAddedDeleted = 'player-added-or-deleted',
     switchPlayer = 'switch-player',
-    movePlayer = 'move-player'
+    movePlayer = 'move-player',
+    loadPlayers = 'load-players'
 }

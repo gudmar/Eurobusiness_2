@@ -20,8 +20,8 @@ export const useCalculatedPawnPosition = (color: tColors ) => {
             setPosition({left: y, top: x})
         }
     }, [color, fieldIndex, calculatePawnLocation])
-    useEffect(() => {
-        console.log(`Player ${color} position: top ${position.top}, left ${position.left}`)
-    }, [position, color])
+    // useEffect(() => {
+    //     console.log(`Player ${color} position: top ${position.top}, left ${position.left}`)
+    // }, [position, color])
     return position;
 }

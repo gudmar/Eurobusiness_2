@@ -41,11 +41,13 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
         this._strategy = getStrategyProvider(strategy);
 
         this._initialState = this.getSnapshot()
-        this.runAllSubscriptions(ANY_CHANGE, {...this.getSnapshot()})
+        // this.runAllSubscriptions(ANY_CHANGE, {...this.getSnapshot()})
+        this._informAnyChange();
     }
 
     private _informAnyChange() { 
         this.runAllSubscriptions(ANY_CHANGE, {...this.getSnapshot()}) 
+        console.log(`${this._color} Player subscribtion run`, this.state)
     }
 
     set name(val: string) { this._name = val; this._informAnyChange(); }
@@ -169,7 +171,8 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
         this._isInPrison = val.isInPrison;
         this._nrTurnsToWait = val.nrTurnsToWait;
         this._isGameLost = val.isGameLost;
-        this._strategyName = val.strategy;   
+        this._strategyName = val.strategy;
+        this._informAnyChange();
     }
     getDoneFunction() {
         let outsideResolve;
