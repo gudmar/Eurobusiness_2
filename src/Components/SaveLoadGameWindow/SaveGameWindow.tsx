@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useThemesAPI } from "../../Contexts/ThemeContext";
+import { clearConsole } from "../../Functions/clearConsole";
 import { getGames, getSavedGameNames } from "../../Functions/PersistRetrieveGameState/localStorageOperations";
 import { getAllSavedGameNames, saveCurrentGameState } from "../../Functions/PersistRetrieveGameState/PersistGame";
 import { loadGameStateFromLocalStorage } from "../../Functions/PersistRetrieveGameState/RetrieveGame";
@@ -49,6 +50,7 @@ export const SaveGameWindow = () => {
     return (
         <>
             <h1 className={classes.headline}>Save Game</h1>
+            <button onClick={clearConsole}>Clear console</button>
             <ul className={classes.savedGames}>
                 {
                     savedGamesList.map((game) => <li key={game} className={`${classes.savedGameEntry} ${selectedGame === game ? classes.chosenOne : ''}`} onClick={() => setSelectedGame(game)}>

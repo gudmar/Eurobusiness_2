@@ -28,6 +28,7 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
             if (Players.players?.length === 0) {
                 console.log(players)
                 players!.forEach((player) => { this._addNewPlayer(player); })
+                Players._instance.runAllSubscriptions( Messages.loadPlayers, {});
             }    
             return Players._instance
         } else {
@@ -40,6 +41,11 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
         }
     }
     static deleteAllPlayers () { Players.players = [];}
+
+    // static get descriptors() {
+    //     const result = Players?._instance?.allPlayersStates;
+    //     return result
+    // }
 
     private _addNewPlayer({color, name, strategy}: iPlayerDescriptor) {
         const nextPlayer = this._createPlayer({color, name, strategy});
