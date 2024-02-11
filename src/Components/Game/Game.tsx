@@ -8,8 +8,7 @@ import { GREY_THEME } from '../../Themes/greyTheme';
 import { Button, ButtonColorScheme } from '../Button/Button';
 import { InformationStack } from '../Information/Information';
 import { Informator } from '../Information/Infromator';
-import { LoadGameWindow } from '../SaveLoadGameWindow/LoadGameWindow';
-import { SaveGameWindow } from '../SaveLoadGameWindow/SaveGameWindow';
+import { SaveLoadGameWindow } from '../SaveLoadGameWindow/SaveLoadGameWindow';
 import { PlayerEditor } from '../StateEditor/StateEditor/StateEditor';
 import { GameStarter } from './GameStarter';
 import { useStyles } from './styles';
@@ -48,8 +47,7 @@ const Game = () => {
     const { theme, setThemeName } = useThemesAPI();
     const classes = useStyles(theme as any);
     const {Component: StateEditor, setOpen: openStateEditor, setIsOpen: setIsOpenStateEditor} = useModal(PlayerEditor)
-    const {Component: SaveGameDialog, setOpen: openSaveGameWindow, setIsOpen: setIsOpenSaveGameDialog} = useModal(SaveGameWindow)
-    const {Component: LoadGameDialog, setOpen: openLoadGameWindow, setIsOpen: setIsOpenLoadGameDialog} = useModal(LoadGameWindow)
+    const {Component: SaveGameDialog, setOpen: openSaveGameWindow, setIsOpen: setIsOpenSaveGameDialog} = useModal(SaveLoadGameWindow)
     return (
         <div className = {classes.screen}>
             <InformationStack />
@@ -91,17 +89,11 @@ const Game = () => {
                     label = {'Save game'}
                     colorVariant = {ButtonColorScheme.success}
                 />
-                <Button
-                    action = {openLoadGameWindow}
-                    label = {'Load game'}
-                    colorVariant = {ButtonColorScheme.success}
-                />
 
             </nav>
 
             {StateEditor ? StateEditor: null}
             {SaveGameDialog ? SaveGameDialog: null}
-            {LoadGameDialog ? LoadGameDialog: null}
             <GameStarter/>
         </div>
     )

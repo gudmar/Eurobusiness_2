@@ -5,6 +5,7 @@ import { iSubscription, tSubscription } from "../Types/types"
 export abstract class SubscribtionsHandler<SubscriptionMessageType extends string, StateType> {
     private _subscribtions: iSubscription<SubscriptionMessageType>[] =[];
     logSubscribtions() {console.log('Subscribtions: ', this._subscribtions)}
+    
     subscribe(subscription: iSubscription<SubscriptionMessageType>) {
         this._subscribtions.push(subscription);
     }
