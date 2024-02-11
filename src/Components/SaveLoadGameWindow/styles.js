@@ -6,6 +6,9 @@ export const useStyles = createUseStyles({
     'headline': {
         textAlign: 'center',
     },
+    content: {
+        display: 'flex',
+    },
     savedGames: theme => ({
         height: '10rem',
         backgroundColor: theme.inputBackgroundColor,
@@ -14,7 +17,8 @@ export const useStyles = createUseStyles({
         borderRadius: '0.5rem',
         display: 'flex',
         flexDirection: 'column',
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
+        width: '30%'
     }),
     savedGameEntry: theme => ({
         // display: 'inline-block',
@@ -44,5 +48,15 @@ export const useStyles = createUseStyles({
     row: {
         display: 'flex',
     },
+    description: {
+        width: '65%',
+        borderRadius: '0.5rem'
+    },
+    descriptionText: {
+        backgroundColor: '#ffffff88',
+        width: '100%',
+        height: '100%',
+        
+    }
 })
 
