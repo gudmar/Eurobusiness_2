@@ -113,6 +113,7 @@ export const useSaveLoadGameLogic = (savedGamesGetter = getAllSavedGames) => {
         filteredGames,
         logState: log,
         setDescription:  ((e: React.ChangeEvent<HTMLInputElement>) => setDescription(e?.target?.value)),
+        setDescriptionAsString: (val: string) => setDescription(val),
         setNameAsString: setName,
     }
 }
