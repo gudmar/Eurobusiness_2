@@ -18,12 +18,15 @@ export const useStyles = createUseStyles((theme: CustomTheme) => ({
         position: 'relative',
         fontWeight: 'bold',
         fontFamily: 'Arial',
-        borderRadius: '5px',
+        // borderRadius: '5px',
         margin: '0.2rem',
         // overflow: 'hidden',
         '&:hover > div': {
             visibility: 'visible'
         }
+    },
+    button: {
+        borderRadius: '0.4rem'
     },
     center: {
         ...CENTER,

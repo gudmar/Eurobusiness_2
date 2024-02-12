@@ -47,6 +47,8 @@ export const useStyles = createUseStyles({
     }),
     row: {
         display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     description: {
         width: '65%',

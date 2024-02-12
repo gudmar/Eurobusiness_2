@@ -12,6 +12,12 @@ export const throwErrorIfNameTaken = (name: string) => {
     if (isStateNameTaken(name)) throw new Error(`Game name ${name} already taken`)
 }
 
+export const deleteGame = (toBeDeletedGameName: string) => {
+    const games = getGames();
+    delete games[toBeDeletedGameName];
+    overwritteGames(games)
+
+}
 
 export const getGames = (): tSavedGames => {
     const gamesAsString = window.localStorage.getItem(STATE_LOCATION);

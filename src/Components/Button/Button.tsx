@@ -23,10 +23,10 @@ export const Button = ({
 }: iButton) => {
     const classes = useClasses();
     const getCalculatedClass = (): string => {
-        if (disabled) return `${classes.center} ${classes.disabled}`;
-        if (colorVariant === ButtonColorScheme.alert) return `${classes.center} ${classes.alert}`
-        if (colorVariant === ButtonColorScheme.success) return `${classes.center} ${classes.success}`
-        if (colorVariant === ButtonColorScheme.info) return `${classes.center} ${classes.info}`
+        if (disabled) return `${classes.button} ${classes.center} ${classes.disabled}`;
+        if (colorVariant === ButtonColorScheme.alert) return   `${classes.button} ${classes.center} ${classes.alert}`
+        if (colorVariant === ButtonColorScheme.success) return `${classes.button} ${classes.center} ${classes.success}`
+        if (colorVariant === ButtonColorScheme.info) return    `${classes.button} ${classes.center} ${classes.info}`
         return classes.center;
     }
     const onActication = () => { if (!disabled) action() }
