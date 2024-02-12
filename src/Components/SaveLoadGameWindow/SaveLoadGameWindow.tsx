@@ -4,6 +4,7 @@ import { deleteGame } from "../../Functions/PersistRetrieveGameState/localStorag
 import { saveCurrentGameState } from "../../Functions/PersistRetrieveGameState/PersistGame";
 import { loadGameStateFromLocalStorage } from "../../Functions/PersistRetrieveGameState/RetrieveGame";
 import { Button } from "../Button/Button";
+import { TextAreaInput } from "../Interactors/TextArea/TextArea";
 import { TextInput } from "../Interactors/TextInput/TextInput";
 import { useStyles } from "./styles";
 import { tSavedGame } from "./types";
@@ -15,7 +16,7 @@ import { getDefaultName } from "./utils";
 export const SaveLoadGameWindow = () => {
     const { theme, setThemeName } = useThemesAPI();
     const classes = useStyles(theme as any);
-    const {name, setDescription, setName, setNameAsString, description, isSetDefault, savedGames, selectedGame, searchFilter, filteredGames, setSelectedGame, logState} = useSaveLoadGameLogic();
+    const {name, setDescriptionAsString, setDescription, setName, setNameAsString, description, isSetDefault, savedGames, selectedGame, searchFilter, filteredGames, setSelectedGame, logState} = useSaveLoadGameLogic();
     
     return (
         <>
@@ -31,12 +32,20 @@ export const SaveLoadGameWindow = () => {
                     }
                     
                 </ul>
-                <fieldset id={'Description'} className={classes.description}>
-                    <legend>Description</legend>
-                    <article className={classes.descriptionText}>
+                {/* <fieldset id={'Description'} className={classes.description}>
+                    <legend>Description</legend> */}
+                    {/* <article className={classes.descriptionText}>
                         {description}
-                    </article>
-                </fieldset>
+                    </article> */}
+                    <div className={classes.description}>
+                        <TextAreaInput
+                            value={description}
+                            setValue={setDescriptionAsString}
+                            isEnabled={name !==''}
+                            label={description}
+                        />
+                    </div>
+                {/* </fieldset> */}
             </section>
             <div className={classes.row}>
                 <TextInput
