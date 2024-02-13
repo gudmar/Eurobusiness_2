@@ -47,7 +47,6 @@ export const usePlayerData = (playersData: iPlayerDescriptor[] | null) => {
     const [playersInstance, setPlayersInstance] = useState<null | iAllPlayers>(null);
     const [currentPlayer, setCurrentPlayer] = useState<null | iPlayer>(null)
     const [data, setData] = useState<any>(initialPlayerState)
-    // throw Error('Pawns are not updated. Search this and GameStarter')
     useEffect(() => {
         if (playersInstance === null && playersData !== null) {
             const players = new Players({
@@ -61,7 +60,6 @@ export const usePlayerData = (playersData: iPlayerDescriptor[] | null) => {
     }, [playersData, playersInstance])
     useEffect(() => {
         const player = Players.instance.currentPlayer;
-        console.log('Player current changed')
         setCurrentPlayer(player)
     }, [playersData])
     useEffect(() => {
@@ -74,9 +72,7 @@ export const usePlayerData = (playersData: iPlayerDescriptor[] | null) => {
             const newData = getData(playersInstance);
             setData(newData);    
         }
-        console.log('Should set datea')
         return playersInstance?.unsubscribe(Messages.switchPlayer, USE_PLAYER_DATA_ID)
     }, [setCurrentPlayer, playersInstance, currentPlayer])
-    useEffect(() => console.log(data), [data])
     return data
 }

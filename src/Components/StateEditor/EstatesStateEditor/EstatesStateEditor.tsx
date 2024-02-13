@@ -60,7 +60,7 @@ const EstatesList = ({estates, selectedEstate, setSelectEstate }: iEditEstateArg
 
 const EstatesTestFieldEdit = (args: tEstatesTestFieldEditArgs ) => {
     const title = args.title;
-    useEffect(() => console.log('Args changed',args), [args])
+    
     switch (title) {
         case EstateEditorFieldNames.owner: return (
             <EditOwner {...args}/>
@@ -85,7 +85,6 @@ const EditEstate = ({selectedEstate}: tEditEstate) => {
     const classes: {[key:string]: string} = useStyles(theme as any);
     const logSelectedEstatesState = () => {
         const state = selectedEstate?.state;
-        console.log(state)
     }
     const {
         estateColor,

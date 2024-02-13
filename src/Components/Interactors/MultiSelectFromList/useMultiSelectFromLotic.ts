@@ -51,7 +51,6 @@ const search = (state: iMultiSelectFromState, payload: tAction) => {
         const isFound = asString.toLowerCase().includes((payload as unknown as string).toLowerCase());
         return isFound;
     })
-    console.log('SEARCH', filteredItems)
     const newState = { ...state, visibleItems: filteredItems, displayed: payload }
     return newState;
 }

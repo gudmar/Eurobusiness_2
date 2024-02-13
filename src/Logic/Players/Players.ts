@@ -26,7 +26,6 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
                 Players._instance._diceClassInstance = new DiceClass!();
             }
             if (Players.players?.length === 0) {
-                console.log(players)
                 players!.forEach((player) => { this._addNewPlayer(player); })
                 Players._instance.runAllSubscriptions( Messages.loadPlayers, {});
             }    
@@ -36,7 +35,6 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
         }
         if (!this._diceClassInstance) this._diceClassInstance = new DiceClass!();
         if (Players.players?.length === 0) {
-            console.log(players)
             players!.forEach((player) => { this._addNewPlayer(player); })
         }
     }

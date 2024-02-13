@@ -75,7 +75,6 @@ export const useSelectFromLogic = ({ blurRef, isEnabled, items, defaultSelection
         selected: defaultSelection,
         displayed: defaultSelection
     });
-    useEffect(() => console.log('Default selection in SelectFromLogic', defaultSelection), [defaultSelection])
     useEffect(() => {
         if (!isEnabled) {close()}
     }, [isEnabled])

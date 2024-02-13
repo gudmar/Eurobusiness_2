@@ -113,7 +113,6 @@ export const useSaveLoadGameLogic = (savedGamesGetter = getAllSavedGames) => {
     useEffect(() => {
         setGamesFromLocalStorage();
     }, [])
-    useEffect(() => console.log(dropSelection), [dropSelection])
 
     return {
         name,

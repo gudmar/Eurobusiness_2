@@ -59,7 +59,6 @@ export class Commander {
     private static get _testDice() {return new DiceTestModeDecorator() }
 
     static changeTestMode(newMode: TestModes) {
-        console.log(newMode)
         Commander._testDice.testingMode = newMode;
     }
     static changeNrToBeSelectedOnDicesThrow(nr: number) {
@@ -70,17 +69,13 @@ export class Commander {
     }
 
     static addFieldsToVisit(listOfFields: string[]) {
-        console.log(Commander._testDice.fieldsToVisit)
         const newList: string[] = addUniqueArrayItems(Commander._testDice.fieldsToVisit, listOfFields) as string[];
-        console.log(newList)
         Commander._testDice.fieldsToVisit = newList;
     }
 
     static removeFieldsToVisit(fieldsToRemove: string[])  {
-        console.log(fieldsToRemove)
         const listCp = [...Commander._testDice.fieldsToVisit];
         const newList = listCp.reduce((acc: string[], item) => {
-            console.log(item, fieldsToRemove, listCp)
             if (fieldsToRemove.includes(item)) return acc;
             acc.push(item);
             return acc;
@@ -105,22 +100,13 @@ export class Commander {
     }
 
     static async animateMovingPlayerWithRecursion(player: iPlayer, desiredPosition: number) {
-        // const currentPosition = player.fieldNr;
-        // console.log('Positions', currentPosition, desiredPosition)
-        // if (currentPosition === desiredPosition) return Promise.resolve(true);
-        // const nextDesiredPosition = desiredPosition + 1 >= BOARD_SIZE ? 0 : currentPosition + 1;
-        // const isDone = await this.doAfterTimenout(500, () => {player.fieldNr = nextDesiredPosition})
-        // console.log('Is done', isDone, nextDesiredPosition)
-        // await Commander.animateMovingPlayer(player, desiredPosition)
-        // return isDone;
+
     }
     static async step(player: iPlayer, nrOfSteps: number) {
         const currentPosition = player.fieldNr;
-        console.log('Positions', currentPosition, nrOfSteps)
         if (nrOfSteps <= 0) return Promise.resolve(true);
         const nextDesiredPosition = currentPosition + 1 < BOARD_SIZE ? currentPosition + 1 : 0;
         const isDone = await this.doAfterTimenout(500, () => {player.fieldNr = nextDesiredPosition})
-        console.log('Is done', isDone, nextDesiredPosition)
         await Commander.step(player, nrOfSteps - 1)
         return isDone;
 

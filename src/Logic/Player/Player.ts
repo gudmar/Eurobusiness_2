@@ -47,7 +47,6 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
 
     private _informAnyChange() { 
         this.runAllSubscriptions(ANY_CHANGE, {...this.getSnapshot()}) 
-        console.log(`${this._color} Player subscribtion run`, this.state)
     }
 
     set name(val: string) { this._name = val; this._informAnyChange(); }

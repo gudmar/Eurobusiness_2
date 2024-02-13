@@ -6,7 +6,6 @@ export const overwritteCurrentGameState = ({name, description}: tSavedGameDescri
     const state = getGameState();
     const gameState = { ...state, name, description };
     const saves = getGames();
-    console.log(gameState)
     const newSaves = {...saves, [name]: gameState }
     overwritteGames(newSaves);
 }

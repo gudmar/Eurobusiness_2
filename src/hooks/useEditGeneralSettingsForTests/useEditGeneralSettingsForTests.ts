@@ -24,7 +24,6 @@ const setNrToBeSelectedForDicesThrow = (state: iEditGeneralSettingsState, payloa
 }
 
 const setTestMode = (state: iEditGeneralSettingsState, payload: tEditGeneralSettingPayload) => {
-    console.log('Setting test mode: ', payload)
     const newState = {...state, testMode: payload};
     return newState;
 }
@@ -73,7 +72,6 @@ type tDispach = (arg: tActions) => void;
 export const getSelectFromLogicActions = (dispatch: tDispach) => ({
     setNrToBeSelectedForDicesThrow: (payload: number) => dispatch(setNrOnDiceAction(payload)),
     setTestMode: (payload: TestModes) => {
-        console.log(payload)
         dispatch(setTestModeAction(payload))
     },
     addFieldToVisit: (palylad: string) => dispatch(addFieldToVisitAction(palylad)),
@@ -101,7 +99,6 @@ interface iSubscribeArgs {
 const getSubscribtion = ({id, callback, instance, messageType } : iSubscribeArgs) => {
     const subscribtion = { callback, id, messageType }
     const subscribe = () => {
-        console.log('Subscribing', id, messageType, callback)
         instance.subscribe(subscribtion)
     }
     const unsubscribe = () => {instance.unsubscribe(messageType, id)};
@@ -142,7 +139,6 @@ const subscribtionsStructure: {[key:string]: (dispatch: tDispach) => (payload: a
     fieldsToVisit: (dispatch: tDispach) => getSelectFromLogicActions(dispatch)['changeFieldsToVisit'],
     testingMode: (dispatch: tDispach) => {
         const cb = getSelectFromLogicActions(dispatch)['setTestMode'];
-        console.log(cb)
         return cb
     },
     nrThatDiceWillSelectInTestMode: (dispatch: tDispach) => {
@@ -160,7 +156,6 @@ export const useGeneralSettingsForTests = (): tUseGeneralSettingsForTests => {
     });
     const {nrToBeSelectedForDicesThrow, testMode, selectedFields} = state;
     useSubscribtions(testDice, dispatch);
-    useEffect(() => console.log(testMode), [testMode])
     return {
         nrToBeSelectedForDicesThrow,
         testMode,

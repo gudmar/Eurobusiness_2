@@ -15,7 +15,7 @@ export const TextAreaInput = (props: tTextAreaProps) => {
             disabled={!isEnabled}
             spellCheck={'true'}
             wrap={'true'}
-            onChange={(event) => {console.log(event); setValue(event.target.value)}}
+            onChange={(event) => {setValue(event.target.value)}}
             value={value}
         />
     )
