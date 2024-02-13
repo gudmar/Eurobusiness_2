@@ -29,3 +29,9 @@ export type tSavedGameDescriptor = {
     name: string,
     description: string,
 }
+
+export type tRenameGameArgs = {
+    originalName: string,
+    newName: string,
+    newDescription: string,
+}

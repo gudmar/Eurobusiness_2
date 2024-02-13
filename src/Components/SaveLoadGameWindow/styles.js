@@ -8,9 +8,10 @@ export const useStyles = createUseStyles({
     },
     content: {
         display: 'flex',
+        height: '70%'
     },
     savedGames: theme => ({
-        height: '10rem',
+        height: '100%',
         backgroundColor: theme.inputBackgroundColor,
         color: theme.inputForgroundColor,
         margin: '0 1rem 0 1rem',
@@ -18,10 +19,10 @@ export const useStyles = createUseStyles({
         display: 'flex',
         flexDirection: 'column',
         flexWrap: 'wrap',
-        width: '30%'
+        width: '30%',
+        overflow: 'auto'
     }),
     savedGameEntry: theme => ({
-        // display: 'inline-block',
         width: '10rem',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
@@ -52,13 +53,26 @@ export const useStyles = createUseStyles({
     },
     description: {
         width: '65%',
-        borderRadius: '0.5rem'
+        borderRadius: '0.5rem',
+        outline: 'none',
+        border: 'none'
     },
     descriptionText: {
         backgroundColor: '#ffffff88',
         width: '100%',
         height: '100%',
         
+    },
+    savedGamesList: {
+        width: '100%',
+        paddingLeft: '0',
+        marginTop: '0',
+    },
+    buttonGroup: {
+        margin: '1rem',
+        '& *': {
+            margin: '0.2rem'
+        }
     }
 })
 
