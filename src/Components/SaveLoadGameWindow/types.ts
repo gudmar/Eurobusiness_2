@@ -18,7 +18,8 @@ export enum SaveLoadGameTypes {
     setSelectedGame = 'setSelectedGame',
     setFilteredGames = 'setFilteredGames',
     search = 'search',
-    log = 'log'
+    log = 'log',
+    dropSelection = 'dropSelection'
 }
 
 export type tActions = {
@@ -37,4 +38,6 @@ export type tActions = {
     type: SaveLoadGameTypes.setFilteredGames, payload: tSavedGame[]
 } | {
     type: SaveLoadGameTypes.log
+} | {
+    type: SaveLoadGameTypes.dropSelection
 }

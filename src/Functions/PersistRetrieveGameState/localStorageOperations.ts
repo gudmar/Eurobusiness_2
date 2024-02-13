@@ -1,5 +1,5 @@
 import { STATE_LOCATION } from "./const";
-import { tSavedGames, tSaves } from "./types";
+import { tRenameGameArgs, tSavedGames, tSaves } from "./types";
 
 export const isStateNameTaken = (name:string) => {
     const gamesAsString = window.localStorage.getItem(STATE_LOCATION);
@@ -16,7 +16,11 @@ export const deleteGame = (toBeDeletedGameName: string) => {
     const games = getGames();
     delete games[toBeDeletedGameName];
     overwritteGames(games)
-
+}
+export const renameGame = ({originalName, newName, newDescription}: tRenameGameArgs ) => {
+    const games = getGames();
+    games[originalName] = {...games[originalName], name: newName, description: newDescription}
+    overwritteGames(games);
 }
 
 export const getGames = (): tSavedGames => {

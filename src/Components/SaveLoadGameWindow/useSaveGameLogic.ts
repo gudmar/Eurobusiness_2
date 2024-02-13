@@ -25,7 +25,7 @@ const toggleIsDefault = (state: tSaveLoadGameState) => {
 }
 
 const search = (state: tSaveLoadGameState, payload: string) => {
-    const filtered = state.savedGames.filter(({name, description}) => name.includes(payload) || description.includes(payload))
+    const filtered = state.savedGames.filter(({name, description}) => name.toLocaleLowerCase().includes(payload.toLocaleLowerCase()) || description.includes(payload))
     const newState = {...state, searchFilter: payload, filteredGames: filtered}
     return newState
 }
@@ -43,8 +43,13 @@ const setFilteredGames = (state: tSaveLoadGameState, payload: string[]) => {
 const logState = (state: tSaveLoadGameState) => {console.log(state); return state}
 
 const setSelectedGame = (state: tSaveLoadGameState, payload: tSavedGame) => {
-    const game = state. savedGames.find(({name}) => name === payload.name)
+    const game = state.savedGames.find(({name}) => name === payload.name)
     const newState = {...state, selectedGame: game, name: game?.name, description: game?.description}
+    return newState
+}
+
+const dropSelection = (state: tSaveLoadGameState) => {
+    const newState = {...state, selectedGame: '', name: '', description: ''}
     return newState
 }
 
@@ -62,6 +67,7 @@ const REDUCER = {
     [SaveLoadGameTypes.search]: search,
     [SaveLoadGameTypes.setFilteredGames]: setFilteredGames,
     [SaveLoadGameTypes.log]: logState,
+    [SaveLoadGameTypes.dropSelection]: dropSelection,
 }
 
 const reducer = getReducer<tSaveLoadGameState, SaveLoadGameTypes, tPayloadTypes>(REDUCER);
@@ -72,7 +78,9 @@ const toggleIsDefaultAction = (): tActions => ({type: SaveLoadGameTypes.toggleIs
 const setSavedGamesAction = (payload: tSavedGame[]): tActions => ({type: SaveLoadGameTypes.setSavedGames, payload});
 const setSelectedGameAction = (payload: tSavedGame): tActions => ({type: SaveLoadGameTypes.setSelectedGame, payload});
 const setFilteredGameAction = (payload: tSavedGame[]): tActions => ({type: SaveLoadGameTypes.setFilteredGames, payload});
-const logAction = (): tActions => ({type: SaveLoadGameTypes.log})
+const logAction = (): tActions => ({type: SaveLoadGameTypes.log});
+const dropSelectionAction = (): tActions => ({type: SaveLoadGameTypes.dropSelection});
+const searchAction = (payload: string): tActions => ({type: SaveLoadGameTypes.search, payload})
 
 
 const getSaveLoadGamesActions = (dispatch: (args: tActions) => void) => ({
@@ -82,7 +90,9 @@ const getSaveLoadGamesActions = (dispatch: (args: tActions) => void) => ({
     setSavedGames: (payload: tSavedGame[]):void => dispatch(setSavedGamesAction(payload)),
     setSelectedGame: (payload: tSavedGame):void => dispatch(setSelectedGameAction(payload)),
     setFilteredGames: (payload: tSavedGame[]): void => dispatch(setFilteredGameAction(payload)),
-    log: () => dispatch(logAction())
+    log: () => dispatch(logAction()),
+    dropSelection: () => dispatch(dropSelectionAction()),
+    search: (payload: string) => dispatch(searchAction(payload))
 })
 
 export const useSaveLoadGameLogic = (savedGamesGetter = getAllSavedGames) => {
@@ -92,13 +102,18 @@ export const useSaveLoadGameLogic = (savedGamesGetter = getAllSavedGames) => {
     const {
         setName, setDescription,
         toggleIsDefault, setSavedGames,
-        setSelectedGame, setFilteredGames, log
+        setSelectedGame, setFilteredGames, log, dropSelection, search
     } = getSaveLoadGamesActions(dispatch);
-    useEffect(() => {
+
+    const setGamesFromLocalStorage = () => {
         const allGames = savedGamesGetter();
-        setSavedGames(savedGamesGetter())
-        setFilteredGames(allGames)}, 
-    [])
+        setSavedGames(savedGamesGetter());
+        setFilteredGames(allGames);
+    }
+    useEffect(() => {
+        setGamesFromLocalStorage();
+    }, [])
+    useEffect(() => console.log(dropSelection), [dropSelection])
 
     return {
         name,
@@ -112,8 +127,11 @@ export const useSaveLoadGameLogic = (savedGamesGetter = getAllSavedGames) => {
         searchFilter,
         filteredGames,
         logState: log,
+        search: ((e: React.ChangeEvent<HTMLInputElement>) => search(e?.target?.value)),
         setDescription:  ((e: React.ChangeEvent<HTMLInputElement>) => setDescription(e?.target?.value)),
         setDescriptionAsString: (val: string) => setDescription(val),
         setNameAsString: setName,
+        reloadGames: setGamesFromLocalStorage,
+        dropSelection,
     }
 }
