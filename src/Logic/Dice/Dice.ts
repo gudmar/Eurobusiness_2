@@ -41,7 +41,6 @@ export class Dice implements iDice {
 
     getThrowForGetOutOfPrisonResult(): iJailTestOutcome {
         const throws = this._getTwoThrows();
-        console.log('Throws', throws)
         const isDoublet  = throws[0] === throws[1];
         const result = { throws, result: isDoublet };
         return result;

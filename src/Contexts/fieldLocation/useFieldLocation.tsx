@@ -42,7 +42,6 @@ const useFieldLocationGettersStorage: tUseFieldLocationGettersStorage = () => {
         const locationGetter = getLocationGetter(index);
         const {top, left, width, height} = locationGetter();
         const {x, y} = getPawnLocation({top, left, width, height}, pawnDiameter, color);
-        console.log('calculatePawnLocation', index, color, x, y)
         return {x, y};
     }
     return { getLocationGetter, calculatePawnLocation, registerCurrentReference }

@@ -22,7 +22,6 @@ export const GeneralStateEditor = () => {
         testMode,
         setTestMode,
     } = useGeneralSettingsForTests()
-    useEffect(() => console.log(selectedFields), [selectedFields])
     return (
         <StateEditorForm
             headline={'General settings for tests'}

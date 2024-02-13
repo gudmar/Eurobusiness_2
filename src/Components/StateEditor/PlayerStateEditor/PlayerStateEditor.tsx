@@ -42,7 +42,7 @@ export const PlayerStateEditor = ({section}: any) => {
                         }
                     />
                 </StateEditorEntry>
-                <StateEditorEntry title='Money' currentValue={name}>
+                <StateEditorEntry title='Money' currentValue={money}>
                     <NumberInput
                         label={''}
                         value={money}

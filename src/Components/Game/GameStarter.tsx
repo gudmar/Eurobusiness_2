@@ -43,7 +43,6 @@ const usePlayersDescriptors = () => {
     useEffect(() => {
         const subscribtionCallback = () => {
             const playersDescriptors = getPlayersDescriptors();
-            console.log('Setting Players descriptors to ', playersDescriptors)
             setDescriptorsFromLogic(playersDescriptors);
         };
         Players.instance.subscribe({
@@ -51,11 +50,9 @@ const usePlayersDescriptors = () => {
             id: GAME_STARTER_ID,
             messageType: Messages.loadPlayers,
         })
-        console.log('SUBSCRIBED TO PLAYERS ')
         return (
             () => {
                 Players.instance.unsubscribe(Messages.loadPlayers, GAME_STARTER_ID);
-                console.log('UNSUBSCRIBE FROM PLAYERS')
             })
     }, [])
     return descriptorsFromLogic ?? TEST_PLAYERS
@@ -69,7 +66,6 @@ export const GameStarter = () => {
     useStartChanceCardsHolders();
     useEffect(() => {new Bank()}, [])
     const playersDescriptors = usePlayersDescriptors()
-    useEffect(() => {console.log(playersDescriptors)}, [playersDescriptors])
     return (
         <>
             <Board/>

@@ -22,7 +22,6 @@ const setPlayersState = (state: tGameState) => {
     const stateTemplates = Object.entries(state.players);
     Players.deleteAllPlayers();
     const playersConstructorArgs = stateTemplates.map(([color, state]) => (state));
-    console.log(playersConstructorArgs, stateTemplates)
     new Players({DiceClass: DiceTestModeDecorator, players: playersConstructorArgs});
     Players.players.forEach((player) => {
         const color = player.color;
