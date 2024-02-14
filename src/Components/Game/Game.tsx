@@ -89,7 +89,6 @@ const Game = () => {
                     label = {'Save game'}
                     colorVariant = {ButtonColorScheme.success}
                 />
-
             </nav>
 
             {StateEditor ? StateEditor: null}
