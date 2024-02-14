@@ -12,6 +12,6 @@ export const useStyles = createUseStyles({
     navigations: {
         display: 'flex',
         flexDirection: 'column'
-    }
+    },
 })
 
