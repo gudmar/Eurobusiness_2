@@ -1,3 +1,4 @@
+import { round } from "../round";
 import { COLOR_ALIACES, tColorAliace, tColorAliaces } from "./colorAliases";
 
 type tGetFromArrayFunction = (arr: number[]) => void;
@@ -15,6 +16,36 @@ export const hexAlpha2decAlpha = (hexAlpha: string) => {
     const hexToDecimal = parseInt(hexAlpha, HEX);
     const normalized = Math.round(hexToDecimal * PERCENTAGE_FACTOR / MAX_16_BIT_HEXADECIMAL_VALUE) / PERCENTAGE_FACTOR;
     return normalized;
+}
+
+export type tRgb = {r: number, g: number, b: number};
+
+export const rgb2hsl = ({r: red, g: green, b: blue}: tRgb) => {
+    const {r, g, b} = normalize(red, green, blue);
+    const maxColorIngr = Math.max(r, g, b);
+    const minColorIngr = Math.min(r, g, b);
+    const delta = maxColorIngr - minColorIngr;
+    const roundHue = function(hue: number):number{
+      const value = Math.round(hue * 60);
+      return value < 0 ? value + 360 : value
+    }
+    const calculateHue = function(): number{
+      if (delta == 0) return 0;
+      if (maxColorIngr == r) return roundHue(((g - b) / delta) % 6);
+      if (maxColorIngr == g) return roundHue(((b - r) / delta) + 2);
+      return roundHue((r - g) / delta + 4);
+    }
+    const calculateLight = function() {
+      return (maxColorIngr + minColorIngr) / 2;
+    }
+    const calculateSaturation = function() {
+      return delta == 0 ? 0 : delta / (1 - Math.abs(2 * calculateLight() - 1));
+    }
+    return {h: round(calculateHue(), 2), s: round(calculateSaturation(), 2), l: round(calculateLight(), 2)}
+}
+
+const normalize = (r: number, g: number, b: number) => {
+    return {r: r / 255, g: g / 255, b: b / 255}
 }
 
 export class Color {
@@ -150,14 +181,29 @@ export class Color {
         const isSupported = conditions.some((result) => result === true)
         if (!isSupported) throw new Error(ColorErrors.notSupported)
     }
+    private _convertToHsl() {
+        const {h, s, l} = rgb2hsl({ r: this._r, g: this._g, b: this._b });
+        this._h = h;
+        this._l = l;
+        this._s = s;
+    }
 
     constructor(color: string) {
         this._throwIfNotSupported(color)
-        if (this._isRgb(color)) this._parseRgba(color)
+        if (this._isRgb(color)) {
+            this._parseRgba(color);
+            this._convertToHsl();
+        }
         if (this._isHsl(color)) this._parseHsla(color)
-        if (this._isHex(color)) this._parseHex(color);
-        if (this._isAlias(color)) this._parseAlias(color);
+        
+        if (this._isHex(color)) {
+            this._parseHex(color);
+            this._convertToHsl();
+        }
+        if (this._isAlias(color)) {
+            this._parseAlias(color);
+            this._convertToHsl();
+        }
     }
-
 }
 
