@@ -1,11 +1,20 @@
+import { COLOR_ALIACES, tColorAliace, tColorAliaces } from "./colorAliases";
+
 type tGetFromArrayFunction = (arr: number[]) => void;
+
+const HEX = 16;
 
 export enum ColorErrors {
     hexNotProperSize = 'Hexadecimal number is not of a proper size',
+    notSupported = 'Syntax for this color is not supported',
 }
 
 export const hexAlpha2decAlpha = (hexAlpha: string) => {
-    return 0;
+    const MAX_16_BIT_HEXADECIMAL_VALUE = 255;
+    const PERCENTAGE_FACTOR = 100;
+    const hexToDecimal = parseInt(hexAlpha, HEX);
+    const normalized = Math.round(hexToDecimal * PERCENTAGE_FACTOR / MAX_16_BIT_HEXADECIMAL_VALUE) / PERCENTAGE_FACTOR;
+    return normalized;
 }
 
 export class Color {
@@ -74,13 +83,80 @@ export class Color {
         return result;
     }
 
+    private _throwErrorIfHexNotProperLength(hexNoTag: string) {
+        const { length } = hexNoTag;
+        const allowedLengths = [3, 6, 8];
+        const isAllowedLength = allowedLengths.includes(length);
+        if (!isAllowedLength) throw new Error(ColorErrors.hexNotProperSize)
+    }
+
+    private _parseShortHexBit(hexBit: string) {
+        const decimal = parseInt(hexBit, HEX);
+        const SHORT_HEX_TO_DEC_FACTOR = 17;
+        const result = SHORT_HEX_TO_DEC_FACTOR * decimal;
+        return result;
+    }
+
+    private _parseShortHex(hexNoTag: string) {
+        const r = hexNoTag[0];
+        const g = hexNoTag[1];
+        const b = hexNoTag[2];
+        this._r = this._parseShortHexBit(r);
+        this._g = this._parseShortHexBit(g);
+        this._b = this._parseShortHexBit(b);
+    }
+
+    private _parseLongHex(hexNoTag: string) {
+        const r = hexNoTag.substring(0, 2);
+        const g = hexNoTag.substring(2, 4);
+        const b = hexNoTag.substring(4, 6);
+        const a = hexNoTag.substring(6);
+        this._r = parseInt(r, HEX);
+        this._g = parseInt(g, HEX);
+        this._b = parseInt(b, HEX);
+        const parsedA = parseInt(a, HEX);
+        if (isNaN(parsedA)) return;
+        this._a = hexAlpha2decAlpha(a);
+    }
+
     private _parseHex(color: string){
-        //1 to 17
+        const colorTagStripped = color.substring(1);
+        this._throwErrorIfHexNotProperLength(colorTagStripped);
+        if (colorTagStripped.length === 3) {
+            const result = this._parseShortHex(colorTagStripped);
+            return result;
+        }
+        this._parseLongHex(colorTagStripped)
+    }
+    private _isAlias(color: string) {
+        const descriptor = (COLOR_ALIACES as tColorAliaces)[color] as tColorAliace;
+        return (descriptor !== undefined)
+    }
+
+    private _parseAlias(color: string) {
+        const {r, g, b} = (COLOR_ALIACES as tColorAliaces)[color] as tColorAliace;
+        this._r = r;
+        this._g = g;
+        this._b = b;
+    }
+
+    private _throwIfNotSupported = (color: string) => {
+        const conditions = [
+            this._isAlias(color),
+            this._isHex(color),
+            this._isHsl(color),
+            this._isRgb(color),
+        ]
+        const isSupported = conditions.some((result) => result === true)
+        if (!isSupported) throw new Error(ColorErrors.notSupported)
     }
 
     constructor(color: string) {
+        this._throwIfNotSupported(color)
         if (this._isRgb(color)) this._parseRgba(color)
         if (this._isHsl(color)) this._parseHsla(color)
+        if (this._isHex(color)) this._parseHex(color);
+        if (this._isAlias(color)) this._parseAlias(color);
     }
 
 }

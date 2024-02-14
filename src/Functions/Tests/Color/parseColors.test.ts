@@ -69,7 +69,21 @@ describe('Parsing colors by Color class correctly', () => {
             expect(b).toBe(0)
             expect(a).toBe(0)
         })
-        it.only('Should parse when hex with 3 digit symbols given', () => {
+        it('Should throw when hex is not of a proper size', () => {
+            const tooShort1 = '#93';
+            const tooShort2 = '#9234';
+            const tooShort3 = '#12345';
+            const tooLong = '#1234567';
+            const testData = [tooShort1, tooShort2, tooShort3, tooLong];
+            const throwingFunctions = testData.map(
+                (input) => {
+                    const instanceCreator = () => new Color(input);
+                    return instanceCreator
+                }
+            );
+            throwingFunctions.forEach((f) => expect(f).toThrow(ColorErrors.hexNotProperSize))
+        })
+        it('Should parse when hex with 3 digit symbols given', () => {
             const input = '#123';
             const colorInstance = new Color(input);
             const {r, g, b, a} = colorInstance;
@@ -139,21 +153,28 @@ describe('Parsing colors by Color class correctly', () => {
             expect(r).toBe(161)
             expect(g).toBe(31)
             expect(b).toBe(131)
-            expect(a).toBe(53)
+            expect(a).toBe(0.53)
         })
-        it('Should throw when hex is not of a proper size', () => {
-            const tooShort1 = '#93';
-            const tooShort2 = '#9234';
-            const tooShort3 = '#12345';
-            const tooLong = '#1234567';
-            const testData = [tooShort1, tooShort2, tooShort3, tooLong];
-            const throwingFunctions = testData.map(
-                (input) => {
-                    const instanceCreator = () => new Color(input);
-                    return instanceCreator
-                }
-            );
-            throwingFunctions.forEach((f) => expect(f).toThrow(ColorErrors.hexNotProperSize))
+    })
+    describe('Check if throws if color format is not supported', () => {
+        it('Should throw if color is not supported', () => {
+            const throwFunction = () => new Color('not supported')
+            expect(throwFunction).toThrow(ColorErrors.notSupported)
+        })
+    })
+    describe('Check if aliases for colors work', () => {
+        it('Should parse correctly when given some alliases', () => {
+            const alliases = [
+                {name: 'black', r: 0, g: 0, b: 0},
+                {name: 'blue', r: 0, g: 0, b: 255},
+                {name: 'red', r: 255, g: 0, b: 0}
+            ]
+            alliases.forEach(({name, r, g, b}) => {
+                const instance = new Color(name);
+                expect(r).toBe(instance.r)
+                expect(g).toBe(instance.g)
+                expect(b).toBe(instance.b)
+            })
         })
     })
 })
