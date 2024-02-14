@@ -111,11 +111,11 @@ describe('Testing hex transparency to decimal transparencey', () => {
     entries.forEach(([dec, hex]) => {
         it(`Should convert ${hex} alpha to ${dec} alpha correctly`, () => {
             const result = hexAlpha2decAlpha(hex);
-            expect(result).toBe(dec);
+            expect(result).toBe(+dec/100);
         })
     })
-    it('Should round opacity up, when there is no decimal value for some hex', () => {
+    it('Should round opacity, when there is no decimal value for some hex', () => {
         const result = hexAlpha2decAlpha('88');
-        expect(result).toBe(54);
+        expect(result).toBe(0.53);
     })
 })

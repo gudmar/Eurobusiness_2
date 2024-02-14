@@ -1,6 +1,12 @@
 // https://www.w3.org/wiki/CSS/Properties/color/keywords
 
-export const COLOR_ALIASES = {
+export type tColorAliace = {
+    hex: string, r: number, b: number, g: number
+}
+
+export type tColorAliaces = {[key: string]: tColorAliace}
+
+export const COLOR_ALIACES = {
     black: { hex: '#000000', r: 0, b: 0, g: 0, },
     silver: { hex: '#C0C0C0', r: 192, g: 192, b: 192, },
     gray:	{hex: '#808080',	r: 128, g: 128, b: 128 },
