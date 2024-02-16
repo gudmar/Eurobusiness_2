@@ -7,14 +7,16 @@ import { StateEditorNavigation } from "../EditorSelectinMenu/SectionMenu"
 import { EstatesStateEditor } from "../EstatesStateEditor/EstatesStateEditor";
 import { GeneralStateEditor } from "../General/GeneralStateEditor";
 import { PlayerStateEditor } from "../PlayerStateEditor/PlayerStateEditor";
+import { ViewTester } from "../ViewTester/ViewTester";
 import { useStyles } from "./style";
 
 const BOARD = 'Board';
 const GENERAL = 'General';
 const RED_CARDS = 'Red cards';
 const BLUE_CARDS = 'Blue cards';
+const TEST_VIEW = 'Test view';
 
-type tSections = typeof YELLOW | typeof GREEN | typeof BLUE | typeof RED | typeof BOARD | typeof GENERAL;
+type tSections = typeof YELLOW | typeof GREEN | typeof BLUE | typeof RED | typeof BOARD | typeof GENERAL | typeof TEST_VIEW;
 
 interface iEditorProps {
     section: tSections,
@@ -33,13 +35,14 @@ const EDITORS: iEditors = {
     [GENERAL]: GeneralStateEditor,
     [RED_CARDS]: () => <ChanceCardsPresenter section={RED} />,
     [BLUE_CARDS]: () => <ChanceCardsPresenter section={BLUE} />,
+    [TEST_VIEW]: ViewTester,
 }
 
 export const PlayerEditor = () => {
     const { theme } = useThemesAPI();
     const classes: {[key:string]: string} = useStyles(theme as any);
     const playersColors = usePlayersColors();
-    const sections = [GENERAL, ...playersColors, BOARD, RED_CARDS, BLUE_CARDS]
+    const sections = [GENERAL, ...playersColors, BOARD, RED_CARDS, BLUE_CARDS, TEST_VIEW]
     const [activeSection, setActiveSection] = useState(sections[0]);
     const Editor = EDITORS[activeSection];
     return (

@@ -1,4 +1,4 @@
-import { rgb2hsl } from "../../Color/Color";
+import { rgb2hsl } from "../../Color/rgbToHsl";
 
 // https://github.com/gudmar/notePad/blob/master/src/app/services/rgb-2-hsl.service.spec.ts
 const testSuit = [
