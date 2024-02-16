@@ -1,7 +1,8 @@
 import { round } from "../round";
 import { COLOR_ALIACES, tColorAliace, tColorAliaces } from "./colorAliases";
-
-type tGetFromArrayFunction = (arr: number[]) => void;
+import { hsl2rgb } from "./hslToRgb";
+import { rgb2hsl } from "./rgbToHsl";
+import { tHsl, tHsla, tRgb, tRgba } from "./types";
 
 const HEX = 16;
 
@@ -18,34 +19,18 @@ export const hexAlpha2decAlpha = (hexAlpha: string) => {
     return normalized;
 }
 
-export type tRgb = {r: number, g: number, b: number};
+const FULL_ANGLE = 360;
 
-export const rgb2hsl = ({r: red, g: green, b: blue}: tRgb) => {
-    const {r, g, b} = normalize(red, green, blue);
-    const maxColorIngr = Math.max(r, g, b);
-    const minColorIngr = Math.min(r, g, b);
-    const delta = maxColorIngr - minColorIngr;
-    const roundHue = function(hue: number):number{
-      const value = Math.round(hue * 60);
-      return value < 0 ? value + 360 : value
-    }
-    const calculateHue = function(): number{
-      if (delta == 0) return 0;
-      if (maxColorIngr == r) return roundHue(((g - b) / delta) % 6);
-      if (maxColorIngr == g) return roundHue(((b - r) / delta) + 2);
-      return roundHue((r - g) / delta + 4);
-    }
-    const calculateLight = function() {
-      return (maxColorIngr + minColorIngr) / 2;
-    }
-    const calculateSaturation = function() {
-      return delta == 0 ? 0 : delta / (1 - Math.abs(2 * calculateLight() - 1));
-    }
-    return {h: round(calculateHue(), 2), s: round(calculateSaturation(), 2), l: round(calculateLight(), 2)}
+const normalizeAngle = (angle: number) => {
+    if (angle >= 0) return angle % FULL_ANGLE;
+    const absAngle = Math.abs(angle);
+    const normalizedDelta = absAngle % FULL_ANGLE;
+    const result = FULL_ANGLE - normalizedDelta;
+    return result;
 }
-
-const normalize = (r: number, g: number, b: number) => {
-    return {r: r / 255, g: g / 255, b: b / 255}
+export const  sumAnglesUpTo360 = (angleA: number, angleB: number) => {
+    const result = normalizeAngle(angleA + angleB);
+    return result;
 }
 
 export class Color {
@@ -56,6 +41,14 @@ export class Color {
     private _g: number = 0;
     private _b: number = 0;
     private _a: number = 0;
+    set h(v: number) { this._h = v}
+    set l(v: number) { this._l = round(v, 2)}
+    set s(v: number) { this._s = round(v, 2)}
+    set r(v: number) { this._r = v}
+    set g(v: number) { this._g = v}
+    set b(v: number) { this._b = v}
+    set a(v: number) { this._a = round(v, 2)}
+
     get h() {return this._h}
     get l() {return this._l}
     get s() {return this._s}
@@ -89,9 +82,9 @@ export class Color {
     }
     private _getHslaFromArray(arr: number[]) {
         const [h, s, l, a] = arr;
-        this._h = h;
-        this._s = s;
-        this._l = l;
+        this.h = h;
+        this.s = s;
+        this.l = l;
         if (a !== undefined) this._a = a;
     }
     private _parseWithBrackets(color: string) {
@@ -183,9 +176,103 @@ export class Color {
     }
     private _convertToHsl() {
         const {h, s, l} = rgb2hsl({ r: this._r, g: this._g, b: this._b });
-        this._h = h;
-        this._l = l;
-        this._s = s;
+        this.h = h;
+        this.l = round(l, 2);
+        this.s = round(s, 2);
+    }
+
+    private _convertToRgb() {
+        const {r, b, g} = hsl2rgb({h: this.h, l: this.l, s: this.s});
+        this._r = r;
+        this._g = g;
+        this._b = b;
+    }
+
+    static getColorAsRgbString([r, g, b]: number[]) {
+        return `rgb(${r}, ${g}, ${b})`
+    }
+
+    private _makeHslString(hsl: tHsl) {
+        return `hsl(${hsl.h}, ${round(hsl.s, 2)*100}%, ${round(hsl.l, 2)*100}%)`
+    }
+
+    private _makeHslaString(hsla: tHsla) {
+        return `hsl(${hsla.h}, ${hsla.s*100}%, ${hsla.l*100}%, ${hsla.a})`
+    }
+
+    private _makeRgbString(rgb: tRgb) {
+        return `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`
+    }
+
+    private _makeRgbaString(rgba: tRgba) {
+        return `rgb(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a})`
+    }
+
+    private _getContrastColor() {
+        const THRESHOLD = 0.3
+        const isTooBlue = this._b > 120 && this._r < 120 && this._g < 120;
+        const reducedL = isTooBlue ? 100 : (this.l - THRESHOLD) * (-100);
+        const lMax1 = reducedL > 1 ? 1 : reducedL;
+        const lMin0 = lMax1 < 0 ? 0: lMax1
+        console.log(this.l)
+        const angle = sumAnglesUpTo360( this.h, 0);
+        return this._makeHslString({
+            h: angle, s: this.s, l: lMin0
+        })
+    }
+
+    get contrastColor() {return this._getContrastColor()}
+
+
+    // private _getComplementaryColorAsHsla() {
+    //     const h = sumAnglesUpTo360(this.h, 180);
+    //     const s = this._s;
+    //     const l = this._l;
+    //     const a = this._a;
+    //     return this._makeHslaString({h, s, l, a})
+    // }
+
+    // private _getComplementaryColorAsHsl() {
+    //     const h = sumAnglesUpTo360(this._h, 180);
+    //     const s = this._s;
+    //     const l = this._l;
+    //     return this._makeHslString({h, s, l})
+    // }
+
+
+    // get complementaryAsHslaString() {
+    //     return this._getComplementaryColorAsHsla();
+    // }
+
+    // get complementaryAsHslString() {
+    //     return this._getComplementaryColorAsHsl();
+    // }
+
+    private _getHslaType() {
+        return {h: this.h, s: this.s, l: this.l, a: this.a}
+    }
+
+    private _getComplementaryColorAsRgba() {
+        const hsla = this._getHslaType();
+        const h = sumAnglesUpTo360(hsla.h, 180);
+        const convertedRgb = hsl2rgb({...hsla, h});
+        return this._makeRgbaString({...convertedRgb, a: this.a})
+    }
+
+    get hsl() {
+        return `hsl(h: ${this.h}, s: ${this.s * 100}%, l: ${this.l * 100}%)`
+    }
+
+    get hsla() {
+        return `hsl(h: ${this.h}, s: ${this.s * 100}%, l: ${this.l * 100}%, a: ${this.a})`
+    }
+
+    get rgb() {
+        return `rgb(r: ${this.r}, g: ${this.g}, b: ${this.b})`
+    }
+
+    get rgba() {
+        return `rgb(r: ${this.r}, g: ${this.g}, b: ${this.b}, a: ${this.a})`
     }
 
     constructor(color: string) {
@@ -194,8 +281,11 @@ export class Color {
             this._parseRgba(color);
             this._convertToHsl();
         }
-        if (this._isHsl(color)) this._parseHsla(color)
-        
+        if (this._isHsl(color)) {
+            this._parseHsla(color);
+            this._convertToRgb();
+        }
+
         if (this._isHex(color)) {
             this._parseHex(color);
             this._convertToHsl();
