@@ -10,9 +10,11 @@ const CENTER = {
     justifyContent: 'center',
 }
 
-const CONTAINER_SIZE = '3.4rem';
+const CONTAINER_SIZE = '2.4rem';
 const FRAME_THICKNTSS = '0.3rem';
 const HEAD_SIZE = '0.9rem';
+const HOUSE_NO_ROOF_SIZE = '0.7rem';
+const HOUSE_ROOF_SIZE = '1rem'
 
 export const useStyles = createUseStyles((theme) => ({
     container: {
@@ -57,9 +59,25 @@ export const useStyles = createUseStyles((theme) => ({
         borderRadius: '50%',
     },
     roof: {
-
+        borderStyle: 'solid',
+        borderWidth: '0px',
+        width: 0,
+        height: 0,
+        borderBottomWidth: HOUSE_NO_ROOF_SIZE,
+        borderLeftWidth: HOUSE_ROOF_SIZE,
+        borderRightWidth: HOUSE_ROOF_SIZE,
+        borderColor: 'transparent',
+        gridArea: 'roof'
     },
     houseNoRoof: {
+        // width: HOUSE_NO_ROOF_SIZE,
+        width: '100%',
+        height: HOUSE_NO_ROOF_SIZE,
+        gridArea: 'body',
+        alignContent: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+        justifyItems: 'center'
 
     },
     hotel: {
@@ -74,6 +92,15 @@ export const useStyles = createUseStyles((theme) => ({
         background: 'yellow',
         padding: '0.2rem',
         transform: 'translateY(2rem)'
+    },
+    houseLayout: {
+        display: 'grid',
+        gridTemplateAreas: `
+            "roof roof roof"
+            "left body right";
+        `,
+        gridTemplateColumns: '1fr 7fr 1fr',
+        gridTemplateRows: '2fr 3fr',
     },
     playerLayout: {
         display: 'grid',
