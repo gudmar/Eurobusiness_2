@@ -13,8 +13,9 @@ const CENTER = {
 const CONTAINER_SIZE = '2.4rem';
 const FRAME_THICKNTSS = '0.3rem';
 const HEAD_SIZE = '0.9rem';
-const HOUSE_NO_ROOF_SIZE = '0.7rem';
-const HOUSE_ROOF_SIZE = '1rem'
+const HOUSE_NO_ROOF_SIZE = '0.8rem';
+const HOUSE_ROOF_SIZE = '1rem';
+const HOTEL_SIZE = '1.4rem';
 
 export const useStyles = createUseStyles((theme) => ({
     container: {
@@ -69,6 +70,11 @@ export const useStyles = createUseStyles((theme) => ({
         borderColor: 'transparent',
         gridArea: 'roof'
     },
+    moveUp:{
+        transform: 'translateY(-0.2rem)',
+        fontWeight: 'bold',
+        fontSize: '1.3rem'
+    },
     houseNoRoof: {
         // width: HOUSE_NO_ROOF_SIZE,
         width: '100%',
@@ -77,7 +83,12 @@ export const useStyles = createUseStyles((theme) => ({
         alignContent: 'center',
         alignItems: 'center',
         justifyContent: 'center',
-        justifyItems: 'center'
+        justifyItems: 'center',
+        display: 'flex',
+        alignItems: 'center',
+        alignContent: 'center',
+        justifyItems: 'center',
+        justifyContent: 'center'
 
     },
     hotel: {
@@ -102,12 +113,37 @@ export const useStyles = createUseStyles((theme) => ({
         gridTemplateColumns: '1fr 7fr 1fr',
         gridTemplateRows: '2fr 3fr',
     },
+    hotelCeiling:  { gridArea: 'ceiling' , width: '100%', height: '100%'},
+    hotelLeftWall: { gridArea: 'leftWall', width: '100%', height: '100%'},
+    hotelRightWall: { gridArea: 'rightWall', width: '100%', height: '100%'},
+    hotelWindow11: { gridArea: 'window11', width: '100%', height: '100%'},
+    hotelWindow12: { gridArea: 'window12', width: '100%', height: '100%'},
+    hotelWindow21: { gridArea: 'window21', width: '100%', height: '100%'},
+    hotelWindow22: { gridArea: 'window22', width: '100%', height: '100%'},
+    hotelFloor1: {gridArea: 'floor1', width: '100%', height: '100%'},
+    hotelFloor2: {gridArea: 'floor2', width: '100%', height: '100%'},
+    hotelWall: {gridArea: 'wall', width: '100%', height: '100%'},
+    ground:    {gridArea: 'ground', width: '100%', height: '100%'},
+    hotelLayout: {
+        display: 'grid',
+        gridTemplateAreas: `
+            "ceiling ceiling ceiling ceiling ceiling"
+            "leftWall window11 wall window12 rightWall"
+            "leftWall floor1   wall floor2   rightWall"
+            "leftWall window21 wall window22 rightWall"
+            "ground ground ground ground ground"
+        `,
+        gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
+        gridTemplateRows: ' 1fr 1fr 1fr 1fr 1fr',
+        width: HOTEL_SIZE,
+        height: HOTEL_SIZE,
+    },
     playerLayout: {
         display: 'grid',
         gridTemplateAreas: `
-            "blank blank blank"
-            "noLeft head noRight"
-            "no no no"
+            ".    .     ."
+            ". head ."
+            ". . ."
             "corps corps corps";
         `,
         gridTemplateColumns: '1fr 1fr 1fr',
