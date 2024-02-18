@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useThemesAPI } from "../../../Contexts/ThemeContext";
 import { Color } from "../../../Functions/Color/Color";
+import { HotelToken } from "../../InfoTokens/HotelToken";
 import { HouseToken } from "../../InfoTokens/HouseToken";
 import { PlayerToken } from "../../InfoTokens/PlayerToken";
 import { StateEditorForm } from "../../StateEditorForm/StateEditorForm";
@@ -99,13 +100,30 @@ export const ViewTester = () => {
                 title='Tokens'
                 currentValue=''
             >
-                <div style={{display: 'flex'}}>
+                <div style={{display: 'flex', width: '100%', justifyContent: 'space-around'}}>
                     <PlayerToken
                         color={color}
                         name={'John Doe'}
                     />
                     <HouseToken
+                        ammount={1}
+                        color={color}
+                    />
+
+                    <HouseToken
                         ammount={2}
+                        color={color}
+                    />
+                    <HouseToken
+                        ammount={3}
+                        color={color}
+                    />
+                    <HouseToken
+                        ammount={4}
+                        color={color}
+                    />
+
+                    <HotelToken
                         color={color}
                     />
                 </div>
