@@ -116,6 +116,7 @@ const newState = (oldState: tSelectedEstate, payload: tSelectedEstate) => {
     const setNrOfHouses = (newValue: number) => {
         
         if ((payload || {}).type === CITY){
+            console.log('Setting nr of housese', newValue, payload);
             (payload as CityField)!.nrOfHouses = newValue;
         }
     }

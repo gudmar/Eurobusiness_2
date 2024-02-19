@@ -616,6 +616,7 @@ export const useStyles = createUseStyles({
         backgroundColor: 'gray',
         borderBottom: theme.boardBorderStyle,
         gridArea: 'colorBar',
+        display: 'flex'
     }),
     fieldNumber: (theme) => ({
         gridArea: 'fieldNumber',

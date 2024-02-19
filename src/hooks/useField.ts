@@ -19,17 +19,21 @@ export const useAbstractField = <StateType>(name: tFlattenedFieldTypes) => {
     const caretaker = getBoardCaretaker();
     const thisField = caretaker.getFieldByName(name)
     const [state, setState]: [StateType, (arg0: StateType) => void] = useState<any>(thisField!.state)
+    const setNewState = (val: StateType) => {
+        setState({...val})
+    }
     useEffect(() => {
         const subscribeArgs: tSubscriptionArgs = {
-            callback: setState,
+            callback: setNewState,
             id: ID,
-            messageType: name as tFlattenedFieldTypes,
+            messageType: name
         }
         thisField!.subscribe(subscribeArgs)
-        return thisField!.unsubscribe(name, ID)
-    }, [])
-    return (state)
+        return () => thisField!.unsubscribe(name, ID)
+    }, [setNewState, thisField])
+    return ({...state, logSubscribtions: () => thisField?.logSubscribtions()})
 }
+
 
 export const useCityField = (name: tCity) => {
     const state = useAbstractField<iNamedCityField>(name)

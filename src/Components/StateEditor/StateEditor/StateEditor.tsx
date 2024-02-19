@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import { useThemesAPI } from "../../../Contexts/ThemeContext";
 import { BLUE, GREEN, RED, YELLOW } from "../../../Data/const";
 import { usePlayersColors } from "../../../hooks/usePlayersColors"
+import { ChanceCardHolder } from "../../../Logic/Chance/ChanceCardHolder";
 import { ChanceCardsPresenter } from "../ChanceCardsPresenter/ChanceCardsPresenter";
 import { StateEditorNavigation } from "../EditorSelectinMenu/SectionMenu"
 import { EstatesStateEditor } from "../EstatesStateEditor/EstatesStateEditor";
@@ -47,6 +48,7 @@ export const PlayerEditor = () => {
     const Editor = EDITORS[activeSection];
     return (
         <div className={classes.container}>
+            <button onClick={() => console.log(ChanceCardHolder.instances)}>Log card holder</button>
             <div className={classes.nav}>
                 <StateEditorNavigation
                     sections={sections}

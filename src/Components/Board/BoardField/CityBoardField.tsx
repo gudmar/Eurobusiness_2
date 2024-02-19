@@ -6,6 +6,10 @@ import { LEFT, RIGHT, TOP, BOTTOM, tBoardSideDirections } from "../types";
 import { useSubscribeToFieldLocation } from "../../../Contexts/fieldLocation/useFieldLocation";
 import { LegacyRef } from "react";
 import { useClasses } from "../../Pawns/styles";
+import { BANK } from "../../../Data/const";
+import { PlayerToken } from "../../InfoTokens/PlayerToken";
+import { HouseToken } from "../../InfoTokens/HouseToken";
+import { HotelToken } from "../../InfoTokens/HotelToken";
 
 const CityBoardField = (fieldDescriptor: iNamedCityField & {direction: tBoardSideDirections }) => {
     const {
@@ -19,9 +23,11 @@ const CityBoardField = (fieldDescriptor: iNamedCityField & {direction: tBoardSid
         visit,
         owner,
         nrOfHouses,
+        nrOfHotels,
         color,
         isPlegded,
          index,
+         logSubscribtions,
     } = useCityField(fieldDescriptor.name as tCity)
     const { theme } = useThemesAPI();
     const classes = useStyles(theme as any);
@@ -38,8 +44,12 @@ const CityBoardField = (fieldDescriptor: iNamedCityField & {direction: tBoardSid
     const titleFieldNumberClass = classes[`fieldNumber${fieldDescriptor.direction}`] + ' ' + classes.fontCityNumber;
     return (
         <div ref={nodeReference as unknown as LegacyRef<HTMLDivElement>} className={`${containerClass} ${classes.singleWidth} ${classes.fieldWrapper}`}>
-            <div className={colorBarClass} style={{backgroundColor: color}}></div>
-            <div className={titleClass}>{name}</div>
+            <div className={colorBarClass} style={{backgroundColor: color}}>
+                {owner !== BANK && <PlayerToken color={color} name={owner}/>}
+                {nrOfHouses > 0 && <HouseToken color={color} ammount={nrOfHouses}/>}
+                {nrOfHotels > 0 && <HotelToken color={color}/>}
+            </div>
+            <div className={titleClass} onClick={logSubscribtions}>{name}</div>
             <div className={priceClass}>{price}</div>
             <div className={emptyClass}></div>
             <div className={priceUpsideDownClass}>{price}</div>
