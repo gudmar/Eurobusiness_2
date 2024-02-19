@@ -214,7 +214,6 @@ export class Color {
         const reducedL = isTooBlue ? 100 : (this.l - THRESHOLD) * (-100);
         const lMax1 = reducedL > 1 ? 1 : reducedL;
         const lMin0 = lMax1 < 0 ? 0: lMax1
-        console.log(this.l)
         const angle = sumAnglesUpTo360( this.h, 0);
         return this._makeHslString({
             h: angle, s: this.s, l: lMin0

@@ -7,7 +7,6 @@ export const TextAreaInput = (props: tTextAreaProps) => {
     const { theme, setThemeName } = useThemesAPI();
     const classes = useStyles(theme as any);
     const { value, setValue, isEnabled, label } = props
-    useEffect(() => console.log(value), [value])
     const interior = (
         <textarea
             className={classes.textInput}

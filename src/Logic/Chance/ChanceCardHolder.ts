@@ -85,9 +85,11 @@ export class ChanceCardHolder {
     constructor(cards: tChance);
     public constructor(args: tChance | tChanceCardState) {
         if ('descriptions' in args) {
-            this._constructFromCards(args)
+            const instance = this._constructFromCards(args);
+            return instance;
         } else {
-            this._constructFromState(args)
+            const instance = this._constructFromState(args)
+            return instance;
         }
     }
 
@@ -100,6 +102,7 @@ export class ChanceCardHolder {
         this._cardsOrder              = cards.cardsOrder;
         this._lastDrawnCardIndex      = cards.lastDrawnCardIndex; 
         this._cardsBorrowedByPlayers = cards.cardsBorrewedByPlayers;
+        return this;
     }
 
     private _constructFromCards (cards: tChance) {
@@ -113,6 +116,7 @@ export class ChanceCardHolder {
         this._initializeCardsObject(cards);
         ChanceCardHolder.instances[cards.cardSetName] = this;
         this._cardSetName = cards.cardSetName;
+        return this
     }
 
     private get _nrOfCards() {

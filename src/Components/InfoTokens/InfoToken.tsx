@@ -15,7 +15,6 @@ export const InfoToken = ({children, mainColor, alt, tooltip}: Props) => {
     const bgColor = color.contrastColor;
     const bgColorInstance = new Color(bgColor);
     const outlineColor = bgColorInstance.contrastColor;
-    console.log(color, bgColor, outlineColor)
     return (
         <div 
             className = {classes.container} 

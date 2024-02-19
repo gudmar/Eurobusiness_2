@@ -1,4 +1,5 @@
 import {createUseStyles} from 'react-jss'
+import { transform } from 'typescript';
 import { ZIndexes } from '../../Constants/styleConstants';
 import { useThemesAPI } from '../../Contexts/ThemeContext';
 import { CustomTheme } from '../../Types/themes'
@@ -10,7 +11,7 @@ const CENTER = {
     justifyContent: 'center',
 }
 
-const CONTAINER_SIZE = '2.4rem';
+const CONTAINER_SIZE = '2.2rem';
 const FRAME_THICKNTSS = '0.3rem';
 const HEAD_SIZE = '0.9rem';
 const HOUSE_NO_ROOF_SIZE = '0.8rem';
@@ -22,15 +23,22 @@ export const useStyles = createUseStyles((theme) => ({
         width: CONTAINER_SIZE,
         height: CONTAINER_SIZE,
         borderRadius: '50%',
+        '&div': {
+            transitionDelay:'0.3s'
+        },
         '&:hover div': {
-            visibility: 'visible'
+            visibility: 'visible',
+            // transitionDelay:'0.3s',
+            // transform: 'scale(1)'
         },
         display: 'flex',
         alignContent: 'center',
         alignItems: 'center',
         justifyContent: 'center',
-        justifyItems: 'center'
-
+        justifyItems: 'center',
+        margin: '0px',
+        flexDirection: 'row',
+        cursor:'default'
     },
     frame: {
         borderStyle: 'solid',
@@ -99,10 +107,20 @@ export const useStyles = createUseStyles((theme) => ({
     },
     tooltip: {
         visibility: 'hidden',
+        // top: '2rem',
+        // width: '0px',
+        // height: '0px',
+        // padding: '0px',
+        overflow: 'hidden',
         position: 'absolute',
-        background: 'yellow',
+        background: 'hsl(130, 100%, 60%)',
         padding: '0.2rem',
-        transform: 'translateY(2rem)'
+        transform: 'translateY(4rem)',
+        width: '5rem',
+        zIndex: ZIndexes.tooltip,
+        textAlign: 'center',
+        border: 'thin solid green',
+        borderRadius: '0.3rem',
     },
     houseLayout: {
         display: 'grid',

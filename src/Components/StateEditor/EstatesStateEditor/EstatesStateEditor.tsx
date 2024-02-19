@@ -132,6 +132,7 @@ const EditEstate = ({selectedEstate}: tEditEstate) => {
             >
                 {fieldsOrder.map(({title, value, handler}) => {
                         const child = <EstatesTestFieldEdit
+                                key={title}
                                 title={title}
                                 value={(value ?? '').toString()}
                                 handler={handler}
@@ -142,6 +143,7 @@ const EditEstate = ({selectedEstate}: tEditEstate) => {
                             />
                         return (
                                 <CollapsedEditorEntry
+                                    key={title}
                                     title = {title}
                                     currentValue = {(value ?? '').toString()}
                                 >
@@ -198,7 +200,7 @@ export const EstatesStateEditor = () => {
                                     id={`${estateOwner}`} 
                                     type='checkbox' 
                                     onClick={() => toggleOwner(estateOwner)}
-                                    checked={ ownersFilter.includes(estateOwner) }
+                                    defaultChecked={ ownersFilter.includes(estateOwner) }
                                 />
                                 <label htmlFor={`${estateOwner}`}>{estateOwner}</label>
 
@@ -215,7 +217,7 @@ export const EstatesStateEditor = () => {
                                     id = {`${type}`} 
                                     type='checkbox' 
                                     onClick={() => toggleEstateType(type)}
-                                    checked={estateTypesFilter.includes(type)}
+                                    defaultChecked={estateTypesFilter.includes(type)}
                                 />
                                 <label htmlFor={`${type}`}>{type}</label>
                             </li>)

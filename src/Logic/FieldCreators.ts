@@ -86,10 +86,11 @@ export class CityField extends SubscribtionsHandler<tFlattenedFieldTypes, iCityF
     get isPlegded() { return this._isPlegded }
     get color() { return this._color}
     get index() { return this._index }
+
     set nrOfHouses(val: number) {
         if (val > 4 || val < 0) throw new Error('Nr of houses has to be > 0 and < 5')
         this._nrOfHouses = val;
-        this.runAllSubscriptions(this.name as tFlattenedFieldTypes, this.state);
+        this.runAllSubscriptions(this.name, this.state);
     }
     set nrOfHotels(val: number) {
         if (val > 1 || val < 0) throw new Error('Nr of hotels has to be > 0 and < 1')
@@ -99,14 +100,6 @@ export class CityField extends SubscribtionsHandler<tFlattenedFieldTypes, iCityF
         this._nrOfHotels = val;
         this.runAllSubscriptions(this.name as tFlattenedFieldTypes, this.state);
     }
-    // getMemento(): iCityMemento {
-    //     return ({
-    //         owner: this._owner,
-    //         name: this._name,
-    //         nrOfHouses: this._nrOfHouses,
-    //         isPlegded: this._isPlegded,
-    //     })
-    // }
     get state(): iCityFieldState {
         return ({
             name: this._name,
@@ -130,6 +123,7 @@ export class CityField extends SubscribtionsHandler<tFlattenedFieldTypes, iCityF
         this.nrOfHotels = val.nrOfHotels;
         this.nrOfHouses = val.nrOfHouses;
         this.isPlegded = val.isPlegded;
+        this.runAllSubscriptions(this._name, this.state)
     }
     set owner(val: tOwner) { 
         this._owner = val;
@@ -226,6 +220,7 @@ export class NonCityEstatesField extends SubscribtionsHandler<tFlattenedFieldTyp
     set state(val) {
         this._owner = val.owner;
         this._isPlegded = val.isPlegded;
+        this.runAllSubscriptions(this.name as tFlattenedFieldTypes, this.state);
     }
 }
 
