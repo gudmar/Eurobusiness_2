@@ -48,7 +48,6 @@ export const PlayerEditor = () => {
     const Editor = EDITORS[activeSection];
     return (
         <div className={classes.container}>
-            <button onClick={() => console.log(ChanceCardHolder.instances)}>Log card holder</button>
             <div className={classes.nav}>
                 <StateEditorNavigation
                     sections={sections}

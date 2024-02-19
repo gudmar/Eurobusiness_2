@@ -33,7 +33,6 @@ const useColors = (initialValues = [128, 128, 128]) => {
     }, [
         red, setRed, green, setGreen, blue, setBlue
     ])
-    useEffect(() => console.log(complementaryColor), [complementaryColor])
     return {
         red, setRed, green, setGreen, blue, setBlue,
         color: Color.getColorAsRgbString([red, green, blue]),

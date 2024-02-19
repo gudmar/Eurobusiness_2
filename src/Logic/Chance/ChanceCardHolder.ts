@@ -84,7 +84,6 @@ export class ChanceCardHolder {
     constructor(state: tChanceCardState);
     constructor(cards: tChance);
     public constructor(args: tChance | tChanceCardState) {
-        console.log('args', args)
         if ('descriptions' in args) {
             const instance = this._constructFromCards(args);
             return instance;
@@ -107,7 +106,6 @@ export class ChanceCardHolder {
     }
 
     private _constructFromCards (cards: tChance) {
-        console.log('Constructing from cards', ChanceCardHolder.instances, cards, ChanceCardHolder?.instances?.[cards?.cardSetName])
         if (Object.values(ChanceCardHolder?.instances?.[cards.cardSetName] || {}).some(i => i.collectable === true || i.collectable === false) ) {
             throw new Error('CARD ALREADY BORROWED')
         }
@@ -280,7 +278,6 @@ export class ChanceCardHolder {
         return descriptions;
     }
     get descriptionsInShufledOrder() {
-        console.log(this)
         return this._cardsOrder.map((id) => this.descriptions[id]);
     }
 

@@ -44,7 +44,7 @@ const CityBoardField = (fieldDescriptor: iNamedCityField & {direction: tBoardSid
     const titleFieldNumberClass = classes[`fieldNumber${fieldDescriptor.direction}`] + ' ' + classes.fontCityNumber;
     return (
         <div ref={nodeReference as unknown as LegacyRef<HTMLDivElement>} className={`${containerClass} ${classes.singleWidth} ${classes.fieldWrapper}`}>
-            <div className={colorBarClass} style={{backgroundColor: color}}>
+            <div className={`${colorBarClass} ${classes.colorBar}`} style={{backgroundColor: color}}>
                 {owner !== BANK && <PlayerToken color={color} name={owner}/>}
                 {nrOfHouses > 0 && <HouseToken color={color} ammount={nrOfHouses}/>}
                 {nrOfHotels > 0 && <HotelToken color={color}/>}

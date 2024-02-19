@@ -220,6 +220,7 @@ export class NonCityEstatesField extends SubscribtionsHandler<tFlattenedFieldTyp
     set state(val) {
         this._owner = val.owner;
         this._isPlegded = val.isPlegded;
+        this.runAllSubscriptions(this.name as tFlattenedFieldTypes, this.state);
     }
 }
 
