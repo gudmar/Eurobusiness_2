@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss'
-import { useThemesAPI } from '../../Contexts/ThemeContext';
+import { useThemesAPI } from '../ThemeContext';
 import { CustomTheme } from '../../Types/themes'
 
 export const useStyles = createUseStyles((theme: CustomTheme) => ({
@@ -18,6 +18,6 @@ export const useStyles = createUseStyles((theme: CustomTheme) => ({
 
 export const useClasses = () => {
     const {theme} = useThemesAPI();
-    const classes: {[key:string]: string} = useStyles({theme});
+    const classes: {[key:string]: any} = useStyles({theme});
     return classes
 }

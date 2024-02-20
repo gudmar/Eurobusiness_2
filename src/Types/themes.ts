@@ -39,6 +39,9 @@ export type CustomTheme = {
     inputBackgroundColor: string,
     inputIconColor: string,
     inputForgroundColor: string,
+
+    reportBackgroundColor: string,
+    reportForegroundColor: string,
 }
 
 export type NamedTheme = {

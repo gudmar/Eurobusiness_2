@@ -50,5 +50,7 @@ export const DARK_THEME: NamedTheme = {
         inputIconColor:       '#ddd',
         inputForgroundColor: '#ddd',
 
+        reportBackgroundColor: '#333',
+        reportForegroundColor: '#ddd'
     }
 }

@@ -44,6 +44,9 @@ export const BLANK_THEME: NamedTheme = {
         inputBackgroundColor: '', 
         inputIconColor:       '',
         inputForgroundColor: '',
+
+        reportBackgroundColor: '',
+        reportForegroundColor: '',
     
     }
 }
