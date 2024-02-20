@@ -1,3 +1,4 @@
+import { GameInformator, useReport } from '../../Contexts/GameInformator.ts/GameInformator';
 import { useThemesAPI } from '../../Contexts/ThemeContext';
 import { YELLOW } from '../../Data/const';
 import { displayError, displayInfo, displayWarning } from '../../Functions/displayMessage';
@@ -6,6 +7,7 @@ import { Commander } from '../../Logic/Commander/Commander';
 import { DARK_THEME } from '../../Themes/darkTheme';
 import { GREY_THEME } from '../../Themes/greyTheme';
 import { Button, ButtonColorScheme } from '../Button/Button';
+import { Report } from '../GameInformators/Report/Report';
 import { InformationStack } from '../Information/Information';
 import { Informator } from '../Information/Infromator';
 import { SaveLoadGameWindow } from '../SaveLoadGameWindow/SaveLoadGameWindow';
@@ -43,7 +45,7 @@ const moveYellowPlayer = () => {
     Commander.movePlayer(YELLOW)
 }
 
-const Game = () => {
+const GameGuts = () => {
     const { theme, setThemeName } = useThemesAPI();
     const classes = useStyles(theme as any);
     const {Component: StateEditor, setOpen: openStateEditor, setIsOpen: setIsOpenStateEditor} = useModal(PlayerEditor)
@@ -89,12 +91,21 @@ const Game = () => {
                     label = {'Save game'}
                     colorVariant = {ButtonColorScheme.success}
                 />
+                <Report/>
             </nav>
 
             {StateEditor ? StateEditor: null}
             {SaveGameDialog ? SaveGameDialog: null}
             <GameStarter/>
         </div>
+    )
+}
+
+const Game = () => {
+    return (
+        <GameInformator>
+            <GameGuts />
+        </GameInformator>
     )
 }
 

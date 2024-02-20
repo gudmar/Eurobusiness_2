@@ -48,5 +48,8 @@ export const GREY_THEME: NamedTheme = {
         inputBackgroundColor: '#fff', 
         inputIconColor:       '#333',
         inputForgroundColor: '#222',
+
+        reportBackgroundColor: '#ddd',
+        reportForegroundColor: '#444'
     }
 }
