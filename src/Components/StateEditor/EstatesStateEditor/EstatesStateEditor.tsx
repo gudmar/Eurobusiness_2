@@ -6,12 +6,13 @@ import { isDefined } from "../../../Functions/isDefined";
 import { usePlayersColors } from "../../../hooks/usePlayersColors";
 import { getBoard } from "../../../Logic/BoardCaretaker";
 import { tEstateField } from "../../../Logic/boardTypes";
+import { tSelectedEstate } from "../../../Types/types";
 import { StateEditorForm } from "../../StateEditorForm/StateEditorForm";
 import { CollapsedEditorEntry } from "../../StateEditorForm/StateEditorFormEntry";
 import { EstateEditorFieldNames } from "./const";
 import { EditIsPlegded, EditNrHotels, EditNrHouses, EditOwner } from "./EditFields";
 import { useStyles } from "./styles";
-import { iEditEstateArgs, tEditEstate, tEstateArgs, tEstatesTestFieldEditArgs, tGetEstateClassesArgs, tSelectedEstate, tSetSelectEstateFunction } from "./types";
+import { iEditEstateArgs, tEstateArgs, tEstatesTestFieldEditArgs, tGetEstateClassesArgs } from "./types";
 import { useEstatesEditor } from "./useEstatesEditor";
 import { useSelectEstate } from "./useSelectEstate";
 
@@ -78,7 +79,7 @@ const EstatesTestFieldEdit = (args: tEstatesTestFieldEditArgs ) => {
     }
 
 }
-
+type tEditEstate = {selectedEstate: tSelectedEstate}
 
 const EditEstate = ({selectedEstate}: tEditEstate) => {
     const { theme } = useThemesAPI();

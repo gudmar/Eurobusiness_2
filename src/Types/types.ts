@@ -1,6 +1,6 @@
 import { tColors } from "../Data/types";
 import { tBankState } from "../Logic/Bank/types";
-import { tField } from "../Logic/boardTypes";
+import { tEstateField, tField } from "../Logic/boardTypes";
 import { tChanceCardState } from "../Logic/Chance/ChanceCardHolder";
 import { tDiceState, TestModes } from "../Logic/Dice/types";
 import { iPlayerSnapshot } from "../Logic/Player/types";
@@ -39,4 +39,11 @@ export interface iProps { [key: string]: unknown }
 export interface iMessage {
     title: string,
     message: string,
+}
+
+export type tSelectedEstate = tEstateField | null;
+
+export type tGetSubscribtionType = {
+    callback: tSubscription,
+    estateInstance: tSelectedEstate,
 }

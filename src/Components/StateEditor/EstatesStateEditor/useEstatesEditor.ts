@@ -1,11 +1,11 @@
 import { useEffect, useReducer } from "react"
 import { CITY, UK, YELLOW } from "../../../Data/const"
 import { tCountries, tEstateTypes, tFlattenedFieldTypes, tOwner, tVisitPayment } from "../../../Data/types"
+import { getEstateSubscribtion } from "../../../Functions/getEstateSubscribtion"
 import { getReducer } from "../../../Functions/reducer"
 import { tEstateField } from "../../../Logic/boardTypes"
 import { CityField } from "../../../Logic/FieldCreators"
-import { tSubscription } from "../../../Types/types"
-import { tSelectedEstate } from "./types"
+import { tSelectedEstate, tSubscription } from "../../../Types/types"
 
 type tStateProperty = any
 
@@ -168,16 +168,16 @@ type tGetSubscribtionType = {
     estateInstance: tSelectedEstate,
 }
 
-const getSubscribtion = ({callback, estateInstance}: tGetSubscribtionType) => {
-    const name = estateInstance?.name;
-    const messageType = name as tFlattenedFieldTypes
-    const id = `edited-estate-${name}`;
-    const decoratedCb = (args: unknown) => { callback(args) }
-    const subscribtion = {callback: decoratedCb, id, messageType};
-    const subscribe = () => ((estateInstance as tEstateField)?.subscribe(subscribtion));
-    const unsubscribe = () => ((estateInstance as tEstateField)?.unsubscribe(messageType, id));
-    return {subscribe, unsubscribe};
-}
+// const getSubscribtion = ({callback, estateInstance}: tGetSubscribtionType) => {
+//     const name = estateInstance?.name;
+//     const messageType = name as tFlattenedFieldTypes
+//     const id = `edited-estate-${name}`;
+//     const decoratedCb = (args: unknown) => { callback(args) }
+//     const subscribtion = {callback: decoratedCb, id, messageType};
+//     const subscribe = () => ((estateInstance as tEstateField)?.subscribe(subscribtion));
+//     const unsubscribe = () => ((estateInstance as tEstateField)?.unsubscribe(messageType, id));
+//     return {subscribe, unsubscribe};
+// }
 
 export const useEstatesEditor = (editedEstate: tSelectedEstate) => {
     const reducer = getReducer<tSelectedEstate, string, tSelectedEstate>(REDUCER);
@@ -203,7 +203,7 @@ export const useEstatesEditor = (editedEstate: tSelectedEstate) => {
     }, dispatch] = useReducer(reducer, initialEstatesEditorState);
     const {setNewState} = getEstatesEditorActions(dispatch);
     useEffect(() => {
-        const {subscribe, unsubscribe} = getSubscribtion({
+        const {subscribe, unsubscribe} = getEstateSubscribtion({
             callback: () => setNewState(editedEstate),
             estateInstance: editedEstate,
         })

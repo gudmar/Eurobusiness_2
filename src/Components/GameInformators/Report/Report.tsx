@@ -1,6 +1,7 @@
 import { useReport } from "../../../Contexts/GameInformator.ts/GameInformator";
 import { useClasses } from "./styles";
 
+
 export const Report = () => {
     const { Report } = useReport();
     const classes = useClasses();
