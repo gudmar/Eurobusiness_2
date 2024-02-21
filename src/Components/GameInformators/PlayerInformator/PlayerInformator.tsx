@@ -1,4 +1,5 @@
 import { tColors } from "../../../Data/types";
+import { Color } from "../../../Functions/Color/Color";
 import { useEditPlayer } from "../../../hooks/useEditPlayer/useEditPlayer";
 import { useGetPlayerEstates, useGetPlayerEstatesNames } from "../../../hooks/useSubscribePlayerEstates";
 import { Players } from "../../../Logic/Players/Players";
@@ -11,6 +12,8 @@ export interface Props {
 export const PlayerInformator = ({name}: Props) => {
     console.log('name', name)
     const color = Players.playerNameToPlayerColor(name) as unknown as tColors
+    const colorInstance = new Color(color);
+    const contrastColor = colorInstance.contrastColor;
     const {
         money, isGameLost,
         specialCards, fieldNr,
@@ -23,6 +26,7 @@ export const PlayerInformator = ({name}: Props) => {
         {propName: 'Special Cards', propValue: specialCards, ariaLabel: 'What special cards does player hold'},
         {propName: 'Turns to wait', propValue: nrTurnsToWait, ariaLabel: 'How many turns has player to wait if is in prison'},
         {propName: 'Owned estates', propValue: ownedEstates, ariaLabel: 'Estates owned by player'},
+        {propName: 'Color', propValue: {color, contrastColor}, ariaRole: 'none'}
     ]
     return (
         <ReportDocument
