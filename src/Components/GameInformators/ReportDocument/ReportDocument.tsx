@@ -1,5 +1,5 @@
 import { useClasses } from "./styles";
-import { iReportData, iReportProps, tReportDataValue } from "./types";
+import { iReportData, iReportProps, tReportDataInput_color, tReportDataValue } from "./types";
 
 type tReportDocumentList = string[] | number[]
 
@@ -11,7 +11,21 @@ const ReportList = ({items}: {items: tReportDocumentList}) => {
     )
 }
 
+const ReportColor = ({color, contrastColor}: tReportDataInput_color) => {
+    const classes = useClasses();
+    return (
+        <div className={classes.colorBox} style={{backgroundColor: color}}>
+            <span style={{color: contrastColor}}>Color</span>
+        </div>
+    )
+}
+
 const ReportValueCell = ({value}: {value: tReportDataValue}) => {
+    if (typeof value === 'object' && 'color' in value) {
+        return (
+            <ReportColor color={value.color} contrastColor={value.contrastColor} aria-role="none"/>
+        )
+    }
     if (typeof value === "object") {
         return (
             <ReportList items={value} />
@@ -43,7 +57,7 @@ const ReportDocumentGuts = (props: {data: iReportData[]}) => {
 }
 
 export const ReportDocument = (props: iReportProps) => {
-    const {data, title, subtitle, ariaLabel} = props;
+    const {data, title, subtitle, ariaLabel } = props;
     const classes = useClasses();
     return (
         <section aria-label={ariaLabel}>
