@@ -7,7 +7,7 @@ import { useEstateOwners } from "../../../hooks/useEstateOwners";
 import { usePlayersColors } from "../../../hooks/usePlayersColors";
 import { getBoard } from "../../../Logic/BoardCaretaker";
 import { tEstateField } from "../../../Logic/boardTypes";
-import { tSelectedEstate } from "./types";
+import { tSelectedEstate } from "../../../Types/types";
 
 
 

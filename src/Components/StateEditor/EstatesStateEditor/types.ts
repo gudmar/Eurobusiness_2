@@ -1,10 +1,8 @@
 import { BANK } from "../../../Data/const";
 import { tColors, tEstateTypes, tOwner } from "../../../Data/types";
 import { tEstateField } from "../../../Logic/boardTypes";
+import { tSelectedEstate } from "../../../Types/types";
 
-export type tEditEstate = {selectedEstate: tSelectedEstate}
-
-export type tSelectedEstate = tEstateField | null;
 export type tSetSelectEstateFunction = (estate: tSelectedEstate) => void
 
 
