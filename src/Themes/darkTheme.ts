@@ -51,6 +51,12 @@ export const DARK_THEME: NamedTheme = {
         inputForgroundColor: '#ddd',
 
         reportBackgroundColor: '#333',
-        reportForegroundColor: '#ddd'
+        reportForegroundColor: '#ddd',
+
+        tableStripOddRowBackground:  '#222',
+        tableStripEvenRowBackground: '#555',
+        tableStripEvenRowFgColor:    '#ddd',
+        tableStripOddRowFgColor:     '#ddd',
+
     }
 }

@@ -42,6 +42,13 @@ export type CustomTheme = {
 
     reportBackgroundColor: string,
     reportForegroundColor: string,
+
+    tableStripOddRowBackground: string,
+    tableStripEvenRowBackground: string,
+    tableStripEvenRowFgColor: string,
+    tableStripOddRowFgColor: string,
+
+
 }
 
 export type NamedTheme = {

@@ -380,7 +380,7 @@ export const useStyles = createUseStyles({
         gridArea: 'titleUpsideDown',
         writingMode: 'vertical-rl',
         textAlign: 'center',
-        transform: 'rotate(180deg)'
+        transform: 'rotate(180deg)',
     }),
     titleUpsideDownRight: (theme) => ({
         gridArea: 'titleUpsideDown',
@@ -572,5 +572,8 @@ export const useStyles = createUseStyles({
         borderRight: theme.boardBorderStyle,
         height: '100%'
     }),
+    help: {
+        cursor: 'help',
+    }
 
 });

@@ -50,6 +50,12 @@ export const GREY_THEME: NamedTheme = {
         inputForgroundColor: '#222',
 
         reportBackgroundColor: '#ddd',
-        reportForegroundColor: '#444'
+        reportForegroundColor: '#444',
+
+        tableStripOddRowBackground:  '#eee',
+        tableStripEvenRowBackground: '#ccc',
+        tableStripEvenRowFgColor:    '#333',
+        tableStripOddRowFgColor:     '#333',
+
     }
 }

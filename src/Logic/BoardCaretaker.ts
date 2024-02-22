@@ -152,6 +152,12 @@ export const getBoard = () => {
     return result;
 }
 
+export const getEstate = (name: string)  => {
+    const estatesInstance = getBoard().estates.find(({name: value}) => value === name);
+    if (!estatesInstance) return null;
+    return estatesInstance;
+}
+
 export class BoardCreator {
     factory: FieldFactory = new FieldFactory(LIST_OF_FIELD_PRODUCERS);
     caretaker!: BoardCaretaker;
