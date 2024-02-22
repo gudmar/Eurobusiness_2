@@ -10,6 +10,7 @@ import { BANK } from "../../../Data/const";
 import { PlayerToken } from "../../InfoTokens/PlayerToken";
 import { HouseToken } from "../../InfoTokens/HouseToken";
 import { HotelToken } from "../../InfoTokens/HotelToken";
+import { useReport } from "../../../Contexts/GameInformator.ts/GameInformator";
 
 const CityBoardField = (fieldDescriptor: iNamedCityField & {direction: tBoardSideDirections }) => {
     const {
@@ -31,6 +32,7 @@ const CityBoardField = (fieldDescriptor: iNamedCityField & {direction: tBoardSid
     } = useCityField(fieldDescriptor.name as tCity)
     const { theme } = useThemesAPI();
     const classes = useStyles(theme as any);
+    const { displayEstateInfo } = useReport();
 
     const nodeReference = useSubscribeToFieldLocation(index)
     
@@ -49,11 +51,11 @@ const CityBoardField = (fieldDescriptor: iNamedCityField & {direction: tBoardSid
                 {nrOfHouses > 0 && <HouseToken color={color} ammount={nrOfHouses}/>}
                 {nrOfHotels > 0 && <HotelToken color={color}/>}
             </div>
-            <div className={titleClass} onClick={logSubscribtions}>{name}</div>
+            <div className={`${titleClass} ${classes.help}`} onClick={() => displayEstateInfo(name)}>{name}</div>
             <div className={priceClass}>{price}</div>
             <div className={emptyClass}></div>
             <div className={priceUpsideDownClass}>{price}</div>
-            <div className={titleUpsideDownClass}>{name}</div>
+            <div className={`${titleUpsideDownClass} ${classes.help}`} onClick={() => displayEstateInfo(name)}>{name}</div>
             <div className={titleFieldNumberClass}>{index+1}</div>
         </div>
     )

@@ -5,6 +5,7 @@ import { CustomTheme } from '../../../Types/themes';
 export const useStyles = createUseStyles((theme: CustomTheme) => ({
     report: {
         minWidth: '20rem',
+        width: '20rem',
         backgroundColor: theme.reportBackgroundColor,
         color: theme.reportForegroundColor,
         display: 'flex',

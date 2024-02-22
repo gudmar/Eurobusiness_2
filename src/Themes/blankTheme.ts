@@ -47,6 +47,11 @@ export const BLANK_THEME: NamedTheme = {
 
         reportBackgroundColor: '',
         reportForegroundColor: '',
-    
+
+        tableStripOddRowBackground:  '',
+        tableStripEvenRowBackground: '',
+        tableStripEvenRowFgColor:    '',
+        tableStripOddRowFgColor:     '',
+
     }
 }

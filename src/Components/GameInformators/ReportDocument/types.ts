@@ -1,4 +1,4 @@
-export type tReportDataInput_color = {color: string, contrastColor: string}
+export type tReportDataInput_color = {color: string, contrastColor: string, text?: string}
 
 export type tReportDataValue = string | number | boolean | string[] | number [] | tReportDataInput_color
 
@@ -7,6 +7,7 @@ export interface iReportData {
     propValue: tReportDataValue,
     ariaLabel?: string,
     ariaRole?: string,
+    visibility?: boolean,
 }
 
 export interface iReportProps {
