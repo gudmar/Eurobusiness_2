@@ -23,7 +23,7 @@ const useSubscribeToEachEstate = (callback: (state: any) => void) => {
     const estates = boardEndpoint.estates.filter(({type}) => [CITY, PLANT, RAILWAY].includes(type)) as tEstateField[];
     useEffect(() => {
         const unsubscribtions = estates.map((estate) => {
-            const {subscribe, unsubscribe} = getEstateSubscribtion({estateInstance: estate, callback})
+            const {subscribe, unsubscribe} = getEstateSubscribtion({estateInstance: estate, callback, subscribtionId: 'useSubscribeToEachEstate'})
             subscribe();
             return unsubscribe
         })

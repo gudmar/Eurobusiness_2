@@ -46,4 +46,5 @@ export type tSelectedEstate = tEstateField | null;
 export type tGetSubscribtionType = {
     callback: tSubscription,
     estateInstance: tSelectedEstate,
+    subscribtionId: string
 }

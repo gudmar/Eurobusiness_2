@@ -179,7 +179,7 @@ type tGetSubscribtionType = {
 //     return {subscribe, unsubscribe};
 // }
 
-export const useEstatesEditor = (editedEstate: tSelectedEstate) => {
+export const getUseEstatesEditor = (instanceId: string) => (editedEstate: tSelectedEstate) => {
     const reducer = getReducer<tSelectedEstate, string, tSelectedEstate>(REDUCER);
     const [{
         setIsPlegded,
@@ -206,6 +206,7 @@ export const useEstatesEditor = (editedEstate: tSelectedEstate) => {
         const {subscribe, unsubscribe} = getEstateSubscribtion({
             callback: () => setNewState(editedEstate),
             estateInstance: editedEstate,
+            subscribtionId: instanceId,
         })
         subscribe();
         return unsubscribe;
@@ -249,4 +250,5 @@ export const useEstatesEditor = (editedEstate: tSelectedEstate) => {
     }
 }
 
-
+export const useEstatesEditor = getUseEstatesEditor('edit-estate');
+export const useEstatesInformation = getUseEstatesEditor('estate-info')
