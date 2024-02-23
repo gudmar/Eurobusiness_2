@@ -175,6 +175,34 @@ export const useStyles = createUseStyles((theme) => ({
         justifyContent: 'center',
         justifyItems: 'center'
 
+    },
+    plegded: {
+        display: 'flex',
+        alignContent: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+        justifyItems: 'center',
+        fontSize: '3rem',
+        lineHeight: '3rem',
+        margin: '0',
+        padding: '0'
+    },
+    x: {
+        display: 'flex',
+        alignContent: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+        justifyItems: 'center',
+        margin: '0',
+        padding: '0',
+        width: '0.3rem',
+        height: '2rem',
+    },
+    xLeft: {
+        transform: 'translateX(25%) rotate(45deg)',
+    },
+    xRight: {
+        transform: 'translateX(-25%) rotate(-45deg)',
     }
 })
 );

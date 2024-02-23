@@ -71,7 +71,7 @@ export const EditIsPlegded = (args: tEstatesTestFieldEditArgs ) => {
     const {title, value, handler, owner, nrOfHotels, nrOfHouses, isPlegeded} = args
     const tooltip = getIsPlegdedTooltip(args);
     const isEnabled = () => {
-        const result = owner != BANK && nrOfHotels === 0 && nrOfHouses === 0;
+        const result = owner != BANK && (nrOfHotels === 0 || nrOfHotels === undefined) && (nrOfHouses === 0 || nrOfHouses === undefined);
         return result;
     };
     const checked = value === 'false' ? false : true;
