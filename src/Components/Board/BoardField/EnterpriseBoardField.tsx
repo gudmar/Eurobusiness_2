@@ -6,6 +6,7 @@ import { BANK } from "../../../Data/const";
 import { iNamedNonCityEstates, tNonCityEstates } from "../../../Data/types"
 import { useNonCityEstatesField } from "../../../hooks/useField"
 import { PlayerToken } from "../../InfoTokens/PlayerToken";
+import { PlegdedToken } from "../../InfoTokens/PlegdedToken";
 import { useClasses } from "../../Pawns/styles";
 import { tBoardSideDirections } from "../types";
 import { useStyles } from "./styels";
@@ -34,11 +35,22 @@ const EnterpriseBoardField = (fieldDescriptor: iNamedNonCityEstates & {direction
     const priceClass = classes[`price${fieldDescriptor.direction}`]
     
     return (
-        <div ref={nodeReference as unknown as LegacyRef<HTMLDivElement>} className={`${enterpriseFieldWrapper} ${classes.singleWidth} ${classes.fieldWrapper}`}>
-            {
+        <div ref={nodeReference as unknown as LegacyRef<HTMLDivElement>} className={`${enterpriseFieldWrapper} ${classes.singleWidth} ${classes.fieldWrapper}`}>                
+                    <div className={classes[`owner${fieldDescriptor.direction}`]}>
+                        { owner !== BANK && <PlayerToken color={owner} name={owner}/> }
+                        {
+                            isPlegded && <PlegdedToken color={owner}/>
+                        }
+                    </div>
+            {/* {
                 owner !== BANK && 
-                    <div className={classes[`owner${fieldDescriptor.direction}`]}><PlayerToken color={'white'} name={owner}/></div>                    
+                    <div className={classes[`owner${fieldDescriptor.direction}`]}><PlayerToken color={'white'} name={owner}/></div>
             }
+            {
+                isPlegded &&
+                    <div className={classes[`owner${fieldDescriptor.direction}`]}><PlegdedToken color={'white'}/></div>
+                
+            } */}
             <div className={`${titleClass} ${classes.help}`} onClick={() => displayEstateInfo(name)}>{name}</div>
             <div className={priceClass}>{price}</div>
             <div className={`${classes.icon} ${classes[fieldDescriptor.direction]}`}><Icon /></div>

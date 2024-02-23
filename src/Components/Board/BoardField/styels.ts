@@ -259,11 +259,13 @@ export const useStyles = createUseStyles({
     },
     ownerBottom: {
         position: 'absolute',
-        top: '-3rem'
+        top: '-3rem',
+        display: 'flex',
     },
     ownerTop: {
         position: 'absolute',
-        bottom: '-3rem'
+        bottom: '-3rem',
+        display: 'flex',
     },
     ownerLeft:{
         position: 'absolute',

@@ -11,6 +11,7 @@ import { PlayerToken } from "../../InfoTokens/PlayerToken";
 import { HouseToken } from "../../InfoTokens/HouseToken";
 import { HotelToken } from "../../InfoTokens/HotelToken";
 import { useReport } from "../../../Contexts/GameInformator.ts/GameInformator";
+import { PlegdedToken } from "../../InfoTokens/PlegdedToken";
 
 const CityBoardField = (fieldDescriptor: iNamedCityField & {direction: tBoardSideDirections }) => {
     const {
@@ -50,6 +51,7 @@ const CityBoardField = (fieldDescriptor: iNamedCityField & {direction: tBoardSid
                 {owner !== BANK && <PlayerToken color={color} name={owner}/>}
                 {nrOfHouses > 0 && <HouseToken color={color} ammount={nrOfHouses}/>}
                 {nrOfHotels > 0 && <HotelToken color={color}/>}
+                {isPlegded && <PlegdedToken color={color}/>}
             </div>
             <div className={`${titleClass} ${classes.help}`} onClick={() => displayEstateInfo(name)}>{name}</div>
             <div className={priceClass}>{price}</div>
