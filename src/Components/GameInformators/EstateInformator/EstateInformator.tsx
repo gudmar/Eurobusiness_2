@@ -1,9 +1,9 @@
 import { BANK, CITY } from "../../../Data/const";
 import { Color } from "../../../Functions/Color/Color";
-import { getBoard, getEstate } from "../../../Logic/BoardCaretaker";
+import { getEstate } from "../../../Logic/BoardCaretaker";
 import { Players } from "../../../Logic/Players/Players";
 import { tSelectedEstate } from "../../../Types/types";
-import { useEstatesEditor } from "../../StateEditor/EstatesStateEditor/useEstatesEditor";
+import { useEstatesInformation } from "../../StateEditor/EstatesStateEditor/useEstatesEditor";
 import { ReportDocument } from "../ReportDocument/ReportDocument";
 
 export interface Props {
@@ -31,8 +31,7 @@ export const EstatesInformator = ({name}: Props) => {
         isPlegded, nrOfHotels, nrOfHouse,
         country, hotelPrice, housePrice, index, mortgage, price,
         type, visit, owner
-    } = useEstatesEditor(estatesInstance);
-    console.log('Color', owner)
+    } = useEstatesInformation(estatesInstance);
     const ownerColorInstance = new Color(owner !== BANK ? owner : 'rgb(0,0,0)');
     const ownerColorContrast = ownerColorInstance.contrastColor;
     const playerName = owner === BANK ? BANK : Players.playerColorToPlayerName(owner);

@@ -1,7 +1,7 @@
 import { tColors } from "../../../Data/types";
 import { Color } from "../../../Functions/Color/Color";
-import { useEditPlayer } from "../../../hooks/useEditPlayer/useEditPlayer";
-import { useGetPlayerEstates, useGetPlayerEstatesNames } from "../../../hooks/useSubscribePlayerEstates";
+import { usePlayerInfo } from "../../../hooks/useEditPlayer/useEditPlayer";
+import { useGetPlayerEstatesNames } from "../../../hooks/useSubscribePlayerEstates";
 import { Players } from "../../../Logic/Players/Players";
 import { ReportDocument } from "../ReportDocument/ReportDocument";
 
@@ -17,8 +17,8 @@ export const PlayerInformator = ({name}: Props) => {
     const {
         money, isGameLost,
         specialCards, fieldNr,
-        isInPrison, nrTurnsToWait,
-    } = useEditPlayer(color);
+        isInPrison, nrTurnsToWait
+    } = usePlayerInfo(color);
     const ownedEstates = useGetPlayerEstatesNames(name)
     const data = [
         {propName: 'Money',         propValue: money, ariaLabel: 'How much money player has'},
@@ -29,11 +29,13 @@ export const PlayerInformator = ({name}: Props) => {
         {propName: 'Color', propValue: {color, contrastColor}, ariaRole: 'none'}
     ]
     return (
+        <>
         <ReportDocument
             title={'Players data report'}
             subtitle={`For ${name}`}
             ariaLabel={`Data about player ${name}`}
             data={data}
         />
+        </>
     )
 }
