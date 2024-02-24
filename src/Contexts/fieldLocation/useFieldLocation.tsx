@@ -56,7 +56,7 @@ export const useSubscribeToFieldLocation = (index: number) => {
         if (ref && ref.current && registerCurrentReference){
             registerCurrentReference(ref.current, index)
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // // eslint-disable-next-line react-hooks/exhaustive-deps
     },[ref.current, index, registerCurrentReference])
     
     return ref;
