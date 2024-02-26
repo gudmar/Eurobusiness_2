@@ -1,11 +1,12 @@
+import { useLanguage } from "../../Contexts/CurrentLanguage/CurrentLanguage";
 import { useThemesAPI } from "../../Contexts/ThemeContext";
-import { clearConsole } from "../../Functions/clearConsole";
 import { deleteGame, renameGame } from "../../Functions/PersistRetrieveGameState/localStorageOperations";
 import { saveCurrentGameState } from "../../Functions/PersistRetrieveGameState/PersistGame";
 import { loadGameStateFromLocalStorage } from "../../Functions/PersistRetrieveGameState/RetrieveGame";
 import { Button } from "../Button/Button";
 import { TextAreaInput } from "../Interactors/TextArea/TextArea";
 import { TextInput } from "../Interactors/TextInput/TextInput";
+import { TEXT } from "./languages";
 import { useStyles } from "./styles";
 import { tSavedGame } from "./types";
 import { useSaveLoadGameLogic } from "./useSaveGameLogic";
@@ -13,8 +14,10 @@ import { getDefaultName } from "./utils";
 
 const doesGameAlreadyExist = (savedGames: tSavedGame[], gameName: string) => savedGames.some(({ name }) => name === gameName)
 
+
 export const SaveLoadGameWindow = () => {
-    const { theme, setThemeName } = useThemesAPI();
+    const { languageKey } = useLanguage();
+    const { theme } = useThemesAPI();
     const classes = useStyles(theme as any);
     const {
         name, setDescriptionAsString, dropSelection, setDescription,
@@ -25,12 +28,12 @@ export const SaveLoadGameWindow = () => {
     
     return (
         <>
-            <h1 className={classes.headline}>Persist Game Operations</h1>
+            <h1 className={classes.headline}>{TEXT.title[languageKey]}</h1>
             {/* <button onClick ={logState}>Log state</button>
             <button onClick={clearConsole}>Clear console</button> */}
             <section className={classes.content}>
                 <fieldset className={classes.savedGames}>
-                    <legend>Saved games</legend>
+                    <legend>{TEXT.savedGamesListLabel[languageKey]}</legend>
                     <ul className={classes.savedGamesList}>
                         {
                             filteredGames.map(({name, description}: tSavedGame) => <li key={name} className={`${classes.savedGameEntry} ${selectedGame.name === name ? classes.chosenOne : ''}`} onClick={() => setSelectedGame({ name, description })}>
@@ -52,51 +55,51 @@ export const SaveLoadGameWindow = () => {
             <div className={classes.row}>
                 <TextInput
                     value={name}
-                    label={'Name:'}
+                    label={`${TEXT.name[languageKey]}:`}
                     onChange={setName}
                     minLength={1}
                     enableConditionFunction={ () => !isSetDefault}
-                    disabledTooltip={"Cannot set name if name is default"}
+                    disabledTooltip={TEXT.disabledNameTooltip[languageKey]}
                 />
                 <TextInput
                     value={searchFilter}
-                    label={'Search names:'}
+                    label={TEXT.search[languageKey]}
                     onChange={search}
                 />
                 <Button
-                    label={'Propose default name'}
+                    label={TEXT.proposeDefaultName[languageKey]}
                     action={
                         () => setNameAsString(getDefaultName())
                     }
                 />
                 <Button
-                    label={'Drop selection'}
+                    label={TEXT.dropSelection[languageKey]}
                     action={ dropSelection }
                     disabled={!selectedGame}
-                    disabledTooltip={'Game has to be selected'}
+                    disabledTooltip={TEXT.dropSelectionTooltip[languageKey]}
                 />
 
             </div>
             <nav className={classes.buttonGroup}>
                 <Button
-                    label={'Save'}
+                    label={TEXT.save[languageKey]}
                     action={() => {
                         saveCurrentGameState({name, description});
                         reloadGames();
                     }}
                     disabled={name === '' || doesGameAlreadyExist(savedGames, name)}
-                    disabledTooltip={'Name cannot be empty, cannot save existing game'}
+                    disabledTooltip={TEXT.saveTooltip[languageKey]}
                 />
                 <Button
-                    label={'Load'}
+                    label={TEXT.load[languageKey]}
                     action={() => {
                         loadGameStateFromLocalStorage(name)
                     }}
                     disabled={name === ''}
-                    disabledTooltip={'Name cannot be empty, and must exist'}
+                    disabledTooltip={TEXT.loadTooltip[languageKey]}
                 />
                 <Button
-                    label={'Rename'}
+                    label={TEXT.rename[languageKey]}
                     action = {
                         () => {
                             renameGame({originalName: selectedGame.name, newName: name, newDescription: description});
@@ -106,10 +109,10 @@ export const SaveLoadGameWindow = () => {
                     disabled={
                         !selectedGame || (selectedGame.name === name && selectedGame.description === description)
                     }
-                    disabledTooltip={'Game has to be selected, and description or name has to be changed'}
+                    disabledTooltip={TEXT.rename[languageKey]}
                 />
                 <Button
-                    label={'Delete'}
+                    label={TEXT.delete[languageKey]}
                     action = {
                         () => {
                             deleteGame(name);
