@@ -98,7 +98,7 @@ export class ChanceCardHolder {
         this._cardsActions            = cards.cardsActions;
         this._cardsMetadata           = cards.cardsMetaData;
         this._language                = cards.language;
-        this._cardSetName             = cards.cardSetName; // BLUE_CARDS_SET or RED_CARDS_SET, noun
+        this._cardSetName             = cards.cardSetName;
         this._cardsOrder              = cards.cardsOrder;
         this._lastDrawnCardIndex      = cards.lastDrawnCardIndex; 
         this._cardsBorrowedByPlayers = cards.cardsBorrewedByPlayers;

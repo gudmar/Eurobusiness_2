@@ -1,11 +1,11 @@
 + 1. Display board:
 +    a) Shape with empty fields
 +    b) Each field has descriptions and icons
-2. Dice randomly selects numbers according to specification:
-    * 2 dices thrown at the same time,
-    * the same number on each dice - throw once more, until different numbers on each dice. Summ all points thrown this way
-3. Pawn component walk (move) nr of dice throws
-4. When in 'view' mode, and some field clicked, displayes modal with clicked field description (raw data)
++ 2. Dice randomly selects numbers according to specification:
++    * 2 dices thrown at the same time,
++    * the same number on each dice - throw once more, until different numbers on each dice. Summ all points thrown this way
++ 3. Pawn component walk (move) nr of dice throws
++ 4. When in 'view' mode, and some field clicked, displayes modal with clicked field description (raw data)
 5. When in 'tutorial' mode, and some field clicked, displayes modal with short description, what can be done with some field
     a) City:
         * If owned by bank, may be bought by player that stands on it,
@@ -108,11 +108,11 @@
     * Build a house if I have ....
     * Build a hotel if I have. ...
 19. Skins changing look of app
-20. Save application state to localStorage
-21. Retrieve application state from JS object, / local storage
++ 20. Save application state to localStorage
++ 21. Retrieve application state from JS object, / local storage
 THis may be used to inject game initial state
-22. Editor for state creation
-23. Message hidden window allowing to access hidden things like state editor.
++ 22. Editor for state creation
+- 23. Message hidden window allowing to access hidden things like state editor.
 Message would show it self as long as some correct meeage is being typed.
 When typed message stops being recognized, it is no longer displayed
 

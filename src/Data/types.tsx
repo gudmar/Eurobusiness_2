@@ -1,4 +1,5 @@
 import { FC } from "react"
+import { Commands, tCommandPayloadTypes } from "../Logic/Commander/commands"
 import { tCombineStringUnions } from "../Types/types"
 import { AMSTERDAM, ATENY, AUSTRIA, BANK, BARCELONA, BENELUX, BLUE, BONN, BRUKSELA, CHANCE_BLUE, CHANCE_BLUE_BOTTOM, CHANCE_BLUE_LEFT, CHANCE_BLUE_RIGHT, CHANCE_RED, CHANCE_RED_BOTTOM, CHANCE_RED_RIGHT, CHANCE_RED_TOP, CITY, EAST_RAILWAYS, FRANKFURT, FREE_PARK, GLASGOW, GOTEBORG, GO_TO_JAIL, GREECE, GREEN, GUARDED_PARKING, INSBRUK, ITALY, JAIL, KOLONIA, LIVERPOOL, LONDON, MADRIT, MALMO, MEDIOLAN, NEAPOL, NORTH_RAILWAYS, PLANT, POWER_STATION, RAILWAY, RAILWAYS, RED, RFN, ROME, ROTTERDAM, SALONIKI, SEWILLA, SOUTH_RAILWAY, SPAIN, START, SWEEDEN, SZTOKHOLM, TAX, THROW_10, THROW_20, UK, WATER_PLANT, WEST_RAILWAYS, WIEDEN, YELLOW } from "./const"
 
@@ -156,4 +157,34 @@ export type tBoard = {
     [INSBRUK]: iCityField,
     [TAX]: iOtherFieldTypes,
     [WIEDEN]: iCityField,
+}
+
+
+
+
+export interface iDescriptionsInLanguages {
+    en: string,
+    pl: string,
+}
+export interface iChanceCardActions {
+    type: Commands,
+    payload? : tCommandPayloadTypes,
+}
+
+export interface iChanceCardMetadata {
+    collectable: boolean,
+}
+
+
+export interface iChanceCardData {
+    descriptions: iDescriptionsInLanguages, 
+    actions: {
+        type: Commands,
+        payload?: number
+    }[],
+    metadata?: iChanceCardMetadata
+}
+
+export interface iChanceCardsData {
+    [key: number]: iChanceCardData
 }
