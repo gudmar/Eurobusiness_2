@@ -1,3 +1,4 @@
+import { CurrentLanguageContext } from '../../Contexts/CurrentLanguage/CurrentLanguage';
 import { GameInformator, useReport } from '../../Contexts/GameInformator.ts/GameInformator';
 import { useThemesAPI } from '../../Contexts/ThemeContext';
 import { YELLOW } from '../../Data/const';
@@ -11,6 +12,7 @@ import { Report } from '../GameInformators/Report/Report';
 import { InformationStack } from '../Information/Information';
 import { Informator } from '../Information/Infromator';
 import { SaveLoadGameWindow } from '../SaveLoadGameWindow/SaveLoadGameWindow';
+import { SelectLanguage } from '../SelectLanguage/SelectLanguage';
 import { PlayerEditor } from '../StateEditor/StateEditor/StateEditor';
 import { GameStarter } from './GameStarter';
 import { useStyles } from './styles';
@@ -54,6 +56,7 @@ const GameGuts = () => {
         <div className = {classes.screen}>
             <InformationStack />
             <nav className={classes.navigations}>
+                <SelectLanguage />
                 <Button 
                     action = {() => setThemeName(DARK_THEME.name)}
                     label = {DARK_THEME.name}
@@ -103,9 +106,11 @@ const GameGuts = () => {
 
 const Game = () => {
     return (
-        <GameInformator>
-            <GameGuts />
-        </GameInformator>
+        <CurrentLanguageContext>
+            <GameInformator>
+                <GameGuts />
+            </GameInformator>
+        </CurrentLanguageContext>
     )
 }
 
