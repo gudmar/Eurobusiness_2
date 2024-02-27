@@ -3,6 +3,7 @@ import { iChanceCardsData } from "./types";
 
 
 export const CHANCE_CARDS_RED: iChanceCardsData = {
+    cardsSetName: 'Chance cards red',
     0: {
         descriptions: {
             pl: "Zobowiązany jesteś zmodernizować swoje miasto, płacisz za każdy dom 80 $,za każdy hotel 230 $",
@@ -203,13 +204,14 @@ export const CHANCE_CARDS_RED: iChanceCardsData = {
             }
         ],
         metadata: {
-            collectable: true,
+            isCollctable: true,
         }
     }
 
 }
 
 export const CHANCE_CARDS_BLUE = {
+    cardsSetName: 'Chance cards blue',
     0: {
         descriptions: {
             pl: "Płacisz na budowę szpitala 400 $.",

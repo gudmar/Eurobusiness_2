@@ -167,7 +167,7 @@ export const CHANCE_CARDS_RED: tChance = {
     },
     metadata: {
         15: {
-            collectable: true,
+            isCollectable: true,
         }
     }
 }
@@ -283,7 +283,7 @@ export const CHANCE_CARDS_BLUE: tChance = {
     },
     metadata: {
         6: {
-            collectable: true
+            isCollectable: true
         }
     }
 }

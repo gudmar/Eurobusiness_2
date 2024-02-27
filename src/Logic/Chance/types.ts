@@ -1,4 +1,7 @@
 import { tChanceMessages } from "../../Constants/commands"
+import { tEachLanguageText, tLanguage } from "../../Contexts/CurrentLanguage/types"
+import { iChanceCardActions, iChanceCardMetadata, iDescriptionsInLanguages } from "../../Data/types"
+import { tAction } from "../../Types/types"
 
 export type tChanceAction = {
     payload?: number,
@@ -13,7 +16,7 @@ export type iDescription = {
 }
 
 export type tCardMetadataBit = {
-    collectable?: boolean,
+    isCollectable?: boolean,
 }
 
 export type tCardMetadata = {
@@ -35,4 +38,36 @@ export type tBorrowedCards = {
     [key: tCardIndex]: boolean, // cannot hold palyerName as cards may change owner
 }
 
+export type tSingleChanceCardState = {
+    descriptions: tEachLanguageText,
+    actions: tAction[],
+    metadata?: iChanceCardMetadata,
+    isBorrowedToPlayer?: boolean,
+}
+
+export interface iChanceCard {
+    state: tSingleChanceCardState,
+    // descriptions: iDescriptionsInLanguages,
+    actions: tAction[],
+    descriptions: iDescriptionsInLanguages,
+    isCollectable: boolean,
+    isBorrowedToPlayer: boolean,
+    borrow: () => boolean,
+    return: () => boolean,
+    getDescription: (language: tLanguage) => string,
+}
+
+
+
+export type tChanceCardsHolderState = {
+    // cardsDescriptions?: tLanguageDescriptionEntry[],
+    // cardsActions?: iActions,
+    // cardsMetaData?: tCardMetadata,
+
+    cardsSetName: string,
+    // cardsOrder: number[],
+    cardsInOrder: tSingleChanceCardState[],
+    lastDrawnCardIndex: number,
+    // cardsBorrewedByPlayers: tBorrowedCards,
+}
 

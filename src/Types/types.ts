@@ -1,7 +1,7 @@
 import { tColors } from "../Data/types";
 import { tBankState } from "../Logic/Bank/types";
 import { tEstateField, tField } from "../Logic/boardTypes";
-import { tChanceCardState } from "../Logic/Chance/ChanceCardHolder";
+import { Commands } from "../Logic/Commander/commands";
 import { tDiceState, TestModes } from "../Logic/Dice/types";
 import { iPlayerSnapshot } from "../Logic/Player/types";
 
@@ -13,9 +13,11 @@ export interface iSubscription<MessageType extends string> {
     messageType: MessageType,
 }
 
-export type tAction<PayloadType> = {
+export type tActionPayloadTypes = string | number | boolean | object
+
+export type tAction<PayloadType=Commands> = {
     type: PayloadType,
-    payload: any,
+    payload?: tActionPayloadTypes,
 }
 
 export interface iDictionary {

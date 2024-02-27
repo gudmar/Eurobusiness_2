@@ -1,6 +1,6 @@
 import { FC } from "react"
 import { Commands, tCommandPayloadTypes } from "../Logic/Commander/commands"
-import { tCombineStringUnions } from "../Types/types"
+import { tAction, tCombineStringUnions } from "../Types/types"
 import { AMSTERDAM, ATENY, AUSTRIA, BANK, BARCELONA, BENELUX, BLUE, BONN, BRUKSELA, CHANCE_BLUE, CHANCE_BLUE_BOTTOM, CHANCE_BLUE_LEFT, CHANCE_BLUE_RIGHT, CHANCE_RED, CHANCE_RED_BOTTOM, CHANCE_RED_RIGHT, CHANCE_RED_TOP, CITY, EAST_RAILWAYS, FRANKFURT, FREE_PARK, GLASGOW, GOTEBORG, GO_TO_JAIL, GREECE, GREEN, GUARDED_PARKING, INSBRUK, ITALY, JAIL, KOLONIA, LIVERPOOL, LONDON, MADRIT, MALMO, MEDIOLAN, NEAPOL, NORTH_RAILWAYS, PLANT, POWER_STATION, RAILWAY, RAILWAYS, RED, RFN, ROME, ROTTERDAM, SALONIKI, SEWILLA, SOUTH_RAILWAY, SPAIN, START, SWEEDEN, SZTOKHOLM, TAX, THROW_10, THROW_20, UK, WATER_PLANT, WEST_RAILWAYS, WIEDEN, YELLOW } from "./const"
 
 export type tColors = typeof YELLOW | typeof RED | typeof BLUE | typeof GREEN
@@ -172,19 +172,18 @@ export interface iChanceCardActions {
 }
 
 export interface iChanceCardMetadata {
-    collectable: boolean,
+    isCollctable: boolean,
 }
 
 
 export interface iChanceCardData {
     descriptions: iDescriptionsInLanguages, 
-    actions: {
-        type: Commands,
-        payload?: number
-    }[],
+    actions: tAction[],
     metadata?: iChanceCardMetadata
+    isBorrowedToPlayer?: boolean,
 }
 
 export interface iChanceCardsData {
+    cardsSetName: string,
     [key: number]: iChanceCardData
 }

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from "react"
 import { DEFAULT_LANGUAGE, EN, PL, reverseLanguageMapping } from "./const"
-import { SupportedLanguages, tSupportedLanguagesKeys } from "./types"
+import { SupportedLanguages, tCurrentLanguage, tLanguage, tSupportedLanguagesKeys } from "./types"
 
 export interface Props {
     children: React.ReactNode,
@@ -14,7 +14,7 @@ const isKeyType = (val: string) => {
 
 const useCurrentLanguage = () => {
     const [currentLanguageName, setCurrentLanguageName] = useState<SupportedLanguages>(DEFAULT_LANGUAGE)
-    const setLanguage = (nameOrKey: SupportedLanguages | tSupportedLanguagesKeys) => {
+    const setLanguage = (nameOrKey: tLanguage) => {
         if (isKeyType(nameOrKey)) {
             const newLanguageName = SupportedLanguages[nameOrKey as tSupportedLanguagesKeys];
             setCurrentLanguageName(newLanguageName);
@@ -27,16 +27,6 @@ const useCurrentLanguage = () => {
     const supportedLanguageKeys = Object.values(reverseLanguageMapping)
     return { currentLanguageName, setLanguage, languageKey, supportedLanguageNames, supportedLanguageKeys }
 }
-
-type tCurrentLanguageNotNull = {
-    currentLanguageName: SupportedLanguages,
-    setLanguage: (val: tSupportedLanguagesKeys | SupportedLanguages) => void,
-    languageKey: tSupportedLanguagesKeys,
-    supportedLanguageNames: SupportedLanguages[],
-    supportedLanguageKeys: tSupportedLanguagesKeys[]
-}
-
-type tCurrentLanguage = tCurrentLanguageNotNull | null;
 
 const CurrentLanguage = createContext<tCurrentLanguage>(null);
 

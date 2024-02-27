@@ -1,48 +1,63 @@
-import { DEFAULT_LANGUAGE, SupportedLanguages } from "../../Constants/constants";
+import { reverseLanguageMapping } from "../../Contexts/CurrentLanguage/const";
+import { tLanguage, tSupportedLanguagesKeys } from "../../Contexts/CurrentLanguage/types";
 import { iChanceCardActions, iChanceCardData, iChanceCardMetadata, iDescriptionsInLanguages } from "../../Data/types";
+import { runCallbackWithLanguage } from "../../Functions/runCallbackWithLanguage";
+import { tAction } from "../../Types/types";
+import { iChanceCard, tSingleChanceCardState } from "./types";
 
 
-export interface iChanceCard {
-    
-}
-
-const getLanguageShort = (longName: string): tLanguageKeysShort => {
-    const entries = Object.entries(SupportedLanguages);
-    const result = entries.find(([key, value]) => value === longName);
-    if (!result) throw new Error(`Language ${longName} is not supported`);
-    return result[0] as tLanguageKeysShort
-}
-
-type tLanguageKeysShort = 'en' | 'pl'
-
-export class ChanceCard {
+export class ChanceCard implements iChanceCard {
     private _descriptions: iDescriptionsInLanguages;
-    // private _currentLanguage: SupportedLanguages;
-    private _actions: iChanceCardActions[];
+    private _actions: tAction[];
     private _metadata?: iChanceCardMetadata
     private _isBorrowedToPlayer: boolean
 
-    constructor({descriptions, actions, metadata}: iChanceCardData) {
+    constructor({descriptions, actions, metadata, isBorrowedToPlayer}: iChanceCardData) {
         this._descriptions = descriptions;
-        // this._currentLanguage = DEFAULT_LANGUAGE;
         this._actions = actions;
-        this._isBorrowedToPlayer = false;
+        this._isBorrowedToPlayer = !!isBorrowedToPlayer;
         this._metadata  = metadata;
     }
 
-    get description() {
-        const languageShort: tLanguageKeysShort = getLanguageShort(this._currentLanguage) as tLanguageKeysShort;
-        const result = this._descriptions[languageShort];
-        return result;
+    get state(): tSingleChanceCardState {
+        return {
+            descriptions: this._descriptions,
+            actions: this._actions,
+            metadata: this._metadata,
+            isBorrowedToPlayer: this._isBorrowedToPlayer,
+        }
     }
 
-    // set language (value: any) {
-    //     throw new Error('Implement ChanceCard.language')
-    // }
+    getDescription(language: tLanguage) {
+        const result = runCallbackWithLanguage<string>({
+                language,
+                shortNameCallback: () => (this._descriptions[language as tSupportedLanguagesKeys]),
+                longNameCallback: () => (this._descriptions[reverseLanguageMapping[language]]),
+        })
+        return result
+    }
+
+    borrow() {
+        if (this.isCollectable && !this.isBorrowedToPlayer) {
+            this.isBorrowedToPlayer = true;
+            return true
+        }
+        return false;
+    }
+
+    return() {
+        if (this.isCollectable && this.isBorrowedToPlayer) {
+            this.isBorrowedToPlayer = false;
+            return true;
+        }
+        return false
+    }
+
     set isBorrowedToPlayer(value: boolean) {this._isBorrowedToPlayer = value}
     get isBorrowedToPlayer() {return this._isBorrowedToPlayer}
 
     get actions() {return this._actions}
+    get descriptions() {return this._descriptions}
 
-    get isCollectable() {return !!this._metadata?.collectable}
+    get isCollectable() {return !!this._metadata?.isCollctable}
 }
