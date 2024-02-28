@@ -57,7 +57,7 @@ export class ChanceCardHolder {
     // private _language: string = LanguageNameToShortName.english;
     private _cards: iChanceCard[] = [];
     private _cardsSetName: string = ''; // BLUE // RED
-    private _cardsOrder!: number[];
+    // private _cardsOrder!: number[];
     private _lastDrawnCardIndex = 0;
     // _cardsBorrowedByPlayers: tBorrowedCards = {}
 
@@ -201,17 +201,18 @@ export class ChanceCardHolder {
             throw new Error('Cannot return any card, all cards are suspended')
         }
         while (true) {
-            const cardIndexMappedToShuffled = this._cardsOrder[this._lastDrawnCardIndex];
-            const currentCard = this.getDescriptionForCardNr(cardIndexMappedToShuffled);
+            // const cardIndexMappedToShuffled = this._cardsOrder[this._lastDrawnCardIndex];
+            // const currentCard = this.getDescriptionForCardNr(cardIndexMappedToShuffled);
+            const currentCard = this._cards[this._lastDrawnCardIndex];
             this._lastDrawnCardIndex++;
-            if (this._lastDrawnCardIndex >= this._cardsOrder.length) {
+            if (this._lastDrawnCardIndex >= this._cards.length) {
                 this.shuffle();
             }
-            if (!this._isTargetCardSuspended(cardIndexMappedToShuffled)) return currentCard;
+            if (!currentCard.isBorrowedToPlayer) return currentCard;
         }
     }
 
-    private * _drawACard (): Generator<string> {
+    private * _drawACard (): Generator<iChanceCard> {
         while(true){
             const currentCard = this._getNextNotSuspendedCard();
             yield currentCard;
@@ -394,9 +395,10 @@ export class ChanceCardHolder {
         return result;
     }
 
-    drawACard() {
-        const card: any = this._drawACard().next().value;
-        return card
+    drawACard(languageKey: tSupportedLanguagesKeys) {
+        const card: ChanceCard = this._drawACard().next().value;
+        const description = card.getDescription(languageKey)
+        return description;
     }
 
     // get cardsOrder() {return this._cardsOrder}
