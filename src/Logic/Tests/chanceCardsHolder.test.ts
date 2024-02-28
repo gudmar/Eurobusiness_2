@@ -1,226 +1,406 @@
-import { GAIN, GAIN_FROM_EACH_PLAYER, GO_TO_FIELD_CONDITIONALLY_PASS_START, PAY } from "../../Constants/commands";
-import { CHANCE_CARDS_BLUE } from "../../Data/chanceCards";
+import { EN, PL } from "../../Contexts/CurrentLanguage/const";
+import { BLUE_CARDS_SET_NAME, CHANCE_CARDS_BLUE } from "../../Data/chanceCards";
+import { iChanceCardsData } from "../../Data/types";
 import { range } from "../../Functions/createRange";
 import { mockMathRandom, zeroRandomGenerator } from "../../Functions/testUtils";
 import { iDictionary } from "../../Types/types";
 import { ChanceCardHolder } from "../Chance/ChanceCardHolder";
 import { Errors } from "../Chance/errors";
 import { tChance } from "../Chance/types";
+import { Commands } from "../Commander/commands";
 
-export const YELLOW_1: tChance = {
-    cardSetName: 'yellow',
-    descriptions: {
-            en: {
-                0: 'a',
-                1: 'b',
-                2: 'c',
-                3:  "d",
-                4:  'e',
-                5: 'f',
-            },
-        
+export const YELLOW_1: iChanceCardsData = {
+    cardsSetName: 'yellow',
+    0: {
+        descriptions: {
+            [EN]: 'a',
+            [PL]: 'aPL',
+        },
+        actions: [
+            {
+                type: Commands.Pay,
+                payload: 400,
+            }
+        ],
     },
-    actions: {
-        0: [{
-            type: PAY,
-            payload: 400,
-        }],
-        1: [{
-            type: GAIN,
-            payload: 200,
-        }],
-        2: [{
-            type: GAIN_FROM_EACH_PLAYER,
-            payload: 20,
-        }],
-        3: [{
-            type: GO_TO_FIELD_CONDITIONALLY_PASS_START,
-        }],
-        4: [{
-            type: GAIN,
-            payload: 400,
-        }],
-        5: [{
-            type: PAY,
-            payload: 20,
-        }]
+    1: {
+        descriptions: {
+            [EN]: 'b',
+            [PL]: 'bPL',
+        },
+        actions: [
+            {
+                type: Commands.GetMoney,
+                payload: 200,    
+            }
+        ]
     },
-    metadata: {
-        2: {
-            collectable: true
+    2: {
+        descriptions: {
+            [EN]: 'c',
+            [PL]: 'cPL',
+        },
+        actions: [
+            {
+                type: Commands.GetMoneyFromEachPlayer,
+                payload: 20,    
+            }
+        ],
+        metadata: {
+            isCollectable: true
         }
-    }
-
+    },
+    3: {
+        descriptions: {
+            [EN]: 'd',
+            [PL]: 'dPL',
+        },
+        actions: [
+            {
+                type: Commands.GoToFieldConditionalyPassStart,
+            }
+        ],
+    },
+    4: {
+        descriptions: {
+            [EN]: 'e',
+            [PL]: 'ePL',
+        },
+        actions: [
+            {
+                type: Commands.GetMoney,
+                payload: 400,
+            }
+        ],
+    },
+    5: {
+        descriptions: {
+            [EN]: 'f',
+            [PL]: 'fPL'
+        },
+        actions: [
+            {
+                type: Commands.Pay,
+                payload: 20,
+            }
+        ]
+    },
 }
 
-export const YELLOW_2: tChance = {
-    cardSetName: 'yellow',
-    descriptions: {
-            en: {
-                0: 'g',
-                1: 'h',
-                2: 'i',
-                3:  "j",
-                4:  'k',
-                5: 'l',
-            },
-        
+export const YELLOW_2: iChanceCardsData= {
+    cardsSetName: 'yellow',
+    0: {
+        descriptions: {
+            [EN]: 'g',
+            [PL]: 'gPL'
+        },
+        actions: [
+            {
+                type: Commands.Pay,
+                payload: 400,    
+            }
+        ]
     },
-    actions: {
-        0: [{
-            type: PAY,
-            payload: 400,
-        }],
-        1: [{
-            type: GAIN,
-            payload: 200,
-        }],
-        2: [{
-            type: GAIN_FROM_EACH_PLAYER,
-            payload: 20,
-        }],
-        3: [{
-            type: GO_TO_FIELD_CONDITIONALLY_PASS_START,
-        }],
-        4: [{
-            type: GAIN,
-            payload: 400,
-        }],
-        5: [{
-            type: PAY,
-            payload: 20,
-        }]
-    }
+    1: {
+        descriptions: {
+            [EN]: 'h',
+            [PL]: 'hPL'
+        },
+        actions: [
+            {
+                type: Commands.GetMoney,
+                payload: 400,    
+            }
+        ]
+    },
+    2: {
+        descriptions: {
+            [EN]: 'i',
+            [PL]: 'iPL'
+        },
+        actions: [
+            {
+                type: Commands.GetMoneyFromEachPlayer,
+                payload: 20,
+            }
+        ]
+    },
+    3: {
+        descriptions: {
+            [EN]: 'j',
+            [PL]: 'jPL'
+    },
+        actions: [
+            {
+                type: Commands.GetMoneyFromEachPlayer,
+                payload: 20,
+            }
+        ]
+    },
+    4: {
+        descriptions: {
+            [EN]: 'k',
+            [PL]: 'KPL'
+        },
+        actions: [
+            {
+                type: Commands.GetMoney,
+                payload: 400,
+            }
+        ]
+    },
+    5: {
+        descriptions: {
+            [EN]: 'l',
+            [PL]: 'lPL'
+        },
+        actions: [
+            {
+                type: Commands.Pay,
+                payload: 20,
+            }
+        ]
+    },    
 }
 
-export const ORANGE: tChance = {
-    cardSetName: 'orange',
-    descriptions: {
-            en: {
-                0: 'm',
-                1: 'n',
-                2: 'o',
-                3:  "p",
-                4:  'r',
-                5: 's',
-            },
-        
+export const ORANGE: iChanceCardsData = {
+    cardsSetName: 'orange',
+    0: {
+        descriptions: {
+            [EN]: 'm',
+            [PL]: 'mPL'
+        },
+        actions: [
+            {
+                type: Commands.Pay,
+                payload: 400,
+            }
+        ]
     },
-    actions: {
-        0: [{
-            type: PAY,
-            payload: 400,
-        }],
-        1: [{
-            type: GAIN,
-            payload: 200,
-        }],
-        2: [{
-            type: GAIN_FROM_EACH_PLAYER,
-            payload: 20,
-        }],
-        3: [{
-            type: GO_TO_FIELD_CONDITIONALLY_PASS_START,
-        }],
-        4: [{
-            type: GAIN,
-            payload: 400,
-        }],
-        5: [{
-            type: PAY,
-            payload: 20,
-        }]
-    }
+    1: {
+        descriptions: {
+            [EN]: 'n',
+            [PL]: 'nPL'
+        },
+        actions: [
+            {
+                type: Commands.GetMoney,
+                payload: 200,
+            }
+        ]
+    },
+    2: {
+        descriptions: {
+            [EN]: 'o',
+            [PL]: 'oPL'
+        },
+        actions: [
+            {
+                type: Commands.GetMoneyFromEachPlayer,
+                payload: 20,
+            }
+        ]
+    },
+    3: {
+        descriptions: {
+            [EN]: 'p',
+            [PL]: 'pPL'
+        },
+        actions: [
+            {
+                type: Commands.GoToFieldConditionalyPassStart,
+                payload: 400,
+            }
+        ]
+    },
+    4: {
+        descriptions: {
+            [EN]: 'r',
+            [PL]: 'rPL'
+        },
+        actions: [
+            {
+                type: Commands.GetMoney,
+                payload: 400,
+            }
+        ]
+    },
+    5: {
+        descriptions: {
+            [EN]: 's',
+            [PL]: 'sPL'
+        },
+        actions: [
+            {
+                type: Commands.Pay,
+                payload: 400,
+            }
+        ]
+    },
 }
 
-export const GRAY: tChance = {
-    cardSetName: 'gray',
-    descriptions: {
-            en: {
-                0: 'g',
-                1: 'r',
-                2: 'a',
-                3:  "y",
-                4:  'c',
-            5: 'o',
-            },
-        
+export const GRAY: iChanceCardsData = {
+    cardsSetName: 'gray',
+    0: {
+        descriptions: {
+            [EN]: 'g',
+            [PL]: 'gPL'
+        },
+        actions: [
+            {
+                type: Commands.Pay,
+                payload: 400,
+            }
+        ],
+        metadata: {
+            isCollectable: true
+        }
     },
-    actions: {
-        0: [{
-            type: PAY,
-            payload: 400,
-        }],
-        1: [{
-            type: GAIN,
-            payload: 200,
-        }],
-        2: [{
-            type: GAIN_FROM_EACH_PLAYER,
-            payload: 20,
-        }],
-        3: [{
-            type: GO_TO_FIELD_CONDITIONALLY_PASS_START,
-        }],
-        4: [{
-            type: GAIN,
-            payload: 400,
-        }],
-        5: [{
-            type: PAY,
-            payload: 20,
-        }]
+    1: {
+        descriptions: {
+            [EN]: 'r',
+            [PL]: 'rPL'
+        },
+        actions: [
+            {
+                type: Commands.Pay,
+                payload: 400,
+            }
+        ],
+        metadata: {
+            isCollectable: true
+        }
     },
-    metadata: {
-        1: {collectable: true},
-        3: {collectable: true},
-        5: {collectable: true},
-    }
+    2: {
+        descriptions: {
+            [EN]: 'a',
+            [PL]: 'aPL'
+        },
+        actions: [
+            {
+                type: Commands.GetMoneyFromEachPlayer,
+                payload: 20,
+            }
+        ],
+        metadata: {
+            isCollectable: true
+        }
+    },
+    3: {
+        descriptions: {
+            [EN]: 'y',
+            [PL]: 'yPL'
+        },
+        actions: [
+            {
+                type: Commands.GoToFieldConditionalyPassStart,
+            }
+        ],
+    },
+    4: {
+        descriptions: {
+            [EN]: 'c',
+            [PL]: 'cPL'
+        },
+        actions: [
+            {
+                type: Commands.Pay,
+                payload: 20,
+            }
+        ],
+        metadata: {
+            isCollectable: true
+        }
+    },
+    // metadata: {
+    //     1: {collectable: true},
+    //     3: {collectable: true},
+    //     5: {collectable: true},
+    // }
 }
 
-export const BLACK: tChance = {
-    cardSetName: 'black',
-    descriptions: {
-            en: {
-                0: 'b',
-                1: 'l',
-                2: 'a',
-                3:  "c",
-                4:  'k',
-            5: '_',
-            },
-        
+export const BLACK: iChanceCardsData = {
+    cardsSetName: 'black',
+    0: {
+        descriptions: {
+            [EN]: 'b',
+            [PL]: 'bPL'
+        },
+        actions: [
+            {
+                type: Commands.Pay,
+                payload: 400,
+            }
+        ],
+        metadata: {
+            isCollectable: true
+        }
     },
-    actions: {
-        0: [{
-            type: PAY,
-            payload: 400,
-        }],
-        1: [{
-            type: GAIN,
-            payload: 200,
-        }],
-        2: [{
-            type: GAIN_FROM_EACH_PLAYER,
-            payload: 20,
-        }],
-        3: [{
-            type: GO_TO_FIELD_CONDITIONALLY_PASS_START,
-        }],
-        4: [{
-            type: GAIN,
-            payload: 400,
-        }],
-        5: [{
-            type: PAY,
-            payload: 20,
-        }]
+    1: {
+        descriptions: {
+            [EN]: 'l',
+            [PL]: 'lPL'
+        },
+        actions: [
+            {
+                type: Commands.GetMoney,
+                payload: 200,
+            }
+        ],
     },
-    metadata: {
-        2: {collectable: true},
-        4: {collectable: true},
-        0: {collectable: true},
-    }
+    2: {
+        descriptions: {
+            [EN]: 'a',
+            [PL]: 'aPL'
+        },
+        actions: [
+            {
+                type: Commands.GetMoneyFromEachPlayer,
+                payload: 20,
+            }
+        ],
+        metadata: {
+            isCollectable: true
+        }
+    },
+    3: {
+        descriptions: {
+            [EN]: 'c',
+            [PL]: 'cPL'
+        },
+        actions: [
+            {
+                type: Commands.GoToFieldConditionalyPassStart,
+            }
+        ],
+    },
+    4: {
+        descriptions: {
+            [EN]: 'k',
+            [PL]: 'kPL'
+        },
+        actions: [
+            {
+                type: Commands.GetMoney,
+                payload: 400,
+            }
+        ],
+        metadata: {
+            isCollectable: true
+        }
+    },
+    5: {
+        descriptions: {
+            [EN]: '_',
+            [PL]: '_PL'
+        },
+        actions: [
+            {
+                type: Commands.Pay,
+                payload: 20,
+            }
+        ],
+    },
 }
 
 
@@ -231,15 +411,18 @@ describe('Testing ChanceCardHolder', () => {
     describe('Uploading cards to the memory', () => {
         it('Should upload all blue cards from data folder, when requested to do so', () => {
             const instance = new ChanceCardHolder(CHANCE_CARDS_BLUE);
-            const nrOfActions = instance.nrOfActions;
-            const nrOfDescriptions = instance.nrOfDescriptions;
-            const cardNr5Description = instance.getDescriptionForCardNr(5);
-            const expectedNrOfActions = 16;
-            const expectedNrOfDescriptions = 16;
-            const expectedCardDescription = CHANCE_CARDS_BLUE.descriptions.en[5];
-            expect(nrOfActions).toEqual(expectedNrOfActions);
-            expect(nrOfDescriptions).toEqual(expectedNrOfDescriptions);
+            const state = instance.state;
+            const nrOfCards = state.cardsInOrder.length;
+            const name = state.cardsSetName;
+            const index = state.lastDrawnCardIndex;
+            const cardNr5Description = instance.state.cardsInOrder[5].descriptions[EN];
+            const expectedNrOfCards = 16;
+            
+            const expectedCardDescription = CHANCE_CARDS_BLUE[5].descriptions[EN];
+            expect(nrOfCards).toEqual(expectedNrOfCards);
             expect(cardNr5Description).toEqual(expectedCardDescription)
+            expect(name).toBe(BLUE_CARDS_SET_NAME)
+            expect(index).toBe(0);
         });
     })
     describe('Delivering cards', () => {
@@ -247,29 +430,49 @@ describe('Testing ChanceCardHolder', () => {
             acc[item] = true;
             return acc;
         }, {})
+        const getEnglishDescriptionsFromData = (cardsData: iChanceCardsData) => {
+            const result = (Object.entries(CHANCE_CARDS_BLUE).filter(([key]) => (typeof key === 'number')) as any[]).map(({descriptions}) => descriptions[EN])
+            return result;
+        }
+        const getEnglishDescriptionsFromInstance = (instance: ChanceCardHolder) => {
+            const cards = instance.state.cardsInOrder;
+            const descriptions = cards.map(({descriptions}) => descriptions[EN]);
+            return descriptions;
+        }
         it('Should draw cards in shuffled order, when requested to draw a card', () => {
-            const expectedDescriptions = [...Object.values(CHANCE_CARDS_BLUE.descriptions.en)].reverse();
+            const expectedDescriptions = getEnglishDescriptionsFromData(CHANCE_CARDS_BLUE).reverse()
+            // const expectedDescriptions = [...Object.values(CHANCE_CARDS_BLUE.descriptions.en)].reverse();
             const instance = new ChanceCardHolder(CHANCE_CARDS_BLUE);
             const result = mockMathRandom(zeroRandomGenerator, () => {
                 instance.shuffle();
                 const shuffledCards = range(expectedDescriptions.length - 1).map((_) => {
-                    return instance.drawACard();
+                    return instance.drawACard(EN);
                 })
                 return shuffledCards;
             })
             expect(result).toEqual(expectedDescriptions);
         });
         it('Should reshuffle the library when drawn cards come to the end', () => {
-            const descriptions = [...Object.values(CHANCE_CARDS_BLUE.descriptions.en)];
-            const descriptionsAsKeys = arrToObjectAsKeys(descriptions);
+            const descriptions = getEnglishDescriptionsFromData(CHANCE_CARDS_BLUE);
             const instance = new ChanceCardHolder(CHANCE_CARDS_BLUE);
-            const cardsBeforeShuffle = range(descriptions.length - 1).map(() => instance.drawACard());
-            const cardsAfterShuffle = range(descriptions.length - 1).map(() => instance.drawACard());
-            const cardsBeforeAsKeys = arrToObjectAsKeys(cardsBeforeShuffle);
-            const cardsAfterAsKeys = arrToObjectAsKeys(cardsAfterShuffle);
+            const descriptionsBeforeShuffle = getEnglishDescriptionsFromInstance(instance);
+            const cardsBeforeShuffle = range(descriptions.length - 1).map(() => instance.drawACard(EN));
+            const descriptionsAfterShuffle = getEnglishDescriptionsFromInstance(instance);
+            const cardsAfterShuffle = range(descriptions.length - 1).map(() => instance.drawACard(EN));
             expect(cardsBeforeShuffle).not.toEqual(cardsAfterShuffle);
-            expect(cardsBeforeAsKeys).toEqual(cardsAfterAsKeys);
-            expect(cardsBeforeAsKeys).toEqual(descriptionsAsKeys);
+            expect(cardsBeforeShuffle).toEqual(descriptionsBeforeShuffle);
+            expect(cardsAfterShuffle).toEqual(descriptionsBeforeShuffle);
+
+
+            const descriptionsAsKeys = arrToObjectAsKeys(descriptions);
+            // const instance = new ChanceCardHolder(CHANCE_CARDS_BLUE);
+            // const cardsBeforeShuffle = range(descriptions.length - 1).map(() => instance.drawACard());
+            // const cardsAfterShuffle = range(descriptions.length - 1).map(() => instance.drawACard());
+            // const cardsBeforeAsKeys = arrToObjectAsKeys(cardsBeforeShuffle);
+            // const cardsAfterAsKeys = arrToObjectAsKeys(cardsAfterShuffle);
+            // expect(cardsBeforeShuffle).not.toEqual(cardsAfterShuffle);
+            // expect(cardsBeforeAsKeys).toEqual(cardsAfterAsKeys);
+            // expect(cardsBeforeAsKeys).toEqual(descriptionsAsKeys);
         });
     });
     describe('Testing if ChanceCarHolder creates a separate constatn instance for each card color', () => {

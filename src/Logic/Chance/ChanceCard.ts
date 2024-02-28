@@ -59,5 +59,5 @@ export class ChanceCard implements iChanceCard {
     get actions() {return this._actions}
     get descriptions() {return this._descriptions}
 
-    get isCollectable() {return !!this._metadata?.isCollctable}
+    get isCollectable() {return !!this._metadata?.isCollectable}
 }

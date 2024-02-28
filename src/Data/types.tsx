@@ -172,7 +172,7 @@ export interface iChanceCardActions {
 }
 
 export interface iChanceCardMetadata {
-    isCollctable: boolean,
+    isCollectable: boolean,
 }
 
 

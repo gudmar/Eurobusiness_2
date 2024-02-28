@@ -204,14 +204,16 @@ export const CHANCE_CARDS_RED: iChanceCardsData = {
             }
         ],
         metadata: {
-            isCollctable: true,
+            isCollectable: true,
         }
     }
 
 }
 
-export const CHANCE_CARDS_BLUE = {
-    cardsSetName: 'Chance cards blue',
+export const BLUE_CARDS_SET_NAME = 'Chance cards blue';
+
+export const CHANCE_CARDS_BLUE: iChanceCardsData= {
+    cardsSetName: BLUE_CARDS_SET_NAME,
     0: {
         descriptions: {
             pl: "Płacisz na budowę szpitala 400 $.",
@@ -290,10 +292,12 @@ export const CHANCE_CARDS_BLUE = {
         },
         actions: [
             {
-                type: Commands.GetFreeFromJailCard,
-                collectible: true,
+                type: Commands.GetFreeFromJailCard, 
             }
-        ]
+        ],
+        metadata: {
+            isCollectable: true,
+        }
     },
     7: {
         descriptions: {
