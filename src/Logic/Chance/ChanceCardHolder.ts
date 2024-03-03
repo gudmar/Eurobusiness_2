@@ -5,7 +5,7 @@ import { shuffle } from "../../Functions/shuffle";
 import { iDictionary } from "../../Types/types";
 import { ChanceCard } from "./ChanceCard";
 import { Errors } from "./errors";
-import { iActions, iChanceCard, iDescription, tBorrowedCards, tCardMetadata, tCardMetadataBit, tChance, tChanceCardsHolderState, tPlayerName, tSingleChanceCardState } from "./types";
+import { iActions, iChanceCard, iDescription, tBorrowedCards, tCardMetadata, tCardMetadataBit, tChance, tChanceCardsHolderState, tPlayerName, tRunOnEachInstanceCallback, tSingleChanceCardState } from "./types";
 
 export type tChanceCardHolderInstance = ChanceCardHolder;
 
@@ -48,6 +48,12 @@ type tChanceCardHolderInstances = {
     [key: string]: ChanceCardHolder
 }
 
+const getDescriptionsFromCards = (cards: iChanceCard[], languageKey: tSupportedLanguagesKeys) => {
+    const descriptions = cards.map(({descriptions}) => descriptions[languageKey]);
+    return descriptions;
+}
+
+
 export class ChanceCardHolder {
     
     static instances: tChanceCardHolderInstances;
@@ -55,7 +61,7 @@ export class ChanceCardHolder {
     // private _cardsActions?: iActions;
     // private _cardsMetadata?: tCardMetadata;
     // private _language: string = LanguageNameToShortName.english;
-    private _cards: iChanceCard[] = [];
+    protected _cards: iChanceCard[] = [];
     private _cardsSetName: string = ''; // BLUE // RED
     // private _cardsOrder!: number[];
     private _lastDrawnCardIndex = 0;
@@ -155,7 +161,7 @@ export class ChanceCardHolder {
     private _initializeCardsObject(cardsDescriptor: iChanceCardsData ) {
         const entries = Object.entries(cardsDescriptor);
         entries.forEach(([key, value]) => {
-            if (typeof key === 'number') {
+            if (!isNaN(parseInt(key))) {
                 this._cards.push(new ChanceCard(value))
             } else {
                 if (key === 'cardsSetName') this._cardsSetName = value
@@ -240,10 +246,42 @@ export class ChanceCardHolder {
         return allCards
     }
 
+    private static _runOnEachInstance<ReturnType>(callback: tRunOnEachInstanceCallback<ReturnType>) {
+        const allCards = Object.entries(ChanceCardHolder.instances).reduce((acc: any, [name, instance]: [string, ChanceCardHolder]) => {
+                const result: any = callback(instance);
+                acc[name] = result;
+                return acc
+        }, {});
+        return allCards
+    }
+
+    static getAllCollectableCardDescriptionsInSets(languageKey: tSupportedLanguagesKeys) {
+        const getDescription = (instance: ChanceCardHolder) => 
+            instance._cards.filter(({isCollectable}) => isCollectable).map(({descriptions}) => descriptions[languageKey])
+        
+        const collectablesInSets = ChanceCardHolder._runOnEachInstance(getDescription);
+        return collectablesInSets;
+    }
+
+    static getAllNotBorrowedCardDescriptionsInSets(languageKey: tSupportedLanguagesKeys) {
+        const getDescription = (instance: ChanceCardHolder) =>
+            instance._cards.filter(({isCollectable, isBorrowedToPlayer}) => (isCollectable && !isBorrowedToPlayer)).map(({descriptions}) => descriptions[languageKey])
+        
+        const collectablesInSets = ChanceCardHolder._runOnEachInstance(getDescription);
+        return collectablesInSets;
+    }
+
     private static get allCollectableCards() {
         const allCards = ChanceCardHolder.allCards;
         const collectable = allCards.filter(({isCollectable}) => isCollectable)
         return collectable;
+    }
+
+    static getCollectableCardsDescriptions(languageKey: tSupportedLanguagesKeys) {
+        const allCards = ChanceCardHolder.allCards;
+        const collectable = allCards.filter(({isCollectable}) => isCollectable);
+        const descriptions = getDescriptionsFromCards(collectable, languageKey);
+        return descriptions;
     }
 
     static getNotBorrowedCardsDescriptions(languageKey: tSupportedLanguagesKeys) {
@@ -346,12 +384,13 @@ export class ChanceCardHolder {
 
     borrowCardToAPlayer(description: string) {
         const cardIndex = this.getCardIndexByDescription(description);
-        this._cards[cardIndex].borrow;
+        console.log('Index:', cardIndex)
+        this._cards[cardIndex].borrow();
     }
 
     returnBorrowedCard(description: string) {
         const cardIndex = this.getCardIndexByDescription(description);
-        this._cards[cardIndex].return;
+        this._cards[cardIndex].return();
     }
 
     // private static _getBorrowFunctions(cardDescription: string ) {
@@ -400,6 +439,20 @@ export class ChanceCardHolder {
         const description = card.getDescription(languageKey)
         return description;
     }
+
+
+    getCollectableCardsDescriptions(languageKey: tSupportedLanguagesKeys) {
+        const collectable = this._cards.filter(({isCollectable}) => isCollectable);
+        const descriptions = getDescriptionsFromCards(collectable, languageKey);
+        return descriptions;
+    }
+
+    getAvailableCollectableCards(languageKey: tSupportedLanguagesKeys) {
+        const notBorrowed = this._cards.filter(({isCollectable, isBorrowedToPlayer}) => isCollectable && !isBorrowedToPlayer);
+        const descriptions = getDescriptionsFromCards(notBorrowed, languageKey);
+        return descriptions;
+    }
+
 
     // get cardsOrder() {return this._cardsOrder}
 }

@@ -2,6 +2,7 @@ import { tChanceMessages } from "../../Constants/commands"
 import { tEachLanguageText, tLanguage } from "../../Contexts/CurrentLanguage/types"
 import { iChanceCardActions, iChanceCardMetadata, iDescriptionsInLanguages } from "../../Data/types"
 import { tAction } from "../../Types/types"
+import { ChanceCardHolder } from "./ChanceCardHolder"
 
 export type tChanceAction = {
     payload?: number,
@@ -57,7 +58,7 @@ export interface iChanceCard {
     getDescription: (language: tLanguage) => string,
 }
 
-
+export type tRunOnEachInstanceCallback<ReturnType> = (instance: ChanceCardHolder) => ReturnType
 
 export type tChanceCardsHolderState = {
     // cardsDescriptions?: tLanguageDescriptionEntry[],
