@@ -194,7 +194,7 @@ export const CHANCE_CARDS_RED: iChanceCardsData = {
     },
     15: {
         descriptions: {
-            pl: "Wychodzisz wolny z więzienia. Kartę należy zachować do wykorzystania lub sprzedania.",
+            pl: "Wychodzisz wolny z więzienia. Kartę można zachować lub sprzedać.",
             en: "You get out of prison. Card may be kept or sold"
         },
         actions: [

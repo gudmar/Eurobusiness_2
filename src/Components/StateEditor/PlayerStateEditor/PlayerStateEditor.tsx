@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { MAX_PLAYER_NAME_LENGTH, MONEY_ALLTOGETHER } from "../../../Constants/constants";
 import { useLanguage } from "../../../Contexts/CurrentLanguage/CurrentLanguage";
 import { useEditPlayer } from "../../../hooks/useEditPlayer/useEditPlayer"
@@ -22,11 +23,13 @@ export const PlayerStateEditor = ({section}: any) => {
     } = useEditPlayer(section);
     const {languageKey} = useLanguage();
     const getVisibleCards = (cardsBorrowedByPleyer: string[]) => {
-        const allNotBorrowed = Object.values(ChanceCardHolder.getNotBorrowedCardsDescriptions(languageKey)).flat() as string[];
+        // const allNotBorrowed = Object.values(ChanceCardHolder.getNotBorrowedCardsDescriptions(languageKey)).flat() as string[];
+        const allNotBorrowed = ChanceCardHolder.getNotBorrowedCardsDescriptions(languageKey);
+        console.log(allNotBorrowed)
         return [...allNotBorrowed, ...cardsBorrowedByPleyer]
     }
     const visibleSpecialCards = getVisibleCards(specialCards)
-    
+    useEffect(() => console.log(visibleSpecialCards), [visibleSpecialCards])
     return (
         <StateEditorForm
             headline={`Player state editor for color : ${color}`}

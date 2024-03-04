@@ -1,7 +1,7 @@
 import { tColors } from "../../Data/types"
 import { tBankState } from "../../Logic/Bank/types"
 import { tField } from "../../Logic/boardTypes"
-import { tChanceCardState } from "../../Logic/Chance/ChanceCardHolder"
+import { tChanceCardsHolderState } from "../../Logic/Chance/types"
 import { tDiceState } from "../../Logic/Dice/types"
 import { iPlayerSnapshot } from "../../Logic/Player/types"
 
@@ -11,7 +11,7 @@ export type tGameState = {
     players: tPartialPlayer,
     dice: tDiceState,
     bank: tBankState,
-    chanceCards: { [key: string ]: tChanceCardState}
+    chanceCards: { [key: string ]: tChanceCardsHolderState}
     boardFields: tField[]
 }
 

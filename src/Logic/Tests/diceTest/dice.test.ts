@@ -172,7 +172,7 @@ type tGetVisitAllFieldsFromListArgs = { startFromField: number, listToVisit: str
         dice.testingMode = TestModes.visitFieldsFromList;
         const toVisit = ['13', '24', '33', '32'];
         dice.fieldsToVisit = toVisit;
-        const expectedSums = [13, 11, 9, 39, 21];
+        const expectedSums = [12, 10, 8, 38, 20]; // SHIFT 1: computer starts with 0 and board is numerated starting from 0
         const { result } = visitAllFieldsFromList({
             listToVisit: dice.fieldsToVisit, nrOfMoves: 5, dice, nrOfMove: 0, result: [], startFromField: 0
         })
@@ -183,7 +183,7 @@ type tGetVisitAllFieldsFromListArgs = { startFromField: number, listToVisit: str
         dice.testingMode = TestModes.visitFieldsFromList;
         const toVisit = ['3', '2', '4'];
         dice.fieldsToVisit = toVisit;
-        const expectedSums = [3, 39, 2, 39];
+        const expectedSums = [2, 38, 1, 38]; // SHIFT 1: computer starts with 0 and board is numerated starting from 0
         const { result } = visitAllFieldsFromList({
             listToVisit: dice.fieldsToVisit, nrOfMoves: 4, dice, nrOfMove: 0, result: [], startFromField: 0
         })

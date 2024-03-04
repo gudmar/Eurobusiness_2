@@ -72,3 +72,9 @@ export type tChanceCardsHolderState = {
     // cardsBorrewedByPlayers: tBorrowedCards,
 }
 
+export enum ChanceCardOperations { Borrow = "borrow", Return = "return" }
+export type tChanceCardOperationMessage = {
+    description: string
+}
+
+
