@@ -93,7 +93,8 @@ const getPositionDataFromReference = (fieldReference: tUseRefOnDiv):tBoardFieldP
 }
 
 export const reducer = (state: tBoardDimensions, action: tDimensionAction): tBoardDimensions => {
-    const {type, payload} = action;
+    const {type} = action;
+    const payload: any = action.payload
     switch (type) {
         case DimanetionsOperations.update: {
             const nextState = getStateDependingOnClientRect({...payload, state});
