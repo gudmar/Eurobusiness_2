@@ -22,14 +22,18 @@ export const PlayerStateEditor = ({section}: any) => {
         setIsGameLost,
     } = useEditPlayer(section);
     const {languageKey} = useLanguage();
+    useEffect(() => console.log('Section', section), [section])
     const getVisibleCards = (cardsBorrowedByPleyer: string[]) => {
         // const allNotBorrowed = Object.values(ChanceCardHolder.getNotBorrowedCardsDescriptions(languageKey)).flat() as string[];
         const allNotBorrowed = ChanceCardHolder.getNotBorrowedCardsDescriptions(languageKey);
         console.log(allNotBorrowed)
+        console.log(cardsBorrowedByPleyer)
         return [...allNotBorrowed, ...cardsBorrowedByPleyer]
     }
     const visibleSpecialCards = getVisibleCards(specialCards)
+    useEffect(() => console.log(specialCards), [specialCards])
     useEffect(() => console.log(visibleSpecialCards), [visibleSpecialCards])
+    useEffect(() => console.log(color), [color])
     return (
         <StateEditorForm
             headline={`Player state editor for color : ${color}`}
