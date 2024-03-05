@@ -38,23 +38,115 @@ const subscribtionsStructure = [
     {propName: 'state',        callback: getUpdateState},
 ]
 
+
+// export const getUseEditPlayer = (instanceId: string) => (wantedColor: tColors) => {
+//     const infromator = new Informator();
+//     const players = Players.players
+//     const player = Players.getPlayerByColor(wantedColor);
+//     const specialCards = player.specialCards;
+//     const initialState = {...player.state }
+//     const [{
+//         name, money, color, fieldNr, isInPrison, nrTurnsToWait, isGameLost
+//     }, dispatch ] = useReducer(reducer, initialState)
+//     const player = useRef<null | iPlayer>(null)
+// useEffect(() => console.log(wantedColor, [wantedColor]))
+// useEffect(() => console.log(player), [player])
+//     useEffect(() => {
+//         const subscribtions: (()=>void)[] = [];
+//         const unsubscribtions: (()=>void)[] = [];
+//         const fillSubscribtions = () => {
+//             subscribtionsStructure.forEach(({propName, callback}) => {
+//                 if (player) {
+//                     const {subscribe, unsubscribe} = getSubscribtions({propName, callback: callback(dispatch), playerInstance: player, instanceId})
+//                     subscribtions.push(subscribe);
+//                     unsubscribtions.push(unsubscribe);
+//                 }
+                
+//             })
+//         }
+//         const subscribeAll = () => subscribtions?.forEach((cb) => cb());
+//         const unsubscribeAll = () => unsubscribtions?.forEach((cb) => cb());
+//         const clearSubscribtions = () => { clearArray(subscribtions); clearArray(unsubscribtions) }
+//         player = getPlayerInstance(players, wantedColor)
+//         if (player) { 
+//             fillSubscribtions(); subscribeAll(); 
+//         }
+//         const newPlayerState = player??.state;
+//         dispatch(changeStateAction(newPlayerState))
+//         return () => { unsubscribeAll(); clearSubscribtions(); }
+//     }, []
+//     )
+
+
+//     const setName = useCallback((val: string) => {
+//         if (player && player) {
+//             player.name = val
+//         }
+//     }, [wantedColor])
+//     const setFieldNr = useCallback((val: string) => {
+//         if (player && player && !player.isInPrison) {
+//             player.fieldNr = parseInt(val)
+//         } else {
+//             infromator.displayError(
+//                 {
+//                     title: 'Operation not allowed',
+//                     message: 'Player cannot be moved as long as he is in prison'
+//                 }
+//             )
+//         }
+//     }, [wantedColor])
+
+//     // const setMoney = useCallback((val: string) => {
+//     //     if (player && player) {
+//     //         player.money = parseInt(val)
+//     //     }
+//     // }, [wantedColor])
+//     const setMoney = (val: string) => player.money = val;
+
+//     const setNrTurnsToWait = useCallback((val: string) => {
+//         if (player && player) {
+//             player.nrTurnsToWait = parseInt(val)
+//         }
+//     }, [wantedColor])
+//     const setIsInPrison = useCallback((val: boolean) => {
+//         if (player && player && player.fieldNr === PRISON_FIELD_NR_INDEXED_FROM_0) {
+//             player.isInPrison = val
+//         } else {
+//            infromator.displayError({title: 'Operation not allowed', message: 'Player may be marked as prisoner, only when he is on the "Jail" field (nr 11)'})
+//         }
+//     }, [wantedColor])
+//     const setIsGameLost = useCallback((val: boolean) => {
+//         if (player && player) {
+//             player.isGameLost = val
+//         }
+//     }, [wantedColor])
+
+//     return {
+//         name, setName, setMoney, money, 
+//         specialCards, color, fieldNr, setFieldNr, 
+//         isInPrison, setIsInPrison, nrTurnsToWait, 
+//         setNrTurnsToWait, isGameLost, setIsGameLost,
+//     }
+// }
+
 export const getUseEditPlayer = (instanceId: string) => (wantedColor: tColors) => {
     const infromator = new Informator();
     const players = Players.players
-    const thisPlayer = Players.getPlayerByColor(wantedColor);
-    const initialState = {...thisPlayer.state }
+    const player = Players.getPlayerByColor(wantedColor);
+    const specialCards = player.specialCards;
+    const initialState = {...player.state }
     const [{
-        name, money, specialCards, color, fieldNr, isInPrison, nrTurnsToWait, isGameLost
+        name, money, color, fieldNr, isInPrison, nrTurnsToWait, isGameLost
     }, dispatch ] = useReducer(reducer, initialState)
-    const player = useRef<null | iPlayer>(null)
-
+useEffect(() => console.log(wantedColor, [wantedColor]))
+useEffect(() => console.log(player), [player])
     useEffect(() => {
         const subscribtions: (()=>void)[] = [];
         const unsubscribtions: (()=>void)[] = [];
         const fillSubscribtions = () => {
             subscribtionsStructure.forEach(({propName, callback}) => {
-                if (player.current) {
-                    const {subscribe, unsubscribe} = getSubscribtions({propName, callback: callback(dispatch), playerInstance: player.current, instanceId})
+                if (player) {
+                    const {subscribe, unsubscribe} = getSubscribtions({propName, callback: callback(dispatch), playerInstance: player, instanceId})
                     subscribtions.push(subscribe);
                     unsubscribtions.push(unsubscribe);
                 }
@@ -64,25 +156,25 @@ export const getUseEditPlayer = (instanceId: string) => (wantedColor: tColors) =
         const subscribeAll = () => subscribtions?.forEach((cb) => cb());
         const unsubscribeAll = () => unsubscribtions?.forEach((cb) => cb());
         const clearSubscribtions = () => { clearArray(subscribtions); clearArray(unsubscribtions) }
-        player.current = getPlayerInstance(players, wantedColor)
-        if (player.current) { 
+        // player = getPlayerInstance(players, wantedColor)
+        if (player) { 
             fillSubscribtions(); subscribeAll(); 
         }
-        const newPlayerState = player?.current?.state;
+        const newPlayerState = player?.state;
         dispatch(changeStateAction(newPlayerState))
         return () => { unsubscribeAll(); clearSubscribtions(); }
-    }, []
+    }, [player]
     )
 
 
     const setName = useCallback((val: string) => {
-        if (player && player.current) {
-            player.current.name = val
+        if (player ) {
+            player.name = val
         }
     }, [wantedColor])
     const setFieldNr = useCallback((val: string) => {
-        if (player && player.current && !player.current.isInPrison) {
-            player.current.fieldNr = parseInt(val)
+        if (player  && !player.isInPrison) {
+            player.fieldNr = parseInt(val)
         } else {
             infromator.displayError(
                 {
@@ -94,27 +186,27 @@ export const getUseEditPlayer = (instanceId: string) => (wantedColor: tColors) =
     }, [wantedColor])
 
     // const setMoney = useCallback((val: string) => {
-    //     if (player && player.current) {
-    //         player.current.money = parseInt(val)
+    //     if (player && player) {
+    //         player.money = parseInt(val)
     //     }
     // }, [wantedColor])
-    const setMoney = (val: string) => thisPlayer.money = val;
+    const setMoney = (val: string) => player.money = val;
 
     const setNrTurnsToWait = useCallback((val: string) => {
-        if (player && player.current) {
-            player.current.nrTurnsToWait = parseInt(val)
+        if (player) {
+            player.nrTurnsToWait = parseInt(val)
         }
     }, [wantedColor])
     const setIsInPrison = useCallback((val: boolean) => {
-        if (player && player.current && player.current.fieldNr === PRISON_FIELD_NR_INDEXED_FROM_0) {
-            player.current.isInPrison = val
+        if (player && player.fieldNr === PRISON_FIELD_NR_INDEXED_FROM_0) {
+            player.isInPrison = val
         } else {
            infromator.displayError({title: 'Operation not allowed', message: 'Player may be marked as prisoner, only when he is on the "Jail" field (nr 11)'})
         }
     }, [wantedColor])
     const setIsGameLost = useCallback((val: boolean) => {
-        if (player && player.current) {
-            player.current.isGameLost = val
+        if (player) {
+            player.isGameLost = val
         }
     }, [wantedColor])
 
