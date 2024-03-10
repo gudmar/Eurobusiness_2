@@ -49,17 +49,18 @@ export const usePlayerData = (playersData: iPlayerDescriptor[] | null) => {
     const [data, setData] = useState<any>(initialPlayerState)
     useEffect(() => {
         if (playersInstance === null && playersData !== null) {
-            const players = new Players({
-                DiceClass: DiceTestModeDecorator, 
-                players: playersData,
-            });
+            const players = Players.instance;
+            // const players = new Players({
+            //     DiceClass: DiceTestModeDecorator, 
+            //     players: playersData,
+            // });
             setPlayersInstance(players)
-            const actualPlayer = players.currentPlayer;
+            const actualPlayer = players?.currentPlayer;
             setCurrentPlayer(actualPlayer);
         }
     }, [playersData, playersInstance])
     useEffect(() => {
-        const player = Players.instance.currentPlayer;
+        const player = Players?.instance?.currentPlayer;
         setCurrentPlayer(player)
     }, [playersData])
     useEffect(() => {

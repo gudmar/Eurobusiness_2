@@ -6,6 +6,6 @@ export const useStartChanceCardsHolders = () => {
     useEffect(() => {
         new ChanceCardHolder(CHANCE_CARDS_BLUE);
         new ChanceCardHolder(CHANCE_CARDS_RED);
-        return (() => ChanceCardHolder.clearAllInstances());
+        // return (() => ChanceCardHolder.clearAllInstances());
     }, [])
 }

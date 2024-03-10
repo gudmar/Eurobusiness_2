@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { BLUE, GREEN, RED, YELLOW } from "../../Data/const"
 import { useStartChanceCardsHolders } from "../../hooks/starters/useStartChanceCardsHoleders"
 import { Bank } from "../../Logic/Bank/Bank"
+import { Game } from "../../Logic/Game/Game"
 import { Messages } from "../../Logic/Messages/constants"
 import { Players } from "../../Logic/Players/Players"
 import { iPlayerDescriptor } from "../../Logic/Players/types"
@@ -45,14 +46,14 @@ const usePlayersDescriptors = () => {
             const playersDescriptors = getPlayersDescriptors();
             setDescriptorsFromLogic(playersDescriptors);
         };
-        Players.instance.subscribe({
+        Players?.instance?.subscribe({
             callback: subscribtionCallback,
             id: GAME_STARTER_ID,
             messageType: Messages.loadPlayers,
         })
         return (
             () => {
-                Players.instance.unsubscribe(Messages.loadPlayers, GAME_STARTER_ID);
+                Players?.instance?.unsubscribe(Messages.loadPlayers, GAME_STARTER_ID);
             })
     }, [])
     return descriptorsFromLogic ?? TEST_PLAYERS
@@ -63,8 +64,13 @@ export const GameStarter = () => {
     // and players strategies
     // For now it is only a wrapper delivering data
 
-    useStartChanceCardsHolders();
-    useEffect(() => {new Bank()}, [])
+    // useStartChanceCardsHolders();
+    // useEffect(() => {new Bank()}, [])
+    useEffect(() => {
+        new Game({
+            playersData: getPlayersDescriptors(),
+        })
+    }, [])
     const playersDescriptors = usePlayersDescriptors()
     return (
         <>

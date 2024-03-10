@@ -17,12 +17,13 @@ const getChanceCardsState = () => {
 }
 
 const getPlayersState = () => {
-    const state = Players.players.reduce((acc, player) => {
-        const id = player.color;
-        const state = player.state;
-        const newAcc = {...acc, [id]: state }
-        return newAcc;
-    },{})
+    const state = Players.players.map((player) => player.state);
+    // const state = Players.players.reduce((acc, player) => {
+    //     const id = player.color;
+    //     const state = player.state;
+    //     const newAcc = {...acc, [id]: state }
+    //     return newAcc;
+    // },{})
     return state;
 }
 const getBoardFieldsStates = () => {

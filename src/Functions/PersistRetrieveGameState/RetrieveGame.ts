@@ -19,14 +19,16 @@ const setChanceCardsState = (state: tGameState) => {
 }
 
 const setPlayersState = (state: tGameState) => {
-    const stateTemplates = Object.entries(state.players);
+    // const stateTemplates = Object.entries(state.players);
+    const stateTemplates = state.players;
     Players.deleteAllPlayers();
-    const playersConstructorArgs = stateTemplates.map(([color, state]) => (state));
+    // const playersConstructorArgs = stateTemplates.map(([color, state]) => (state));
+    const playersConstructorArgs = stateTemplates;
     new Players({DiceClass: DiceTestModeDecorator, players: playersConstructorArgs});
-    Players.players.forEach((player) => {
-        const color = player.color;
-        player.state = state.players[color as  keyof tPartialPlayer]
-    })
+    // Players.players.forEach((player) => {
+    //     const color = player.color;
+    //     player.state = state.players[color as  keyof tPartialPlayer]
+    // })
 }
 
 const getFieldInstance = (boardField: tField): CityField | NonCityEstatesField | null => {
