@@ -25,3 +25,8 @@ export interface iAction<Type, Payload> {
     type: Type,
     payload: Payload
 }
+
+export enum TurnPhases {
+    BeforeMove = 'Before move',
+    AfterMove = 'After move'
+}

@@ -1,5 +1,8 @@
 **Class that knows about all 4 players, draws randomly order they play, may access next, current player,knows what player is current and next, may give a report of player belongings**
 
+
+** Players order is order of `players` prop **
+
 1. As a player I would like to be informed what options do I have at some moment of the game (judge)
 2. As a player I would like to know what options are mandatory
 3. As a player I need a decision helper (strategy)

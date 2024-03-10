@@ -9,7 +9,7 @@ import { SubscribtionsHandler } from "../SubscrbtionsHandler";
 import { iAllPlayers, iAllPlayersArgs,  iPlayer, iPlayerDescriptor, iPlayersMemento, iPlayersSnapshot, iPlayerState, tSwitchPlayer } from "./types";
 
 export class Players extends SubscribtionsHandler<Messages, iPlayer> implements iAllPlayers {
-    private static _instance: Players;
+    static _instance: Players;
     
     private _diceClassInstance!: iDiceTestModeDecorator;
     static players: iPlayer[] = [];
