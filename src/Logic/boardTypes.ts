@@ -4,6 +4,18 @@ import { ChanceField, CityField, NonCityEstatesField, OtherFieldTypesField } fro
 export type tEstateCreateors = CityField | NonCityEstatesField;
 
 export type tField = CityField | NonCityEstatesField | OtherFieldTypesField | ChanceField
+export type tFieldState = iCityFieldState | iNonCityEstatesFieldState | iOtherFieldTypesFieldState | iChanceFieldState
+
+export const isCityFieldState = (field: tFieldState): field is iCityFieldState => {
+    return (field as iCityFieldState).housePrice !== undefined
+}
+
+export const isNonCityEstatesFieldState = (field: tFieldState): field is iNonCityEstatesFieldState => {
+    const isOwner = (field as iCityFieldState | iNonCityEstatesFieldState).owner !== undefined;
+    const isHousePrice = (field as iCityFieldState).housePrice !== undefined;
+    if (isOwner && !isHousePrice) return true;
+    return false
+}
 
 export type tEstateField = CityField | NonCityEstatesField
 

@@ -1,13 +1,13 @@
 import { Bank } from "../../Logic/Bank/Bank"
 import { BoardCaretaker } from "../../Logic/BoardCaretaker"
-import { tField } from "../../Logic/boardTypes"
+import { isCityFieldState, isNonCityEstatesFieldState, tFieldState } from "../../Logic/boardTypes"
 import { ChanceCardHolder } from "../../Logic/Chance/ChanceCardHolder"
 import { DiceTestModeDecorator } from "../../Logic/Dice/Dice"
 import { ChanceField, CityField, NonCityEstatesField, OtherFieldTypesField } from "../../Logic/FieldCreators"
 import { Players } from "../../Logic/Players/Players"
 import { displayError } from "../displayMessage"
 import { getGames } from "./localStorageOperations"
-import { tGameState, tPartialPlayer, tSaves } from "./types"
+import { tGameState } from "./types"
 import { getGameState, throwIfNoGame } from "./utils"
 
 
@@ -31,7 +31,7 @@ const setPlayersState = (state: tGameState) => {
     // })
 }
 
-const getFieldInstance = (boardField: tField): CityField | NonCityEstatesField | null => {
+const getFieldInstance = (boardField: tFieldState): CityField | NonCityEstatesField | null => {
     const result = BoardCaretaker.fieldInstances.find(({name}) => boardField.name === name);
     if (!result) throw new Error(`Cannot find estate named ${boardField.name}`)
     if (result instanceof OtherFieldTypesField || result instanceof ChanceField) {
@@ -44,10 +44,12 @@ const getFieldInstance = (boardField: tField): CityField | NonCityEstatesField |
 const setBoardFieldsStates = (state: tGameState) => {
     const { boardFields } = state;
     boardFields.forEach((boardField) => {
-        if (boardField instanceof OtherFieldTypesField || boardField instanceof ChanceField) return;
-        const fieldInstance = getFieldInstance(boardField);
-        if (!fieldInstance) return;
-        if (fieldInstance) fieldInstance.state = boardField;
+        // if (boardField instanceof OtherFieldTypesField || boardField instanceof ChanceField) return;
+        if (isCityFieldState(boardField) || isNonCityEstatesFieldState(boardField)){
+            const fieldInstance = getFieldInstance(boardField);
+            if (!fieldInstance) return;
+            if (fieldInstance) fieldInstance.state = boardField;    
+        }
     })
 }
 const setDiceState = (state: tGameState) => {
