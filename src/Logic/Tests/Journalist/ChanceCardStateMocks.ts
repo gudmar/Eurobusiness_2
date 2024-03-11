@@ -1,16 +1,78 @@
+import { BLUE, CHANCE_BLUE_BOTTOM, CHANCE_BLUE_LEFT, CHANCE_BLUE_RIGHT, CHANCE_RED_BOTTOM, CHANCE_RED_RIGHT, CHANCE_RED_TOP, CITY, FREE_PARK, GO_TO_JAIL, GREEN, GUARDED_PARKING, JAIL, PLANT, RAILWAY, RED, START, TAX, YELLOW } from "../../../Data/const";
+import { tColors, tIcon, tOwner } from "../../../Data/types";
+import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
+import { tEstateField, tFieldState } from "../../boardTypes";
+import { tChanceCardsHolderState } from "../../Chance/types";
 import { Commands } from "../../Commander/commands";
+import { TestModes } from "../../Dice/types";
+import { iPlayerSnapshot } from "../../Player/types";
+import { StrategyNames } from "../../Strategies/types";
+import { TurnPhases } from "../../types";
+
+
+type tCardType = "Chance cards red" | "Chance cards blue"
+
+const dummyIcon = {} as tIcon
 
 export const getStateForRedChanceCardsTest = (cardIndex: number) => {
+    const result = getStateForChanceCardsTest(cardIndex, "Chance cards red");
+    return result
+}
+
+export const getStateForBlueChanceCardsTest = (cardIndex: number) => {
+    const result = getStateForChanceCardsTest(cardIndex, "Chance cards blue");
+    return result
+}
+
+
+type tProps = {
+  [key: string]: any,
+}
+
+type tChangeInEstate = {
+  estateName: string, 
+  props: tProps,
+}
+
+const changeEstate = (state: tGameState, {estateName, props}: tChangeInEstate) => {
+  const fields = state.boardFields;
+  const field = fields.find((f) => f.name === estateName);
+  Object.entries(props).forEach(([key, value]) => {
+    (field as any)[key] = value
+  })
+  return state;
+}
+
+export const changeEstates = (state: tGameState, deltas: tChangeInEstate[]) => {
+  deltas.forEach((delta) => changeEstate(state, delta));
+  return state;
+}
+
+export const changeEstatesOwner = (state: tGameState, listOfEstateNames: string[], ownerColor: string) => {
+  const fields = state.boardFields;
+  fields.forEach((field) => {
+    if (listOfEstateNames.includes(field.name)) {
+      (field as unknown as tEstateField).owner = ownerColor as unknown as tOwner
+    }
+  })
+  return state
+}
+
+export const getStateForChanceCardsTest = (cardIndex: number, key: tCardType) => {
     const state = getStateMock();
     const {chanceCards} = state;
-    const redCards = chanceCards["Chance cards red"];
-    const ordered = redCards.cardsInOrder;
+    const cards = chanceCards[key];
+    const ordered = cards.cardsInOrder;
     const [cardAtIndex] = ordered.splice(cardIndex, 1);
     ordered.unshift(cardAtIndex);
 }
 
-export const getStateMock = () => {
+export const getStateMock = ():tGameState => {
+// export const getStateMock = () => {
     const state = {
+        currentPlayerName: 'John Doe',
+        playerNamesQueue: ['yellow', 'red', 'blue', 'green'] as tColors[],
+        turnPhase: TurnPhases.BeforeMove,
         bank: getBankStateTemplate(),
         dice: getDiceStateTemplate(),
         boardFields: getBoardFieldsStateTemplate(),
@@ -23,17 +85,17 @@ export const getStateMock = () => {
 const getBankStateTemplate = () => ({ nrOfHotels: 12, nrOfHouses: 32 })
 
 const getDiceStateTemplate = () => ({
-    testingMode: "none",
+    testingMode: TestModes.none,
     fieldsToVisit: [],
     indexOnNextFieldToVisit: 0,
     nrThatDiceWillSelectInTestMode: 4
 })
 
-const getBoardFieldsStateTemplate = () => ([
+const getBoardFieldsStateTemplate = (): tFieldState[] => ([
     {
       name: "Start",
-      type: "Start",
-      Icon: {},
+      type: START,
+      Icon: dummyIcon,
       visit: [
         -400
       ],
@@ -42,7 +104,7 @@ const getBoardFieldsStateTemplate = () => ([
     },
     {
       name: "Saloniki",
-      type: "City",
+      type: CITY,
       country: "Greece",
       price: 120,
       mortgage: 60,
@@ -66,12 +128,12 @@ const getBoardFieldsStateTemplate = () => ([
     {
       name: "Chance blue_bottom",
       index: 2,
-      Icon: {},
-      type: "Chance blue"
+      Icon: dummyIcon,
+      type: CHANCE_BLUE_BOTTOM
     },
     {
       name: "Ateny",
-      type: "City",
+      type: CITY,
       country: "Greece",
       price: 120,
       mortgage: 60,
@@ -94,8 +156,8 @@ const getBoardFieldsStateTemplate = () => ([
     },
     {
       name: "Guarded Parking",
-      type: "Guarded Parking",
-      Icon: {},
+      type: GUARDED_PARKING,
+      Icon: dummyIcon,
       visit: [
         400
       ],
@@ -103,7 +165,7 @@ const getBoardFieldsStateTemplate = () => ([
       index: 4
     },
     {
-      type: "Railway",
+      type: RAILWAY,
       country: "Railways",
       price: 400,
       mortgage: 200,
@@ -115,13 +177,13 @@ const getBoardFieldsStateTemplate = () => ([
       ],
       owner: "Bank",
       isPlegded: false,
-      Icon: {},
+      Icon: dummyIcon,
       name: "South Railway",
       index: 5
     },
     {
       name: "Neapol",
-      type: "City",
+      type: CITY,
       country: "Italy",
       price: 200,
       mortgage: 100,
@@ -145,12 +207,12 @@ const getBoardFieldsStateTemplate = () => ([
     {
       name: "Chance red_bottom",
       index: 7,
-      Icon: {},
-      type: "Chance red"
+      Icon: dummyIcon,
+      type: CHANCE_RED_BOTTOM
     },
     {
       name: "Mediolan",
-      type: "City",
+      type: CITY,
       country: "Italy",
       price: 200,
       mortgage: 100,
@@ -173,7 +235,7 @@ const getBoardFieldsStateTemplate = () => ([
     },
     {
       name: "Rome",
-      type: "City",
+      type: CITY,
       country: "Italy",
       price: 240,
       mortgage: 120,
@@ -196,14 +258,14 @@ const getBoardFieldsStateTemplate = () => ([
     },
     {
       name: "Jail",
-      type: "Jail",
-      Icon: {},
+      type: JAIL,
+      Icon: dummyIcon,
       wait: 2,
       index: 10
     },
     {
       name: "Barcelona",
-      type: "City",
+      type: CITY,
       country: "Spain",
       price: 280,
       mortgage: 140,
@@ -225,7 +287,7 @@ const getBoardFieldsStateTemplate = () => ([
       index: 11
     },
     {
-      type: "Plant",
+      type: PLANT,
       country: "Plant",
       price: 300,
       mortgage: 150,
@@ -235,13 +297,13 @@ const getBoardFieldsStateTemplate = () => ([
       ],
       owner: "Bank",
       isPlegded: false,
-      Icon: {},
+      Icon: dummyIcon,
       name: "Power Station",
       index: 12
     },
     {
       name: "Sewilla",
-      type: "City",
+      type: CITY,
       country: "Spain",
       price: 280,
       mortgage: 140,
@@ -264,7 +326,7 @@ const getBoardFieldsStateTemplate = () => ([
     },
     {
       name: "Madrit",
-      type: "City",
+      type: CITY,
       country: "Spain",
       price: 320,
       mortgage: 160,
@@ -286,7 +348,7 @@ const getBoardFieldsStateTemplate = () => ([
       index: 14
     },
     {
-      type: "Railway",
+      type: RAILWAY,
       country: "Railways",
       price: 400,
       mortgage: 200,
@@ -298,13 +360,13 @@ const getBoardFieldsStateTemplate = () => ([
       ],
       owner: "Bank",
       isPlegded: false,
-      Icon: {},
+      Icon: dummyIcon,
       name: "West Railways",
       index: 15
     },
     {
       name: "Liverpool",
-      type: "City",
+      type: CITY,
       country: "UK",
       price: 360,
       mortgage: 180,
@@ -328,12 +390,12 @@ const getBoardFieldsStateTemplate = () => ([
     {
       name: "Chance blue_left",
       index: 17,
-      Icon: {},
-      type: "Chance blue"
+      Icon: dummyIcon,
+      type: CHANCE_BLUE_LEFT
     },
     {
       name: "Glasgow",
-      type: "City",
+      type: CITY,
       country: "UK",
       price: 360,
       mortgage: 180,
@@ -356,7 +418,7 @@ const getBoardFieldsStateTemplate = () => ([
     },
     {
       name: "London",
-      type: "City",
+      type: CITY,
       country: "UK",
       price: 400,
       mortgage: 200,
@@ -379,8 +441,8 @@ const getBoardFieldsStateTemplate = () => ([
     },
     {
       name: "Free park",
-      type: "Free park",
-      Icon: {},
+      type: FREE_PARK,
+      Icon: dummyIcon,
       visit: [
         0
       ],
@@ -389,7 +451,7 @@ const getBoardFieldsStateTemplate = () => ([
     },
     {
       name: "Rotterdam",
-      type: "City",
+      type: CITY,
       country: "Benelux",
       price: 440,
       mortgage: 220,
@@ -413,12 +475,12 @@ const getBoardFieldsStateTemplate = () => ([
     {
       name: "Chance red_top",
       index: 22,
-      Icon: {},
-      type: "Chance red"
+      Icon: dummyIcon,
+      type: CHANCE_RED_TOP
     },
     {
       name: "Bruksela",
-      type: "City",
+      type: CITY,
       country: "Benelux",
       price: 440,
       mortgage: 220,
@@ -441,7 +503,7 @@ const getBoardFieldsStateTemplate = () => ([
     },
     {
       name: "Amsterdam",
-      type: "City",
+      type: CITY,
       country: "Benelux",
       price: 480,
       mortgage: 240,
@@ -463,7 +525,7 @@ const getBoardFieldsStateTemplate = () => ([
       index: 24
     },
     {
-      type: "Railway",
+      type: RAILWAY,
       country: "Railways",
       price: 400,
       mortgage: 200,
@@ -475,13 +537,13 @@ const getBoardFieldsStateTemplate = () => ([
       ],
       owner: "Bank",
       isPlegded: false,
-      Icon: {},
+      Icon: dummyIcon,
       name: "North Railways",
       index: 25
     },
     {
       name: "Malmo",
-      type: "City",
+      type: CITY,
       country: "Sweeden",
       price: 520,
       mortgage: 260,
@@ -504,7 +566,7 @@ const getBoardFieldsStateTemplate = () => ([
     },
     {
       name: "Goteborg",
-      type: "City",
+      type: CITY,
       country: "Sweeden",
       price: 520,
       mortgage: 260,
@@ -526,7 +588,7 @@ const getBoardFieldsStateTemplate = () => ([
       index: 27
     },
     {
-      type: "Plant",
+      type: PLANT,
       country: "Plant",
       price: 300,
       mortgage: 150,
@@ -536,13 +598,13 @@ const getBoardFieldsStateTemplate = () => ([
       ],
       owner: "Bank",
       isPlegded: false,
-      Icon: {},
+      Icon: dummyIcon,
       name: "Water Plant",
       index: 28
     },
     {
       name: "Stockholm",
-      type: "City",
+      type: CITY,
       country: "Sweeden",
       price: 560,
       mortgage: 280,
@@ -565,14 +627,14 @@ const getBoardFieldsStateTemplate = () => ([
     },
     {
       name: "Go to jail",
-      type: "Go to jail",
-      Icon: {},
+      type: GO_TO_JAIL,
+      Icon: dummyIcon,
       wait: 0,
       index: 30
     },
     {
       name: "Frankfurt",
-      type: "City",
+      type: CITY,
       country: "RFN",
       price: 600,
       mortgage: 300,
@@ -595,7 +657,7 @@ const getBoardFieldsStateTemplate = () => ([
     },
     {
       name: "Cologne",
-      type: "City",
+      type: CITY,
       country: "RFN",
       price: 600,
       mortgage: 300,
@@ -619,12 +681,12 @@ const getBoardFieldsStateTemplate = () => ([
     {
       name: "Chance blue_right",
       index: 33,
-      Icon: {},
-      type: "Chance blue"
+      Icon: dummyIcon,
+      type: CHANCE_BLUE_RIGHT
     },
     {
       name: "Bonn",
-      type: "City",
+      type: CITY,
       country: "RFN",
       price: 640,
       mortgage: 320,
@@ -646,7 +708,7 @@ const getBoardFieldsStateTemplate = () => ([
       index: 34
     },
     {
-      type: "Railway",
+      type: RAILWAY,
       country: "Railways",
       price: 400,
       mortgage: 200,
@@ -658,19 +720,19 @@ const getBoardFieldsStateTemplate = () => ([
       ],
       owner: "Bank",
       isPlegded: false,
-      Icon: {},
+      Icon: dummyIcon,
       name: "East Railways",
       index: 35
     },
     {
       name: "Chance red_right",
       index: 36,
-      Icon: {},
-      type: "Chance red"
+      Icon: dummyIcon,
+      type: CHANCE_RED_BOTTOM
     },
     {
       name: "Insbruck",
-      type: "City",
+      type: CITY,
       country: "Austria",
       price: 700,
       mortgage: 350,
@@ -693,8 +755,8 @@ const getBoardFieldsStateTemplate = () => ([
     },
     {
       name: "Tax",
-      type: "Tax",
-      Icon: {},
+      type: TAX,
+      Icon: dummyIcon,
       visit: [
         200
       ],
@@ -703,7 +765,7 @@ const getBoardFieldsStateTemplate = () => ([
     },
     {
       name: "Wien",
-      type: "City",
+      type: CITY,
       country: "Austria",
       price: 700,
       mortgage: 350,
@@ -726,56 +788,58 @@ const getBoardFieldsStateTemplate = () => ([
     }
   ])
 
-const getPlayersStateTemplate = () => ([
+const getPlayersStateTemplate = (): iPlayerSnapshot[] => ([
         {
           name: "Balin",
           money: 3000,
           specialCards: [],
-          color: "yellow",
+          color: YELLOW,
           fieldNr: 0,
           isInPrison: false,
           nrTurnsToWait: 0,
           isGameLost: false,
-          strategy: "manual"
+          strategy: StrategyNames.manual
         },
         {
           name: "Dwalin",
           money: 3000,
           specialCards: [],
-          color: "red",
+          color: RED,
           fieldNr: 0,
           isInPrison: false,
           nrTurnsToWait: 0,
           isGameLost: false,
-          strategy: "manual"
+          strategy: StrategyNames.manual
         },
         {
           name: "Dorin",
           money: 3000,
           specialCards: [],
-          color: "green",
+          color: GREEN,
           fieldNr: 0,
           isInPrison: false,
           nrTurnsToWait: 0,
           isGameLost: false,
-          strategy: "manual"
+          strategy: StrategyNames.manual
         },
         {
           name: "Gloin",
           money: 3000,
           specialCards: [],
-          color: "blue",
+          color: BLUE,
           fieldNr: 0,
           isInPrison: false,
           nrTurnsToWait: 0,
           isGameLost: false,
-          strategy: "manual"
+          strategy: StrategyNames.manual
         }
       ])
 
-const getChanceCardsStateTemplate = () => ({
+const getChanceCardsStateTemplate = (): {chanceCards: { [key: string ]: tChanceCardsHolderState}} => ({
     chanceCards: {
         'Chance cards red': {
+            cardsSetName: 'Chance cards red',
+            lastDrawnCardIndex: 0,
             cardsInOrder: [
                 {
                     descriptions: {
@@ -999,6 +1063,8 @@ const getChanceCardsStateTemplate = () => ({
             ]
           },  
         'Chance cards blue': {
+          cardsSetName: 'Chance cards red',
+          lastDrawnCardIndex: 0,
           cardsInOrder: [
             {
                 descriptions: {
