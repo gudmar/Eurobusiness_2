@@ -3,7 +3,7 @@ import { range } from "../../Functions/createRange";
 import { shiftBoardIndexByNeg1 } from "../../Functions/shiftIndex";
 import { ANY_CHANGE, CHANGE_FIELDS_TO_VISIT, CHANGE_NR_THAT_DICE_WILL_THROW, CHANGE_TEST_MODE } from "../Messages/constants";
 import { SubscribtionsHandler } from "../SubscrbtionsHandler";
-import { CHANCE_FIELDS, CITY_FIELDS, NONE, PLANTS, RAILWAYS, TAX_FIELD } from "./const";
+import { CHANCE_FIELDS, CITY_FIELDS, NONE, PLANTS, RAILWAYS_FIELDS, TAX_FIELD } from "./const";
 import { iDice, iDiceTestModeDecorator, iJailTestOutcome, iThrowResult, iThrowResultRecursive, tDiceState, TestModes } from "./types";
 
 // DICE USES BOARD INDEX, NOT FROM 0 BuT FROM 1
@@ -18,7 +18,7 @@ const FIELD_INDEXES_FOR_TESTING = {
     [NONE]: [],
     [CHANCE_FIELDS]: [3, 8, 18, 23, 34, 37],
     [CITY_FIELDS]: [2,4, 7 , 8, 9,  10, 12, 14, 15, 17, 19, 20, 22, 24, 25, 27, 28, 30, 32, 33, 35, 36, 38, 40],
-    [RAILWAYS]: [6, 16 ,26, 36],
+    [RAILWAYS_FIELDS]: [6, 16 ,26, 36],
     [PLANTS]: [13, 29],
     [GO_TO_JAIL]: [31],
     [TAX_FIELD]: [39],
@@ -88,7 +88,7 @@ const testModeFieldsDictionary: tDictionary = {
     [TestModes.chanceFields]: FIELD_INDEXES_FOR_TESTING[CHANCE_FIELDS],
     [TestModes.cityFields]: FIELD_INDEXES_FOR_TESTING[CITY_FIELDS],
     [TestModes.plants]: FIELD_INDEXES_FOR_TESTING[PLANTS],
-    [TestModes.railways]: FIELD_INDEXES_FOR_TESTING[RAILWAYS],
+    [TestModes.railways]: FIELD_INDEXES_FOR_TESTING[RAILWAYS_FIELDS],
     [TestModes.goToJailField]: FIELD_INDEXES_FOR_TESTING[GO_TO_JAIL],
     [TestModes.taxField]: FIELD_INDEXES_FOR_TESTING[TAX_FIELD],
 }
