@@ -3,9 +3,11 @@ import { iBank, tBankState } from "./types";
 
 export class Bank implements iBank {
 
-    private _nrOfHotels: number = INITIAL_NR_HOTELS;
-    private _nrOfHouses: number = INITIAL_NR_HOUSES;
+    // private _nrOfHotels: number = INITIAL_NR_HOTELS;
+    // private _nrOfHouses: number = INITIAL_NR_HOUSES;
     private static _instance?: Bank;
+    static nrOfHotels: number;
+    static nrOfHouses: number
 
     constructor() {
         if (Bank._instance) return Bank._instance;
@@ -18,34 +20,34 @@ export class Bank implements iBank {
 
     get state(): tBankState {
         return {
-            nrOfHotels: this._nrOfHotels,
-            nrOfHouses: this._nrOfHouses,
+            nrOfHotels: Bank.nrOfHotels,
+            nrOfHouses: Bank.nrOfHouses,
         }
     }
 
     set state(state: tBankState) {
-            this._nrOfHotels = state.nrOfHotels;
-            this._nrOfHouses = state.nrOfHouses;
+            Bank.nrOfHotels = state.nrOfHotels;
+            Bank.nrOfHouses = state.nrOfHouses;
         }
 
-    get nrOfHotels(): number {return this._nrOfHotels}
-    get nrOfHouses(): number {return this._nrOfHouses}
+    get nrOfHotels(): number {return Bank.nrOfHotels}
+    get nrOfHouses(): number {return Bank.nrOfHouses}
 
     getHotel() {
-        if (this._nrOfHotels <= 0) {return false}
-        this._nrOfHotels--; return true
+        if (Bank.nrOfHotels <= 0) {return false}
+            Bank.nrOfHotels--; return true
     }
-    returnHotel(): boolean { this._nrOfHotels++; return true; }
+    returnHotel(): boolean { Bank.nrOfHotels++; return true; }
 
     getHouses(nrOfHousesToGet: number): boolean {
 
         if (nrOfHousesToGet > MAX_NR_OF_HOUSES_TO_PURCHASE_IN_ONE_ROW) throw new Error(`Cannot get more then ${MAX_NR_OF_HOUSES_TO_PURCHASE_IN_ONE_ROW}`)
-        if (this._nrOfHouses <= nrOfHousesToGet ) {return false}
-        this._nrOfHouses -= nrOfHousesToGet;
+        if (Bank.nrOfHouses <= nrOfHousesToGet ) {return false}
+        Bank.nrOfHouses -= nrOfHousesToGet;
         return true;
     }
     returnHouses(nrOfHousesToReturn: number): boolean {
-        this._nrOfHouses += nrOfHousesToReturn;
+        Bank.nrOfHouses += nrOfHousesToReturn;
         return true;
     }
 
