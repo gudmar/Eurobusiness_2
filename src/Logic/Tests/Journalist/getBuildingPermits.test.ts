@@ -1,9 +1,9 @@
-import { AMSTERDAM, ATENY, BARCELONA, BLUE, BRUKSELA, GOTEBORG, LIVERPOOL, LONDON, MADRIT, MALMO, MEDIOLAN, NEAPOL, POWER_STATION, RED, ROME, ROTTERDAM, SALONIKI, SEWILLA, SZTOKHOLM, WATER_PLANT } from "../../../Data/const";
+import { AMSTERDAM, ATENY, BARCELONA, BLUE, BRUKSELA, FRANKFURT, GOTEBORG, INSBRUK, LIVERPOOL, LONDON, MADRIT, MALMO, MEDIOLAN, NEAPOL, POWER_STATION, RED, ROME, ROTTERDAM, SALONIKI, SEWILLA, SZTOKHOLM, WATER_PLANT } from "../../../Data/const";
 import { BuildingPermitRejected, getBuildingPermits } from "../../Journalist/utils/getBuildingPermits";
 import { Players } from "../../Players/Players";
 import { changeEstates, getStateMock } from "./ChanceCardStateMocks";
-
-const PLAYER_NAME = 'Dwalin';
+import { permits_0h0H_0h0H, permits_0h0H_0h0H_0h0H, permits_0h0H_1h0H_0h0H, permits_0h1H_4h0H, permits_0h1H_4h0H_4h0H, permits_1h0H_0h0H, permits_1h0H_0h0H_1h0H, permits_1h0H_1h0H_0h0H, permits_3h0H_3h0H_3h0H, permits_4h0H_0h1H, permits_4h0H_0h1H_0h1H, permits_4h0H_3h0H_3h0H, permits_4h0H_4h0H_4h0H } from "./getBuildingPermitsMocks_outputs";
+import { readyState1, readyState2, readyState3 } from "./getBuildingPermitsMocks_statePreparation";
 
 Players.playerNameToPlayerColor = () => RED;
 
@@ -102,22 +102,93 @@ describe('Testing getBuildingPermits', () => {
         expect(reasonAlreadyHotels).toBe(BuildingPermitRejected.alreadyBuild)
     });
     it('Should return an object with rejected reason when bank has no houses and only houses might have been build in cities of some country', () => {
-        
+
     })
     it('Should return an object with rejected reason when bank has no hotels and there is a max nr of houses in each city in the country', () => {
 
     })
-    it('Should return an object with the country name and permits for up to 4 houses when player owns each city in country, none city is plegded, there is no house, 2 cities in a country case', () => {
-
+    describe('Testing successfull building permits. Each when player owns all estates, none is plegede', () => {
+        describe('changeBuildingsDeltasSuccess1', () => {
+            it('Should return an object with the country name and permits for up to 4 houses when [0h0H, 0h0H]', () => {
+                //Austria
+                // const permits = getBuildingPermits({gameState: readyState1, playerName: RED, cityName: INSBRUK});
+                // expect(permits).toEqual(permits_0h0H_0h0H);
+            })
+            it('Should return an object with the country name and permits for up to 4 houses when [1h0H, 0h0H]', () => {
+                //Grecja
+                // const permits = getBuildingPermits({gameState: readyState1, playerName: RED, cityName: ATENY});
+                // expect(permits).toEqual(permits_1h0H_0h0H);
+        
+            })
+            it('Should return an object with the country name and permits for up to 4 houses when [0h0H, 0h0H, 0h0H]', () => {
+                //Włochy
+                // const permits = getBuildingPermits({gameState: readyState1, playerName: RED, cityName: NEAPOL});
+                // expect(permits).toEqual(permits_0h0H_0h0H_0h0H);
+            })
+            it('Should return an object with the country name and permits for up to 4 houses when [0h0H, 1h0H, 0h0H]', () => {
+                //Hiszpania
+                // const permits = getBuildingPermits({gameState: readyState1, playerName: RED, cityName: MADRIT});
+                // expect(permits).toEqual(permits_0h0H_1h0H_0h0H);
+            })
+            it('Should return an object with the country name and permits for up to 4 houses when [1h0H, 0h0H, 1h0H]', () => {
+                //UK
+                // const permits = getBuildingPermits({gameState: readyState1, playerName: RED, cityName: LONDON});
+                // expect(permits).toEqual(permits_1h0H_0h0H_1h0H);
+            })
+            it('Should return an object with the country name and permits for up to 4 houses when [1h0H, 1h0H, 0h0H]', () => {
+                //Benelux
+                // const permits = getBuildingPermits({gameState: readyState1, playerName: RED, cityName: ROTTERDAM});
+                // expect(permits).toEqual(permits_1h0H_1h0H_0h0H);
+            })
+            it('Should return an object with the country name and permits for up to 4 houses when [3h0H, 3h0H, 3h0H]', () => {
+                //Szwecja
+                // const permits = getBuildingPermits({gameState: readyState1, playerName: RED, cityName: GOTEBORG});
+                // expect(permits).toEqual(permits_3h0H_3h0H_3h0H);
+            })
+            it('Should return an object with the country name and permits for up to 4 houses when [4h0H, 3h0H, 3h0H]', () => {
+                //RFN
+                // const permits = getBuildingPermits({gameState: readyState1, playerName: RED, cityName: FRANKFURT});
+                // expect(permits).toEqual(permits_4h0H_3h0H_3h0H);
+        
+            })
+        }),
+        describe('changeBuildingsDeltasSuccess2', () => {
+            it('Should return an object with the country name and permits for up to 3 houses when, [2h0H, 3h0H]', () => {
+                //Grecja
+                // const permits = getBuildingPermits({gameState: readyState2, playerName: RED, cityName: ATENY});
+                // expect(permits).toEqual(permits_4h0H_3h0H_3h0H);            
+            })
+            it('Should return an object with permits when [0h1H, 4h0H]', () => {
+                //Austria
+                // const permits = getBuildingPermits({gameState: readyState2, playerName: RED, cityName: INSBRUK});
+                // expect(permits).toEqual(permits_0h1H_4h0H);
+            })
+            it('Should return an object with the country name and permits for up to 4 houses when [0h1H, 4h0H, 4h0H]', () => {
+                //Hiszpania
+                // const permits = getBuildingPermits({gameState: readyState2, playerName: RED, cityName: BARCELONA});
+                // expect(permits).toEqual(permits_0h1H_4h0H_4h0H);
+            })
+            it('Should return an object with the country name and permits for up to 4 houses when [4h0H, 0h1H, 0h1H]', () => {
+                // UK
+                // const permits = getBuildingPermits({gameState: readyState2, playerName: RED, cityName: LIVERPOOL});
+                // expect(permits).toEqual(permits_4h0H_0h1H_0h1H);
+            })    
+        });
+        describe('changeBuildingsDeltasSuccess3', () => {
+            it('Should return an object with permits when [4h0H, 0h1H]', () => {
+                //Grecja
+                // const permits = getBuildingPermits({gameState: readyState3, playerName: RED, cityName: SALONIKI});
+                // expect(permits).toEqual(permits_4h0H_0h1H);
+            })    
+            it('Should return an option to purchase hotels when each city has 4 houses', () => {
+                //Spain
+                // const permits = getBuildingPermits({gameState: readyState3, playerName: RED, cityName: SALONIKI});
+                // expect(permits).toEqual(permits_4h0H_4h0H_4h0H);
+            })
+        })
     })
-    it('Should return an object with the country name and permits for up to 4 houses when player owns each city in a country, none city is plegeded, there is no house, 3 cities in a country case', () => {
-
-    })
-    it('Should return an object with the country name and permits for up to 4 houses when player owns each city in a 2 city country, and there is 1 house build already', () => {
-
-    })
-    it('Should return an object with the country name and permits for up to 3 houses when player owns each city in a 2 city country, and there are 5 houses already there', () => {
-
+    describe('Player already bough some hotels in this turn. Limit of hotels per turn is 3', () => {
+        // Nr of hotels purchased in a turn has to be saved to the game state!!
     })
 
 })
