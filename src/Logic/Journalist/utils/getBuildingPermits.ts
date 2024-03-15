@@ -17,8 +17,11 @@ export enum NrOfHouses {
     one = '1 house',
     two = '2 houses',
     three = '3 houses',
-    four = '4 houses',
 }
+export enum NrOfHotels {
+    one = '1 hotel', two = '2 hotels', three = '3 hotels'
+}
+
 export enum BuildingPermitRejected {
     notACity = 'Buildings may be build only in a city',
     plegded = 'Buildings may be created only on non plegded properties',
@@ -37,7 +40,6 @@ export type tBuidlingApproved = {
         [NrOfHouses.one]: tHouseLocations[],
         [NrOfHouses.two]: tHouseLocations[]
         [NrOfHouses.three]: tHouseLocations[],
-        [NrOfHouses.four]: tHouseLocations[]
     }
 }
 
