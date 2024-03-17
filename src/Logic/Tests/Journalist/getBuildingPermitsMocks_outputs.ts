@@ -3,7 +3,7 @@
 // }
 
 import { WIEDEN, AUSTRIA, INSBRUK, GREECE, ATENY, SALONIKI, ITALY, NEAPOL, MEDIOLAN, ROME, SPAIN, BARCELONA, MADRIT, SEWILLA, UK, GLASGOW, LIVERPOOL, LONDON, BENELUX, AMSTERDAM, ROTTERDAM, BRUKSELA, SWEEDEN, MALMO, GOTEBORG, SZTOKHOLM, RFN, KOLONIA, BONN } from "../../../Data/const";
-import { NrOfHotels, NrOfHouses } from "../../Journalist/utils/getBuildingPermits";
+import { BuildingPermitRejected, NrOfHotels, NrOfHouses } from "../../Journalist/utils/getBuildingPermits";
 
 // export type tBuidlingApproved = {
 //     country: string,
@@ -171,6 +171,23 @@ export const permits_2h0H_3h0H = {
     }
 }
 
+export const permits_2h0H_3h0H_NotEnoughHouses = {
+    country: GREECE,
+    reason: BuildingPermitRejected.noHousesLeftInBank,
+    permits: {
+        [NrOfHouses.one]: [
+            {locationOne: [SALONIKI], cost: 100},
+        ],
+        [NrOfHouses.two]: [
+            {locationOne: [SALONIKI, ATENY], cost: 200},
+            {locationTwo: [SALONIKI], cost: 200},
+        ],
+        [NrOfHouses.three]: [
+            {locationOne: [ATENY], locationTwo: [SALONIKI], cost: 300}
+        ],
+    }
+}
+
 export const permits_0h1H_4h0H = {
     country: AUSTRIA,
     permits: {
@@ -230,4 +247,20 @@ export const permits_4h0H_4h0H_4h0H = {
     }
 }
 
+export const permits_4h0H_4h0H_4h0H_2HotelsLeft = {
+    country: SPAIN,
+    reason: BuildingPermitRejected.noHotelsLeftInBank,
+    permits: {
+        [NrOfHotels.one]: [
+            {locationOne: [NEAPOL], cost: 200},
+            {locationOne: [MEDIOLAN], cost: 200},
+            {locationOne: [ROME], cost: 200},
+        ],
+        [NrOfHotels.two]: [
+            {locationOne: [NEAPOL, MEDIOLAN], cost: 400},
+            {locationOne: [NEAPOL, ROME], cost: 400},
+            {locationOne: [MEDIOLAN, ROME], cost: 400},
+        ],
+    }
+}
 
