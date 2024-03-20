@@ -1,7 +1,7 @@
 import { INITIAL_NR_HOTELS, INITIAL_NR_HOUSES } from "../../../Constants/constants";
 import { AMSTERDAM, ATENY, BARCELONA, BLUE, BRUKSELA, FRANKFURT, GOTEBORG, INSBRUK, LIVERPOOL, LONDON, MADRIT, MALMO, MEDIOLAN, NEAPOL, POWER_STATION, RED, ROME, ROTTERDAM, SALONIKI, SEWILLA, SZTOKHOLM, WATER_PLANT, WIEDEN } from "../../../Data/const";
 import { Bank } from "../../Bank/Bank";
-import { BuildingPermitRejected, getBuildingPermits } from "../../Journalist/utils/getBuildingPermits";
+import { BuildingPermitRejected, getBuildingPermits, tBuildingPermits, tHouseLocations } from "../../Journalist/utils/getBuildingPermits";
 import { Players } from "../../Players/Players";
 import { changeEstates, getStateMock } from "./ChanceCardStateMocks";
 import { permits_0h0H_0h0H, permits_0h0H_0h0H_0h0H, permits_0h0H_1h0H_0h0H, permits_0h1H_4h0H, permits_0h1H_4h0H_4h0H, permits_1h0H_0h0H, permits_1h0H_0h0H_1h0H, permits_1h0H_1h0H_0h0H, permits_2h0H_3h0H, permits_2h0H_3h0H_NotEnoughHouses, permits_3h0H_3h0H_3h0H, permits_4h0H_0h1H, permits_4h0H_0h1H_0h1H, permits_4h0H_3h0H_3h0H, permits_4h0H_4h0H_4h0H, permits_4h0H_4h0H_4h0H_2HotelsLeft } from "./getBuildingPermitsMocks_outputs";
@@ -126,6 +126,29 @@ describe('Testing getBuildingPermits', () => {
         // const reasonNoHouses = getBuildingPermits({gameState: stateChangedBuildings, playerName: RED, cityName: WIEDEN, });
         // expect(reasonNoHouses).toBe(BuildingPermitRejected.noHotelsLeftInBank)
     })
+
+    const printHouses = (permits: any) => {
+        const entries = Object.entries(permits);
+        console.log('Calculated permits:')
+        entries.forEach(([key, value]: [string, any]) => {
+            console.log(key)
+            Object.entries(value).forEach(([k, v]) => {
+                if (key !== 'country')
+                console.log(k, v)
+            })
+        })
+    }
+
+    const sortPermits = (buildingPermits: tBuildingPermits) => {
+        const permits = Object.values(buildingPermits.permits || {});
+        permits.forEach((permit) => {
+            permit.sort();
+            Object.values(permit).forEach((val) => {
+                if (Array.isArray(val)) val.sort();
+            })
+        })
+    }
+
     describe('Testing successfull building permits. Each when player owns all estates, none is plegede', () => {
         describe('changeBuildingsDeltasSuccess1', () => {
             it('Should return an object with the country name and permits for up to 4 houses when [0h0H, 0h0H]', () => {
@@ -135,8 +158,8 @@ describe('Testing getBuildingPermits', () => {
             })
             it('Should return an object with the country name and permits for up to 4 houses when [1h0H, 0h0H]', () => {
                 //Grecja
-                // const permits = getBuildingPermits({gameState: readyState1, playerName: RED, cityName: ATENY});
-                // expect(permits).toEqual(permits_1h0H_0h0H);
+                const permits = getBuildingPermits({gameState: readyState1, playerName: RED, cityName: ATENY});
+                expect(sortPermits(permits as tBuildingPermits)).toEqual(sortPermits(permits_1h0H_0h0H));
         
             })
             it('Should return an object with the country name and permits for up to 4 houses when [0h0H, 0h0H, 0h0H]', () => {
