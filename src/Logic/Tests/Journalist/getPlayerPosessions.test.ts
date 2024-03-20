@@ -21,7 +21,7 @@ const changeOwnerDeltas = ESTATES.map((estateName) => ({
     }
 }))
 
-const state = getStateMock();
+const state = getStateMock()
 const stateWithChangedOwner = changeEstates(state, changeOwnerDeltas);
 const changeBuildingsDeltas = [
     {
