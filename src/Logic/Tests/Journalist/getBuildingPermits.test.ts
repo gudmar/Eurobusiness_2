@@ -198,7 +198,7 @@ describe('Testing getBuildingPermits', () => {
                 console.log('Printing expectattions')
                 printHouses(sortedExpectation)
                 expect(sortedPermits).toEqual(sortedExpectation);
-            })
+            }) 
             it('Should return an object with the country name and permits for up to 4 houses when [3h0H, 3h0H, 3h0H]', () => {
                 //Szwecja
                 // const permits = getBuildingPermits({gameState: readyState1, playerName: RED, cityName: GOTEBORG});
