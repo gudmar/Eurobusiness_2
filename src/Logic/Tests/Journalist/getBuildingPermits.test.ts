@@ -1,7 +1,7 @@
 import { INITIAL_NR_HOTELS, INITIAL_NR_HOUSES } from "../../../Constants/constants";
 import { AMSTERDAM, ATENY, BARCELONA, BLUE, BRUKSELA, FRANKFURT, GOTEBORG, INSBRUK, LIVERPOOL, LONDON, MADRIT, MALMO, MEDIOLAN, NEAPOL, POWER_STATION, RED, ROME, ROTTERDAM, SALONIKI, SEWILLA, SZTOKHOLM, WATER_PLANT, WIEDEN } from "../../../Data/const";
 import { Bank } from "../../Bank/Bank";
-import { BuildingPermitRejected, getBuildingPermits, tBuildingPermits, tHouseLocations } from "../../Journalist/utils/getBuildingPermits";
+import { BuildingPermitRejected, getBuildingPermits, tBuidlingApproved, tBuildingPermits, tHouseLocations } from "../../Journalist/utils/getBuildingPermits";
 import { Players } from "../../Players/Players";
 import { changeEstates, getStateMock } from "./ChanceCardStateMocks";
 import { permits_0h0H_0h0H, permits_0h0H_0h0H_0h0H, permits_0h0H_1h0H_0h0H, permits_0h1H_4h0H, permits_0h1H_4h0H_4h0H, permits_1h0H_0h0H, permits_1h0H_0h0H_1h0H, permits_1h0H_1h0H_0h0H, permits_2h0H_3h0H, permits_2h0H_3h0H_NotEnoughHouses, permits_3h0H_3h0H_3h0H, permits_4h0H_0h1H, permits_4h0H_0h1H_0h1H, permits_4h0H_3h0H_3h0H, permits_4h0H_4h0H_4h0H, permits_4h0H_4h0H_4h0H_2HotelsLeft } from "./getBuildingPermitsMocks_outputs";
@@ -88,32 +88,32 @@ describe('Testing getBuildingPermits', () => {
         expect(throwingFunction).toThrow();
     });
     it('Should return an object with rejected reason when given an estate where buildings cannot be created', () => {
-        const reason = getBuildingPermits({gameState: stateChangedBuildings, playerName: RED, cityName: POWER_STATION})?.reason;
+        const reason = (getBuildingPermits({gameState: stateChangedBuildings, playerName: RED, cityName: POWER_STATION}) as tBuidlingApproved)?.reason;
         expect(reason).toBe(BuildingPermitRejected.notACity);
     });
     it('Should return an object with rejected reason when given an estate in country, where some other estate is plegded', () => {
-        const reason = getBuildingPermits({gameState: stateChangedBuildings, playerName: RED, cityName: GOTEBORG})?.reason;
+        const reason = (getBuildingPermits({gameState: stateChangedBuildings, playerName: RED, cityName: GOTEBORG}) as tBuidlingApproved)?.reason;
         expect(reason).toBe(BuildingPermitRejected.plegded)
     });
     it('Should return an object with rejected reason when given a plegded estate', () => {
-        const reason = getBuildingPermits({gameState: stateChangedBuildings, playerName: RED, cityName: SZTOKHOLM})?.reason;
+        const reason = (getBuildingPermits({gameState: stateChangedBuildings, playerName: RED, cityName: SZTOKHOLM}) as tBuidlingApproved)?.reason;
         expect(reason).toBe(BuildingPermitRejected.plegded)
     });
     it('Should return an object with rejected reason when gieven estate belongs to another player / bank', () => {
-        const reasonAnotherPlayer = getBuildingPermits({gameState: stateChangedBuildings, playerName: RED, cityName: MADRIT})?.reason;
-        const reasonAnotherBank = getBuildingPermits({gameState: stateChangedBuildings, playerName: RED, cityName: LONDON})?.reason;
+        const reasonAnotherPlayer = (getBuildingPermits({gameState: stateChangedBuildings, playerName: RED, cityName: MADRIT}) as tBuidlingApproved)?.reason;
+        const reasonAnotherBank = (getBuildingPermits({gameState: stateChangedBuildings, playerName: RED, cityName: LONDON}) as tBuidlingApproved)?.reason;
         expect(reasonAnotherPlayer).toBe(BuildingPermitRejected.ownsOnlyPart)
         expect(reasonAnotherBank).toBe(BuildingPermitRejected.ownsOnlyPart)
 
     });
     it('Should return an object with rejected reason when given estate is in a country, where some other city belongs to another pleyer / bank', () => {
-        const reasonAnotherPlayer = getBuildingPermits({gameState: stateChangedBuildings, playerName: RED, cityName: BARCELONA})?.reason;
-        const reasonAnotherBank = getBuildingPermits({gameState: stateChangedBuildings, playerName: RED, cityName: LIVERPOOL})?.reason;
+        const reasonAnotherPlayer = (getBuildingPermits({gameState: stateChangedBuildings, playerName: RED, cityName: BARCELONA}) as tBuidlingApproved)?.reason;
+        const reasonAnotherBank = (getBuildingPermits({gameState: stateChangedBuildings, playerName: RED, cityName: LIVERPOOL}) as tBuidlingApproved)?.reason;
         expect(reasonAnotherPlayer).toBe(BuildingPermitRejected.ownsOnlyPart)
         expect(reasonAnotherBank).toBe(BuildingPermitRejected.ownsOnlyPart)
     });
     it('Should return an object with rejected reason when given estate is in a country where each city has a hotel', () => {
-        const reasonAlreadyHotels = getBuildingPermits({gameState: stateChangedBuildings, playerName: RED, cityName: SALONIKI})?.reason;
+        const reasonAlreadyHotels = (getBuildingPermits({gameState: stateChangedBuildings, playerName: RED, cityName: SALONIKI}) as tBuidlingApproved)?.reason;
         expect(reasonAlreadyHotels).toBe(BuildingPermitRejected.alreadyBuild)
     });
     it('Should return an object with rejected reason when bank has no houses and only houses might have been build in cities of some country', () => {
@@ -141,12 +141,22 @@ describe('Testing getBuildingPermits', () => {
 
     const sortPermits = (buildingPermits: tBuildingPermits) => {
         const permits = Object.values(buildingPermits.permits || {});
-        permits.forEach((permit) => {
-            permit.sort();
-            Object.values(permit).forEach((val) => {
-                if (Array.isArray(val)) val.sort();
+        permits.forEach((rows) => {
+            rows.sort((a, b) => {
+                const aAsString = JSON.stringify(a)
+                const bAsString = JSON.stringify(b);
+                if (aAsString > bAsString) return -1
+                return aAsString === bAsString ? 0 : 1 
+            });
+            rows.forEach((row) => {
+                Object.values(row).forEach((val) => {
+                    if (Array.isArray(val)) {
+                        val.sort();
+                    };    
+                })
             })
         })
+        return buildingPermits;
     }
 
     describe('Testing successfull building permits. Each when player owns all estates, none is plegede', () => {
@@ -164,24 +174,31 @@ describe('Testing getBuildingPermits', () => {
             })
             it('Should return an object with the country name and permits for up to 4 houses when [0h0H, 0h0H, 0h0H]', () => {
                 //Włochy
-                // const permits = getBuildingPermits({gameState: readyState1, playerName: RED, cityName: NEAPOL});
-                // expect(permits).toEqual(permits_0h0H_0h0H_0h0H);
+                const permits = getBuildingPermits({gameState: readyState1, playerName: RED, cityName: NEAPOL});
+                expect(permits).toEqual(permits_0h0H_0h0H_0h0H);
             })
-            it('Should return an object with the country name and permits for up to 4 houses when [0h0H, 1h0H, 0h0H]', () => {
+            it('Should return an object with the country name and permits for up to 3 houses when [0h0H, 1h0H, 0h0H]', () => {
                 //Hiszpania
-                // const permits = getBuildingPermits({gameState: readyState1, playerName: RED, cityName: MADRIT});
-                // expect(permits).toEqual(permits_0h0H_1h0H_0h0H);
+                const permits = getBuildingPermits({gameState: readyState1, playerName: RED, cityName: MADRIT});
+                expect(sortPermits(permits as tBuidlingApproved)).toEqual(sortPermits(permits_0h0H_1h0H_0h0H));
             })
             it('Should return an object with the country name and permits for up to 4 houses when [1h0H, 0h0H, 1h0H]', () => {
                 //UK
-                // const permits = getBuildingPermits({gameState: readyState1, playerName: RED, cityName: LONDON});
-                // expect(permits).toEqual(permits_1h0H_0h0H_1h0H);
+                const permits = getBuildingPermits({gameState: readyState1, playerName: RED, cityName: LONDON});
+                printHouses(permits);
+                expect(permits).toEqual(permits_1h0H_0h0H_1h0H);
             })
-            it('Should return an object with the country name and permits for up to 4 houses when [1h0H, 1h0H, 0h0H]', () => {
+            it.only('Should return an object with the country name and permits for up to 4 houses when [1h0H, 1h0H, 0h0H]', () => {
                 //Benelux
-                // const permits = getBuildingPermits({gameState: readyState1, playerName: RED, cityName: ROTTERDAM});
-                // expect(permits).toEqual(permits_1h0H_1h0H_0h0H);
-            })
+                const permits = getBuildingPermits({gameState: readyState1, playerName: RED, cityName: ROTTERDAM});
+                const sortedPermits = sortPermits(permits as tBuidlingApproved)
+                const sortedExpectation = sortPermits(permits_1h0H_1h0H_0h0H);
+                console.log('Printing permits')
+                printHouses(sortPermits)
+                console.log('Printing expectattions')
+                printHouses(sortedExpectation)
+                expect(sortedPermits).toEqual(sortedExpectation);
+            }) 
             it('Should return an object with the country name and permits for up to 4 houses when [3h0H, 3h0H, 3h0H]', () => {
                 //Szwecja
                 // const permits = getBuildingPermits({gameState: readyState1, playerName: RED, cityName: GOTEBORG});
