@@ -41,7 +41,8 @@ const stateWithRedOwner2 = changeEstates(state2, changeRedOwnerDeltas);
 const stateWithRedOwner3 = changeEstates(state3, changeRedOwnerDeltas);
 
 const changeBuildingsDeltasSuccess1 = [
-    { estateName: ATENY, props: { nrOfHouses: 1 } },
+    // { estateName: ATENY, props: { nrOfHouses: 1 } },
+    { estateName: SALONIKI, props: { nrOfHouses: 1 } },
     // { estateName: INSBRUK, props: { nrOfHouses: 1 } },
 
     { estateName: SEWILLA, props: { nrOfHouses: 1 } },

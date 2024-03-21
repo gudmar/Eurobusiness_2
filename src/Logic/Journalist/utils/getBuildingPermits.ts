@@ -181,19 +181,38 @@ const findIndexesOfFieldsWithCertainNumberOfHouses = (cities: iCityFieldState[],
 
 const calculatePermitsForTwoNotBalancedHouses = (citiesFromSameCountry: iCityFieldState[]) => {
     const result: tHouseLocations[] = [];
-    const { minHouses, nrOfMin, nrOfMax } = getHouseBalance(citiesFromSameCountry)
-    const indexesOfMin = findIndexesOfFieldsWithCertainNumberOfHouses(citiesFromSameCountry, minHouses)
+    const cities = citiesFromSameCountry as iCityFieldState[];
+    const { minHouses, maxHouses, nrOfMin, nrOfMax } = getHouseBalance(cities)
+    const indexesOfMin = findIndexesOfFieldsWithCertainNumberOfHouses(cities, minHouses)
+    const indexesOfMax = findIndexesOfFieldsWithCertainNumberOfHouses(cities, maxHouses)
     if (nrOfMin > nrOfMax) {
         const solutionFor2FieldsWithMinHouses = getSingleLinkTwoNodes('nrOfHouses', 'housePrice')({citiesFromSameCountry, nodeIndex1: indexesOfMin[0], nodeIndex2: indexesOfMin[1]});
         result.push(solutionFor2FieldsWithMinHouses)
+        return result;
     }
     const resultsForSingleMinHousesField = indexesOfMin.map((index) => {
         const {housePrice, name} = citiesFromSameCountry[index];
         const solution = {locationTwo: [name], cost: housePrice*2}
         return solution;
     })
-    const resultWithAllOptions = [...result, ...resultsForSingleMinHousesField]
-    return resultWithAllOptions;
+    if (cities.length === 2) {
+        const oneHouseInEachCity = getSingleLinkTwoNodes('nrOfHouses', 'housePrice')({citiesFromSameCountry, nodeIndex1: 0, nodeIndex2: 1});
+        const resultWithAllOptions = [
+            ...result,
+            oneHouseInEachCity,
+            ...resultsForSingleMinHousesField,
+        ]
+        return resultWithAllOptions;    
+    }
+    const cityMin = cities[indexesOfMin[0]];
+    const cityMax1 = cities[indexesOfMax[0]];
+    const cityMax2 = cities[indexesOfMax[1]];
+    const solution = [
+        ...resultsForSingleMinHousesField,
+        {locationOne: [cityMin.name, cityMax1.name], cost: cityMin.housePrice + cityMax1.hotelPrice},
+        {locationOne: [cityMin.name, cityMax2.name], cost: cityMin.housePrice + cityMax2.hotelPrice}
+    ]
+    return solution;
 }
 
 const calculatePermitsForTwoHouses = (args: tGetBuildingPermitsForNrOfBuildings): tHouseLocations[] => {
@@ -232,16 +251,18 @@ const calculatePermitsForThreeHouses = (args: tGetBuildingPermitsForNrOfBuilding
         return result;
     }
     const indexesOfFieldsWithMinHouses = findIndexesOfFieldsWithCertainNumberOfHouses(cities, minHouses)
+    const indexesOfFieldsWithMaxHouses = findIndexesOfFieldsWithCertainNumberOfHouses(cities, maxHouses);
     if (nrOfMin === 2) {
         const firstFieldWithMin = cities[indexesOfFieldsWithMinHouses[0]];
-        const secondFieldWithMin = cities[indexesOfFieldsWithMinHouses[1]]
+        const secondFieldWithMin = cities[indexesOfFieldsWithMinHouses[1]];
+        const fieldWithMax = cities[indexesOfFieldsWithMaxHouses[0]];
         const result = [
+            {locationOne: [firstFieldWithMin.name, secondFieldWithMin.name, fieldWithMax.name], cost: fieldWithMax.housePrice + firstFieldWithMin.housePrice + secondFieldWithMin.housePrice},
             {locationOne: [firstFieldWithMin.name], locationTwo: [secondFieldWithMin.name], cost: firstFieldWithMin.housePrice + 2*secondFieldWithMin.hotelPrice},
             {locationOne: [secondFieldWithMin.name], locationTwo: [firstFieldWithMin.name], cost: 2*firstFieldWithMin.housePrice + secondFieldWithMin.hotelPrice},
         ];
         return result;
     }
-    const indexesOfFieldsWithMaxHouses = findIndexesOfFieldsWithCertainNumberOfHouses(cities, maxHouses);
     if (cities.length === 2) {
         const cityWithMinNrOfHouses = cities[indexesOfFieldsWithMinHouses[0]];
         const cityWithMaxNrOfHouses = cities[indexesOfFieldsWithMaxHouses[0]];

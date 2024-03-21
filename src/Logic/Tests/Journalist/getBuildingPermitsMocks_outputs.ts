@@ -97,6 +97,7 @@ export const permits_1h0H_0h0H_1h0H = {
             {locationOne: [GLASGOW, LONDON], cost: 400},
         ],
         [NrOfHouses.three]: [
+            {locationOne: [GLASGOW, LIVERPOOL, LONDON], cost: 600},
             {locationOne: [LIVERPOOL], locationTwo: [GLASGOW], cost: 600},
             {locationOne: [LONDON], locationTwo: [GLASGOW], cost: 600},
         ],
