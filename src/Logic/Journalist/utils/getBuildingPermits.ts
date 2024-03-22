@@ -53,6 +53,8 @@ export type tHouseLocations = {
 export type tBuidlingApproved = {
     country?: string,
     reason?: tReason,
+    hotelReason?: tReason,
+    houseReason?: tReason,
     permits?: {
         [NrOfHouses.one]: tHouseLocations[],
         [NrOfHouses.two]: tHouseLocations[]
@@ -312,23 +314,36 @@ const calculatePermitsForHouses = (args: tGetBuildingPermitsForNrOfBuildings): t
     return result;
 }
 
+const calculateNrOfHousesThatMayStillBeBuild = (cities: iCityFieldState[]) => {
+    const nrOfHousesThatMayStillBeBuild = cities.reduce((acc, {nrOfHouses}) => {
+        const delta = MAX_NR_OF_HOUSES_ON_FIELD - nrOfHouses;
+        const newAcc = acc + delta;
+        return newAcc;
+    }, 0)
+    return nrOfHousesThatMayStillBeBuild;
+}
+
 const calculatePermitsForHousesWithRejectionApply = (args: tGetBuildingPermitsForNrOfBuildings): tBuidlingApproved => {
     const { nrOfBuildings, response, citiesFromSameCountry} = args;
     const nrOfHousesInBank = Bank.nrOfHouses;
     const result = calculatePermitsForHouses(args);
-    if (result.length > 0 && nrOfHousesInBank > nrOfBuildings) {
-        if (nrOfBuildings === 1) {
+    const nrOfHousesThatStillMayBeBuild = calculateNrOfHousesThatMayStillBeBuild(citiesFromSameCountry as iCityFieldState[]);
+    if (result.length > 0 && nrOfHousesInBank >= nrOfBuildings) {
+        if (nrOfBuildings === 1 && nrOfHousesThatStillMayBeBuild > 0) {
             const nextResponse = {...response, [NrOfHouses.one]: result};
             return nextResponse;
         }
-        if (nrOfBuildings === 2) {
+        if (nrOfBuildings === 2 && nrOfHousesThatStillMayBeBuild > 1) {
             const nextResponse = {...response, [NrOfHouses.two]: result};
             return nextResponse;
         }
-        if (nrOfBuildings === 3) {
+        if (nrOfBuildings === 3 && nrOfHousesThatStillMayBeBuild > 2) {
             const nextResponse = {...response, [NrOfHouses.three]: result};
             return nextResponse;
         }
+    } else if (nrOfHousesInBank < nrOfBuildings) {
+        const nextResponse = {...response, houseReason: BuildingPermitRejected.noHousesLeftInBank}
+        return nextResponse;
     }
     return response;
 }
@@ -346,15 +361,15 @@ const calculatePermitsForHotelsWithRejectionApply = (args: tGetBuildingPermitsFo
     const result = calculatePermitsForHotels(args);
     if (result.length > 0) {
         if ((result.length) > nrOfHotelsInBank) {
-            response.reason = BuildingPermitRejected.noHousesLeftInBank;
+            response.hotelReason = BuildingPermitRejected.noHousesLeftInBank;
             return response;
         }
         if (!citiesBigEnough) {
-            response.reason = BuildingPermitRejected.citiesNotBigEnough;
+            response.hotelReason = BuildingPermitRejected.citiesNotBigEnough;
             return response
         }
         if (citiesTooBig) {
-            response.reason = BuildingPermitRejected.alreadyBuild;
+            response.hotelReason = BuildingPermitRejected.alreadyBuild;
             return response
         }
         if (nrOfBuildings === 1 && nrOfHotelsInBank >= 1) {

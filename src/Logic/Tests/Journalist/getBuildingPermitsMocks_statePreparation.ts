@@ -65,8 +65,8 @@ const changeBuildingsDeltasSuccess1 = [
 export const readyState1 = changeEstates(stateWithRedOwner1, changeBuildingsDeltasSuccess1);
 
 const changeBuildingsDeltasSuccess2 = [
-    { estateName: ATENY, props: { nrOfHouses: 2 } },
-    { estateName: SALONIKI, props: { nrOfHouses: 3 } },
+    { estateName: ATENY, props: { nrOfHouses: 3 } },
+    { estateName: SALONIKI, props: { nrOfHouses: 2 } },
 
     { estateName: INSBRUK, props: { nrOfHotels: 1 } },
     { estateName: WIEDEN, props: { nrOfHouses: 4 } },
@@ -81,8 +81,8 @@ const changeBuildingsDeltasSuccess2 = [
 ]
 
 const changeBuildingsDeltasSuccess3 = [
-    { estateName: ATENY, props: { nrOfHouses: 4 } },
-    { estateName: SALONIKI, props: { nrOfHotels: 1 } },
+    { estateName: SALONIKI, props: { nrOfHouses: 4 } },
+    { estateName: ATENY, props: { nrOfHotels: 1 } },
 
     { estateName: INSBRUK, props: { nrOfHotels: 1 } },
     { estateName: WIEDEN, props: { nrOfHouses: 4 } },

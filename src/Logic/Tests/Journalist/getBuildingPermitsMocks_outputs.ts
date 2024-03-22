@@ -152,8 +152,10 @@ export const permits_4h0H_3h0H_3h0H = {
         [NrOfHouses.two]: [
             {locationOne: [KOLONIA, BONN], cost: 800},
         ],
+        hotelReason: BuildingPermitRejected.citiesNotBigEnough,
         // [NrOfHouses.three]: [], // not existing as it is empty
-    }
+    },
+    
 }
 
 export const permits_2h0H_3h0H = {
@@ -174,7 +176,7 @@ export const permits_2h0H_3h0H = {
 
 export const permits_2h0H_3h0H_NotEnoughHouses = {
     country: GREECE,
-    reason: BuildingPermitRejected.noHousesLeftInBank,
+    
     permits: {
         [NrOfHouses.one]: [
             {locationOne: [SALONIKI], cost: 100},
@@ -183,9 +185,7 @@ export const permits_2h0H_3h0H_NotEnoughHouses = {
             {locationOne: [SALONIKI, ATENY], cost: 200},
             {locationTwo: [SALONIKI], cost: 200},
         ],
-        [NrOfHouses.three]: [
-            {locationOne: [ATENY], locationTwo: [SALONIKI], cost: 300}
-        ],
+        houseReason: BuildingPermitRejected.noHousesLeftInBank,
     }
 }
 
@@ -230,20 +230,20 @@ export const permits_4h0H_0h1H = {
 }
 
 export const permits_4h0H_4h0H_4h0H = {
-    country: SPAIN,
+    country: ITALY,
     permits: {
         [NrOfHotels.one]: [
-            {locationOne: [NEAPOL], cost: 200},
-            {locationOne: [MEDIOLAN], cost: 200},
-            {locationOne: [ROME], cost: 200},
+            {locationOne: [NEAPOL], cost: 100},
+            {locationOne: [MEDIOLAN], cost: 100},
+            {locationOne: [ROME], cost: 100},
         ],
         [NrOfHotels.two]: [
-            {locationOne: [NEAPOL, MEDIOLAN], cost: 400},
-            {locationOne: [NEAPOL, ROME], cost: 400},
-            {locationOne: [MEDIOLAN, ROME], cost: 400},
+            {locationOne: [NEAPOL, MEDIOLAN], cost: 200},
+            {locationOne: [NEAPOL, ROME], cost: 200},
+            {locationOne: [MEDIOLAN, ROME], cost: 200},
         ],
         [NrOfHotels.three]: [
-            {locatoinOne: [NEAPOL, MEDIOLAN, ROME], cost: 400}
+            {locatoinOne: [NEAPOL, MEDIOLAN, ROME], cost: 300}
         ]
     }
 }

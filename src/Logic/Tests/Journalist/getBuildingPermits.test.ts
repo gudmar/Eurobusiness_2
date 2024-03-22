@@ -140,21 +140,27 @@ describe('Testing getBuildingPermits', () => {
     }
 
     const sortPermits = (buildingPermits: tBuildingPermits) => {
-        const permits = Object.values(buildingPermits.permits || {});
-        permits.forEach((rows) => {
-            rows.sort((a, b) => {
-                const aAsString = JSON.stringify(a)
-                const bAsString = JSON.stringify(b);
-                if (aAsString > bAsString) return -1
-                return aAsString === bAsString ? 0 : 1 
-            });
-            rows.forEach((row) => {
+        const permits = buildingPermits.permits!;
+        if (Object.keys(permits).length === 0) return buildingPermits;
+        const permitEntries = Object.entries(permits);
+        permitEntries.forEach(([key, rows]: [string, any]) => {
+            rows.forEach((row: any) => {
                 Object.values(row).forEach((val) => {
                     if (Array.isArray(val)) {
                         val.sort();
                     };    
                 })
             })
+            rows.sort((a: unknown, b: unknown) => {
+                const aAsString = JSON.stringify(a)
+                const bAsString = JSON.stringify(b);
+                if (aAsString > bAsString) return -1
+                return aAsString === bAsString ? 0 : 1 
+            });
+            type tPermitKeys = keyof typeof permits;
+            if (key in permits) {
+                permits[key as tPermitKeys] = rows;
+            }
         })
         return buildingPermits;
     }
@@ -188,69 +194,73 @@ describe('Testing getBuildingPermits', () => {
                 printHouses(permits);
                 expect(permits).toEqual(permits_1h0H_0h0H_1h0H);
             })
-            it.only('Should return an object with the country name and permits for up to 4 houses when [1h0H, 1h0H, 0h0H]', () => {
+            it('Should return an object with the country name and permits for up to 4 houses when [1h0H, 1h0H, 0h0H]', () => {
                 //Benelux
                 const permits = getBuildingPermits({gameState: readyState1, playerName: RED, cityName: ROTTERDAM});
                 const sortedPermits = sortPermits(permits as tBuidlingApproved)
                 const sortedExpectation = sortPermits(permits_1h0H_1h0H_0h0H);
-                console.log('Printing permits')
-                printHouses(sortPermits)
-                console.log('Printing expectattions')
-                printHouses(sortedExpectation)
                 expect(sortedPermits).toEqual(sortedExpectation);
             }) 
             it('Should return an object with the country name and permits for up to 4 houses when [3h0H, 3h0H, 3h0H]', () => {
                 //Szwecja
-                // const permits = getBuildingPermits({gameState: readyState1, playerName: RED, cityName: GOTEBORG});
-                // expect(permits).toEqual(permits_3h0H_3h0H_3h0H);
+                const permits = getBuildingPermits({gameState: readyState1, playerName: RED, cityName: GOTEBORG});
+                expect(permits).toEqual(permits_3h0H_3h0H_3h0H);
             })
             it('Should return an object with the country name and permits for up to 4 houses when [4h0H, 3h0H, 3h0H]', () => {
                 //RFN
-                // const permits = getBuildingPermits({gameState: readyState1, playerName: RED, cityName: FRANKFURT});
-                // expect(permits).toEqual(permits_4h0H_3h0H_3h0H);
+                const permits = getBuildingPermits({gameState: readyState1, playerName: RED, cityName: FRANKFURT});
+                printHouses(permits)
+                expect(permits).toEqual(permits_4h0H_3h0H_3h0H);
         
             })
         }),
         describe('changeBuildingsDeltasSuccess2', () => {
+            afterEach(() => {
+                Bank.nrOfHouses = 40;
+            })
+
             it('Should return an object with the country name and permits for up to 3 houses when, [2h0H, 3h0H]', () => {
                 //Grecja
-                // const permits = getBuildingPermits({gameState: readyState2, playerName: RED, cityName: ATENY});
-                // expect(permits).toEqual(permits_2h0H_3h0H);
+                const permits = getBuildingPermits({gameState: readyState2, playerName: RED, cityName: ATENY});
+                const sortedPermits = sortPermits(permits as tBuidlingApproved);
+                const sortedExpectation = sortPermits(permits_2h0H_3h0H)
+                expect(sortedPermits).toEqual(sortedExpectation);
             })
             it('Should return permits for 1 and 2 houses only if there are only 2 houses left in the bank', () => {
                 //Grecja
-                // Bank.nrOfHouses = 2;
-                // const permits = getBuildingPermits({gameState: readyState2, playerName: RED, cityName: ATENY});
-                // expect(permits).toEqual(permits_2h0H_3h0H_NotEnoughHouses);
+                Bank.nrOfHouses = 2;
+                const permits = getBuildingPermits({gameState: readyState2, playerName: RED, cityName: ATENY});
+                printHouses(permits)
+                expect(permits).toEqual(permits_2h0H_3h0H_NotEnoughHouses);
                 
             })
 
             it('Should return an object with permits when [0h1H, 4h0H]', () => {
                 //Austria
-                // const permits = getBuildingPermits({gameState: readyState2, playerName: RED, cityName: INSBRUK});
-                // expect(permits).toEqual(permits_0h1H_4h0H);
+                const permits = getBuildingPermits({gameState: readyState2, playerName: RED, cityName: INSBRUK});
+                expect(permits).toEqual(permits_0h1H_4h0H);
             })
             it('Should return an object with the country name and permits for up to 4 houses when [0h1H, 4h0H, 4h0H]', () => {
                 //Hiszpania
-                // const permits = getBuildingPermits({gameState: readyState2, playerName: RED, cityName: BARCELONA});
-                // expect(permits).toEqual(permits_0h1H_4h0H_4h0H);
+                const permits = getBuildingPermits({gameState: readyState2, playerName: RED, cityName: BARCELONA});
+                expect(permits).toEqual(permits_0h1H_4h0H_4h0H);
             })
             it('Should return an object with the country name and permits for up to 4 houses when [4h0H, 0h1H, 0h1H]', () => {
                 // UK
-                // const permits = getBuildingPermits({gameState: readyState2, playerName: RED, cityName: LIVERPOOL});
-                // expect(permits).toEqual(permits_4h0H_0h1H_0h1H);
+                const permits = getBuildingPermits({gameState: readyState2, playerName: RED, cityName: LIVERPOOL});
+                expect(permits).toEqual(permits_4h0H_0h1H_0h1H);
             })    
         });
-        describe('changeBuildingsDeltasSuccess3', () => {
+        describe.only('changeBuildingsDeltasSuccess3', () => {
             it('Should return an object with permits when [4h0H, 0h1H]', () => {
                 //Grecja
-                // const permits = getBuildingPermits({gameState: readyState3, playerName: RED, cityName: SALONIKI});
-                // expect(permits).toEqual(permits_4h0H_0h1H);
+                const permits = getBuildingPermits({gameState: readyState3, playerName: RED, cityName: SALONIKI});
+                expect(permits).toEqual(permits_4h0H_0h1H);
             })    
             it('Should return an option to purchase hotels when each city has 4 houses', () => {
                 //Spain
-                // const permits = getBuildingPermits({gameState: readyState3, playerName: RED, cityName: SALONIKI});
-                // expect(permits).toEqual(permits_4h0H_4h0H_4h0H);
+                const permits = getBuildingPermits({gameState: readyState3, playerName: RED, cityName: MEDIOLAN});
+                expect(permits).toEqual(permits_4h0H_4h0H_4h0H);
             })
             it('Should return permits for 1 or 2 hotels if there are only 2 hotels left in the bank', () => {
                 // Spain
