@@ -4,7 +4,7 @@ import { Bank } from "../../Bank/Bank";
 import { BuildingPermitRejected, getBuildingPermits, tBuidlingApproved, tBuildingPermits, tHouseLocations } from "../../Journalist/utils/getBuildingPermits";
 import { Players } from "../../Players/Players";
 import { changeEstates, getStateMock } from "./ChanceCardStateMocks";
-import { permits_0h0H_0h0H, permits_0h0H_0h0H_0h0H, permits_0h0H_1h0H_0h0H, permits_0h1H_4h0H, permits_0h1H_4h0H_4h0H, permits_1h0H_0h0H, permits_1h0H_0h0H_1h0H, permits_1h0H_1h0H_0h0H, permits_2h0H_3h0H, permits_2h0H_3h0H_NotEnoughHouses, permits_3h0H_3h0H_3h0H, permits_4h0H_0h1H, permits_4h0H_0h1H_0h1H, permits_4h0H_3h0H_3h0H, permits_4h0H_4h0H_4h0H, permits_4h0H_4h0H_4h0H_2HotelsLeft } from "./getBuildingPermitsMocks_outputs";
+import { permits_0h0H_0h0H, permits_0h0H_0h0H_0h0H, permits_0h0H_1h0H_0h0H, permits_0h1H_4h0H, permits_0h1H_4h0H_4h0H, permits_1h0H_0h0H, permits_1h0H_0h0H_1h0H, permits_1h0H_1h0H_0h0H, permits_2h0H_3h0H, permits_2h0H_3h0H_NotEnoughHouses, permits_3h0H_3h0H_3h0H, permits_4h0H_0h1H, permits_4h0H_0h1H_0h1H, permits_4h0H_3h0H_3h0H, permits_4h0H_4h0H_4h0H, permits_4h0H_4h0H_4h0H_0HotelsLeft, permits_4h0H_4h0H_4h0H_2HotelsLeft } from "./getBuildingPermitsMocks_outputs";
 import { readyState1, readyState2, readyState3 } from "./getBuildingPermitsMocks_statePreparation";
 
 Players.playerNameToPlayerColor = () => RED;
@@ -251,7 +251,8 @@ describe('Testing getBuildingPermits', () => {
                 expect(permits).toEqual(permits_4h0H_0h1H_0h1H);
             })    
         });
-        describe.only('changeBuildingsDeltasSuccess3', () => {
+        describe('changeBuildingsDeltasSuccess3', () => {
+            afterEach(() => Bank.nrOfHotels = 89)
             it('Should return an object with permits when [4h0H, 0h1H]', () => {
                 //Grecja
                 const permits = getBuildingPermits({gameState: readyState3, playerName: RED, cityName: SALONIKI});
@@ -259,15 +260,23 @@ describe('Testing getBuildingPermits', () => {
             })    
             it('Should return an option to purchase hotels when each city has 4 houses', () => {
                 //Spain
-                const permits = getBuildingPermits({gameState: readyState3, playerName: RED, cityName: MEDIOLAN});
-                expect(permits).toEqual(permits_4h0H_4h0H_4h0H);
+                const permits = getBuildingPermits({gameState: readyState3, playerName: RED, cityName: SEWILLA});
+                const sortedPermits = sortPermits(permits as tBuidlingApproved);
+                const sortedExpected = sortPermits(permits_4h0H_4h0H_4h0H)
+                expect(sortedPermits).toEqual(sortedExpected);
             })
             it('Should return permits for 1 or 2 hotels if there are only 2 hotels left in the bank', () => {
                 // Spain
-                // Bank.nrOfHotels = 2;
-                // const permits = getBuildingPermits({gameState: readyState3, playerName: RED, cityName: SALONIKI});
-                // expect(permits).toEqual(permits_4h0H_4h0H_4h0H_2HotelsLeft);
+                Bank.nrOfHotels = 2;
+                const permits = getBuildingPermits({gameState: readyState3, playerName: RED, cityName: SEWILLA});
+                expect(permits).toEqual(permits_4h0H_4h0H_4h0H_2HotelsLeft);
             });
+            it('Should return reason no hotels left if nr of hotels is 0 and otherwise there would be a possiblity to build up to 3 hotels', () => {
+                Bank.nrOfHotels = 0;
+                const permits = getBuildingPermits({gameState: readyState3, playerName: RED, cityName: SEWILLA});
+                printHouses(permits)
+                expect(permits).toEqual(permits_4h0H_4h0H_4h0H_0HotelsLeft);
+            })
         })
     })
     describe('Player already bough some hotels in this turn. Limit of hotels per turn is 3', () => {
