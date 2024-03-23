@@ -230,38 +230,46 @@ export const permits_4h0H_0h1H = {
 }
 
 export const permits_4h0H_4h0H_4h0H = {
-    country: ITALY,
+    country: SPAIN,
     permits: {
         [NrOfHotels.one]: [
-            {locationOne: [NEAPOL], cost: 100},
-            {locationOne: [MEDIOLAN], cost: 100},
-            {locationOne: [ROME], cost: 100},
+            {locationOne: [BARCELONA], cost: 200},
+            {locationOne: [SEWILLA], cost: 200},
+            {locationOne: [MADRIT], cost: 200},
         ],
         [NrOfHotels.two]: [
-            {locationOne: [NEAPOL, MEDIOLAN], cost: 200},
-            {locationOne: [NEAPOL, ROME], cost: 200},
-            {locationOne: [MEDIOLAN, ROME], cost: 200},
+            {locationOne: [BARCELONA, SEWILLA], cost: 400},
+            {locationOne: [BARCELONA, MADRIT], cost: 400},
+            {locationOne: [SEWILLA, MADRIT], cost: 400},
         ],
         [NrOfHotels.three]: [
-            {locatoinOne: [NEAPOL, MEDIOLAN, ROME], cost: 300}
+            {locationOne: [BARCELONA, SEWILLA, MADRIT], cost: 600}
         ]
     }
 }
 
 export const permits_4h0H_4h0H_4h0H_2HotelsLeft = {
     country: SPAIN,
-    reason: BuildingPermitRejected.noHotelsLeftInBank,
+    
     permits: {
+        hotelReason: BuildingPermitRejected.noHotelsLeftInBank,
         [NrOfHotels.one]: [
-            {locationOne: [NEAPOL], cost: 200},
-            {locationOne: [MEDIOLAN], cost: 200},
-            {locationOne: [ROME], cost: 200},
+            {locationOne: [BARCELONA], cost: 200},
+            {locationOne: [SEWILLA], cost: 200},
+            {locationOne: [MADRIT], cost: 200},
         ],
         [NrOfHotels.two]: [
-            {locationOne: [NEAPOL, MEDIOLAN], cost: 400},
-            {locationOne: [NEAPOL, ROME], cost: 400},
-            {locationOne: [MEDIOLAN, ROME], cost: 400},
+            {locationOne: [BARCELONA, SEWILLA], cost: 400},
+            {locationOne: [BARCELONA, MADRIT], cost: 400},
+            {locationOne: [SEWILLA, MADRIT], cost: 400},
         ],
     }
 }
 
+export const permits_4h0H_4h0H_4h0H_0HotelsLeft = {
+    country: SPAIN,
+    
+    permits: {
+        hotelReason: BuildingPermitRejected.noHotelsLeftInBank,
+    }
+}

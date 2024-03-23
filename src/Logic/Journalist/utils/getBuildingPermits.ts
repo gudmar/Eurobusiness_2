@@ -56,9 +56,12 @@ export type tBuidlingApproved = {
     hotelReason?: tReason,
     houseReason?: tReason,
     permits?: {
-        [NrOfHouses.one]: tHouseLocations[],
-        [NrOfHouses.two]: tHouseLocations[]
-        [NrOfHouses.three]: tHouseLocations[],
+        [NrOfHouses.one]?: tHouseLocations[],
+        [NrOfHouses.two]?: tHouseLocations[]
+        [NrOfHouses.three]?: tHouseLocations[],
+        [NrOfHotels.one]?: tHouseLocations[],
+        [NrOfHotels.two]?: tHouseLocations[],
+        [NrOfHotels.three]?: tHouseLocations[]
     }
 }
 
@@ -125,6 +128,19 @@ const getHouseBalance = (citiesFromSameCountry: tFieldState[]): tHouseBalance =>
     return {
         maxHouses, minHouses, isBalanced, balance, existingHouses, nrOfMin, nrOfMax: existingHouses.length - nrOfMin
     }
+}
+
+
+const getPossibleHotelLocations = (cities: iCityFieldState[]): tHotelBalance => {
+    const isItPossibleToSetAHotel = cities.every(({nrOfHouses, nrOfHotels}) => {
+        const result = nrOfHotels === 1 || nrOfHouses === MAX_NR_OF_HOUSES_ON_FIELD;
+        return result
+    })
+    if (!isItPossibleToSetAHotel) {
+        return {possibleLocations: []}
+    }
+    const possibleLocations = cities.filter(({nrOfHouses}) => nrOfHouses === MAX_NR_OF_HOUSES_ON_FIELD )
+    return {possibleLocations}
 }
 
 
@@ -302,6 +318,10 @@ type tHouseBalance = {
     maxHouses: number, minHouses: number, isBalanced: boolean, balance: number, existingHouses: number[], nrOfMin: number, nrOfMax: number,
 }
 
+type tHotelBalance = {
+    possibleLocations: iCityFieldState[]
+}
+
 const calculatePermitsForHouses = (args: tGetBuildingPermitsForNrOfBuildings): tHouseLocations[] => {
     const { gameState, citiesFromSameCountry, playerName, cityName, nrOfBuildings, response} = args;
     if (Bank.nrOfHouses < nrOfBuildings) return []
@@ -361,8 +381,9 @@ const calculatePermitsForHotelsWithRejectionApply = (args: tGetBuildingPermitsFo
     const result = calculatePermitsForHotels(args);
     if (result.length > 0) {
         if ((result.length) > nrOfHotelsInBank) {
-            response.hotelReason = BuildingPermitRejected.noHousesLeftInBank;
-            return response;
+            response.hotelReason = BuildingPermitRejected.noHotelsLeftInBank;
+            // response.hotelReason = BuildingPermitRejected.noHotelsLeftInBank;
+            // return response;
         }
         if (!citiesBigEnough) {
             response.hotelReason = BuildingPermitRejected.citiesNotBigEnough;
@@ -381,7 +402,7 @@ const calculatePermitsForHotelsWithRejectionApply = (args: tGetBuildingPermitsFo
             return nextResponse;
         }
         if (nrOfBuildings === 3 && nrOfHotelsInBank >= 3) {
-            const nextResponse = {...response, [NrOfHotels.two]: result};
+            const nextResponse = {...response, [NrOfHotels.three]: result};
             return nextResponse;
         }
     }
@@ -391,28 +412,25 @@ const calculatePermitsForHotelsWithRejectionApply = (args: tGetBuildingPermitsFo
 const calculatePermitsForHotels = (args: tGetBuildingPermitsForNrOfBuildings): tHouseLocations[] => {
     const { gameState, playerName, cityName, nrOfBuildings, response, citiesFromSameCountry } = args;
     const cities = citiesFromSameCountry as iCityFieldState[];
-    const { isBalanced, minHouses, nrOfMin, maxHouses } = getHouseBalance(citiesFromSameCountry)
-    const possibleLocations = cities.filter(({nrOfHouses}) => nrOfHouses === MAX_NR_OF_HOUSES_ON_FIELD);
+    // const { isBalanced, minHouses, nrOfMin, maxHouses } = getHouseBalance(citiesFromSameCountry)
+    const {possibleLocations} = getPossibleHotelLocations(citiesFromSameCountry as iCityFieldState[])
+    if (possibleLocations.length === 0) return []
+    // const possibleLocations = cities.filter(({nrOfHouses}) => nrOfHouses === MAX_NR_OF_HOUSES_ON_FIELD);
     if (nrOfBuildings === 1){
         const result = possibleLocations.map(({name, hotelPrice}) => ({locationOne: [name], cost: hotelPrice}));
         return result
     }
-    if (nrOfBuildings === 2 && possibleLocations.length > 1){
-        if (isBalanced && cities.length === 3) {
-            const resultBalanced = getSingleLinkTwoNodesLinkForEveryNode('nrOfHotels', 'hotelPrice')(citiesFromSameCountry as iCityFieldState[]);
-            return resultBalanced;    
+    if (nrOfBuildings === 2 && possibleLocations.length > 1) {
+        if (possibleLocations.length === 2) {
+            const result = possibleLocations.map(({name, hotelPrice}) => ({locationOne: [name], cost: hotelPrice}));
+            return result    
         }
-        const citiesWithHouses = cities.filter(({nrOfHouses}) => nrOfHouses === MAX_NR_OF_HOUSES_ON_FIELD)
-        return (
-            [
-                { locationOne: citiesWithHouses.map(({name}) => name), cost: sum(citiesWithHouses.map(({hotelPrice}) => hotelPrice)) }
-            ]            
-        )
+        const result = getSingleLinkTwoNodesLinkForEveryNode('nrOfHotels', 'hotelPrice')(cities);
+        return result;
     }
-    if (nrOfBuildings === 3 && possibleLocations.length > 2){
-        return [
-            { locationOne: cities.map(({name}) => name), cost: sum(cities.map(({hotelPrice}) => hotelPrice)) }
-        ]
+    if (nrOfBuildings === 3 && possibleLocations.length > 2) {
+        const result = [{locationOne: possibleLocations.map(({name}) => name), cost: sum(possibleLocations.map(({hotelPrice}) => hotelPrice))}]
+        return result
     }
     return []
 }
