@@ -4,7 +4,7 @@ import { Bank } from "../../Bank/Bank";
 import { BuildingPermitRejected, getBuildingPermits, tBuidlingApproved, tBuildingPermits, tHouseLocations } from "../../Journalist/utils/getBuildingPermits";
 import { Players } from "../../Players/Players";
 import { changeEstates, getStateMock } from "./ChanceCardStateMocks";
-import { permits_0h0H_0h0H, permits_0h0H_0h0H_0h0H, permits_0h0H_1h0H_0h0H, permits_0h1H_4h0H, permits_0h1H_4h0H_4h0H, permits_1h0H_0h0H, permits_1h0H_0h0H_1h0H, permits_1h0H_1h0H_0h0H, permits_2h0H_3h0H, permits_2h0H_3h0H_NotEnoughHouses, permits_3h0H_3h0H_3h0H, permits_4h0H_0h1H, permits_4h0H_0h1H_0h1H, permits_4h0H_3h0H_3h0H, permits_4h0H_4h0H_4h0H, permits_4h0H_4h0H_4h0H_0HotelsLeft, permits_4h0H_4h0H_4h0H_2HotelsLeft } from "./getBuildingPermitsMocks_outputs";
+import { noHotelsInBankOutput, noHousesInBankOutput, permits_0h0H_0h0H, permits_0h0H_0h0H_0h0H, permits_0h0H_1h0H_0h0H, permits_0h1H_4h0H, permits_0h1H_4h0H_4h0H, permits_1h0H_0h0H, permits_1h0H_0h0H_1h0H, permits_1h0H_1h0H_0h0H, permits_2h0H_3h0H, permits_2h0H_3h0H_NotEnoughHouses, permits_3h0H_3h0H_3h0H, permits_4h0H_0h1H, permits_4h0H_0h1H_0h1H, permits_4h0H_3h0H_3h0H, permits_4h0H_4h0H_4h0H, permits_4h0H_4h0H_4h0H_0HotelsLeft, permits_4h0H_4h0H_4h0H_2HotelsLeft } from "./getBuildingPermitsMocks_outputs";
 import { readyState1, readyState2, readyState3 } from "./getBuildingPermitsMocks_statePreparation";
 
 Players.playerNameToPlayerColor = () => RED;
@@ -117,14 +117,14 @@ describe('Testing getBuildingPermits', () => {
         expect(reasonAlreadyHotels).toBe(BuildingPermitRejected.alreadyBuild)
     });
     it('Should return an object with rejected reason when bank has no houses and only houses might have been build in cities of some country', () => {
-        // Bank.nrOfHouses = 0;
-        // const reasonNoHouses = getBuildingPermits({gameState: stateChangedBuildings, playerName: RED, cityName: MEDIOLAN, });
-        // expect(reasonNoHouses).toBe(BuildingPermitRejected.noHousesLeftInBank)
+        Bank.nrOfHouses = 0;
+        const reasonNoHouses = getBuildingPermits({gameState: stateChangedBuildings, playerName: RED, cityName: MEDIOLAN, });
+        expect(reasonNoHouses).toEqual(noHousesInBankOutput)
     })
     it('Should return an object with rejected reason when bank has no hotels and there is a max nr of houses in each city in the country', () => {
-        // Bank.nrOfHotels = 0;
-        // const reasonNoHouses = getBuildingPermits({gameState: stateChangedBuildings, playerName: RED, cityName: WIEDEN, });
-        // expect(reasonNoHouses).toBe(BuildingPermitRejected.noHotelsLeftInBank)
+        Bank.nrOfHotels = 0;
+        const reasonNoHouses = getBuildingPermits({gameState: stateChangedBuildings, playerName: RED, cityName: WIEDEN, });
+        expect(reasonNoHouses).toEqual(noHotelsInBankOutput)
     })
 
     const printHouses = (permits: any) => {
@@ -209,7 +209,6 @@ describe('Testing getBuildingPermits', () => {
             it('Should return an object with the country name and permits for up to 4 houses when [4h0H, 3h0H, 3h0H]', () => {
                 //RFN
                 const permits = getBuildingPermits({gameState: readyState1, playerName: RED, cityName: FRANKFURT});
-                printHouses(permits)
                 expect(permits).toEqual(permits_4h0H_3h0H_3h0H);
         
             })
@@ -243,6 +242,7 @@ describe('Testing getBuildingPermits', () => {
             it('Should return an object with the country name and permits for up to 4 houses when [0h1H, 4h0H, 4h0H]', () => {
                 //Hiszpania
                 const permits = getBuildingPermits({gameState: readyState2, playerName: RED, cityName: BARCELONA});
+                printHouses(permits)
                 expect(permits).toEqual(permits_0h1H_4h0H_4h0H);
             })
             it('Should return an object with the country name and permits for up to 4 houses when [4h0H, 0h1H, 0h1H]', () => {
@@ -281,6 +281,9 @@ describe('Testing getBuildingPermits', () => {
     })
     describe('Player already bough some hotels in this turn. Limit of hotels per turn is 3', () => {
         // Nr of hotels purchased in a turn has to be saved to the game state!!
+        it('Should return 1 hotel and a reason when there is a possibility to purchase 3 hotels, but player already bought 2 hotels in this round', () => {
+
+        })
     })
 
 })

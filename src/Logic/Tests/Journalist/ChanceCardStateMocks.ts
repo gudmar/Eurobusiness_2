@@ -82,6 +82,17 @@ export const getStateMock = ():tGameState => {
     return state;
 }
 
+export type tSetNrOfHotelsBoughtInRowArgs = {
+  state: tGameState,
+  color: string,
+  nrHotelsBoughtInRound: number
+}
+
+export const setNrOfHotelsBoughtInRow = ({state ,color, nrHotelsBoughtInRound}: tSetNrOfHotelsBoughtInRowArgs) => {
+  const player = state.players.find((player) => player.color === color);
+  player.nrOfHotelsBoughtInRound = nrHotelsBoughtInRound
+}
+
 const getBankStateTemplate = () => ({ nrOfHotels: 12, nrOfHouses: 32 })
 
 const getDiceStateTemplate = () => ({
@@ -798,7 +809,9 @@ const getPlayersStateTemplate = (): iPlayerSnapshot[] => ([
           isInPrison: false,
           nrTurnsToWait: 0,
           isGameLost: false,
-          strategy: StrategyNames.manual
+          strategy: StrategyNames.manual,
+
+          nrOfHotelsBoughtInRound: 0,
         },
         {
           name: "Dwalin",
@@ -809,7 +822,9 @@ const getPlayersStateTemplate = (): iPlayerSnapshot[] => ([
           isInPrison: false,
           nrTurnsToWait: 0,
           isGameLost: false,
-          strategy: StrategyNames.manual
+          strategy: StrategyNames.manual,
+
+          nrOfHotelsBoughtInRound: 0,
         },
         {
           name: "Dorin",
@@ -820,7 +835,9 @@ const getPlayersStateTemplate = (): iPlayerSnapshot[] => ([
           isInPrison: false,
           nrTurnsToWait: 0,
           isGameLost: false,
-          strategy: StrategyNames.manual
+          strategy: StrategyNames.manual, 
+
+          nrOfHotelsBoughtInRound: 0,
         },
         {
           name: "Gloin",
@@ -831,7 +848,9 @@ const getPlayersStateTemplate = (): iPlayerSnapshot[] => ([
           isInPrison: false,
           nrTurnsToWait: 0,
           isGameLost: false,
-          strategy: StrategyNames.manual
+          strategy: StrategyNames.manual,
+
+          nrOfHotelsBoughtInRound: 0,
         }
       ])
 

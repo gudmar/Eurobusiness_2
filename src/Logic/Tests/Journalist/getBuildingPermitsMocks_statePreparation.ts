@@ -35,6 +35,7 @@ const changeRedOwnerDeltas = ESTATES_SUCCESS_1.map((estateName) => ({
 const state1 = getStateMock();
 const state2 = getStateMock();
 const state3 = getStateMock();
+const state4 = getStateMock();
 
 const stateWithRedOwner1 = changeEstates(state1, changeRedOwnerDeltas);
 const stateWithRedOwner2 = changeEstates(state2, changeRedOwnerDeltas);

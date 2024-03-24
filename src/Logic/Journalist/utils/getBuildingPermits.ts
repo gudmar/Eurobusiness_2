@@ -422,7 +422,7 @@ const calculatePermitsForHotels = (args: tGetBuildingPermitsForNrOfBuildings): t
     }
     if (nrOfBuildings === 2 && possibleLocations.length > 1) {
         if (possibleLocations.length === 2) {
-            const result = possibleLocations.map(({name, hotelPrice}) => ({locationOne: [name], cost: hotelPrice}));
+            const result = [{locationOne: [possibleLocations[0].name, possibleLocations[1].name], cost: possibleLocations[0].hotelPrice + possibleLocations[1].hotelPrice}];
             return result    
         }
         const result = getSingleLinkTwoNodesLinkForEveryNode('nrOfHotels', 'hotelPrice')(cities);
