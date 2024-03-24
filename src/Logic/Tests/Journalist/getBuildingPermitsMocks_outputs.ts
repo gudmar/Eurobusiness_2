@@ -152,11 +152,25 @@ export const permits_4h0H_3h0H_3h0H = {
         [NrOfHouses.two]: [
             {locationOne: [KOLONIA, BONN], cost: 800},
         ],
-        hotelReason: BuildingPermitRejected.citiesNotBigEnough,
+        // hotelReason: BuildingPermitRejected.citiesNotBigEnough,
         // [NrOfHouses.three]: [], // not existing as it is empty
-    },
-    
+    },   
 }
+
+export const noHousesInBankOutput = {
+    country: ITALY,
+    permits: {
+        houseReason: BuildingPermitRejected.noHousesLeftInBank
+    }
+}
+
+export const noHotelsInBankOutput = {
+    country: AUSTRIA,
+    permits: {
+        hotelReason: BuildingPermitRejected.noHotelsLeftInBank
+    }
+}
+
 
 export const permits_2h0H_3h0H = {
     country: GREECE,
