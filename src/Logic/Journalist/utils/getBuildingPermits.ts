@@ -3,7 +3,7 @@ import { range } from "../../../Functions/createRange";
 import { tGameState } from "../../../Functions/PersistRetrieveGameState/types"
 import { sum } from "../../../Functions/sum";
 import { Bank } from "../../Bank/Bank";
-import { iCityFieldState, isCityFieldState, tFieldState } from "../../boardTypes";
+import { iCityFieldState, tFieldState } from "../../boardTypes";
 import { Players } from "../../Players/Players";
 
 export type tGetBuildingPermitsArgs = {
@@ -24,6 +24,7 @@ export type tGetBuildingPermitsForNrOfBuildings = {
 type tReason = string;
 
 const MAX_NR_OF_HOUSES_ON_FIELD = 4;
+const MAX_NR_OF_HOTELS_TO_BUY_IN_ROW = 3;
 
 export type tBuildingRejection = { rjection: tReason };
 export enum NrOfHouses {
@@ -41,9 +42,12 @@ export enum BuildingPermitRejected {
     ownsOnlyPart = 'Buildings may be created only when a player owns all cities in the country',
     soldOut = 'No more buildings are available',
     alreadyBuild = 'No more buildings may be created here',
+    housesAlreadyBuild = 'No more houses may be created. Limit is 4 houses or 1 hotel per city',
     noHousesLeftInBank = 'No houses left in the bank',
     noHotelsLeftInBank = 'No hotels left in the bank',
-    citiesNotBigEnough = 'Each city should have at least 4 houses or 1 hotel'
+    citiesNotBigEnough = 'Each city should have at least 4 houses or 1 hotel',
+    tooManyHotelsBuildInRound = 'Only 3 hotels may be bought in a round',
+
 }
 
 export type tHouseLocations = {
@@ -65,9 +69,7 @@ export type tBuidlingApproved = {
     }
 }
 
-// export type tPermitRejection = {rejection: tReason}
-
-export type tBuildingPermits = tBuidlingApproved //| tPermitRejection;
+export type tBuildingPermits = tBuidlingApproved
 
 const getAllFromSameCountry = (gameState: tGameState, cityName: string) => {
     const estate = gameState.boardFields.find(({name}) => name === cityName);
@@ -345,8 +347,14 @@ const calculateNrOfHousesThatMayStillBeBuild = (cities: iCityFieldState[]) => {
 
 const calculatePermitsForHousesWithRejectionApply = (args: tGetBuildingPermitsForNrOfBuildings): tBuidlingApproved => {
     const { nrOfBuildings, response, citiesFromSameCountry} = args;
+    const cities = citiesFromSameCountry as iCityFieldState[];
     const nrOfHousesInBank = Bank.nrOfHouses;
     const result = calculatePermitsForHouses(args);
+    const citiesTooBig = cities.every(({nrOfHouses, nrOfHotels}) => {
+        const result = (nrOfHouses === MAX_NR_OF_HOUSES_ON_FIELD) || (nrOfHotels === 1);
+        return result
+    });
+    if (citiesTooBig) response.houseReason = BuildingPermitRejected.housesAlreadyBuild
     const nrOfHousesThatStillMayBeBuild = calculateNrOfHousesThatMayStillBeBuild(citiesFromSameCountry as iCityFieldState[]);
     if (result.length > 0 && nrOfHousesInBank >= nrOfBuildings) {
         if (nrOfBuildings === 1 && nrOfHousesThatStillMayBeBuild > 0) {
@@ -379,12 +387,14 @@ const calculatePermitsForHotelsWithRejectionApply = (args: tGetBuildingPermitsFo
     });
     const citiesTooBig = cities.every(({nrOfHotels}) => nrOfHotels === 1);
     const result = calculatePermitsForHotels(args);
-    if (result.length > 0) {
-        if ((result.length) > nrOfHotelsInBank) {
-            response.hotelReason = BuildingPermitRejected.noHotelsLeftInBank;
-            // response.hotelReason = BuildingPermitRejected.noHotelsLeftInBank;
-            // return response;
-        }
+    const nrOfHotelsBoughtInRound = getNrHotelsBoughtInRound(args);
+    const isTooMuchBoughtInRow = MAX_NR_OF_HOTELS_TO_BUY_IN_ROW - nrOfHotelsBoughtInRound < nrOfBuildings;
+    const isTooLittleHotelsInBank = (result.length) > nrOfHotelsInBank;
+    const nrOfBuildingsToKey = (nrOfBuildings: number) => {
+        if (nrOfBuildings > 3 || nrOfBuildings< 0) throw new Error('Nr of buidings to construct has to be > 0 and < 4')
+        if (nrOfBuildings === 1) return NrOfHotels.one;
+        return nrOfBuildings === 2 ? NrOfHotels.two : NrOfHotels.three
+    }
         if (!citiesBigEnough) {
             response.hotelReason = BuildingPermitRejected.citiesNotBigEnough;
             return response
@@ -393,29 +403,26 @@ const calculatePermitsForHotelsWithRejectionApply = (args: tGetBuildingPermitsFo
             response.hotelReason = BuildingPermitRejected.alreadyBuild;
             return response
         }
-        if (nrOfBuildings === 1 && nrOfHotelsInBank >= 1) {
-            const nextResponse = {...response, [NrOfHotels.one]: result};
-            return nextResponse;
+        if (isTooLittleHotelsInBank) {
+            response.hotelReason = BuildingPermitRejected.noHotelsLeftInBank;
         }
-        if (nrOfBuildings === 2 && nrOfHotelsInBank >= 2) {
-            const nextResponse = {...response, [NrOfHotels.two]: result};
-            return nextResponse;
+        if (isTooMuchBoughtInRow) {
+            response.hotelReason = BuildingPermitRejected.tooManyHotelsBuildInRound;
         }
-        if (nrOfBuildings === 3 && nrOfHotelsInBank >= 3) {
-            const nextResponse = {...response, [NrOfHotels.three]: result};
-            return nextResponse;
+        if (nrOfHotelsInBank >= nrOfBuildings && !isTooMuchBoughtInRow && result.length > 0) {
+            const key = nrOfBuildingsToKey(nrOfBuildings);
+            const nextResponse = {...response, [key]: result};
+            return nextResponse    
         }
-    }
+
     return response;
 }
 
 const calculatePermitsForHotels = (args: tGetBuildingPermitsForNrOfBuildings): tHouseLocations[] => {
     const { gameState, playerName, cityName, nrOfBuildings, response, citiesFromSameCountry } = args;
     const cities = citiesFromSameCountry as iCityFieldState[];
-    // const { isBalanced, minHouses, nrOfMin, maxHouses } = getHouseBalance(citiesFromSameCountry)
     const {possibleLocations} = getPossibleHotelLocations(citiesFromSameCountry as iCityFieldState[])
     if (possibleLocations.length === 0) return []
-    // const possibleLocations = cities.filter(({nrOfHouses}) => nrOfHouses === MAX_NR_OF_HOUSES_ON_FIELD);
     if (nrOfBuildings === 1){
         const result = possibleLocations.map(({name, hotelPrice}) => ({locationOne: [name], cost: hotelPrice}));
         return result
@@ -435,13 +442,18 @@ const calculatePermitsForHotels = (args: tGetBuildingPermitsForNrOfBuildings): t
     return []
 }
 
+const getNrHotelsBoughtInRound = (args: tGetBuildingPermitsArgs) => {
+    const {gameState, playerName} = args;
+    const playerColor = Players.playerNameToPlayerColor(playerName);
+    const player = gameState.players.find((player) => player.color === playerColor);
+    const nrOfHotelsBoughtInRound = player?.nrOfHotelsBoughtInRound;
+    return nrOfHotelsBoughtInRound || 0;
+}
 
 export const getBuildingPermits = (args: tGetBuildingPermitsArgs) => {
     const MAX_NR_OF_BUILDINGS = 3;
     const {gameState, playerName, cityName} = args;
     const playerColor = Players.playerNameToPlayerColor(playerName);
-    const nrOfHousesInBank = Bank.nrOfHouses;
-    const nrOfHotelsInBank = Bank.nrOfHotels;
     const estate = gameState.boardFields.find(({name}) => name === cityName)
     if (!estate) throw new Error(`No estate named ${cityName}`)
     if (estate.type !== CITY) {

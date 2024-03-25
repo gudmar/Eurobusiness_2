@@ -1,6 +1,6 @@
 import { AMSTERDAM, ATENY, BARCELONA, BONN, BRUKSELA, FRANKFURT, GLASGOW, GOTEBORG, INSBRUK, KOLONIA, LIVERPOOL, LONDON, MADRIT, MALMO, MEDIOLAN, NEAPOL, RED, ROME, ROTTERDAM, SALONIKI, SEWILLA, SZTOKHOLM, WIEDEN } from "../../../Data/const";
 import { Players } from "../../Players/Players";
-import { changeEstates, getStateMock } from "./ChanceCardStateMocks";
+import { changeEstates, getStateMock, setNrOfHotelsBoughtInRow } from "./ChanceCardStateMocks";
 
 Players.playerNameToPlayerColor = () => RED;
 
@@ -35,11 +35,23 @@ const changeRedOwnerDeltas = ESTATES_SUCCESS_1.map((estateName) => ({
 const state1 = getStateMock();
 const state2 = getStateMock();
 const state3 = getStateMock();
-const state4 = getStateMock();
+
+const getStateWithNrOfHotels = () => {
+    const state_nrOfHotelsInRoundNotSet = getStateMock();
+    setNrOfHotelsBoughtInRow({
+        state: state_nrOfHotelsInRoundNotSet,
+        color: RED,
+        nrHotelsBoughtInRound: 2
+    })
+    return state_nrOfHotelsInRoundNotSet
+}
+
+const state4 = getStateWithNrOfHotels();
 
 const stateWithRedOwner1 = changeEstates(state1, changeRedOwnerDeltas);
 const stateWithRedOwner2 = changeEstates(state2, changeRedOwnerDeltas);
 const stateWithRedOwner3 = changeEstates(state3, changeRedOwnerDeltas);
+const stateWithRedOwner4 = changeEstates(getStateWithNrOfHotels(), changeRedOwnerDeltas);
 
 const changeBuildingsDeltasSuccess1 = [
     // { estateName: ATENY, props: { nrOfHouses: 1 } },
@@ -95,5 +107,6 @@ const changeBuildingsDeltasSuccess3 = [
 
 export const readyState2 = changeEstates(stateWithRedOwner2, changeBuildingsDeltasSuccess2);
 export const readyState3 = changeEstates(stateWithRedOwner3, changeBuildingsDeltasSuccess3);
+export const readyState4 = changeEstates(stateWithRedOwner4, changeBuildingsDeltasSuccess3);
 
 

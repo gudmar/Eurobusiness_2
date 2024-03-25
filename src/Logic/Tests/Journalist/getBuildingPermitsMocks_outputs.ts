@@ -1,18 +1,5 @@
-// type tHouseLocations = {
-//     locationOne: string[], locationTwo: string[], cost: number,
-// }
-
 import { WIEDEN, AUSTRIA, INSBRUK, GREECE, ATENY, SALONIKI, ITALY, NEAPOL, MEDIOLAN, ROME, SPAIN, BARCELONA, MADRIT, SEWILLA, UK, GLASGOW, LIVERPOOL, LONDON, BENELUX, AMSTERDAM, ROTTERDAM, BRUKSELA, SWEEDEN, MALMO, GOTEBORG, SZTOKHOLM, RFN, KOLONIA, BONN } from "../../../Data/const";
 import { BuildingPermitRejected, NrOfHotels, NrOfHouses } from "../../Journalist/utils/getBuildingPermits";
-
-// export type tBuidlingApproved = {
-//     country: string,
-//     permits: {
-//         [NrOfHouses.one]: tHouseLocations[],
-//         [NrOfHouses.two]: tHouseLocations[]
-//         [NrOfHouses.three]: tHouseLocations[],
-//     }
-// }
 
 export const permits_0h0H_0h0H = {
     country: AUSTRIA,
@@ -28,6 +15,7 @@ export const permits_0h0H_0h0H = {
             { locationOne: [INSBRUK], locationTwo: [WIEDEN], cost: 1200 },
             { locationOne: [WIEDEN], locationTwo: [INSBRUK], cost: 1200 },
         ],
+        hotelReason: BuildingPermitRejected.citiesNotBigEnough
     }
 }
 
@@ -44,6 +32,7 @@ export const permits_1h0H_0h0H = {
         [NrOfHouses.three]: [
             { locationOne: [SALONIKI], locationTwo: [ATENY], cost: 300 },
         ],
+        hotelReason: BuildingPermitRejected.citiesNotBigEnough
     }
 }
 
@@ -63,6 +52,7 @@ export const permits_0h0H_0h0H_0h0H = {
         [NrOfHouses.three]: [
             {locationOne: [NEAPOL, MEDIOLAN, ROME], cost: 300},
         ],
+        hotelReason: BuildingPermitRejected.citiesNotBigEnough
     }
 }
 
@@ -81,6 +71,7 @@ export const permits_0h0H_1h0H_0h0H = {
             {locationOne: [BARCELONA], locationTwo: [MADRIT], cost: 600},
             {locationOne: [MADRIT], locationTwo: [BARCELONA], cost: 600},
         ],
+        hotelReason: BuildingPermitRejected.citiesNotBigEnough
     }
 }
 
@@ -101,6 +92,7 @@ export const permits_1h0H_0h0H_1h0H = {
             {locationOne: [LIVERPOOL], locationTwo: [GLASGOW], cost: 600},
             {locationOne: [LONDON], locationTwo: [GLASGOW], cost: 600},
         ],
+        hotelReason: BuildingPermitRejected.citiesNotBigEnough
     }
 }
 
@@ -120,6 +112,7 @@ export const permits_1h0H_1h0H_0h0H = {
             {locationOne: [ROTTERDAM], locationTwo: [AMSTERDAM], cost: 900},
             {locationOne: [BRUKSELA], locationTwo: [AMSTERDAM], cost: 900},
         ],
+        hotelReason: BuildingPermitRejected.citiesNotBigEnough
     }
 }
 
@@ -139,6 +132,7 @@ export const permits_3h0H_3h0H_3h0H = {
         [NrOfHouses.three]: [
             {locationOne: [MALMO, GOTEBORG, SZTOKHOLM], cost: 900},
         ],
+        hotelReason: BuildingPermitRejected.citiesNotBigEnough
     }
 }
 
@@ -152,22 +146,23 @@ export const permits_4h0H_3h0H_3h0H = {
         [NrOfHouses.two]: [
             {locationOne: [KOLONIA, BONN], cost: 800},
         ],
-        // hotelReason: BuildingPermitRejected.citiesNotBigEnough,
-        // [NrOfHouses.three]: [], // not existing as it is empty
+        hotelReason: BuildingPermitRejected.citiesNotBigEnough
     },   
 }
 
 export const noHousesInBankOutput = {
     country: ITALY,
     permits: {
-        houseReason: BuildingPermitRejected.noHousesLeftInBank
+        houseReason: BuildingPermitRejected.noHousesLeftInBank,
+        hotelReason: BuildingPermitRejected.citiesNotBigEnough,
     }
 }
 
 export const noHotelsInBankOutput = {
     country: AUSTRIA,
     permits: {
-        hotelReason: BuildingPermitRejected.noHotelsLeftInBank
+        hotelReason: BuildingPermitRejected.noHotelsLeftInBank,
+        houseReason: BuildingPermitRejected.housesAlreadyBuild,
     }
 }
 
@@ -185,6 +180,7 @@ export const permits_2h0H_3h0H = {
         [NrOfHouses.three]: [
             {locationOne: [ATENY], locationTwo: [SALONIKI], cost: 300}
         ],
+        hotelReason: BuildingPermitRejected.citiesNotBigEnough
     }
 }
 
@@ -200,6 +196,7 @@ export const permits_2h0H_3h0H_NotEnoughHouses = {
             {locationTwo: [SALONIKI], cost: 200},
         ],
         houseReason: BuildingPermitRejected.noHousesLeftInBank,
+        hotelReason: BuildingPermitRejected.citiesNotBigEnough
     }
 }
 
@@ -208,8 +205,9 @@ export const permits_0h1H_4h0H = {
     permits: {
         [NrOfHotels.one]: [
             {locationOne: [WIEDEN], cost: 400}
-        ]
-    }
+        ],
+        houseReason: BuildingPermitRejected.housesAlreadyBuild,
+    },
 }
 
 export const permits_0h1H_4h0H_4h0H = {
@@ -221,8 +219,10 @@ export const permits_0h1H_4h0H_4h0H = {
         ],
         [NrOfHotels.two]: [
             {locationOne: [SEWILLA, MADRIT], cost: 400},
-        ]
-    }
+        ],
+        houseReason: BuildingPermitRejected.housesAlreadyBuild,
+    },
+    
 }
 
 export const permits_4h0H_0h1H_0h1H = {
@@ -231,7 +231,8 @@ export const permits_4h0H_0h1H_0h1H = {
         [NrOfHotels.one]: [
             {locationOne: [LIVERPOOL], cost: 200},
         ],
-    }
+        houseReason: BuildingPermitRejected.housesAlreadyBuild,
+    },
 }
 
 export const permits_4h0H_0h1H = {
@@ -239,8 +240,10 @@ export const permits_4h0H_0h1H = {
     permits: {
         [NrOfHotels.one]: [
             {locationOne: [SALONIKI], cost: 100}
-        ]
-    }
+        ],
+        houseReason: BuildingPermitRejected.housesAlreadyBuild,
+    },
+    
 }
 
 export const permits_4h0H_4h0H_4h0H = {
@@ -258,7 +261,8 @@ export const permits_4h0H_4h0H_4h0H = {
         ],
         [NrOfHotels.three]: [
             {locationOne: [BARCELONA, SEWILLA, MADRIT], cost: 600}
-        ]
+        ],
+        houseReason: BuildingPermitRejected.housesAlreadyBuild,
     }
 }
 
@@ -277,6 +281,7 @@ export const permits_4h0H_4h0H_4h0H_2HotelsLeft = {
             {locationOne: [BARCELONA, MADRIT], cost: 400},
             {locationOne: [SEWILLA, MADRIT], cost: 400},
         ],
+        houseReason: BuildingPermitRejected.housesAlreadyBuild,
     }
 }
 
@@ -285,5 +290,20 @@ export const permits_4h0H_4h0H_4h0H_0HotelsLeft = {
     
     permits: {
         hotelReason: BuildingPermitRejected.noHotelsLeftInBank,
+        houseReason: BuildingPermitRejected.housesAlreadyBuild,
+    }
+}
+
+export const permits_2_hotels_bought = {
+    country: SPAIN,
+    
+    permits: {
+        [NrOfHotels.one]: [
+            {locationOne: [BARCELONA], cost: 200},
+            {locationOne: [SEWILLA], cost: 200},
+            {locationOne: [MADRIT], cost: 200},
+        ],
+       hotelReason: BuildingPermitRejected.tooManyHotelsBuildInRound,
+       houseReason: BuildingPermitRejected.housesAlreadyBuild,
     }
 }
