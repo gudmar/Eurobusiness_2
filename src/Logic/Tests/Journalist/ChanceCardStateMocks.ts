@@ -90,7 +90,9 @@ export type tSetNrOfHotelsBoughtInRowArgs = {
 
 export const setNrOfHotelsBoughtInRow = ({state ,color, nrHotelsBoughtInRound}: tSetNrOfHotelsBoughtInRowArgs) => {
   const player = state.players.find((player) => player.color === color);
-  player.nrOfHotelsBoughtInRound = nrHotelsBoughtInRound
+  if (!player) throw new Error(`Player ${color} no found`)
+  player.nrOfHotelsBoughtInRound = nrHotelsBoughtInRound;
+  
 }
 
 const getBankStateTemplate = () => ({ nrOfHotels: 12, nrOfHouses: 32 })

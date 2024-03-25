@@ -13,6 +13,7 @@ export interface iPlayerSnapshot {
     nrTurnsToWait: number,
     isGameLost: boolean,
     strategy: StrategyNames,
+    nrOfHotelsBoughtInRound: number
 }
 
 export interface iPlayerMemento extends iEditableState, iPlayerState {}
