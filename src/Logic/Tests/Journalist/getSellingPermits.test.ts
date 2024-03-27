@@ -1,4 +1,5 @@
 import { getSellingPermits } from "../../Journalist/utils/getSellingPermits"
+import { shortTestNotationToJsObject } from "../../Journalist/utils/sellingPermitsShortNotation"
 
 // 4h_1H__LXh - Left many houses
 // 4h_1H__L0h - Left 0 houses
@@ -6,6 +7,76 @@ import { getSellingPermits } from "../../Journalist/utils/getSellingPermits"
 
 
 describe('Selling buildings test (getSellingPermits)', () => {
+    describe('Helper functions', () => {
+        describe('Short notation to js object', () => {
+                const testCases = [
+                    {
+                        input: '0h_0h',
+                        expected: {
+                            cities: [
+                                { nrOfHouses: 0, nrOfHotels: 0},
+                                { nrOfHouses: 0, nrOfHotels: 0},
+                            ],
+                            bank: { nrOfHouses: 32, nrOfHotels: 12 }
+                        },
+                        description: 'Should translate 2 citeis zero houses case: 0h_0h properly'
+                    },
+                    {
+                        input: '0H_0h_0h',
+                        expected: {
+                            cities: [
+                                { nrOfHouses: 0, nrOfHotels: 0},
+                                { nrOfHouses: 0, nrOfHotels: 0},
+                                { nrOfHouses: 0, nrOfHotels: 0},
+                            ],
+                            bank: { nrOfHouses: 32, nrOfHotels: 12 }
+                        },
+                        description: 'Should translate 3 citeis 0 hotels 0 houses case 0H_0h_0h properly'
+                    },
+                    {
+                        input: '4h_1H_4h_L2h',
+                        expected: {
+                            cities: [
+                                { nrOfHouses: 4, nrOfHotels: 0},
+                                { nrOfHouses: 0, nrOfHotels: 1},
+                                { nrOfHouses: 4, nrOfHotels: 0},
+                            ],
+                            bank: { nrOfHouses: 2, nrOfHotels: 12 }
+                        },
+                        description: 'Should translate 3 citeis case with limited houses 4h_1H_4h_2Lh properly'
+                    },
+                    {
+                        input: '1H_3h_0H_L0H',
+                        expected: {
+                            cities: [
+                                { nrOfHouses: 0, nrOfHotels: 1},
+                                { nrOfHouses: 3, nrOfHotels: 0},
+                                { nrOfHouses: 0, nrOfHotels: 0},
+                            ],
+                            bank: { nrOfHouses: 32, nrOfHotels: 0 }
+                        },
+                        description: 'Should translate 3 citeis limited hotels 1H_3h_0H_L0H properly'
+                    },
+                    {
+                        input: '0H_0H__L1h1H',
+                        expected: {
+                            cities: [
+                                { nrOfHouses: 0, nrOfHotels: 0},
+                                { nrOfHouses: 0, nrOfHotels: 0},
+                            ],
+                            bank: { nrOfHouses: 1, nrOfHotels: 1 }
+                        },
+                        description: 'Should translate 2 citeis 0 hotels 0 houses limited houses and hotels, long last underscore 0H_0H__L1h1H properly'
+                    },
+                ]
+                testCases.forEach(({input, expected, description}) => {
+                    it(description, () => {
+                        const result = shortTestNotationToJsObject(input)
+                        expect(result).toEqual(expected)
+                    })
+                })
+        })
+    })
     describe('Houses', () => {
         it('Should return a reason when received a country with buildings', () => {
             // getSellingPermits()
