@@ -1,5 +1,5 @@
 
-type tTestCityInputNotation = { nrOfHouses: number | null, nrOfHotels: number | null }
+export type tTestCityInputNotation = { nrOfHouses: number | null, nrOfHotels: number | null }
 
 export type tTestInputNotation = {
     cities: tTestCityInputNotation[],

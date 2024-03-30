@@ -1,4 +1,6 @@
-import { getAllFeasableHouseLocations, getEveryPossibleQuantityOfHouses } from "../../Journalist/utils/getEveryPossibleQuantityOfHouses";
+import { NrOfHouses } from "../../Journalist/utils/getBuildingPermits";
+import { getAllFeasableBuildingLocations, getAllFeasableHouseLocations, getEveryPossibleQuantityOfHouses } from "../../Journalist/utils/getEveryPossibleQuantityOfHouses";
+import { shortTestNotationToJsObject, tTestCityInputNotation } from "../../Journalist/utils/sellingPermitsShortNotation"
 
 describe('Testing every possible quantity of houses', () => {
     describe('Single array', () => {
@@ -191,6 +193,108 @@ describe('Testing every possible quantity of houses', () => {
                 expect(result).toEqual(expected)
             })
         })
+    }),
+    describe.only('Testing getAllFeasableBuildingLocations', () => {
+        const testCases = [
+            {
+                input: '2h_2h',
+                expected: [
+                    '2h_2h',
+                    `2h_1h`,
+                    '1h_2h',
+                    '1h_1h',
+                    '1h_0h',
+                    '0h_1h',
+                    '0h_0h'
+                ],
+                description: 'Should process when given 2h_2h'
+            },
+            {
+                input: '1H_4h',
+                expected: [
+                    '1H_4h',
+                    '4h_4h',
+                    '4h_3h',
+                    '3h_4h',
+                    '3h_3h',
+                    '3h_2h',
+                    '2h_3h',
+                    '2h_2h',
+                    '2h_1h',
+                    '1h_2h',
+                    '1h_1h',
+                    '1h_0h',
+                    '0h_1h',
+                    '0h_0h',
+                ],
+                description: 'Should process when given a single hotel and 2 fields'
+            },
+            {
+                input: '1H_4h_1H',
+                expected: [
+                    '1H_4h_1H',
+                    '1H_4h_4h',
+                    '4h_4h_4h',
+                    '4h_4h_3h',
+                    '4h_3h_4h',
+                    '4h_3h_3h',
+                    '3h_4h_4h',
+                    '3h_4h_3h',
+                    '3h_3h_3h',
+                    '3h_3h_2h',
+                    '3h_2h_3h',
+                    '3h_2h_2h',
+                    '2h_3h_3h',
+                    '2h_3h_2h',
+                    '2h_2h_3h',
+                    '2h_2h_2h',
+                    '2h_2h_1h',
+                    '2h_1h_2h',
+                    '2h_1h_1h',
+                    '1h_2h_2h',
+                    '1h_2h_1h',
+                    '1h_1h_2h',
+                    '1h_1h_1h',
+                    '1h_1h_0h',
+                    '1h_0h_1h',
+                    '1h_0h_0h',
+                    '0h_1h_1h',
+                    '0h_1h_0h',
+                    '0h_0h_1h',
+                    '0h_0h_0h',
+                ],
+                description: 'Should process when given a single hotel and 2 fields'
+            },
 
+
+        ]
+
+        const citiesToNotNullCities = (cities: tTestCityInputNotation[]) => {
+            const result = cities.map(({nrOfHouses, nrOfHotels}: tTestCityInputNotation) => ({
+                nrOfHouses: nrOfHouses ? nrOfHouses : 0,
+                nrOfHotels: nrOfHotels ? nrOfHotels : 0,
+            }));
+            return result;
+        }
+        const bankToNotNullBank = (bank: tTestCityInputNotation) => ({
+                nrOfHouses: bank.nrOfHouses ?? 0,
+                nrOfHotels: bank.nrOfHotels ?? 0,
+        })
+
+        testCases.forEach(({input, expected, description}) => {
+            it(description, () => {
+                const {cities, bank} = shortTestNotationToJsObject(input)
+                const notNullCiteis = citiesToNotNullCities(cities);
+                const notNullBank = bankToNotNullBank(bank);
+                const decompressedExpected = expected.map((value) => {
+                    const { cities } = shortTestNotationToJsObject(value);
+                    const notNullCiteis = citiesToNotNullCities(cities);
+                    return notNullCiteis
+                })
+
+                const result = getAllFeasableBuildingLocations(notNullCiteis, notNullBank);
+                expect(result).toEqual(decompressedExpected);
+            })
+        })
     })
 })

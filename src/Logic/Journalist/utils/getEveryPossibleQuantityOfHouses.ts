@@ -1,3 +1,5 @@
+import { MAX_NR_OF_HOUSES_TO_PURCHASE_IN_ONE_ROW } from "../../../Constants/constants";
+
 type tNrOfBuildings = {
     nrOfHouses: number,
     nrOfHotels: number,
@@ -71,6 +73,47 @@ export const getAllFeasableHouseLocations = (initialHouseLocations: number[]) =>
     return onlyFeasableLocations;
 }
 
+type tArrayNotation = { houses: number[], hotels: number[] }
+
+const getHouseAndHotelLocationsInArrayNotation = (arrNotation: tBuildingLocations): tArrayNotation => {
+    const houses = arrNotation.map(({nrOfHouses}) => nrOfHouses);
+    const hotels = arrNotation.map(({nrOfHotels}) => nrOfHotels);
+    return {houses, hotels}
+}
+
+const arrNotationToVerboseNotation = ({houses, hotels}: tArrayNotation) => {
+    if (hotels.length !== houses.length) throw new Error('Houses and hotels should be equally long')
+    const result = houses.map((nrOfHouses, index) => {
+        const nrOfHotels = hotels[index];
+        return { nrOfHotels, nrOfHouses };
+    })
+    return result;
+}
+
 export const getAllFeasableBuildingLocations = (initialBuildingLocations: tBuildingLocations, bankOwnedBuildings: tNrOfBuildings) => {
 
+    const {houses, hotels} = getHouseAndHotelLocationsInArrayNotation(initialBuildingLocations);
+    const {nrOfHotels: hotelsLimit, nrOfHouses: housesLimit} = bankOwnedBuildings;
+    if (isEnd(hotels)) {
+        const arrayNotationHouses = getAllFeasableHouseLocations(houses);
+        const result = arrayNotationHouses.map((solution) => {
+            const arrayNotationHotels = solution.map(() => 0);
+            const singleSolution = arrNotationToVerboseNotation({houses: solution, hotels: arrayNotationHotels})
+            return singleSolution;
+        }) 
+        return result;
+    } else {
+        const housesWithHotelsSwappedToMaxHouses = houses.map((nrOfHouses, index) => {
+            if (hotels[index] > 0 && nrOfHouses > 0) throw new Error('Cannot have houses and hotels on the same field')
+            if (hotels[index] > 0) return MAX_NR_OF_HOUSES_TO_PURCHASE_IN_ONE_ROW
+            return nrOfHouses;
+        })
+        const arrayNotationHouses = getAllFeasableHouseLocations(housesWithHotelsSwappedToMaxHouses);
+        const housesWithBankLimit = arrayNotationHouses.filter((housesArrNotation) => {
+            const sumOfHousesOnFieldWithHotel = housesArrNotation.reduce((acc, nrOfHouses, index) => {
+                if (hotels[index] > 0) return acc + nrOfHouses;
+                return acc
+            }, 0)
+        })
+    }
 }
