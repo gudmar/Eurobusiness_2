@@ -90,30 +90,41 @@ const arrNotationToVerboseNotation = ({houses, hotels}: tArrayNotation) => {
     return result;
 }
 
-export const getAllFeasableBuildingLocations = (initialBuildingLocations: tBuildingLocations, bankOwnedBuildings: tNrOfBuildings) => {
+const getHotelsToHousesDegradation = (initialBuildingLocations: tBuildingLocations) => {
 
+}
+
+export const getAllFeasableBuildingLocations = (initialBuildingLocations: tBuildingLocations, bankOwnedBuildings: tNrOfBuildings) => {
     const {houses, hotels} = getHouseAndHotelLocationsInArrayNotation(initialBuildingLocations);
     const {nrOfHotels: hotelsLimit, nrOfHouses: housesLimit} = bankOwnedBuildings;
-    if (isEnd(hotels)) {
-        const arrayNotationHouses = getAllFeasableHouseLocations(houses);
-        const result = arrayNotationHouses.map((solution) => {
-            const arrayNotationHotels = solution.map(() => 0);
-            const singleSolution = arrNotationToVerboseNotation({houses: solution, hotels: arrayNotationHotels})
-            return singleSolution;
-        }) 
+    const hotelsAs5HousesNotation = houses.map((value, index) => {
+        if (hotels[index] > 0) return 5;
+        return value;
+    })
+    const allPossibleLocations = getAllFeasableHouseLocations(hotelsAs5HousesNotation);
+    const verboseNotation = allPossibleLocations.map((solution) => {
+        const result = arrNotationToVerboseNotation({houses: solution, hotels: solution.map(() => 0)})
         return result;
-    } else {
-        const housesWithHotelsSwappedToMaxHouses = houses.map((nrOfHouses, index) => {
-            if (hotels[index] > 0 && nrOfHouses > 0) throw new Error('Cannot have houses and hotels on the same field')
-            if (hotels[index] > 0) return MAX_NR_OF_HOUSES_TO_PURCHASE_IN_ONE_ROW
-            return nrOfHouses;
+    })
+    const convertSingleSolutionWithFiveHouessToHotels = (singleSolution: tNrOfBuildings[]) => {
+        const result = singleSolution.map((value: tNrOfBuildings) => {
+            const {nrOfHotels, nrOfHouses} = value;
+            if (nrOfHouses > 4) {
+                value.nrOfHotels = 1;
+                value.nrOfHouses = 0;
+            }
+            return value;
         })
-        const arrayNotationHouses = getAllFeasableHouseLocations(housesWithHotelsSwappedToMaxHouses);
-        const housesWithBankLimit = arrayNotationHouses.filter((housesArrNotation) => {
-            const sumOfHousesOnFieldWithHotel = housesArrNotation.reduce((acc, nrOfHouses, index) => {
-                if (hotels[index] > 0) return acc + nrOfHouses;
-                return acc
-            }, 0)
-        })
+        return  result;
     }
+    const fiveHousesTranslatedToHotel = verboseNotation.map(convertSingleSolutionWithFiveHouessToHotels)
+
+    const nrOfHousesInInitialSolution = houses.reduce((acc, nrOfHouses) => acc + nrOfHouses, 0);
+    const solutionsWithFilteredHousesOwnedByBankLimit = fiveHousesTranslatedToHotel.filter((solution) => {
+        const nrOfHousesSolutionUses = solution.reduce((acc, {nrOfHouses}) => acc + nrOfHouses, 0);
+        const result = nrOfHousesSolutionUses <= nrOfHousesInInitialSolution + housesLimit;
+        return result
+    })
+    return solutionsWithFilteredHousesOwnedByBankLimit
+
 }

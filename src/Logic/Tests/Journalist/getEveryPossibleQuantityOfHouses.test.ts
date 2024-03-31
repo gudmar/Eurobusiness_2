@@ -194,7 +194,7 @@ describe('Testing every possible quantity of houses', () => {
             })
         })
     }),
-    describe.only('Testing getAllFeasableBuildingLocations', () => {
+    describe('Testing getAllFeasableBuildingLocations', () => {
         const testCases = [
             {
                 input: '2h_2h',
@@ -234,12 +234,14 @@ describe('Testing every possible quantity of houses', () => {
                 expected: [
                     '1H_4h_1H',
                     '1H_4h_4h',
+                    '4h_4h_1H',
                     '4h_4h_4h',
                     '4h_4h_3h',
                     '4h_3h_4h',
                     '4h_3h_3h',
                     '3h_4h_4h',
                     '3h_4h_3h',
+                    '3h_3h_4h',
                     '3h_3h_3h',
                     '3h_3h_2h',
                     '3h_2h_3h',
@@ -266,7 +268,36 @@ describe('Testing every possible quantity of houses', () => {
                 description: 'Should process when given a single hotel and 2 fields'
             },
 
-
+            {
+                input: '1H_4h_1H__L4h',
+                expected: [
+                    '1H_4h_1H',
+                    '1H_4h_4h',
+                    '4h_4h_1H',
+                    '3h_3h_2h',
+                    '3h_2h_3h',
+                    '3h_2h_2h',
+                    '2h_3h_3h',
+                    '2h_3h_2h',
+                    '2h_2h_3h',
+                    '2h_2h_2h',
+                    '2h_2h_1h',
+                    '2h_1h_2h',
+                    '2h_1h_1h',
+                    '1h_2h_2h',
+                    '1h_2h_1h',
+                    '1h_1h_2h',
+                    '1h_1h_1h',
+                    '1h_1h_0h',
+                    '1h_0h_1h',
+                    '1h_0h_0h',
+                    '0h_1h_1h',
+                    '0h_1h_0h',
+                    '0h_0h_1h',
+                    '0h_0h_0h',
+                ],
+                description: 'Should filter out solutions that would use too many houses, when nr of houses in bank is limited to 4'
+            },
         ]
 
         const citiesToNotNullCities = (cities: tTestCityInputNotation[]) => {
@@ -293,6 +324,7 @@ describe('Testing every possible quantity of houses', () => {
                 })
 
                 const result = getAllFeasableBuildingLocations(notNullCiteis, notNullBank);
+                // console.log('Result,', result)
                 expect(result).toEqual(decompressedExpected);
             })
         })
