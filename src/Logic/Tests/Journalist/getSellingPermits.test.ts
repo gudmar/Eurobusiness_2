@@ -1,5 +1,8 @@
-import { getSellingPermits } from "../../Journalist/utils/getSellingPermits"
+import { GREECE, SPAIN } from "../../../Data/const"
+import { getSellingPermits, tGetSellingPermitsArgs } from "../../Journalist/utils/getSellingPermits"
+import { delta_0h1h, delta_1h_1h_0h, delta_2h_3h, o_0h_1h, o_1h_1h_0h, o_2h_3h } from "../../Journalist/utils/sellingPermitsMock"
 import { shortTestNotationToJsObject } from "../../Journalist/utils/sellingPermitsShortNotation"
+import { changeEstates, getStateMock } from "./ChanceCardStateMocks"
 
 // 4h_1H__LXh - Left many houses
 // 4h_1H__L0h - Left 0 houses
@@ -78,50 +81,68 @@ describe('Selling buildings test (getSellingPermits)', () => {
         })
     })
     describe('Houses', () => {
-        it('Should return a reason when received a country with buildings', () => {
-            // getSellingPermits()
-        })
+        // it('Should return a reason when received a country without buildings', () => {
+        //     // getSellingPermits()
+        // })
         it('Should return a permit for one house when received a 2 estates country with only a single house build 0h_1h', () => {
+            const gameState = getStateMock();
 
-        })
-        it('Should return a permit for 1 and 2 houses when recewived a 3 estates country with 2 houses on it 1h_1h_0h', () => {
+            const modifiedState = changeEstates(gameState, delta_0h1h);
+            const sellingPermitsGetterArgs: tGetSellingPermitsArgs = { gameState: modifiedState, country: GREECE, playerName: "Dwalin" }
+            const result = getSellingPermits(sellingPermitsGetterArgs);
+            expect(result).toEqual(o_0h_1h);
+        });
 
+        it('Should return a permit for 1 and 2 houses when received a 3 estates country with 2 houses on it 1h_1h_0h', () => {
+            const gameState = getStateMock();
+            const delta = delta_1h_1h_0h;
+            const modifiedState = changeEstates(gameState, delta);
+            const sellingPermitsGetterArgs: tGetSellingPermitsArgs = { gameState: modifiedState, country: SPAIN, playerName: "Dwalin" }
+            const result = getSellingPermits(sellingPermitsGetterArgs);
+            expect(result).toEqual(o_1h_1h_0h);
         })
+
         it('Should return a permit to sell up to 1, 2, 3, 4, 5 houses in a balanced way, when received a country with 2 cities and 5 houses in 2 estate country 2h_3h', () => {
+            const gameState = getStateMock();
+            const delta = delta_2h_3h
+            const modifiedState = changeEstates(gameState, delta);
+            const sellingPermitsGetterArgs: tGetSellingPermitsArgs = { gameState: modifiedState, country: GREECE, playerName: "Dwalin" }
+            const result = getSellingPermits(sellingPermitsGetterArgs);
+            expect(result).toEqual(o_2h_3h);
 
         })
-        it('Should return a permit to sell up to 7 houses in a balanced way when received a 3 estates country with 7 houses 3h_2h_2h', () => {
+        // it('Should return a permit to sell up to 7 houses in a balanced way when received a 3 estates country with 7 houses 3h_2h_2h', () => {
 
-        })
-        it('Should return a permit to sell up to 8 houses in a balanced way when received a country with 2 citeis and 8 houses 4h_4h', () => {
+        // })
+        // it('Should return a permit to sell up to 8 houses in a balanced way when received a country with 2 citeis and 8 houses 4h_4h', () => {
 
-        })
-        it('Should return a permit to sell up to 12 houses in a balanced way when received a country with 3 cities and 12 houses 4h_4h_4h', () => {
+        // })
+        // it('Should return a permit to sell up to 12 houses in a balanced way when received a country with 3 cities and 12 houses 4h_4h_4h', () => {
 
-        })
+        // })
     });
     describe('Hotels', () => {
-        it('Should allow to downgrade when 1H_1H__LXh', () => {
+        // it('Should allow to downgrade when 1H_1H__LXh', () => {
 
-        })
-        it('Should allow to downgrade when 1H_1H__LXh', () => {
+        // })
+        // it('Should allow to downgrade when 1H_1H__LXh', () => {
 
-        })
-        it('Should allow to downgrade with 1H_4h_LXh', () => {
+        // })
+        // it('Should allow to downgrade with 1H_4h_LXh', () => {
 
-        })
-        it('Should allow to downgrade when 4h_1H_4h__LXh', () => {
+        // })
+        // it('Should allow to downgrade when 4h_1H_4h__LXh', () => {
 
-        })
-        it('Should allow to downgradw when 4h_1H__L3h', () => {
+        // })
+        // it('Should allow to downgradw when 4h_1H__L3h', () => {
 
-        })
-        it('Should allow to downgrade when 4h_4h_1H__L5h', () => {
+        // })
+        // it('Should allow to downgrade when 4h_4h_1H__L5h', () => {
 
-        })
-        it('Should allow to downgrade when 4h_1H__L0h', () => {
+        // })
+        // it('Should allow to downgrade when 4h_1H__L0h', () => {
 
-        })
+        // })
         it('Should allow to downgrade when 1H_4h_1H__L0h', () => {
             
         })
