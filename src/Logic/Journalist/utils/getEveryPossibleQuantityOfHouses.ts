@@ -1,13 +1,5 @@
 import { MAX_NR_OF_HOUSES_TO_PURCHASE_IN_ONE_ROW } from "../../../Constants/constants";
-
-type tNrOfBuildings = {
-    nrOfHouses: number,
-    nrOfHotels: number,
-}
-
-type tBuildingLocations = tNrOfBuildings[]
-
-type tPossibleHouseSolutions = number[][]
+import { tBuildingLocations, tNrOfBuildings, tPossibleHouseSolutions } from "./types";
 
 const getDecreasedSolution = (solution: number[], index: number) => {
     const solutionCopy = [...solution];
@@ -90,9 +82,6 @@ const arrNotationToVerboseNotation = ({houses, hotels}: tArrayNotation) => {
     return result;
 }
 
-const getHotelsToHousesDegradation = (initialBuildingLocations: tBuildingLocations) => {
-
-}
 
 export const getAllFeasableBuildingLocations = (initialBuildingLocations: tBuildingLocations, bankOwnedBuildings: tNrOfBuildings) => {
     const {houses, hotels} = getHouseAndHotelLocationsInArrayNotation(initialBuildingLocations);
