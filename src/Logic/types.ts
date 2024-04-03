@@ -30,3 +30,5 @@ export enum TurnPhases {
     BeforeMove = 'Before move',
     AfterMove = 'After move'
 }
+
+export type tObject<Value> = { [key: string]: Value}

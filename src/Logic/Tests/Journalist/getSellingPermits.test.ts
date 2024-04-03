@@ -137,24 +137,24 @@ describe('Selling buildings test (getSellingPermits)', () => {
         // it('Should allow to downgradw when 4h_1H__L3h', () => {
 
         // })
-        // it('Should allow to downgrade when 4h_4h_1H__L5h', () => {
+        it('Should allow to downgrade when 4h_4h_1H__L5h', () => {
 
-        // })
-        // it('Should allow to downgrade when 4h_1H__L0h', () => {
-
-        // })
-        it('Should allow to downgrade when 1H_4h_1H__L0h', () => {
-            
         })
+        it('Should allow to downgrade when 4h_1H__L0h', () => {
+
+        })
+        // it('Should allow to downgrade when 1H_4h_1H__L0h', () => {
+            
+        // })
         // it('Should return a possiblity to downgrade a hotel when received a country with 2 cities, one having 4 houses and second having 1 hotel, when there are enough houses in the bank (4h_1H__LX)', () => {
 
         // })
         // it('Should return a possibility to sell everything on an estate when received a country with 2 cities, one having 4 houes, second having 1 hotel, and there are no houses in the bank (4h_1H__L0)', () => {
 
         // })
-        // it('Should return a possibility to exchange 1 hotel to houses or everything when received a country with 3 cities, 2 having 4 houses and one having 1 hotel (4h_4h_1H_0L) and enough houses in the bank', () => {
+        it('Should return a possibility to exchange 1 hotel to houses or everything when received a country with 3 cities, 2 having 4 houses and one having 1 hotel (4h_4h_1H_L0H) and enough houses in the bank', () => {
 
-        // })
+        })
         // it('Should offer a possibility to downgrade 2 hotels to any number of houses in case all houess available 1h_1h__LXh', () => {
             
         // })
