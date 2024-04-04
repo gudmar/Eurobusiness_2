@@ -334,31 +334,46 @@ const expandSingleTestDataEntry = (args: tExpandSingleTestDataEntryArgs): tExpan
     }
 }
 
+// const expandTestDataEntry = (testDataEntry: tCompressedDataEntry) => {
+//     // const {nrOfSoldHotels, nrOfSoldHouses, price, locationsAfterTransaction}
+// }
+
+const getNothingSoldSolution = (testData: tCompressedTestData) => {
+    const nothingSoldKey = getSellingPermitsCategory({ nrOfSoldHotels: 0, nrOfSoldHouses: 0, price: 0 });
+    const result = testData?.[nothingSoldKey]?.[0]?.solution;
+    if (!result) { 
+        console.log('Keys in testData are', Object.keys(testData))
+        throw new Error(`Cannot find a nothingKey [${nothingSoldKey}] in test data`)
+    }
+    return result;
+}
+
 export const expandTestData = (testData: tCompressedTestData, cityNames: string[]): tExpandedTestData => {
     const entreis = Object.entries(testData);
-    
 
-
-    const result: tExpandedTestData = entreis.reduce((acc: tExpandedTestData, [key, value]) => {
-        const {cities: initialCities} = shortTestNotationToJsObject(value.solution)
+    const result: tExpandedTestData = entreis.reduce((acc: tExpandedTestData, [key, compressedDataEntries]) => {
+        const nothingSoldSolution = getNothingSoldSolution(testData);
+        const {cities: initialCities} = shortTestNotationToJsObject(nothingSoldSolution)
         const nrOfHotelsInInput = initialCities.reduce((acc, {nrOfHotels}) => (acc + (nrOfHotels || 0)), 0)
         const nrOfHousesInInput = initialCities.reduce((acc, {nrOfHouses}) => (acc + (nrOfHouses || 0)), 0)
-        if (!acc[key]) {
-            acc[key] = []
-        }
-        const singleEntry = expandSingleTestDataEntry({
-            dataEntry: value,
-            cityNames, 
-            nrOfHotelsInInput,
-            nrOfHousesInInput,
-        })
-        acc[key].push(singleEntry)
+        if (!acc[key]) { acc[key] = [] }
+
+        const expandedEntries = compressedDataEntries.map((compressedDataEntry) => {
+            const result = expandSingleTestDataEntry({
+                dataEntry: compressedDataEntry,
+                cityNames, 
+                nrOfHotelsInInput,
+                nrOfHousesInInput,
+            })
+            return result;
+        }) 
+        acc[key] = [...acc[key], ...expandedEntries ]
         return acc;
     }, {})
     return result;
 }
 
-export const o_4h_4h_1H__L5h: tCompressedTestData = {
+const compressed_o_4h_4h_1H__L5h: tCompressedTestData = {
     [getSellingPermitsCategory({ nrOfSoldHotels: 0, nrOfSoldHouses: 0, price: 0 })]: [
         {solution: '4h_4h_1H' , price: 0}
     ],
@@ -420,11 +435,16 @@ export const o_4h_4h_1H__L5h: tCompressedTestData = {
     ],
 }
 
-export const o_4h_4h_1H__L5h_expanded = expandTestData(o_4h_4h_1H__L5h, [BARCELONA, SEWILLA, MADRIT])
+export const o_4h_4h_1H__L5h_expanded = expandTestData(compressed_o_4h_4h_1H__L5h, [BARCELONA, SEWILLA, MADRIT])
 
-export const o_4h_4h_1H__L0H = o_4h_4h_1H__L5h
+const compressed_o_4h_4h_1H__L0H = compressed_o_4h_4h_1H__L5h
 
-export const o_4h_1H__L0h = {
+export const expanded_o_4h_4h_1H__L0H = expandTestData(compressed_o_4h_4h_1H__L0H, [BARCELONA, SEWILLA, MADRIT])
+
+const compressed_o_4h_1H__L0h = {
+    [getSellingPermitsCategory({ nrOfSoldHotels: 0, nrOfSoldHouses: 0, price: 0 })]: [
+        {solution: '4h_1H', price: 0},
+    ],
     [getSellingPermitsCategory({ nrOfSoldHotels: 1, nrOfSoldHouses: 7, price: 350 })]: [
         {solution: '1h_0h', price: 350},
     ],
@@ -432,3 +452,5 @@ export const o_4h_1H__L0h = {
         {solution: '0h_0h', price: 400},
     ],
 }
+
+export const expanded_o_4h_1H__L0h = expandTestData(compressed_o_4h_1H__L0h, [SALONIKI, ATENY]);
