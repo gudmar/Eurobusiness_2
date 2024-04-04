@@ -85,18 +85,22 @@ describe('Selling buildings test (getSellingPermits)', () => {
         // it('Should return a reason when received a country without buildings', () => {
         //     // getSellingPermits()
         // })
-        it.only('Should return a permit for one house when received a 2 estates country with only a single house build 0h_1h', () => {
+        it('Should return a permit for one house when received a 2 estates country with only a single house build 0h_1h', () => {
             const gameState = getStateMock();
             Bank.nrOfHotels = 12;
             Bank.nrOfHouses = 12
             const modifiedState = changeEstates(gameState, delta_0h1h);
             const sellingPermitsGetterArgs: tGetSellingPermitsArgs = { gameState: modifiedState, country: GREECE, playerName: "Dwalin" }
             const result = getSellingPermits(sellingPermitsGetterArgs);
+            console.log('result', result);
+            console.log('exp', o_0h_1h)
             expect(result).toEqual(o_0h_1h);
         });
 
         it('Should return a permit for 1 and 2 houses when received a 3 estates country with 2 houses on it 1h_1h_0h', () => {
             const gameState = getStateMock();
+            Bank.nrOfHotels = 12;
+            Bank.nrOfHouses = 0
             const delta = delta_1h_1h_0h;
             const modifiedState = changeEstates(gameState, delta);
             const sellingPermitsGetterArgs: tGetSellingPermitsArgs = { gameState: modifiedState, country: SPAIN, playerName: "Dwalin" }
@@ -106,6 +110,8 @@ describe('Selling buildings test (getSellingPermits)', () => {
 
         it('Should return a permit to sell up to 1, 2, 3, 4, 5 houses in a balanced way, when received a country with 2 cities and 5 houses in 2 estate country 2h_3h', () => {
             const gameState = getStateMock();
+            Bank.nrOfHotels = 12;
+            Bank.nrOfHouses = 12
             const delta = delta_2h_3h
             const modifiedState = changeEstates(gameState, delta);
             const sellingPermitsGetterArgs: tGetSellingPermitsArgs = { gameState: modifiedState, country: GREECE, playerName: "Dwalin" }

@@ -31,11 +31,11 @@ const getNrOfBuildings = (permit: tBuildingLocations, cities: tCityFieldsByCount
 
 const getBuildingDifference = (permit: tNrOfBuildings[], initialLocation: tNrOfBuildings[], cities: tCityFieldsByCountry) => {
     const nrOfBuildingsInPermit = getNrOfBuildings(permit, cities);
-    const nrOfBuildingsInitialLocation = getNrOfBuildings(permit, cities);
+    const nrOfBuildingsInitialLocation = getNrOfBuildings(initialLocation, cities);
     const delta = {
-        nrOfHotels: nrOfBuildingsInPermit.nrOfHotels - nrOfBuildingsInitialLocation.nrOfHotels,
-        nrOfHouses: nrOfBuildingsInPermit.nrOfHouses - nrOfBuildingsInitialLocation.nrOfHouses,
-        price: nrOfBuildingsInPermit.price - nrOfBuildingsInitialLocation.price,
+        nrOfHotels: nrOfBuildingsInitialLocation.nrOfHotels - nrOfBuildingsInPermit.nrOfHotels,
+        nrOfHouses: nrOfBuildingsInitialLocation.nrOfHouses - nrOfBuildingsInPermit.nrOfHouses,
+        price: 0.5*(nrOfBuildingsInitialLocation.price - nrOfBuildingsInPermit.price),
     }
     return delta;
 }
@@ -49,9 +49,12 @@ const getLocationsAfterTransaction = (permit: tNrOfBuildings[], cities: tCityFie
 }
 
 const sortPermits = (permits: tNrOfBuildings[][], initialLocation: tBuildingLocations, cities: tCityFieldsByCountry) => {
+    console.log('Permits', permits)
     const result = permits.reduce((acc: tSellingPermits, permit) => {
+        console.log('PermiT', permit)
         const nrOfSoldBuildings = getBuildingDifference(permit, initialLocation, cities);
         const key: string = getSellingPermitsCategory({nrOfSoldHotels: nrOfSoldBuildings.nrOfHotels, nrOfSoldHouses: nrOfSoldBuildings.nrOfHouses, price: nrOfSoldBuildings.price});
+        console.log('key', key)
         const locationsAfterTransaction = getLocationsAfterTransaction(permit, cities);
         const deltaValue = {
             locationsAfterTransaction, nrOfSoldHotels: nrOfSoldBuildings.nrOfHotels, nrOfSoldHouses: nrOfSoldBuildings.nrOfHouses, price: nrOfSoldBuildings.price
