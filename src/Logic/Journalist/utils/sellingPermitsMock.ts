@@ -33,9 +33,9 @@ export const o_0h_1h = {
     [getSellingPermitsCategory({ nrOfSoldHotels: 0, nrOfSoldHouses: 1, price: 50 })]: [{
         locationsAfterTransaction: [
             { cityName: SALONIKI, nrOfHouses: 0, nrOfHotels: 0 },
-            { cityName: ATENY, nrOfHouses: 1, nrOfHotels: 0 },
+            { cityName: ATENY, nrOfHouses: 0, nrOfHotels: 0 },
         ],
-        nrOfSoldHotels: 0, nrOfSoldHouses: 0, price: 0
+        nrOfSoldHotels: 0, nrOfSoldHouses: 1, price: 50
     }],
 }
 
@@ -81,7 +81,7 @@ export const o_1h_1h_0h = {
                 { cityName: SEWILLA, nrOfHouses: 0, nrOfHotels: 0 },
                 { cityName: MADRIT, nrOfHouses: 0, nrOfHotels: 0 },
             ],
-            nrOfSoldHotels: 0, nrOfSoldHouses: 0, price: 0
+            nrOfSoldHotels: 0, nrOfSoldHouses: 1, price: 100
         },
         {
             locationsAfterTransaction: [
@@ -89,7 +89,7 @@ export const o_1h_1h_0h = {
                 { cityName: SEWILLA, nrOfHouses: 1, nrOfHotels: 0 },
                 { cityName: MADRIT, nrOfHouses: 0, nrOfHotels: 0 },
             ],
-            nrOfSoldHotels: 0, nrOfSoldHouses: 0, price: 0
+            nrOfSoldHotels: 0, nrOfSoldHouses: 1, price: 100
         },
     ],
     [getSellingPermitsCategory({ nrOfSoldHotels: 0, nrOfSoldHouses: 2, price: 200 })]: [
@@ -99,7 +99,7 @@ export const o_1h_1h_0h = {
                 { cityName: SEWILLA, nrOfHouses: 0, nrOfHotels: 0 },
                 { cityName: MADRIT, nrOfHouses: 0, nrOfHotels: 0 },
             ],
-            nrOfSoldHotels: 0, nrOfSoldHouses: 0, price: 0
+            nrOfSoldHotels: 0, nrOfSoldHouses: 2, price: 200
         },
     ],
 }
@@ -109,14 +109,14 @@ export const delta_2h_3h = [
         estateName: ATENY,
         props: {
             owner: RED,
-            nrOfHouses: 2
+            nrOfHouses: 3
         }
     },
     {
         estateName: SALONIKI,
         props: {
             owner: RED,
-            nrOfHouses: 3
+            nrOfHouses: 2
         }
     }
 ]
@@ -186,10 +186,9 @@ export const o_2h_3h = {
                 { cityName: SALONIKI, nrOfHouses: 0, nrOfHotels: 0 },
                 { cityName: ATENY, nrOfHouses: 0, nrOfHotels: 0 },
             ],
-            nrOfSoldHotels: 0, nrOfSoldHouses: 5, price: 200
+            nrOfSoldHotels: 0, nrOfSoldHouses: 5, price: 250
         },
     ],
-
 }
 
 export const delta_4h_4h_1H__L5h = [
