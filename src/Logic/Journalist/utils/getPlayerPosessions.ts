@@ -1,5 +1,5 @@
 import { tGameState } from "../../../Functions/PersistRetrieveGameState/types"
-import { tEstateField, tField, tFieldState } from "../../boardTypes"
+import { iCityFieldState, tEstateField, tField, tFieldState } from "../../boardTypes"
 import { Players } from "../../Players/Players"
 
 type tPlayerBelogingsConditionFunction = (field: tFieldState) => boolean
@@ -38,6 +38,20 @@ type tCountry = {
 }
 type tReport = { [key: string]: tCountry}
 
+type tGetCityFieldByCountryArgs = { gameState: tGameState, countryName: string}
+type tCityFieldsByCountry = iCityFieldState[];
+
+export const getCityFieldsByCountry = (args: tGetCityFieldByCountryArgs): tCityFieldsByCountry => {
+    const { gameState, countryName } = args;
+    const estates = gameState.boardFields;
+    const report = estates.filter((estate) => {
+        if (!('country' in estate)) return false;
+        const result = estate.country === countryName;
+        return result;
+    }, [])
+    return report as tCityFieldsByCountry;
+}
+
 export const getEstatesInCountriesReport = (gameState: tGameState, playerName: string) => {
     const playerColor = Players.playerNameToPlayerColor(playerName);
     const estates = gameState.boardFields;
@@ -64,6 +78,5 @@ export const getEstatesInCountriesReport = (gameState: tGameState, playerName: s
             country.hasAll = false
         }
     })
-    console.log(report)
     return report;
 }

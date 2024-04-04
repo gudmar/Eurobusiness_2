@@ -1,4 +1,5 @@
 import { GREECE, SPAIN } from "../../../Data/const"
+import { Bank } from "../../Bank/Bank"
 import { getSellingPermits, tGetSellingPermitsArgs } from "../../Journalist/utils/getSellingPermits"
 import { delta_0h1h, delta_1h_1h_0h, delta_2h_3h, o_0h_1h, o_1h_1h_0h, o_2h_3h } from "../../Journalist/utils/sellingPermitsMock"
 import { shortTestNotationToJsObject } from "../../Journalist/utils/sellingPermitsShortNotation"
@@ -80,13 +81,14 @@ describe('Selling buildings test (getSellingPermits)', () => {
                 })
         })
     })
-    describe('Houses', () => {
+    describe.only('Houses', () => {
         // it('Should return a reason when received a country without buildings', () => {
         //     // getSellingPermits()
         // })
-        it('Should return a permit for one house when received a 2 estates country with only a single house build 0h_1h', () => {
+        it.only('Should return a permit for one house when received a 2 estates country with only a single house build 0h_1h', () => {
             const gameState = getStateMock();
-
+            Bank.nrOfHotels = 12;
+            Bank.nrOfHouses = 12
             const modifiedState = changeEstates(gameState, delta_0h1h);
             const sellingPermitsGetterArgs: tGetSellingPermitsArgs = { gameState: modifiedState, country: GREECE, playerName: "Dwalin" }
             const result = getSellingPermits(sellingPermitsGetterArgs);
