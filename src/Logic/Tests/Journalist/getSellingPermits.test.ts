@@ -1,7 +1,7 @@
 import { GREECE, SPAIN } from "../../../Data/const"
 import { Bank } from "../../Bank/Bank"
-import { getSellingPermits, tGetSellingPermitsArgs } from "../../Journalist/utils/getSellingPermits"
-import { delta_0h1h, delta_1h_1h_0h, delta_2h_3h, o_0h_1h, o_1h_1h_0h, o_2h_3h } from "../../Journalist/utils/sellingPermitsMock"
+import { getSellingPermits, getSellingPermitsCategory, tGetSellingPermitsArgs } from "../../Journalist/utils/getSellingPermits"
+import { delta_0h1h, delta_1h_1h_0h, delta_2h_3h, delta_4h_4h_1H__L5h, o_0h_1h, o_1h_1h_0h, o_2h_3h, o_4h_4h_1H__L5h_expanded } from "../../Journalist/utils/sellingPermitsMock"
 import { shortTestNotationToJsObject } from "../../Journalist/utils/sellingPermitsShortNotation"
 import { changeEstates, getStateMock } from "./ChanceCardStateMocks"
 
@@ -81,7 +81,7 @@ describe('Selling buildings test (getSellingPermits)', () => {
                 })
         })
     })
-    describe.only('Houses', () => {
+    describe('Houses', () => {
         // it('Should return a reason when received a country without buildings', () => {
         //     // getSellingPermits()
         // })
@@ -129,7 +129,28 @@ describe('Selling buildings test (getSellingPermits)', () => {
 
         // })
     });
-    describe('Hotels', () => {
+    const logResult = (result: any) => {
+        console.log('REsulb', result)
+        result.forEach(({locationsAfterTransaction, nrOfSoldHotels, nrOfSoldHouses, price}: any) => {
+            console.log('===========================')
+            console.log('hotels', nrOfSoldHotels,)
+            console.log('houses', nrOfSoldHouses),
+            console.log('Price', price),
+            console.log('Locations:')
+            const locations = locationsAfterTransaction.reduce((acc: any, {nrOfHotels, nrOfHouses, cityName}: any) => {
+                acc += `
+                    ${cityName}: nrOfHotels: ${nrOfHotels} | nrOfHouses: ${nrOfHouses}
+                `
+                return acc
+            }, '')
+            console.log('----------------')
+            console.log('Location: ',locations)
+        })
+    }
+
+
+
+    describe.only('Hotels', () => {
         // it('Should allow to downgrade when 1H_1H__LXh', () => {
 
         // })
@@ -145,8 +166,32 @@ describe('Selling buildings test (getSellingPermits)', () => {
         // it('Should allow to downgradw when 4h_1H__L3h', () => {
 
         // })
-        it('Should allow to downgrade when 4h_4h_1H__L5h', () => {
+        it.only('Should allow to downgrade when 4h_4h_1H__L5h', () => {
+            const gameState = getStateMock();
+            Bank.nrOfHotels = 12;
+            Bank.nrOfHouses = 5
+            const delta = delta_4h_4h_1H__L5h
+            const modifiedState = changeEstates(gameState, delta);
+            const sellingPermitsGetterArgs: tGetSellingPermitsArgs = { gameState: modifiedState, country: SPAIN, playerName: "Dwalin" }
+            const result = getSellingPermits(sellingPermitsGetterArgs);
+            // console.log('Expected', o_4h_4h_1H__L5h_expanded)
+            // console.log('Result', result);
 
+            const debuggedKey = getSellingPermitsCategory({ nrOfSoldHotels: 1, nrOfSoldHouses: 1, price: 200 })
+            console.log('Debug key', debuggedKey)
+            // console.log('REsult', result[debuggedKey][0].locationsAfterTransaction)
+            // console.log('Expected', o_4h_4h_1H__L5h_expanded[debuggedKey][0].locationsAfterTransaction)
+            // console.log('REsult', result[debuggedKey])
+            console.log('RESULT______')
+            logResult(result[debuggedKey])
+            console.log('____________')
+            console.log('EXPECTED')
+            logResult(o_4h_4h_1H__L5h_expanded[debuggedKey])
+            console.log('___________')
+            // console.log('Expected', o_4h_4h_1H__L5h_expanded[debuggedKey])
+
+            // expect(result[debuggedKey]).toEqual(o_4h_4h_1H__L5h_expanded[debuggedKey])
+            expect(result).toEqual(o_4h_4h_1H__L5h_expanded);
         })
         it('Should allow to downgrade when 4h_1H__L0h', () => {
 

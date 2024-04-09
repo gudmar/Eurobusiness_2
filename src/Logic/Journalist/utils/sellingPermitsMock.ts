@@ -196,21 +196,21 @@ export const delta_4h_4h_1H__L5h = [
         estateName: BARCELONA,
         props: {
             owner: RED, 
-            nrOfHouses: 1
+            nrOfHouses: 4
         }
     },
     {
         estateName: SEWILLA,
         props: {
             owner: RED,
-            nrOfHouses: 1
+            nrOfHouses: 4
         }
     },
     {
         estateName: MADRIT,
         props: {
             owner: RED,
-            nrOfHouses: 0
+            nrOfHotels: 1
         }
     }
 ]
@@ -319,14 +319,25 @@ const expandSingleTestDataEntry = (args: tExpandSingleTestDataEntryArgs): tExpan
         return result;
     })
     const nrOfHotels = locationsAfterTransaction.reduce((acc, {nrOfHotels}) => acc + (nrOfHotels || 0), 0)
-    const nrOfHouses = locationsAfterTransaction.reduce((acc, {nrOfHotels, nrOfHouses}) => {
-        const hotelHouses = nrOfHotelsInInput - (nrOfHotels || 0);
-        const houses = nrOfHousesInInput - (nrOfHouses || 0);
-        const result = houses + hotelHouses;
-        return result;
-    }, 0)
+    // const nrOfHouses = locationsAfterTransaction.reduce((acc, {nrOfHotels, nrOfHouses}) => {
+    //     const hotelHouses = nrOfHotelsInInput - (nrOfHotels || 0);
+    //     const houses = nrOfHousesInInput - (nrOfHouses || 0);
+    //     const result = houses + hotelHouses;
+    //     return result;
+    // }, 0)
+    console.log('Locations after', locationsAfterTransaction)
     const nrOfSoldHotels = nrOfHotelsInInput - nrOfHotels;
-    const nrOfSoldHouses = nrOfHouses;
+    const nrOfHousesFromHotels = nrOfSoldHotels * 4;
+    const baseNrOfHouses = nrOfHousesFromHotels + nrOfHousesInInput;
+    const housesInCurrentSolution = locationsAfterTransaction.reduce((acc, {nrOfHouses}) => acc + (nrOfHouses || 0), 0)
+    const nrOfSoldHouses = baseNrOfHouses - housesInCurrentSolution;
+
+    // throw new Error('Check if sold houses are crectly counted here')
+    // const nrOfSoldHouses = nrOfHousesInInput - nrOfHouses;
+    if (nrOfSoldHouses < 0) {
+        console.log('Sold houses < 0!!!', nrOfHousesInInput, nrOfSoldHouses, nrOfHotelsInInput, nrOfHotels)
+        throw new Error('Sold houses < 0')
+    }
     // const price = nrOfHotels * hotelPrice + nrOfHouses * housePrice;
     return {
         locationsAfterTransaction, nrOfSoldHotels, nrOfSoldHouses, price

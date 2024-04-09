@@ -34,4 +34,7 @@ export type tPossibleHouseSolutions = number[][]
 
 export type tGetCityFieldByCountryArgs = { gameState: tGameState, countryName: string}
 export type tGetCityFieldByCountryIfOwnedByArgs = { gameState: tGameState, countryName: string, playerName: string}
-export type tCityFieldsByCountry = iCityFieldState[];
+type tCityBuildingsManagement = { nrOfHotels: number, nrOfHouses: number, housePrice: number, hotelPrice: number, name: string, owner: string }
+// export type tCityFieldsByCountry = iCityFieldState[];
+type tGenericCityFieldsByCountry<T extends tCityBuildingsManagement> = T;
+export type tCityFieldsByCountry = tGenericCityFieldsByCountry<tCityBuildingsManagement>[];

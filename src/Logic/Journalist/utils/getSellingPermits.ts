@@ -1,4 +1,4 @@
-import { tGetBuildingPermitsArgs } from "./getBuildingPermits";
+import { NrOfHotels, tGetBuildingPermitsArgs } from "./getBuildingPermits";
 import { tCountries } from "../../../Data/types";
 import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
 import { tBuildingLocations, tCityFieldsByCountry, tKeyCreator, tNrOfBuildings, tSellingPermit, tSellingPermits } from "./types";
@@ -29,12 +29,29 @@ const getNrOfBuildings = (permit: tBuildingLocations, cities: tCityFieldsByCount
     return result;
 }
 
+export const calculatePrice = (cities: tCityFieldsByCountry, permit: tNrOfBuildings[], initialLocation: tNrOfBuildings[]) => { 
+    const price = permit.reduce((acc, {nrOfHotels, nrOfHouses}, index) => {
+        const baseNrOfHotels = initialLocation[index].nrOfHotels;
+        const baseNrOfHouses = initialLocation[index].nrOfHouses + 4 * (baseNrOfHotels - nrOfHotels);
+        const hotelsPrice = cities[index].hotelPrice * (baseNrOfHotels - nrOfHotels);
+        const housesPrice = cities[index].housePrice * (baseNrOfHouses - nrOfHouses);
+        const result = acc + 0.5 * (housesPrice + hotelsPrice);
+        return result;
+    }, 0)
+    console.log('Price', price)
+    return price;
+}
+
 const getBuildingDifference = (permit: tNrOfBuildings[], initialLocation: tNrOfBuildings[], cities: tCityFieldsByCountry) => {
     const nrOfBuildingsInPermit = getNrOfBuildings(permit, cities);
     const nrOfBuildingsInitialLocation = getNrOfBuildings(initialLocation, cities);
+    const nrOfHotels = nrOfBuildingsInitialLocation.nrOfHotels - nrOfBuildingsInPermit.nrOfHotels;
+    // const nrOfHouses = nrOfBuildingsInitialLocation.nrOfHouses -  nrOfBuildingsInPermit.nrOfHouses;
+    const nrOfHouses = nrOfBuildingsInitialLocation.nrOfHouses + 4 * nrOfHotels - nrOfBuildingsInPermit.nrOfHouses;
     const delta = {
-        nrOfHotels: nrOfBuildingsInitialLocation.nrOfHotels - nrOfBuildingsInPermit.nrOfHotels,
-        nrOfHouses: nrOfBuildingsInitialLocation.nrOfHouses - nrOfBuildingsInPermit.nrOfHouses,
+        // nrOfHotels: nrOfBuildingsInitialLocation.nrOfHotels - nrOfBuildingsInPermit.nrOfHotels,
+        // nrOfHouses: nrOfBuildingsInitialLocation.nrOfHouses - nrOfBuildingsInPermit.nrOfHouses,
+        nrOfHotels, nrOfHouses,
         price: 0.5*(nrOfBuildingsInitialLocation.price - nrOfBuildingsInPermit.price),
     }
     return delta;
@@ -49,16 +66,20 @@ const getLocationsAfterTransaction = (permit: tNrOfBuildings[], cities: tCityFie
 }
 
 const sortPermits = (permits: tNrOfBuildings[][], initialLocation: tBuildingLocations, cities: tCityFieldsByCountry) => {
-    console.log('Permits', permits)
+    // console.log('Permits', permits)
     const result = permits.reduce((acc: tSellingPermits, permit) => {
-        console.log('PermiT', permit)
+        // console.log('PermiT', permit)
         const nrOfSoldBuildings = getBuildingDifference(permit, initialLocation, cities);
-        const key: string = getSellingPermitsCategory({nrOfSoldHotels: nrOfSoldBuildings.nrOfHotels, nrOfSoldHouses: nrOfSoldBuildings.nrOfHouses, price: nrOfSoldBuildings.price});
-        console.log('key', key)
+        
+        // console.log('key', key)
+        
         const locationsAfterTransaction = getLocationsAfterTransaction(permit, cities);
+        const price = calculatePrice(cities, permit, initialLocation)
         const deltaValue = {
-            locationsAfterTransaction, nrOfSoldHotels: nrOfSoldBuildings.nrOfHotels, nrOfSoldHouses: nrOfSoldBuildings.nrOfHouses, price: nrOfSoldBuildings.price
+            locationsAfterTransaction, nrOfSoldHotels: nrOfSoldBuildings.nrOfHotels, nrOfSoldHouses: nrOfSoldBuildings.nrOfHouses, price//: nrOfSoldBuildings.price
         };
+        const key: string = getSellingPermitsCategory({nrOfSoldHotels: nrOfSoldBuildings.nrOfHotels, nrOfSoldHouses: nrOfSoldBuildings.nrOfHouses, price})//: nrOfSoldBuildings.price});
+        console.log('key permit',key,  permit)
         if (!acc[key]) { acc[key] = []}
         acc[key].push(deltaValue);
         return acc;
@@ -81,13 +102,13 @@ export const getSellingPermits = (args: tGetSellingPermitsArgs) => {
 
 export const getSellingPermitsCategory = ({ nrOfSoldHotels, nrOfSoldHouses, price }: tKeyCreator): string => {
     if (nrOfSoldHotels > 0 && nrOfSoldHouses === 0) {
-        return `Sell ${nrOfSoldHotels}, get ${price}`
+        return `Sell ${nrOfSoldHotels} hotels, get ${price}`
     }
     if (nrOfSoldHotels > 0 && nrOfSoldHotels > 0) {
-        return `Sell ${nrOfSoldHotels} and ${nrOfSoldHouses}, get ${price}`
+        return `Sell ${nrOfSoldHotels} hotels and ${nrOfSoldHouses} houses, get ${price}`
     }
     if (nrOfSoldHouses > 0 && nrOfSoldHotels === 0) {
-        return `Sell ${nrOfSoldHouses}, get ${price}`
+        return `Sell ${nrOfSoldHouses} houses, get ${price}`
     }
     if (nrOfSoldHotels === 0 && nrOfSoldHouses === 0) {
         return 'Sell nothing'
