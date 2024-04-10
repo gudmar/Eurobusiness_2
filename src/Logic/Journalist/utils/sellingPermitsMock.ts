@@ -80,6 +80,30 @@ export const delta_1h_1h_0h = [
     }
 ]
 
+export const delta_1H_4h_1H__L1h = [
+    {
+        estateName: BARCELONA,
+        props: {
+            owner: RED, 
+            nrOfHotels: 1
+        }
+    },
+    {
+        estateName: SEWILLA,
+        props: {
+            owner: RED,
+            nrOfHouses: 4
+        }
+    },
+    {
+        estateName: MADRIT,
+        props: {
+            owner: RED,
+            nrOfHotels: 1
+        }
+    }
+]
+
 export const o_1h_1h_0h = {
     [getSellingPermitsCategory({ nrOfSoldHotels: 0, nrOfSoldHouses: 0, price: 0 })]: [
         {
@@ -447,6 +471,26 @@ const compressed_o_4h_4h_1H__L5h: tCompressedTestData = {
         {solution: '0h_0h_0h', price: 1300},
     ],
 }
+
+const compressed_1H_4h_1H__L1h = {
+    [getSellingPermitsCategory({ nrOfSoldHotels: 0, nrOfSoldHouses: 0, price: 0 })]: [
+        {solution: '1H_4h_1H', price: 0},
+    ],
+    [getSellingPermitsCategory({ nrOfSoldHotels: 2, nrOfSoldHouses: 10, price: 1200 })]: [
+        {solution: '1h_1h_0h', price: 1200},
+        {solution: '0h_1h_1h', price: 1200},
+    ],    
+    [getSellingPermitsCategory({ nrOfSoldHotels: 2, nrOfSoldHouses: 11, price: 1300 })]: [
+        {solution: '1h_0h_0h', price: 1300},
+        {solution: '0h_1h_0h', price: 1300},
+        {solution: '0h_0h_1h', price: 1300},
+    ],    
+    [getSellingPermitsCategory({ nrOfSoldHotels: 2, nrOfSoldHouses: 12, price: 1400 })]: [
+        {solution: '0h_0h_0h', price: 1400},
+    ],
+}
+
+export const expanded_o_1H_4h_1H__L1h = expandTestData(compressed_1H_4h_1H__L1h, [BARCELONA, SEWILLA, MADRIT])
 
 export const o_4h_4h_1H__L5h_expanded = expandTestData(compressed_o_4h_4h_1H__L5h, [BARCELONA, SEWILLA, MADRIT])
 
