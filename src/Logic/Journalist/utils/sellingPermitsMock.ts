@@ -22,6 +22,23 @@ export const delta_0h1h = [
     }
 ]
 
+export const delta_4h_1H__L0h = [
+    {
+        estateName: ATENY,
+        props: {
+            owner: RED,
+            nrOfHotels: 1
+        }
+    },
+    {
+        estateName: SALONIKI,
+        props: {
+            owner: RED,
+            nrOfHouses: 4
+        }
+    }
+]
+
 export const o_0h_1h = {
     [getSellingPermitsCategory({ nrOfSoldHotels: 0, nrOfSoldHouses: 0, price: 0 })]: [{
         locationsAfterTransaction: [
@@ -319,34 +336,20 @@ const expandSingleTestDataEntry = (args: tExpandSingleTestDataEntryArgs): tExpan
         return result;
     })
     const nrOfHotels = locationsAfterTransaction.reduce((acc, {nrOfHotels}) => acc + (nrOfHotels || 0), 0)
-    // const nrOfHouses = locationsAfterTransaction.reduce((acc, {nrOfHotels, nrOfHouses}) => {
-    //     const hotelHouses = nrOfHotelsInInput - (nrOfHotels || 0);
-    //     const houses = nrOfHousesInInput - (nrOfHouses || 0);
-    //     const result = houses + hotelHouses;
-    //     return result;
-    // }, 0)
-    console.log('Locations after', locationsAfterTransaction)
     const nrOfSoldHotels = nrOfHotelsInInput - nrOfHotels;
     const nrOfHousesFromHotels = nrOfSoldHotels * 4;
     const baseNrOfHouses = nrOfHousesFromHotels + nrOfHousesInInput;
     const housesInCurrentSolution = locationsAfterTransaction.reduce((acc, {nrOfHouses}) => acc + (nrOfHouses || 0), 0)
     const nrOfSoldHouses = baseNrOfHouses - housesInCurrentSolution;
 
-    // throw new Error('Check if sold houses are crectly counted here')
-    // const nrOfSoldHouses = nrOfHousesInInput - nrOfHouses;
     if (nrOfSoldHouses < 0) {
         console.log('Sold houses < 0!!!', nrOfHousesInInput, nrOfSoldHouses, nrOfHotelsInInput, nrOfHotels)
         throw new Error('Sold houses < 0')
     }
-    // const price = nrOfHotels * hotelPrice + nrOfHouses * housePrice;
     return {
         locationsAfterTransaction, nrOfSoldHotels, nrOfSoldHouses, price
     }
 }
-
-// const expandTestDataEntry = (testDataEntry: tCompressedDataEntry) => {
-//     // const {nrOfSoldHotels, nrOfSoldHouses, price, locationsAfterTransaction}
-// }
 
 const getNothingSoldSolution = (testData: tCompressedTestData) => {
     const nothingSoldKey = getSellingPermitsCategory({ nrOfSoldHotels: 0, nrOfSoldHouses: 0, price: 0 });
@@ -358,7 +361,7 @@ const getNothingSoldSolution = (testData: tCompressedTestData) => {
     return result;
 }
 
-export const expandTestData = (testData: tCompressedTestData, cityNames: string[]): tExpandedTestData => {
+export const expandTestData = (testData: tCompressedTestData, cityNames: string[], stop=false): tExpandedTestData => {
     const entreis = Object.entries(testData);
 
     const result: tExpandedTestData = entreis.reduce((acc: tExpandedTestData, [key, compressedDataEntries]) => {
@@ -380,6 +383,7 @@ export const expandTestData = (testData: tCompressedTestData, cityNames: string[
         acc[key] = [...acc[key], ...expandedEntries ]
         return acc;
     }, {})
+    if (stop) debugger;
     return result;
 }
 
@@ -399,7 +403,6 @@ const compressed_o_4h_4h_1H__L5h: tCompressedTestData = {
         {solution: '4h_3h_3h', price: 300},
         {solution: '3h_4h_3h', price: 300},
         {solution: '3h_3h_4h', price: 300},
-        {solution: '3h_4h_3h', price: 300}
     ],
     [getSellingPermitsCategory({ nrOfSoldHotels: 1, nrOfSoldHouses: 3, price: 400 })]: [
         {solution: '3h_3h_3h', price: 400}
@@ -453,13 +456,14 @@ export const expanded_o_4h_4h_1H__L0H = expandTestData(compressed_o_4h_4h_1H__L0
 
 const compressed_o_4h_1H__L0h = {
     [getSellingPermitsCategory({ nrOfSoldHotels: 0, nrOfSoldHouses: 0, price: 0 })]: [
+        // Problem when nr of houses limited and discard hotels + nr of houses satisfies limit
         {solution: '4h_1H', price: 0},
     ],
-    [getSellingPermitsCategory({ nrOfSoldHotels: 1, nrOfSoldHouses: 7, price: 350 })]: [
-        {solution: '1h_0h', price: 350},
+    [getSellingPermitsCategory({ nrOfSoldHotels: 1, nrOfSoldHouses: 7, price: 400 })]: [
+        {solution: '1h_0h', price: 400},
     ],
-    [getSellingPermitsCategory({ nrOfSoldHotels: 1, nrOfSoldHouses: 8, price: 400 })]: [
-        {solution: '0h_0h', price: 400},
+    [getSellingPermitsCategory({ nrOfSoldHotels: 1, nrOfSoldHouses: 8, price: 450 })]: [
+        {solution: '0h_0h', price: 450},
     ],
 }
 
