@@ -32,12 +32,11 @@ export const calculatePrice = (cities: tCityFieldsByCountry, permit: tNrOfBuildi
     const price = permit.reduce((acc, {nrOfHotels, nrOfHouses}, index) => {
         const baseNrOfHotels = initialLocation[index].nrOfHotels;
         const baseNrOfHouses = initialLocation[index].nrOfHouses + 4 * (baseNrOfHotels - nrOfHotels);
-        const hotelsPrice = cities[index].hotelPrice * (baseNrOfHotels - nrOfHotels);
+        const hotelsPrice: number = cities[index].hotelPrice * (baseNrOfHotels - nrOfHotels);
         const housesPrice = cities[index].housePrice * (baseNrOfHouses - nrOfHouses);
         const result = acc + 0.5 * (housesPrice + hotelsPrice);
         return result;
     }, 0)
-    console.log('Price', price)
     return price;
 }
 
@@ -82,11 +81,8 @@ export const getSellingPermits = (args: tGetSellingPermitsArgs) => {
     const citiesInCountry = getCityFieldsByCountryIfOwnedBy({ gameState, countryName: country, playerName });
     const buildingLocations = citiesInCountry.map(({nrOfHouses, nrOfHotels}) => ({nrOfHotels, nrOfHouses}));
     const bankOwnedBuildings = {nrOfHouses: Bank.nrOfHouses, nrOfHotels: Bank.nrOfHotels};
-    console.log('Building locations', buildingLocations)
-    console.log('Bank owned', bankOwnedBuildings)
     const permits = getAllFeasableBuildingLocations( buildingLocations, bankOwnedBuildings );
     const sortedPermits = sortPermits(permits, buildingLocations, citiesInCountry);
-    // debugger;
     return sortedPermits;
 }
 
