@@ -6,7 +6,6 @@ import { getCityFieldsByCountryIfOwnedBy } from "./getCityFieldsByCountry";
 import { getAllFeasableBuildingLocations } from "./getEveryPossibleQuantityOfHouses";
 import { Bank } from "../../Bank/Bank";
 
-
 export type tGetSellingPermitsArgs = {
     gameState: tGameState,
     country: tCountries,
@@ -46,11 +45,8 @@ const getBuildingDifference = (permit: tNrOfBuildings[], initialLocation: tNrOfB
     const nrOfBuildingsInPermit = getNrOfBuildings(permit, cities);
     const nrOfBuildingsInitialLocation = getNrOfBuildings(initialLocation, cities);
     const nrOfHotels = nrOfBuildingsInitialLocation.nrOfHotels - nrOfBuildingsInPermit.nrOfHotels;
-    // const nrOfHouses = nrOfBuildingsInitialLocation.nrOfHouses -  nrOfBuildingsInPermit.nrOfHouses;
     const nrOfHouses = nrOfBuildingsInitialLocation.nrOfHouses + 4 * nrOfHotels - nrOfBuildingsInPermit.nrOfHouses;
     const delta = {
-        // nrOfHotels: nrOfBuildingsInitialLocation.nrOfHotels - nrOfBuildingsInPermit.nrOfHotels,
-        // nrOfHouses: nrOfBuildingsInitialLocation.nrOfHouses - nrOfBuildingsInPermit.nrOfHouses,
         nrOfHotels, nrOfHouses,
         price: 0.5*(nrOfBuildingsInitialLocation.price - nrOfBuildingsInPermit.price),
     }
@@ -66,20 +62,14 @@ const getLocationsAfterTransaction = (permit: tNrOfBuildings[], cities: tCityFie
 }
 
 const sortPermits = (permits: tNrOfBuildings[][], initialLocation: tBuildingLocations, cities: tCityFieldsByCountry) => {
-    // console.log('Permits', permits)
     const result = permits.reduce((acc: tSellingPermits, permit) => {
-        // console.log('PermiT', permit)
         const nrOfSoldBuildings = getBuildingDifference(permit, initialLocation, cities);
-        
-        // console.log('key', key)
-        
         const locationsAfterTransaction = getLocationsAfterTransaction(permit, cities);
         const price = calculatePrice(cities, permit, initialLocation)
         const deltaValue = {
-            locationsAfterTransaction, nrOfSoldHotels: nrOfSoldBuildings.nrOfHotels, nrOfSoldHouses: nrOfSoldBuildings.nrOfHouses, price//: nrOfSoldBuildings.price
+            locationsAfterTransaction, nrOfSoldHotels: nrOfSoldBuildings.nrOfHotels, nrOfSoldHouses: nrOfSoldBuildings.nrOfHouses, price
         };
-        const key: string = getSellingPermitsCategory({nrOfSoldHotels: nrOfSoldBuildings.nrOfHotels, nrOfSoldHouses: nrOfSoldBuildings.nrOfHouses, price})//: nrOfSoldBuildings.price});
-        console.log('key permit',key,  permit)
+        const key: string = getSellingPermitsCategory({nrOfSoldHotels: nrOfSoldBuildings.nrOfHotels, nrOfSoldHouses: nrOfSoldBuildings.nrOfHouses, price})
         if (!acc[key]) { acc[key] = []}
         acc[key].push(deltaValue);
         return acc;
@@ -88,7 +78,6 @@ const sortPermits = (permits: tNrOfBuildings[][], initialLocation: tBuildingLoca
 }
 
 export const getSellingPermits = (args: tGetSellingPermitsArgs) => {
-    const MAX_NR_OF_BUILDINGS = 3;
     const {gameState, playerName, country} = args;
     const citiesInCountry = getCityFieldsByCountryIfOwnedBy({ gameState, countryName: country, playerName });
     const buildingLocations = citiesInCountry.map(({nrOfHouses, nrOfHotels}) => ({nrOfHotels, nrOfHouses}));
@@ -97,18 +86,27 @@ export const getSellingPermits = (args: tGetSellingPermitsArgs) => {
     console.log('Bank owned', bankOwnedBuildings)
     const permits = getAllFeasableBuildingLocations( buildingLocations, bankOwnedBuildings );
     const sortedPermits = sortPermits(permits, buildingLocations, citiesInCountry);
+    // debugger;
     return sortedPermits;
 }
 
+const getBuildingsWithUnit = (nrOfBuildings: number, unit: string) => {
+    const base = `${nrOfBuildings} ${unit}`
+    const result = nrOfBuildings > 1 ? `${base}s` : base;
+    return result;
+}
+
 export const getSellingPermitsCategory = ({ nrOfSoldHotels, nrOfSoldHouses, price }: tKeyCreator): string => {
+    const HOTEL = 'hotel';
+    const HOUSE = 'house';
     if (nrOfSoldHotels > 0 && nrOfSoldHouses === 0) {
-        return `Sell ${nrOfSoldHotels} hotels, get ${price}`
+        return `Sell ${getBuildingsWithUnit(nrOfSoldHotels, HOTEL)}, get ${price}$`
     }
     if (nrOfSoldHotels > 0 && nrOfSoldHotels > 0) {
-        return `Sell ${nrOfSoldHotels} hotels and ${nrOfSoldHouses} houses, get ${price}`
+        return `Sell ${getBuildingsWithUnit(nrOfSoldHotels, HOTEL)} and ${getBuildingsWithUnit(nrOfSoldHouses, HOUSE)}, get ${price}$`
     }
     if (nrOfSoldHouses > 0 && nrOfSoldHotels === 0) {
-        return `Sell ${nrOfSoldHouses} houses, get ${price}`
+        return `Sell ${getBuildingsWithUnit(nrOfSoldHouses, HOUSE)}, get ${price}`
     }
     if (nrOfSoldHotels === 0 && nrOfSoldHouses === 0) {
         return 'Sell nothing'

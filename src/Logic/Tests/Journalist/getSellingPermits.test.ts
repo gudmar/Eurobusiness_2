@@ -1,7 +1,7 @@
 import { GREECE, SPAIN } from "../../../Data/const"
 import { Bank } from "../../Bank/Bank"
 import { getSellingPermits, getSellingPermitsCategory, tGetSellingPermitsArgs } from "../../Journalist/utils/getSellingPermits"
-import { delta_0h1h, delta_1h_1h_0h, delta_2h_3h, delta_4h_4h_1H__L5h, o_0h_1h, o_1h_1h_0h, o_2h_3h, o_4h_4h_1H__L5h_expanded } from "../../Journalist/utils/sellingPermitsMock"
+import { delta_0h1h, delta_1h_1h_0h, delta_2h_3h, delta_4h_1H__L0h, delta_4h_4h_1H__L5h, expanded_o_4h_1H__L0h, o_0h_1h, o_1h_1h_0h, o_2h_3h, o_4h_4h_1H__L5h_expanded } from "../../Journalist/utils/sellingPermitsMock"
 import { shortTestNotationToJsObject } from "../../Journalist/utils/sellingPermitsShortNotation"
 import { changeEstates, getStateMock } from "./ChanceCardStateMocks"
 
@@ -82,9 +82,6 @@ describe('Selling buildings test (getSellingPermits)', () => {
         })
     })
     describe('Houses', () => {
-        // it('Should return a reason when received a country without buildings', () => {
-        //     // getSellingPermits()
-        // })
         it('Should return a permit for one house when received a 2 estates country with only a single house build 0h_1h', () => {
             const gameState = getStateMock();
             Bank.nrOfHotels = 12;
@@ -150,7 +147,7 @@ describe('Selling buildings test (getSellingPermits)', () => {
 
 
 
-    describe.only('Hotels', () => {
+    describe('Hotels', () => {
         // it('Should allow to downgrade when 1H_1H__LXh', () => {
 
         // })
@@ -166,7 +163,7 @@ describe('Selling buildings test (getSellingPermits)', () => {
         // it('Should allow to downgradw when 4h_1H__L3h', () => {
 
         // })
-        it.only('Should allow to downgrade when 4h_4h_1H__L5h', () => {
+        it('Should allow to downgrade when 4h_4h_1H__L5h', () => {
             const gameState = getStateMock();
             Bank.nrOfHotels = 12;
             Bank.nrOfHouses = 5
@@ -174,26 +171,24 @@ describe('Selling buildings test (getSellingPermits)', () => {
             const modifiedState = changeEstates(gameState, delta);
             const sellingPermitsGetterArgs: tGetSellingPermitsArgs = { gameState: modifiedState, country: SPAIN, playerName: "Dwalin" }
             const result = getSellingPermits(sellingPermitsGetterArgs);
-            // console.log('Expected', o_4h_4h_1H__L5h_expanded)
-            // console.log('Result', result);
-
-            const debuggedKey = getSellingPermitsCategory({ nrOfSoldHotels: 1, nrOfSoldHouses: 1, price: 200 })
-            console.log('Debug key', debuggedKey)
-            // console.log('REsult', result[debuggedKey][0].locationsAfterTransaction)
-            // console.log('Expected', o_4h_4h_1H__L5h_expanded[debuggedKey][0].locationsAfterTransaction)
-            // console.log('REsult', result[debuggedKey])
-            console.log('RESULT______')
-            logResult(result[debuggedKey])
-            console.log('____________')
-            console.log('EXPECTED')
-            logResult(o_4h_4h_1H__L5h_expanded[debuggedKey])
-            console.log('___________')
-            // console.log('Expected', o_4h_4h_1H__L5h_expanded[debuggedKey])
-
-            // expect(result[debuggedKey]).toEqual(o_4h_4h_1H__L5h_expanded[debuggedKey])
+            // const debuggedKey = getSellingPermitsCategory({ nrOfSoldHotels: 1, nrOfSoldHouses: 1, price: 200 })
+            // console.log('Debug key', debuggedKey)
+            // console.log('RESULT______')
+            // logResult(result[debuggedKey])
+            // console.log('____________')
+            // console.log('EXPECTED')
+            // logResult(o_4h_4h_1H__L5h_expanded[debuggedKey])
+            // console.log('___________')
             expect(result).toEqual(o_4h_4h_1H__L5h_expanded);
         })
-        it('Should allow to downgrade when 4h_1H__L0h', () => {
+        it('Should allow to downgrade when 4h_1H__L0h', () => {            const gameState = getStateMock();
+            Bank.nrOfHotels = 12;
+            Bank.nrOfHouses = 0
+            const delta = delta_4h_1H__L0h
+            const modifiedState = changeEstates(gameState, delta);
+            const sellingPermitsGetterArgs: tGetSellingPermitsArgs = { gameState: modifiedState, country: GREECE, playerName: "Dwalin" }
+            const result = getSellingPermits(sellingPermitsGetterArgs);
+            expect(result).toEqual(expanded_o_4h_1H__L0h);
 
         })
         // it('Should allow to downgrade when 1H_4h_1H__L0h', () => {

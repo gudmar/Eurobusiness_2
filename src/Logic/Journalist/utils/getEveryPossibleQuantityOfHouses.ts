@@ -1,4 +1,4 @@
-import { MAX_NR_OF_HOUSES_TO_PURCHASE_IN_ONE_ROW } from "../../../Constants/constants";
+import { MAX_NR_OF_HOUSES_TO_PURCHASE_IN_ONE_ROW, NR_OF_HOUSES_MUCH_GREATER_THAN_BANK_MAY_HAVE } from "../../../Constants/constants";
 import { tBuildingLocations, tNrOfBuildings, tPossibleHouseSolutions } from "./types";
 
 const getDecreasedSolution = (solution: number[], index: number) => {
@@ -108,11 +108,22 @@ export const getAllFeasableBuildingLocations = (initialBuildingLocations: tBuild
     }
     const fiveHousesTranslatedToHotel = verboseNotation.map(convertSingleSolutionWithFiveHouessToHotels)
 
-    const nrOfHousesInInitialSolution = houses.reduce((acc, nrOfHouses) => acc + nrOfHouses, 0);
-    const solutionsWithFilteredHousesOwnedByBankLimit = fiveHousesTranslatedToHotel.filter((solution) => {
-        const nrOfHousesSolutionUses = solution.reduce((acc, {nrOfHouses}) => acc + nrOfHouses, 0);
-        const result = nrOfHousesSolutionUses <= nrOfHousesInInitialSolution + housesLimit;
-        return result
+    const doesSolutionMeetConstraints = (solution: tNrOfBuildings[]) => {
+        const nrOfAdditionalHousesNeeded = solution.reduce((acc, {nrOfHouses, nrOfHotels}, index) => {
+            const nrHousesInitial = initialBuildingLocations[index].nrOfHouses;
+            const nrHotelsInitial = initialBuildingLocations[index].nrOfHotels;
+            const deltaHotels = nrHotelsInitial - nrOfHotels;
+            const deltaHouses = nrHousesInitial - nrOfHouses;
+            if (deltaHotels > 0) {
+                return  acc + nrOfHouses
+            }
+            return deltaHouses < 0 ? NR_OF_HOUSES_MUCH_GREATER_THAN_BANK_MAY_HAVE + acc : acc;
+        }, 0)
+        return nrOfAdditionalHousesNeeded <= housesLimit
+    }
+    const solutionsWithFilteredHousesOwnedByBankLimit = fiveHousesTranslatedToHotel.filter((solution, index) => {
+        const isSolutionInConstraints = doesSolutionMeetConstraints(solution);
+        return isSolutionInConstraints;
     })
     return solutionsWithFilteredHousesOwnedByBankLimit
 
