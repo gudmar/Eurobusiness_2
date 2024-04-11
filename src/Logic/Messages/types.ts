@@ -1,7 +1,7 @@
-import { tPlayerName } from "../../Components/Pawns/types";
 import { BANK, PLAYER_1, PLAYER_2, PLAYER_3, PLAYER_4 } from "../../Data/const";
 import { BoardCaretaker } from "../BoardCaretaker";
 import { tAllMessages } from "../../Constants/commands";
+import { tPlayerName } from "../Player/types";
 
 export type tPayTargets = typeof PLAYER_1 | typeof PLAYER_2 | typeof PLAYER_3 | typeof PLAYER_4 | typeof BANK;
 

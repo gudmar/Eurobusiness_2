@@ -1,18 +1,19 @@
 import { CHANCE_CARDS_BLUE, CHANCE_CARDS_RED } from "../../Data/chanceCards";
+import { throwIfNotContainKeys } from "../../Functions/throwIfNotContainKey";
 import { Bank } from "../Bank/Bank";
 import { ChanceCardHolder } from "../Chance/ChanceCardHolder";
 import { DiceTestModeDecorator } from "../Dice/Dice";
+import { tPlayerName } from "../Player/types";
 import { Players } from "../Players/Players";
-import { iPlayerDescriptor } from "../Players/types";
 import { TurnPhases } from "../types";
-
-type tGameConstructionArgs = {
-    playersData: iPlayerDescriptor[]
-}
+import { tGameConstructionArgs, tGameLogicState } from "./types";
 
 export class Game {
     static instance: Game;
-    turnPhase = TurnPhases.BeforeMove;
+    static get state() { return Game.instance.state }
+    private _turnPhase = TurnPhases.BeforeMove;
+    private _playersOrder: tPlayerName[] = [];
+    private _currentPlayer: tPlayerName = '';
     constructor({
         playersData
     }: tGameConstructionArgs){
@@ -24,10 +25,30 @@ export class Game {
                 DiceClass: DiceTestModeDecorator, 
                 players: playersData,
             })
+            this._playersOrder = Players.players.map((player) => player.name);
+            this._currentPlayer = this._playersOrder[0];
             Game.instance = this;
-            this.turnPhase =TurnPhases.BeforeMove
+            this._turnPhase =TurnPhases.BeforeMove
         }
         return Game.instance
     }
 
+    get state() {
+        return {
+            currentPlayer: this._currentPlayer,
+            playersOrder: this._playersOrder,
+            turnPhase: this._turnPhase
+        }
+    }
+
+    set state(val: tGameLogicState) {
+        throwIfNotContainKeys({
+            keys: ['currentPlayer', 'playersOrder', 'turnPhase'],
+            objectToValidate: val,
+            source: this.constructor.name,
+        })
+        this._currentPlayer = val.currentPlayer;
+        this._playersOrder = val.playersOrder;
+        this._turnPhase = val.turnPhase;
+    }
 }

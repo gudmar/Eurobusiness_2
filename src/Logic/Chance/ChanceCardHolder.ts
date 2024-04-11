@@ -1,16 +1,15 @@
 import { tSupportedLanguagesKeys } from "../../Contexts/CurrentLanguage/types";
 import { iChanceCardsData } from "../../Data/types";
-import { range } from "../../Functions/createRange";
 import { shuffle } from "../../Functions/shuffle";
-import { iDictionary } from "../../Types/types";
 import { SubscribtionsHandler } from "../SubscrbtionsHandler";
 import { ChanceCard } from "./ChanceCard";
-import { Errors } from "./errors";
-import { ChanceCardOperations, iActions, iChanceCard, iDescription, tBorrowedCards, tCardMetadata, tCardMetadataBit, tChance, tChanceCardOperationMessage, tChanceCardsHolderState, tPlayerName, tRunOnEachInstanceCallback, tSingleChanceCardState } from "./types";
+import { 
+    ChanceCardOperations, iChanceCard,
+    tChanceCardOperationMessage, tChanceCardsHolderState,
+    tRunOnEachInstanceCallback, tSingleChanceCardState
+} from "./types";
 
 export type tChanceCardHolderInstance = ChanceCardHolder;
-
-type tReduceInstancesCallback = (instance: tChanceCardHolderInstance, index?: number) => any;
 
 export const ACTIONS = 'actions'
 

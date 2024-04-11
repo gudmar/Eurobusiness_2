@@ -446,8 +446,8 @@ const getNrHotelsBoughtInRound = (args: tGetBuildingPermitsArgs) => {
     const {gameState, playerName} = args;
     const playerColor = Players.playerNameToPlayerColor(playerName);
     const player = gameState.players.find((player) => player.color === playerColor);
-    const nrOfHotelsBoughtInRound = player?.nrOfHotelsBoughtInRound;
-    return nrOfHotelsBoughtInRound || 0;
+    const  nrOfHotelsPurchasedInRound = player?.nrOfHotelsPurchasedInRound;
+    return nrOfHotelsPurchasedInRound || 0;
 }
 
 export const getBuildingPermits = (args: tGetBuildingPermitsArgs) => {

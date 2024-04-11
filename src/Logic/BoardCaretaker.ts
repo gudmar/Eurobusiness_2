@@ -1,4 +1,3 @@
-import { tPlayerName } from "../Components/Pawns/types";
 import { NR_OF_HOTELS, NR_OF_HOUSES } from "../Constants/constants";
 import { boardInOrder, descriptors } from "../Data/boardFields";
 import { CHANCE_BLUE, CHANCE_RED, CITY, FREE_PARK, GO_TO_JAIL, GUARDED_PARKING, JAIL, PLANT, POWER_STATION, RAILWAY, START, TAX } from "../Data/const";

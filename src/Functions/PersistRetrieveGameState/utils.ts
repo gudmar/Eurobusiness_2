@@ -2,6 +2,7 @@ import { Bank } from "../../Logic/Bank/Bank";
 import { BoardCaretaker } from "../../Logic/BoardCaretaker";
 import { ChanceCardHolder } from "../../Logic/Chance/ChanceCardHolder";
 import { DiceTestModeDecorator } from "../../Logic/Dice/Dice";
+import { Game } from "../../Logic/Game/Game";
 import { Players } from "../../Logic/Players/Players";
 import { isStateNameTaken } from "./localStorageOperations";
 import { tGameState } from "./types";
@@ -43,12 +44,18 @@ const getBankState = () => {
     return state;
 }
 
+const getGameLogicState = () => {
+    const state = Game.state;
+    return state;
+}
+
 const STATE_PROVIDERS = {
     bank: getBankState,
     dice: getDiceState,
     boardFields: getBoardFieldsStates,
     players: getPlayersState,
     chanceCards: getChanceCardsState,
+    game: getGameLogicState,
 }
 
 export const getGameState = (): tGameState => {
