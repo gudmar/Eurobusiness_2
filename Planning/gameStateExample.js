@@ -715,7 +715,8 @@ const state = {
         isInPrison: false,
         nrTurnsToWait: 0,
         isGameLost: false,
-        strategy: "manual"
+        strategy: "manual",
+        nrOfHotelsPurchasedInRound: 0,
       },
       {
         name: "Dwalin",
@@ -728,7 +729,8 @@ const state = {
         isInPrison: false,
         nrTurnsToWait: 0,
         isGameLost: false,
-        strategy: "manual"
+        strategy: "manual",
+        nrOfHotelsPurchasedInRound: 0,
       },
       {
         name: "Dorin",
@@ -741,7 +743,8 @@ const state = {
         isInPrison: false,
         nrTurnsToWait: 0,
         isGameLost: false,
-        strategy: "manual"
+        strategy: "manual",
+        nrOfHotelsPurchasedInRound: 0,
       },
       {
         name: "Gloin",
@@ -752,7 +755,8 @@ const state = {
         isInPrison: false,
         nrTurnsToWait: 0,
         isGameLost: false,
-        strategy: "manual"
+        strategy: "manual",
+        nrOfHotelsPurchasedInRound: 0,
       }
     ],
     chanceCards: {

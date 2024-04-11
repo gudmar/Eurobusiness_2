@@ -3,6 +3,7 @@ import { useThemesAPI } from "../../Contexts/ThemeContext";
 import { deleteGame, renameGame } from "../../Functions/PersistRetrieveGameState/localStorageOperations";
 import { saveCurrentGameState } from "../../Functions/PersistRetrieveGameState/PersistGame";
 import { loadGameStateFromLocalStorage } from "../../Functions/PersistRetrieveGameState/RetrieveGame";
+import { getGameState } from "../../Functions/PersistRetrieveGameState/utils";
 import { Button } from "../Button/Button";
 import { TextAreaInput } from "../Interactors/TextArea/TextArea";
 import { TextInput } from "../Interactors/TextInput/TextInput";
@@ -29,6 +30,10 @@ export const SaveLoadGameWindow = () => {
     return (
         <>
             <h1 className={classes.headline}>{TEXT.title[languageKey]}</h1>
+            <Button 
+                label='Log current game state'
+                action = {() => {console.log(getGameState())} }
+            />
             {/* <button onClick ={logState}>Log state</button>
             <button onClick={clearConsole}>Clear console</button> */}
             <section className={classes.content}>

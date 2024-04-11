@@ -22,6 +22,7 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
     private _isGameLost: boolean;
     private _strategy: iStrategy;
     private _strategyName: StrategyNames;
+    private _nrOfHotelsPurchasedInRound: number;
 
     private _initialState: iPlayerState;
     constructor({
@@ -39,6 +40,7 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
         this._isGameLost = false;
         this._strategyName = strategy;
         this._strategy = getStrategyProvider(strategy);
+        this._nrOfHotelsPurchasedInRound = 0;
 
         this._initialState = this.getSnapshot()
         // this.runAllSubscriptions(ANY_CHANGE, {...this.getSnapshot()})
@@ -111,6 +113,7 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
             nrTurnsToWait: this._nrTurnsToWait,
             isGameLost: this._isGameLost,
             strategy: this._strategyName,
+            nrOfHotelsPurchasedInRound: this._nrOfHotelsPurchasedInRound,
         })
     }
 
@@ -135,6 +138,7 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
             },
             isGameLost: (val: boolean) => this._isGameLost = true,
             strategy: (val: iStrategy) => this._strategy = val,
+            nrOfHotelsPurchasedInRound: (val: number) => this._nrOfHotelsPurchasedInRound = val ?? 0,
         }
         const stateEntries = Object.entries(newState);
         stateEntries.forEach(([key, value]) => { setters[key](value) })
@@ -159,6 +163,7 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
             nrTurnsToWait: this._nrTurnsToWait,
             isGameLost: this._isGameLost,
             strategy: this._strategyName,
+            nrOfHotelsPurchasedInRound: this._nrOfHotelsPurchasedInRound,
         }
     }
     set state(val) {
@@ -172,6 +177,7 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
         this._isGameLost = val.isGameLost;
         this._strategyName = val.strategy;
         this._informAnyChange();
+        this._nrOfHotelsPurchasedInRound = val.nrOfHotelsPurchasedInRound || 0;
     }
     getDoneFunction() {
         let outsideResolve;

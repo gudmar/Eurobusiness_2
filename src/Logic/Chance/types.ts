@@ -32,7 +32,6 @@ export type tChance = {
     metadata?: tCardMetadata,
 }
 
-export type tPlayerName = string;
 export type tCardIndex = string;
 
 export type tBorrowedCards = {

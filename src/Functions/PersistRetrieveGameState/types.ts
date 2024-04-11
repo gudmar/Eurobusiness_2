@@ -3,6 +3,7 @@ import { tBankState } from "../../Logic/Bank/types"
 import { tField, tFieldState } from "../../Logic/boardTypes"
 import { tChanceCardsHolderState } from "../../Logic/Chance/types"
 import { tDiceState } from "../../Logic/Dice/types"
+import { tGameLogicState } from "../../Logic/Game/types"
 import { iPlayerSnapshot } from "../../Logic/Player/types"
 import { TurnPhases } from "../../Logic/types"
 
@@ -18,6 +19,7 @@ export type tGameState = {
     currentPlayerName: string,
     playerNamesQueue: string[],
     turnPhase: TurnPhases,
+    game: tGameLogicState,
 }
 
 // export type tSavedGameDescription = { name: string, description: string }

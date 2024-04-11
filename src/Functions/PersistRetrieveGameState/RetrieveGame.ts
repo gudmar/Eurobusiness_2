@@ -4,6 +4,7 @@ import { isCityFieldState, isNonCityEstatesFieldState, tFieldState } from "../..
 import { ChanceCardHolder } from "../../Logic/Chance/ChanceCardHolder"
 import { DiceTestModeDecorator } from "../../Logic/Dice/Dice"
 import { ChanceField, CityField, NonCityEstatesField, OtherFieldTypesField } from "../../Logic/FieldCreators"
+import { Game } from "../../Logic/Game/Game"
 import { Players } from "../../Logic/Players/Players"
 import { displayError } from "../displayMessage"
 import { getGames } from "./localStorageOperations"
@@ -60,6 +61,11 @@ const setDiceState = (state: tGameState) => {
 const setBankState = (state: tGameState) => {
     const {bank} = state;
     Bank.instance.state = bank;
+}
+
+const setGameState = (state: tGameState) => {
+    const { game } = state;
+    Game.instance.state = game;
 }
 
 const loadGame = (state: tGameState) => {

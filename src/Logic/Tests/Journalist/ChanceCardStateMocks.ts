@@ -5,6 +5,7 @@ import { tEstateField, tFieldState } from "../../boardTypes";
 import { tChanceCardsHolderState } from "../../Chance/types";
 import { Commands } from "../../Commander/commands";
 import { TestModes } from "../../Dice/types";
+import { Game } from "../../Game/Game";
 import { iPlayerSnapshot } from "../../Player/types";
 import { StrategyNames } from "../../Strategies/types";
 import { TurnPhases } from "../../types";
@@ -78,6 +79,7 @@ export const getStateMock = ():tGameState => {
         boardFields: getBoardFieldsStateTemplate(),
         players: getPlayersStateTemplate(),
         chanceCards: getChanceCardsStateTemplate().chanceCards,
+        game: getGameLogicState()
     }
     return state;
 }
@@ -91,8 +93,13 @@ export type tSetNrOfHotelsBoughtInRowArgs = {
 export const setNrOfHotelsBoughtInRow = ({state ,color, nrHotelsBoughtInRound}: tSetNrOfHotelsBoughtInRowArgs) => {
   const player = state.players.find((player) => player.color === color);
   if (!player) throw new Error(`Player ${color} no found`)
-  player.nrOfHotelsBoughtInRound = nrHotelsBoughtInRound;
+  player.nrOfHotelsPurchasedInRound = nrHotelsBoughtInRound;
   
+}
+
+const getGameLogicState = () => {
+  const gameLogicState = Game.instance.state;
+  return gameLogicState;
 }
 
 const getBankStateTemplate = () => ({ nrOfHotels: 12, nrOfHouses: 32 })
@@ -813,7 +820,7 @@ const getPlayersStateTemplate = (): iPlayerSnapshot[] => ([
           isGameLost: false,
           strategy: StrategyNames.manual,
 
-          nrOfHotelsBoughtInRound: 0,
+          nrOfHotelsPurchasedInRound: 0,
         },
         {
           name: "Dwalin",
@@ -826,7 +833,7 @@ const getPlayersStateTemplate = (): iPlayerSnapshot[] => ([
           isGameLost: false,
           strategy: StrategyNames.manual,
 
-          nrOfHotelsBoughtInRound: 0,
+          nrOfHotelsPurchasedInRound: 0,
         },
         {
           name: "Dorin",
@@ -839,7 +846,7 @@ const getPlayersStateTemplate = (): iPlayerSnapshot[] => ([
           isGameLost: false,
           strategy: StrategyNames.manual, 
 
-          nrOfHotelsBoughtInRound: 0,
+          nrOfHotelsPurchasedInRound: 0,
         },
         {
           name: "Gloin",
@@ -852,7 +859,7 @@ const getPlayersStateTemplate = (): iPlayerSnapshot[] => ([
           isGameLost: false,
           strategy: StrategyNames.manual,
 
-          nrOfHotelsBoughtInRound: 0,
+          nrOfHotelsPurchasedInRound: 0,
         }
       ])
 
