@@ -1,4 +1,5 @@
 import { CHANCE_CARDS_BLUE, CHANCE_CARDS_RED } from "../../Data/chanceCards";
+import { getNextArrayItem } from "../../Functions/getNextArrayItem";
 import { throwIfNotContainKeys } from "../../Functions/throwIfNotContainKey";
 import { Bank } from "../Bank/Bank";
 import { ChanceCardHolder } from "../Chance/ChanceCardHolder";
@@ -50,5 +51,10 @@ export class Game {
         this._currentPlayer = val.currentPlayer;
         this._playersOrder = val.playersOrder;
         this._turnPhase = val.turnPhase;
+    }
+
+    nextPlayer() {
+        const nextPlayer = getNextArrayItem(this._playersOrder, this._currentPlayer);
+        this._currentPlayer = nextPlayer as string;
     }
 }
