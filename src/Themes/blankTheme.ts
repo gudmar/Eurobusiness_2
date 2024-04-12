@@ -53,5 +53,10 @@ export const BLANK_THEME: NamedTheme = {
         tableStripEvenRowFgColor:    '',
         tableStripOddRowFgColor:     '',
 
+        gameControlBackgroundColor: '',
+        gameControlForegroundColor: '',
+
+        helpTipBackground: '',
+        helpTipForeground: '',
     }
 }

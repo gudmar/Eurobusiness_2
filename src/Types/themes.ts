@@ -48,6 +48,11 @@ export type CustomTheme = {
     tableStripEvenRowFgColor: string,
     tableStripOddRowFgColor: string,
 
+    gameControlBackgroundColor: string,
+    gameControlForegroundColor: string,
+
+    helpTipBackground: string,
+    helpTipForeground: string,
 
 }
 

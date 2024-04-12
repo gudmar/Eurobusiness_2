@@ -58,5 +58,10 @@ export const DARK_THEME: NamedTheme = {
         tableStripEvenRowFgColor:    '#ddd',
         tableStripOddRowFgColor:     '#ddd',
 
+        gameControlBackgroundColor: '#212121',
+        gameControlForegroundColor: '#fdfdfd',
+
+        helpTipBackground: '#010101',
+        helpTipForeground: '#fdfdfd',
     }
 }

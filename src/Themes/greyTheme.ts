@@ -57,5 +57,11 @@ export const GREY_THEME: NamedTheme = {
         tableStripEvenRowFgColor:    '#333',
         tableStripOddRowFgColor:     '#333',
 
+
+        gameControlBackgroundColor: '#fdfdfd',
+        gameControlForegroundColor: '#012111',
+
+        helpTipBackground: '#010101',
+        helpTipForeground: '#ddd',
     }
 }
