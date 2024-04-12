@@ -1,7 +1,7 @@
-import { useEffect } from "react";
 import { useThemesAPI } from "../../Contexts/ThemeContext";
 import { getBoardCaretaker } from "../../Functions/getBoardCaretaker";
 import { BoardCaretaker } from "../../Logic/BoardCaretaker";
+import GameControl from "../GameControl/GameControl";
 import BoardField from "./BoardField/BoardFiled";
 import BoardSide from "./BoardSide/BoardSide";
 import { useStyles } from "./styles";
@@ -67,7 +67,9 @@ export const Board = () => {
             <BoardSide direction={RIGHT} />
             <BoardSide direction={BOTTOM} />
             <BoardSide direction={LEFT} />
-            <div className={classes.middleBoard}> </div>
+            <div className={classes.middleBoard}>
+                <GameControl />
+            </div>
         </div>
     )
 }

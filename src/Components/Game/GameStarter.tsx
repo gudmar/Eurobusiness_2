@@ -9,6 +9,7 @@ import { iPlayerDescriptor } from "../../Logic/Players/types"
 import { StrategyNames } from "../../Logic/Strategies/types"
 import { Board } from "../Board/Board"
 import CommandArea from "../CommandArea/CommandArea"
+import GameControl from "../GameControl/GameControl"
 import { Pawns } from "../Pawns/Pawns"
 
 const TEST_PLAYERS: iPlayerDescriptor[] = [
@@ -76,7 +77,6 @@ export const GameStarter = () => {
         <>
             <Board/>
             <Pawns playerDescriptors={playersDescriptors}/>
-            {/* <Pawns playerDescriptors={TEST_PLAYERS}/> */}
             <CommandArea/>
         </>
     )

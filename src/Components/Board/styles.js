@@ -43,6 +43,9 @@ export const useStyles = createUseStyles((theme) => ({
         backgroundColor: theme.boardMiddleSectionColor,
         gridArea: 'b-mid',
         border: theme.boardBorderStyle,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
     },}
     )
 )
