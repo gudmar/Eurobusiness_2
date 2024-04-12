@@ -4,11 +4,13 @@ import { BOARD_SIZE } from "../../Data/const";
 import { tColors } from "../../Data/types";
 import { addUniqueArrayItems } from "../../Functions/addArrayUniqueItems";
 import { displayError, displayInfo } from "../../Functions/displayMessage";
+import { getNextArrayItem } from "../../Functions/getNextArrayItem";
 import { shiftBoardIndexBy1 } from "../../Functions/shiftIndex";
 import { Bank } from "../Bank/Bank";
 import { ChanceCardHolder } from "../Chance/ChanceCardHolder";
 import { DiceTestModeDecorator } from "../Dice/Dice";
 import { TestModes } from "../Dice/types";
+import { Game } from "../Game/Game";
 import { Player } from "../Player/Player";
 import { Players } from "../Players/Players";
 import { iPlayer } from "../Players/types";
@@ -117,6 +119,16 @@ export class Commander {
         const nrOfSteps = desiredPosition > currentPosition ? desiredPosition - currentPosition - 1: BOARD_SIZE - currentPosition + desiredPosition - 1;
         const isDone = await Commander.step(player, nrOfSteps)
         return isDone;
+    }
+
+    static nextPlayer() {
+        Game.instance.nextPlayer();
+    }
+
+    static async moveCurrentPlayer() {
+        const { currentPlayer: playerName } = Game.instance.state;
+        const playerColor = Players.playerNameToPlayerColor(playerName);
+        await Commander.movePlayer(playerColor);
     }
 
     static async movePlayer(playerColor: tColors) {

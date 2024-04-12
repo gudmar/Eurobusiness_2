@@ -43,8 +43,10 @@ const logSubscribtions = () => {
     informator.logSubscribtions();
 }
 
-const moveYellowPlayer = () => {
-    Commander.movePlayer(YELLOW)
+const nextMove = () => {
+    Commander.nextPlayer();
+    Commander.moveCurrentPlayer();
+    // Commander.movePlayer(YELLOW)
 }
 
 const GameGuts = () => {
@@ -66,8 +68,8 @@ const GameGuts = () => {
                     label = {GREY_THEME.name}
                 />
                 <Button
-                    action = {moveYellowPlayer}
-                    label = {'Move yellow'}
+                    action = {nextMove}
+                    label = {'Next move'}
                 />
                 <Button
                     action = {openStateEditor}
