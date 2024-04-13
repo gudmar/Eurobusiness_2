@@ -4,6 +4,14 @@ import { StateEditorEntry } from "../StateEditorForm/StateEditorFormEntry";
 import { useStyles } from "./styles";
 import { useGameControlInfo } from "./useGameControlInfo";
 
+const arrayToString = (arr: string[]) => {
+    const result = arr.reduce((acc, item: string) => {
+        if (acc === '') return item;
+        return `${acc}, ${item}`
+    }, '')
+    return result;
+}
+
 const Information = () => {
     const {
         currentPlayerName,
@@ -37,7 +45,7 @@ const Information = () => {
             </StateEditorEntry>
             <StateEditorEntry
                 title='Order'
-                currentValue={playersOrder}
+                currentValue={arrayToString(playersOrder)}
             >
                 <></>
             </StateEditorEntry>
