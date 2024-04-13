@@ -11,3 +11,9 @@ export type tGameLogicState = {
     playersOrder: tPlayerName[],
     turnPhase: TurnPhases,
 }
+
+export enum Messages {
+    currentPlayerChanged = 'Current player changed',
+    turnPhasesChanged = 'Turn phase changed',
+    stateChanged = 'GameLogic State changed'
+}

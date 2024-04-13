@@ -6,18 +6,27 @@ import { ChanceCardHolder } from "../Chance/ChanceCardHolder";
 import { DiceTestModeDecorator } from "../Dice/Dice";
 import { tPlayerName } from "../Player/types";
 import { Players } from "../Players/Players";
+import { SubscribtionsHandler } from "../SubscrbtionsHandler";
 import { TurnPhases } from "../types";
-import { tGameConstructionArgs, tGameLogicState } from "./types";
+import { Messages, tGameConstructionArgs, tGameLogicState } from "./types";
 
-export class Game {
+export class Game extends SubscribtionsHandler<Messages, tGameLogicState | string>  {
     static instance: Game;
-    static get state() { return Game.instance.state }
+    static get state(): tGameLogicState {
+        return {
+            currentPlayer: Game?.instance?._currentPlayer || '',
+            turnPhase: Game?.instance?._turnPhase || TurnPhases.BeforeMove,
+            playersOrder: Game?.instance?._playersOrder || []
+        }
+    }
+    // static get state() { return Game.instance.state }
     private _turnPhase = TurnPhases.BeforeMove;
     private _playersOrder: tPlayerName[] = [];
     private _currentPlayer: tPlayerName = '';
     constructor({
         playersData
     }: tGameConstructionArgs){
+        super();
         if (!Game.instance) {
             new ChanceCardHolder(CHANCE_CARDS_BLUE);
             new ChanceCardHolder(CHANCE_CARDS_RED);    
@@ -51,10 +60,20 @@ export class Game {
         this._currentPlayer = val.currentPlayer;
         this._playersOrder = val.playersOrder;
         this._turnPhase = val.turnPhase;
+        this.runAllSubscriptions(Messages.stateChanged, this.state)
     }
 
     nextPlayer() {
         const nextPlayer = getNextArrayItem(this._playersOrder, this._currentPlayer);
         this._currentPlayer = nextPlayer as string;
+        this.runAllSubscriptions(Messages.currentPlayerChanged, this._currentPlayer)
+        this.runAllSubscriptions(Messages.stateChanged, this.state)
+    }
+
+    nextTurnPhase() {
+        const phases = [TurnPhases.BeforeMove, TurnPhases.AfterMove];
+        const nextPhase = getNextArrayItem(phases, this._turnPhase);
+        this.runAllSubscriptions(Messages.turnPhasesChanged, this._turnPhase);
+        this.runAllSubscriptions(Messages.stateChanged, this.state)
     }
 }
