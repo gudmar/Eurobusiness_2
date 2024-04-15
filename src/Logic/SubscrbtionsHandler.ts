@@ -5,9 +5,22 @@ import { iSubscription, tSubscription } from "../Types/types"
 export abstract class SubscribtionsHandler<SubscriptionMessageType extends string, StateType> {
     private _subscribtions: iSubscription<SubscriptionMessageType>[] =[];
     logSubscribtions() {console.log('Subscribtions: ', this._subscribtions)}
+
+    get state(): unknown {
+        throw new Error('SubscribtionsHandler: state getter should be overriten')
+    }
     
+    private _runSubscribtion (subscription: iSubscription<SubscriptionMessageType>) {
+        subscription.callback(this.state)
+    }
+
     subscribe(subscription: iSubscription<SubscriptionMessageType>) {
         this._subscribtions.push(subscription);
+    }
+
+    subscribeWithInformation(subscription: iSubscription<SubscriptionMessageType>) {
+        this.subscribe(subscription);
+        this._runSubscribtion(subscription);
     }
 
     subscribeDebug(callback: tSubscription, id: string, messageType: SubscriptionMessageType){

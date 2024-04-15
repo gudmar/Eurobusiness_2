@@ -6,6 +6,7 @@ import { ChanceCardHolder } from "../Chance/ChanceCardHolder";
 import { DiceTestModeDecorator } from "../Dice/Dice";
 import { tPlayerName } from "../Player/types";
 import { Players } from "../Players/Players";
+import { iPlayerDescriptor } from "../Players/types";
 import { SubscribtionsHandler } from "../SubscrbtionsHandler";
 import { TurnPhases } from "../types";
 import { Messages, tGameConstructionArgs, tGameLogicState } from "./types";
@@ -19,7 +20,6 @@ export class Game extends SubscribtionsHandler<Messages, tGameLogicState | strin
             playersOrder: Game?.instance?._playersOrder || []
         }
     }
-    // static get state() { return Game.instance.state }
     private _turnPhase = TurnPhases.BeforeMove;
     private _playersOrder: tPlayerName[] = [];
     private _currentPlayer: tPlayerName = '';
@@ -27,22 +27,32 @@ export class Game extends SubscribtionsHandler<Messages, tGameLogicState | strin
         playersData
     }: tGameConstructionArgs){
         super();
+
         if (!Game.instance) {
-            console.log('%cCreating players', 'background-color: black; color: white')
-            console.log('Players data', playersData)
-            new ChanceCardHolder(CHANCE_CARDS_BLUE);
-            new ChanceCardHolder(CHANCE_CARDS_RED);    
-            new Bank();
-            new Players({
-                DiceClass: DiceTestModeDecorator, 
-                players: playersData,
-            })
-            this._playersOrder = Players.players.map((player) => player.name);
-            this._currentPlayer = this._playersOrder[0];
-            Game.instance = this;
-            this._turnPhase =TurnPhases.BeforeMove
+            this.createInitialInstance(playersData);
         }
         return Game.instance
+    }
+
+    static log() {
+        const that = Game.instance
+        console.log('GameLogic state', {
+            turnPhase: that._turnPhase, playersOrder: that._playersOrder, currentPlayer: that._currentPlayer
+        })
+    }
+
+    createInitialInstance(playersData: iPlayerDescriptor[]) {
+        new ChanceCardHolder(CHANCE_CARDS_BLUE);
+        new ChanceCardHolder(CHANCE_CARDS_RED);    
+        new Bank();
+        new Players({
+            DiceClass: DiceTestModeDecorator, 
+            players: playersData,
+        })
+        this._playersOrder = Players.players.map((player) => player.name);
+        this._currentPlayer = this._playersOrder[0];
+        Game.instance = this;
+        this._turnPhase =TurnPhases.BeforeMove
     }
 
     get state() {
