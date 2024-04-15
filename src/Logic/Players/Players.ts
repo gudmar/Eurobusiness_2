@@ -40,11 +40,6 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
     }
     static deleteAllPlayers () { Players.players = [];}
 
-    // static get descriptors() {
-    //     const result = Players?._instance?.allPlayersStates;
-    //     return result
-    // }
-
     private _addNewPlayer({color, name, strategy}: iPlayerDescriptor) {
         const nextPlayer = this._createPlayer({color, name, strategy});
         Players.players.push(nextPlayer);

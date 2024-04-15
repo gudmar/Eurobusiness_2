@@ -1,7 +1,6 @@
 import { CurrentLanguageContext } from '../../Contexts/CurrentLanguage/CurrentLanguage';
 import { GameInformator, useReport } from '../../Contexts/GameInformator.ts/GameInformator';
 import { useThemesAPI } from '../../Contexts/ThemeContext';
-import { YELLOW } from '../../Data/const';
 import { displayError, displayInfo, displayWarning } from '../../Functions/displayMessage';
 import { useModal } from '../../hooks/useModal';
 import { Commander } from '../../Logic/Commander/Commander';
@@ -16,6 +15,8 @@ import { SelectLanguage } from '../SelectLanguage/SelectLanguage';
 import { PlayerEditor } from '../StateEditor/StateEditor/StateEditor';
 import { GameStarter } from './GameStarter';
 import { useStyles } from './styles';
+
+import { Game as GameLogic } from '../../Logic/Game/Game';
 
 const displayTestInfo = () => {
     displayInfo({
@@ -46,7 +47,6 @@ const logSubscribtions = () => {
 const nextMove = () => {
     Commander.nextPlayer();
     Commander.moveCurrentPlayer();
-    // Commander.movePlayer(YELLOW)
 }
 
 const GameGuts = () => {
@@ -95,6 +95,11 @@ const GameGuts = () => {
                     action = {openSaveGameWindow}
                     label = {'Save game'}
                     colorVariant = {ButtonColorScheme.success}
+                />
+                <Button
+                    action = {GameLogic.log}
+                    label = {'Log Game logic'}
+
                 />
                 <Report/>
             </nav>
