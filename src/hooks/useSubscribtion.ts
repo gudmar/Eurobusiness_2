@@ -7,7 +7,7 @@ export const getUseSubscribtion = <SubscribtionType extends SubscribtionsHandler
     useEffect(() => {
         const uuid = getUuid();
         // console.log('Observerd', observationTarget)
-        observationTarget.subscribe({ messageType, id: uuid, callback });
-        return () => observationTarget.unsubscribe(messageType, uuid);
+        observationTarget?.subscribe({ messageType, id: uuid, callback });
+        return () => observationTarget?.unsubscribe(messageType, uuid);
     }, [observationTarget, callback])
 } 

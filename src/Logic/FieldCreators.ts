@@ -52,6 +52,7 @@ export class CityField extends SubscribtionsHandler<tFlattenedFieldTypes, iCityF
 
     }: iNamedCityField, index: number) {
         super();
+        console.log('INDEX in FieldCreator', index)
         if (CityField.instances[name] !== undefined) {
             return CityField.instances[name]
         }

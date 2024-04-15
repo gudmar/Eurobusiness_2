@@ -28,6 +28,8 @@ export class Game extends SubscribtionsHandler<Messages, tGameLogicState | strin
     }: tGameConstructionArgs){
         super();
         if (!Game.instance) {
+            console.log('%cCreating players', 'background-color: black; color: white')
+            console.log('Players data', playersData)
             new ChanceCardHolder(CHANCE_CARDS_BLUE);
             new ChanceCardHolder(CHANCE_CARDS_RED);    
             new Bank();
@@ -57,6 +59,8 @@ export class Game extends SubscribtionsHandler<Messages, tGameLogicState | strin
             objectToValidate: val,
             source: this.constructor.name,
         })
+        console.log('%cSetting Game state', "background-color: orange")
+        console.log(val)
         this._currentPlayer = val.currentPlayer;
         this._playersOrder = val.playersOrder;
         this._turnPhase = val.turnPhase;
