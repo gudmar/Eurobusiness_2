@@ -26,10 +26,12 @@ const setPlayersState = (state: tGameState) => {
     // const playersConstructorArgs = stateTemplates.map(([color, state]) => (state));
     const playersConstructorArgs = stateTemplates;
     new Players({DiceClass: DiceTestModeDecorator, players: playersConstructorArgs});
-    // Players.players.forEach((player) => {
-    //     const color = player.color;
-    //     player.state = state.players[color as  keyof tPartialPlayer]
-    // })
+    Players.players.forEach((player) => {
+        const getPlayer = () => (state.players.find(({name}) => player.state.name === name))
+        const color = player.color;
+        console.log('Creating player', color, player.state, state.players)
+        player.state = getPlayer()
+    })
 }
 
 const getFieldInstance = (boardField: tFieldState): CityField | NonCityEstatesField | null => {

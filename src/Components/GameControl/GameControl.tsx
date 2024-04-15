@@ -18,7 +18,8 @@ const Information = () => {
         currentPlayerColor,
         turnPhase,
         playersOrder,
-        money
+        money,
+        currentPlayerField,
     } = useGameControlInfo();
     return (
         <StateEditorForm
@@ -52,6 +53,12 @@ const Information = () => {
             <StateEditorEntry
                 title='Trun phase'
                 currentValue={turnPhase}
+            >
+                <></>
+            </StateEditorEntry>
+            <StateEditorEntry
+                title='Field name'
+                currentValue={currentPlayerField?.name}
             >
                 <></>
             </StateEditorEntry>
