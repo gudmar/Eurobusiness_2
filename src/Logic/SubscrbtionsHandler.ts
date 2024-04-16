@@ -19,6 +19,8 @@ export abstract class SubscribtionsHandler<SubscriptionMessageType extends strin
     }
 
     subscribeWithInformation(subscription: iSubscription<SubscriptionMessageType>) {
+        // My mistake. Subscribe method should have this run option,
+        // as subscriber should get an initial dose of information
         this.subscribe(subscription);
         this._runSubscribtion(subscription);
     }

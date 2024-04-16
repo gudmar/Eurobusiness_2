@@ -16,6 +16,7 @@ import { Players } from "../Players/Players";
 import { iPlayer } from "../Players/types";
 import { tChanceCardPayload } from "./types";
 
+type asyncBool = Promise<boolean>
 
 export class Commander {
 
@@ -90,8 +91,8 @@ export class Commander {
     // ===================  Move player ===========================
 
 
-    static doAfterTimenout(timeout: number, cb: () => void) {
-        const result = new Promise((resolve) => {
+    static doAfterTimenout(timeout: number, cb: () => void): asyncBool {
+        const result = new Promise<boolean>((resolve) => {
             const t = setTimeout(() => {
                 cb();
                 clearTimeout(t)
@@ -101,10 +102,7 @@ export class Commander {
         return result;
     }
 
-    static async animateMovingPlayerWithRecursion(player: iPlayer, desiredPosition: number) {
-
-    }
-    static async step(player: iPlayer, nrOfSteps: number) {
+    static async step(player: iPlayer, nrOfSteps: number): asyncBool {
         const currentPosition = player.fieldNr;
         if (nrOfSteps <= 0) return Promise.resolve(true);
         const nextDesiredPosition = currentPosition + 1 < BOARD_SIZE ? currentPosition + 1 : 0;
@@ -114,7 +112,7 @@ export class Commander {
 
     }
 
-    static async animateMovingPlayer(player: iPlayer, desiredPosition: number) {
+    static async animateMovingPlayer(player: iPlayer, desiredPosition: number): asyncBool {
         const currentPosition = player.fieldNr;
         const nrOfSteps = desiredPosition > currentPosition ? desiredPosition - currentPosition - 1: BOARD_SIZE - currentPosition + desiredPosition - 1;
         const isDone = await Commander.step(player, nrOfSteps)
@@ -125,20 +123,21 @@ export class Commander {
         Game.instance.nextPlayer();
     }
 
-    static async moveCurrentPlayer() {
+    static async moveCurrentPlayer(): asyncBool {
         const { currentPlayer: playerName } = Game.instance.state;
         const playerColor = Players.playerNameToPlayerColor(playerName);
-        await Commander.movePlayer(playerColor);
+        const isDone = await Commander.movePlayer(playerColor);
+        return isDone;
     }
 
-    static async movePlayer(playerColor: tColors) {
+    static async movePlayer(playerColor: tColors): asyncBool {
         const player = Commander._getPlayerByColor(playerColor);
         const testMode = Commander._testDice.testingMode;
         if ([TestModes.getGetAwayFromJailFail, TestModes.getGetAwayFromJailPass].includes(testMode)) {
             displayError({title: 'Unpossible operation', message: `Dices are in test mode [${testMode}]. This mode is not designed to allow player move`})
-            return;
+            return true;
         }
-        if (!player) return;
+        if (!player) return true;
         const fieldNr = player.fieldNr;
         const {throws, sum, doublets} = Commander._testDice.throwToMove(fieldNr);
         if (doublets >=2) Commander.putPlayerToJail(playerColor)
@@ -154,9 +153,13 @@ export class Commander {
                 `
             })
         }
-        if (![TestModes.none, TestModes.visitFieldsFromList].includes(testMode)) { player.fieldNr = nextFieldNr; }
+        if (![TestModes.none, TestModes.visitFieldsFromList].includes(testMode)) { 
+            player.fieldNr = nextFieldNr;
+            return true
+        }
         else {
-            await Commander.animateMovingPlayer(player, nextFieldNr)
+            const isDone = await Commander.animateMovingPlayer(player, nextFieldNr);
+            return isDone;
         }
         
     }
@@ -172,4 +175,11 @@ export class Commander {
         player.nrTurnsToWait = TURNS_TO_WAIT_TO_GET_OUT_OF_JAIL;
     }
 
+    // ===================  Next game state =============
+
+    static async tick(): asyncBool {
+        Commander.nextPlayer();
+        const isPawnMoveDone = await Commander.moveCurrentPlayer();
+        return isPawnMoveDone;
+    }
 }

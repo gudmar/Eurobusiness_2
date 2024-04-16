@@ -1,5 +1,5 @@
 import { CurrentLanguageContext } from '../../Contexts/CurrentLanguage/CurrentLanguage';
-import { GameInformator, useReport } from '../../Contexts/GameInformator.ts/GameInformator';
+import { GameInformator } from '../../Contexts/GameInformator.ts/GameInformator';
 import { useThemesAPI } from '../../Contexts/ThemeContext';
 import { displayError, displayInfo, displayWarning } from '../../Functions/displayMessage';
 import { useModal } from '../../hooks/useModal';
@@ -17,6 +17,8 @@ import { GameStarter } from './GameStarter';
 import { useStyles } from './styles';
 
 import { Game as GameLogic } from '../../Logic/Game/Game';
+import { useEffect, useState } from 'react';
+import Shutter from '../Shutter/Shutter';
 
 const displayTestInfo = () => {
     displayInfo({
@@ -44,19 +46,23 @@ const logSubscribtions = () => {
     informator.logSubscribtions();
 }
 
-const nextMove = () => {
-    Commander.nextPlayer();
-    Commander.moveCurrentPlayer();
+const nextMove = async (lock: (isLocked: boolean) => void) => {
+    lock(true)
+    const isDone = await Commander.tick();
+    lock(!isDone);
 }
 
 const GameGuts = () => {
     const { theme, setThemeName } = useThemesAPI();
+    const [ isMoving, setIsMoving ] = useState<boolean>(false)
     const classes = useStyles(theme as any);
     const {Component: StateEditor, setOpen: openStateEditor, setIsOpen: setIsOpenStateEditor} = useModal(PlayerEditor)
     const {Component: SaveGameDialog, setOpen: openSaveGameWindow, setIsOpen: setIsOpenSaveGameDialog} = useModal(SaveLoadGameWindow)
+    useEffect(() => console.log('Is moving', isMoving), [isMoving])
     return (
         <div className = {classes.screen}>
             <InformationStack />
+            <Shutter isVisible={isMoving} message={'Pawn moving'} />
             <nav className={classes.navigations}>
                 <SelectLanguage />
                 <Button 
@@ -68,7 +74,9 @@ const GameGuts = () => {
                     label = {GREY_THEME.name}
                 />
                 <Button
-                    action = {nextMove}
+                    action = {
+                        () => nextMove(setIsMoving)
+                    }
                     label = {'Next move'}
                 />
                 <Button
