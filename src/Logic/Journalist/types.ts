@@ -22,6 +22,30 @@ export type tOption = {
     payload?: any
 }
 
-export type tJurnalistState = {
-    options: tOption[]
+type tRejection = {
+    reason: string,
 }
+
+type tJurnalistOutput = tOption | tRejection;
+
+type tJurnalistOutputArray = tJurnalistOutput[];
+// Rejection[] as array because there may be a different reason for each estate
+
+type tJurnalistOutputArrayOrRejection = tJurnalistOutputArray | tRejection;
+// When all entries are rejections, it may better to show a single reason?
+
+export type tJurnalistState = {
+    buyBuildings:  tJurnalistOutputArrayOrRejection;
+    sellBuildings: tJurnalistOutputArrayOrRejection;
+    buyEstate?: tJurnalistOutput;
+    sellEstates: tJurnalistOutputArrayOrRejection;
+    plegdeEstates: tJurnalistOutputArrayOrRejection;
+    unplegdeEstates: tJurnalistOutputArrayOrRejection;
+    pay?: tJurnalistOutput; // When on not guarded parking, there is no reason to explain why not to pay
+    getMoney?: tJurnalistOutput;
+    goToJail?: tJurnalistOutput;
+    move: boolean;
+    endPhase: boolean;
+}
+
+

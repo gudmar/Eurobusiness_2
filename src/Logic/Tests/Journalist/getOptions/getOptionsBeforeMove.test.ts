@@ -1,19 +1,19 @@
 import { getTestableOptions } from "../../../Journalist/getOptions"
 
 describe('Testing getOptions', () => {
-    it('Should allow to move player in each of below cases, when player is not in prison', () => {
-        const options = getTestableOptions()
+    xit('Should allow to move player in each of below cases, when player is not in prison', () => {
+        // const options = getTestableOptions()
     })
     describe('Before move', () => {
         describe('Buildings', () => {
             describe('Should not buy cases', () => {
-                it('Should return a reason for no permit to buy houses, when player cannot purchase them', () => {
+                xit('Should return a reason for no permit to buy houses, when player cannot purchase them', () => {
 
                 })
                 it('Should not add a possiblity to buy buildings when player still did not move for the first time', () => {
 
                 })
-                it('Should not add possibility to buy houses when player does not controll every city in some conutry', () => {
+                it('Should not add possibility to buy houses when player does not control every city in some conutry', () => {
 
                 });
                 it('Should not add possiblity to buy houses when player already bought 3 houses in the round and has where to build houses', () => {
@@ -30,6 +30,23 @@ describe('Testing getOptions', () => {
                 })
                 it('Should not add a possiblity to buy buildings when player has a country, but no more room for buildings', () => {
                     // 1 full countrym, 2/3 of other country
+                })
+                describe('Collapse reasons', () => {
+                    it('Should return a single reason when player has no full countries', () => {
+                        // May controll all railways
+                    })
+                    it('Should return a single reason when player has no money to buy a house on any estate he owns', () => {
+
+                    })
+                    it('Should return a single reason when player is still in jail', () => {
+
+                    })
+                    it('Should return a single reason when player already bought 3 houses in this turn and cannot afford a hotel yet', () => {
+                        // Includes cases when not owns some grounds    
+                    })
+                    it('Should return a single reason when player already bought 3 hotels in round and has no place to build a house', () => {
+
+                    })
                 })
             });
             describe('Should buy cases', () => {
@@ -82,6 +99,20 @@ describe('Testing getOptions', () => {
                 })
                 it ('Should not allow to buy an estate when it has no owner, when this is a before move phase', () => {
 
+                })
+                describe('Collapse options', () => {
+                    it('Should return a single plegde option when no unplegded estates owned', () => {
+
+                    })
+                    it('Should return a single unplegde option when no plegded estates owned', () => {
+
+                    })
+                    it('Should return a single not sell option when no estates owned', () => {
+
+                    })
+                    it('Should return a single not sell option when only COUNTRIES with buildings owned', () => {
+
+                    })
                 })
             })
             describe('Add options', () => {

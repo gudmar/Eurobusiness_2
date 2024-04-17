@@ -1,3 +1,8 @@
+const BALIN = 'Balin';
+const DWALIN = 'Dwalin';
+const DORIN = 'Dorin';
+const GLOIN = 'Gloin';
+
 const state = {
     bank: {
       nrOfHotels: 12,
@@ -1198,6 +1203,11 @@ const state = {
         cardsSetName: "Chance cards red",
         lastDrawnCardIndex: 0
       }
+    },
+    game: {
+      currentPlayer: BALIN,
+      playersOrder: [BALIN, DWALIN, DORIN, GLOIN],
+      turnPhase: 'Before move'
     },
     name: "ChanceCards",
     description: "1. Chance cards sold\n2. Players saved as an array"

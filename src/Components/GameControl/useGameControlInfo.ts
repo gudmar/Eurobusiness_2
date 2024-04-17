@@ -29,7 +29,7 @@ type tGameControlInfoState = {
 const useSubscribeToGameState = (id: string) => {
     const [state, setState] = useState(Game.state)
     useEffect(() => {
-        const subscribion= {
+        const subscribion = {
             callback: setState,
             id,
             messageType: Messages.stateChanged

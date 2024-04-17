@@ -1,10 +1,12 @@
+import { getTestableOptions } from "../../../Journalist/getOptions"
+
 describe('Options after player move', () => {
     // * End turn actions on start, not guarded parking, visit jail are added authomaticaly
     // * Should allow to sell houses, sell estates plegde estates as normal
     // * AUctions are not tested here at least YET
     describe('Should not cases', () => {
         it('Should not allow to build anything when in after move phase', () => {
-
+            // const options = getTestableOptions();
         })
         it('Should not allow to end turn when there is a pending mandatory action', () => {
 
@@ -47,7 +49,7 @@ describe('Options after player move', () => {
 
         })
         it('Should add a mandatory action to pay for a visit at other players estate, when player just stepped on one', () => {
-            
+
         })
     })
 })
