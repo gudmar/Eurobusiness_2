@@ -97,8 +97,17 @@ export const setNrOfHotelsBoughtInRow = ({state ,color, nrHotelsBoughtInRound}: 
   
 }
 
+export const BALIN = 'Balin';
+export const DWALIN = 'Dwalin';
+export const DORIN = 'Dorin';
+export const GLOIN = 'Gloin';
+
 const getGameLogicState = () => {
-  const gameLogicState = Game.instance.state;
+  const gameLogicState = {
+    currentPlayer: BALIN,
+    playersOrder: [BALIN, DWALIN, DORIN, GLOIN],
+    turnPhase: TurnPhases.BeforeMove
+  };
   return gameLogicState;
 }
 

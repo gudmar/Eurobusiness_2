@@ -1,3 +1,8 @@
+const BALIN = 'Balin';
+const DWALIN = 'Dwalin';
+const DORIN = 'Dorin';
+const GLOIN = 'Gloin';
+
 const state = {
     bank: {
       nrOfHotels: 12,
@@ -707,7 +712,7 @@ const state = {
     ],
     players: [
       {
-        name: "Balin",
+        name: BALIN,
         money: 3000,
         specialCards: [],
         color: "yellow",
@@ -715,10 +720,11 @@ const state = {
         isInPrison: false,
         nrTurnsToWait: 0,
         isGameLost: false,
-        strategy: "manual"
+        strategy: "manual",
+        nrOfHotelsPurchasedInRound: 0,
       },
       {
-        name: "Dwalin",
+        name: DWALIN,
         money: 3000,
         specialCards: [],
         color: "red",
@@ -726,10 +732,11 @@ const state = {
         isInPrison: false,
         nrTurnsToWait: 0,
         isGameLost: false,
-        strategy: "manual"
+        strategy: "manual",
+        nrOfHotelsPurchasedInRound: 0,
       },
       {
-        name: "Dorin",
+        name: DORIN,
         money: 3000,
         specialCards: [],
         color: "green",
@@ -737,10 +744,11 @@ const state = {
         isInPrison: false,
         nrTurnsToWait: 0,
         isGameLost: false,
-        strategy: "manual"
+        strategy: "manual",
+        nrOfHotelsPurchasedInRound: 0,
       },
       {
-        name: "Gloin",
+        name: GLOIN,
         money: 3000,
         specialCards: [],
         color: "blue",
@@ -748,7 +756,8 @@ const state = {
         isInPrison: false,
         nrTurnsToWait: 0,
         isGameLost: false,
-        strategy: "manual"
+        strategy: "manual",
+        nrOfHotelsPurchasedInRound: 0,
       }
     ],
     chanceCards: {
@@ -1190,6 +1199,11 @@ const state = {
         cardsSetName: "Chance cards red",
         lastDrawnCardIndex: 0
       }
+    },
+    game: {
+      currentPlayer: BALIN,
+      playersOrder: [BALIN, DWALIN, DORIN, GLOIN],
+      turnPhase: 'Before move'
     },
     name: "NewGame",
     description: ""
