@@ -1,5 +1,6 @@
 import { isBeforeFirstMove } from "../../../Journalist/isBeforeFirstMove";
-import { getStateMock } from "../ChanceCardStateMocks"
+import { getStateMock } from "../getGameStateMock/getStateTemplate";
+
 
 describe('Testing if isBeforeFirstMove produces correct results', () => {
     it('Should return true when receives an initial game state', () => {

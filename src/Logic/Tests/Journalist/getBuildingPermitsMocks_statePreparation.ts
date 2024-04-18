@@ -1,6 +1,8 @@
 import { AMSTERDAM, ATENY, BARCELONA, BONN, BRUKSELA, FRANKFURT, GLASGOW, GOTEBORG, INSBRUK, KOLONIA, LIVERPOOL, LONDON, MADRIT, MALMO, MEDIOLAN, NEAPOL, RED, ROME, ROTTERDAM, SALONIKI, SEWILLA, SZTOKHOLM, WIEDEN } from "../../../Data/const";
 import { Players } from "../../Players/Players";
-import { changeEstates, getStateMock, setNrOfHotelsBoughtInRow } from "./ChanceCardStateMocks";
+import { setNrOfHotelsBoughtInRow } from "./ChanceCardStateMocks";
+import { changeEstates } from "./getGameStateMock/getGameStateMock";
+import { getStateMock } from "./getGameStateMock/getStateTemplate";
 
 Players.playerNameToPlayerColor = () => RED;
 

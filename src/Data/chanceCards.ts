@@ -1,9 +1,11 @@
 import { Commands } from "../Logic/Commander/commands";
 import { iChanceCardsData } from "./types";
 
+export const RED_CARDS_SET_NAME = 'Chance cards red';
+export const BLUE_CARDS_SET_NAME = 'Chance cards blue';
 
 export const CHANCE_CARDS_RED: iChanceCardsData = {
-    cardsSetName: 'Chance cards red',
+    cardsSetName: RED_CARDS_SET_NAME,
     0: {
         descriptions: {
             pl: "Zobowiązany jesteś zmodernizować swoje miasto, płacisz za każdy dom 80 $,za każdy hotel 230 $",
@@ -210,8 +212,6 @@ export const CHANCE_CARDS_RED: iChanceCardsData = {
 
 }
 
-export const BLUE_CARDS_SET_NAME = 'Chance cards blue';
-
 export const CHANCE_CARDS_BLUE: iChanceCardsData= {
     cardsSetName: BLUE_CARDS_SET_NAME,
     0: {
@@ -408,3 +408,7 @@ export const CHANCE_CARDS_BLUE: iChanceCardsData= {
         ]
     }
 }
+
+export const SPECIAL_CARD_RED = CHANCE_CARDS_RED['15'].descriptions.pl
+export const SPECIAL_CARD_BLUE = CHANCE_CARDS_RED['6'].descriptions.pl
+
