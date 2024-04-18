@@ -3,7 +3,8 @@ import { Bank } from "../../Bank/Bank"
 import { getSellingPermits, getSellingPermitsCategory, tGetSellingPermitsArgs } from "../../Journalist/utils/getSellingPermits"
 import { delta_0h1h, delta_1h_1h_0h, delta_1H_4h_1H__L1h, delta_2h_3h, delta_4h_1H__L0h, delta_4h_4h_1H__L5h, expanded_o_1H_4h_1H__L1h, expanded_o_4h_1H__L0h, expanded_o_4h_4h_1H__L0H, o_0h_1h, o_1h_1h_0h, o_2h_3h, o_4h_4h_1H__L5h_expanded } from "../../Journalist/utils/sellingPermitsMock"
 import { shortTestNotationToJsObject } from "../../Journalist/utils/sellingPermitsShortNotation"
-import { changeEstates, getStateMock } from "./ChanceCardStateMocks"
+import { changeEstates } from "./ChanceCardStateMocks"
+import { getStateMock } from "./getGameStateMock/getStateTemplate"
 
 // 4h_1H__LXh - Left many houses
 // 4h_1H__L0h - Left 0 houses

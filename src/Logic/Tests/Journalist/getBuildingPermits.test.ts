@@ -3,9 +3,10 @@ import { AMSTERDAM, ATENY, BARCELONA, BLUE, BRUKSELA, FRANKFURT, GOTEBORG, INSBR
 import { Bank } from "../../Bank/Bank";
 import { BuildingPermitRejected, getBuildingPermits, tBuidlingApproved, tBuildingPermits, tHouseLocations } from "../../Journalist/utils/getBuildingPermits";
 import { Players } from "../../Players/Players";
-import { changeEstates, getStateMock } from "./ChanceCardStateMocks";
+import { changeEstates } from "./ChanceCardStateMocks";
 import { noHotelsInBankOutput, noHousesInBankOutput, permits_0h0H_0h0H, permits_0h0H_0h0H_0h0H, permits_0h0H_1h0H_0h0H, permits_0h1H_4h0H, permits_0h1H_4h0H_4h0H, permits_1h0H_0h0H, permits_1h0H_0h0H_1h0H, permits_1h0H_1h0H_0h0H, permits_2h0H_3h0H, permits_2h0H_3h0H_NotEnoughHouses, permits_2_hotels_bought, permits_3h0H_3h0H_3h0H, permits_4h0H_0h1H, permits_4h0H_0h1H_0h1H, permits_4h0H_3h0H_3h0H, permits_4h0H_4h0H_4h0H, permits_4h0H_4h0H_4h0H_0HotelsLeft, permits_4h0H_4h0H_4h0H_2HotelsLeft } from "./getBuildingPermitsMocks_outputs";
 import { readyState1, readyState2, readyState3, readyState4 } from "./getBuildingPermitsMocks_statePreparation";
+import { getStateMock } from "./getGameStateMock/getStateTemplate";
 
 Players.playerNameToPlayerColor = () => RED;
 
