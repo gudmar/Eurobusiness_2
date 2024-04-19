@@ -775,7 +775,7 @@ const getPlayersStateTemplate = (): iPlayerSnapshot[] => ([
           nrTurnsToWait: 0,
           isGameLost: false,
           strategy: StrategyNames.manual,
-
+          nrOfHousesPurchasedInTurn: 0,
           nrOfHotelsPurchasedInRound: 0,
         },
         {
@@ -788,7 +788,7 @@ const getPlayersStateTemplate = (): iPlayerSnapshot[] => ([
           nrTurnsToWait: 0,
           isGameLost: false,
           strategy: StrategyNames.manual,
-
+          nrOfHousesPurchasedInTurn: 0,
           nrOfHotelsPurchasedInRound: 0,
         },
         {
@@ -801,7 +801,7 @@ const getPlayersStateTemplate = (): iPlayerSnapshot[] => ([
           nrTurnsToWait: 0,
           isGameLost: false,
           strategy: StrategyNames.manual, 
-
+          nrOfHousesPurchasedInTurn: 0,
           nrOfHotelsPurchasedInRound: 0,
         },
         {
@@ -814,7 +814,7 @@ const getPlayersStateTemplate = (): iPlayerSnapshot[] => ([
           nrTurnsToWait: 0,
           isGameLost: false,
           strategy: StrategyNames.manual,
-
+          nrOfHousesPurchasedInTurn: 0,
           nrOfHotelsPurchasedInRound: 0,
         }
       ])

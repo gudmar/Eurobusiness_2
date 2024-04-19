@@ -1,6 +1,7 @@
 import { tOwner } from "../../../../Data/types";
 import { tGameState } from "../../../../Functions/PersistRetrieveGameState/types";
-import { tEstateField } from "../../../boardTypes";
+import { iNonCityEstatesFieldState, tEstateField } from "../../../boardTypes";
+import { iPlayerSnapshot } from "../../../Player/types";
 import { getStateMock } from "./getStateTemplate";
 import { tChangeInEstate, tGetGameStateMockOptions, tStateModifierArgs } from "./types";
 
@@ -27,14 +28,97 @@ const changeEstate = (state: tGameState, {estateName, props}: tChangeInEstate) =
     })
     return state
   }
+
+const getPlayerColor = (state: tGameState, playerName: string) => {
+  const player = state.players.find(({ name }) => name === playerName);
+  return player?.color;
+}
   
 
-// const applyEstatesDeltas = ({state, options}: tStateModifierArgs) => {
-//     const result = 
-// }
+const applyEstatesDeltas = ({state, options}: tStateModifierArgs) => {
+  const deltas = options?.estatesDelta;
+  if (!deltas) return state;
+  const result = changeEstates(state, deltas);
+  return result;
+}
 
-// export const getMockedGameState = (options?: tGetGameStateMockOptions) => {
-//     const state = getStateMock();
-//     const args = {state, options};
-//     const stateWithAppliedEstateDeltas = 
-// }
+const applyOwners = ({state, options}: tStateModifierArgs) => {
+  const ownersDelta = options?.estatesOwner;
+  if (!ownersDelta) return state;
+  const [ownerName, estatesList] = ownersDelta;
+  const estates = state.boardFields;
+  const joinedNamesAsString = estatesList.join(' | ');
+  const ownerColor = getPlayerColor(state, ownerName);
+  if (ownerColor === undefined) throw new Error(`Player ${ownerName} does not exist`)
+  estates.forEach((estate) => {
+    if (joinedNamesAsString.includes(estate?.name)) {
+      (estate as iNonCityEstatesFieldState).owner = ownerColor;
+    }
+  })
+  return state;
+}
+
+const changeHotelsInRound = (args: tStateModifierArgs) => {
+  const { state, options } = args;
+  const hotelsInRoundDeltas = options?.hotelsInRound;
+  if (hotelsInRoundDeltas === undefined) return state;
+  hotelsInRoundDeltas?.forEach((hotelsInRoundDelta) => {
+    const [hotelsInRound, playerName] = hotelsInRoundDelta;
+    const player = state.players.find(({name}) => name === playerName);
+    if(player === undefined) throw new Error(`Player ${playerName} not found`)
+    player.nrOfHotelsPurchasedInRound = hotelsInRound;
+  })
+  return state;
+}
+
+type tOptionsKeys = keyof tGetGameStateMockOptions;
+type tPlayerKeys = keyof iPlayerSnapshot;
+
+const getPlayerPropChanger = (propName: tPlayerKeys, keyInOptions: tOptionsKeys) => (args: tStateModifierArgs) => {
+  const { state, options } = args;
+  const deltas = options?.[keyInOptions];
+  if (deltas === undefined) return state;
+  deltas?.forEach((delta) => {
+    const [value, playerName] = delta as [unknown, string];
+    const playerIndex = state.players.findIndex(({name}) => name === playerName);
+    if(playerIndex === -1) { throw new Error(`Player ${playerName} not found`) };
+    const player = state.players[playerIndex]
+    state.players[playerIndex] = {...player, [propName]: value}
+  })
+  return state;
+}
+
+const changeHousesInTurn = getPlayerPropChanger('nrOfHousesPurchasedInTurn', 'housesInTurn');
+const movePlayers = getPlayerPropChanger('fieldNr', 'movePlayers');
+const setMoney = getPlayerPropChanger('money', 'setMoney');
+const setCards = getPlayerPropChanger('specialCards', 'setCards');
+const sendToJail = getPlayerPropChanger('isInPrison', 'toJail');
+const setTurnsToWait = getPlayerPropChanger('nrTurnsToWait', 'playersWait');
+
+type tStateModifier = (args: tStateModifierArgs) => tGameState
+
+const applyStateModifiers = (args: tStateModifierArgs, listOfModifiers: tStateModifier[]) => {
+  const {state, options} = args;
+  if (options === undefined) return state;
+  const result = listOfModifiers.reduce((modifeidState, modifier) => {
+    const nextState = modifier({state: modifeidState, options});
+    return nextState;
+  }, state)
+  return result;
+}
+
+export const getMockedGameState = (options?: tGetGameStateMockOptions) => {
+    const state = getStateMock();
+    const readyState = applyStateModifiers({state, options} , [
+      applyEstatesDeltas,
+      applyOwners,
+      changeHotelsInRound,
+      changeHousesInTurn,
+      movePlayers,
+      setMoney,
+      setCards,
+      sendToJail,
+      setTurnsToWait
+    ]);
+    return readyState;
+}

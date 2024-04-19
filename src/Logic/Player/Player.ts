@@ -22,6 +22,7 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
     private _isGameLost: boolean;
     private _strategy: iStrategy;
     private _strategyName: StrategyNames;
+    private _nrOfHousesPurchasedInTurn: number;
     private _nrOfHotelsPurchasedInRound: number;
 
     private _initialState: iPlayerState;
@@ -40,6 +41,7 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
         this._isGameLost = false;
         this._strategyName = strategy;
         this._strategy = getStrategyProvider(strategy);
+        this._nrOfHousesPurchasedInTurn = 0;
         this._nrOfHotelsPurchasedInRound = 0;
 
         this._initialState = this.getSnapshot()
@@ -163,6 +165,7 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
             nrTurnsToWait: this._nrTurnsToWait,
             isGameLost: this._isGameLost,
             strategy: this._strategyName,
+            nrOfHousesPurchasedInTurn: this._nrOfHousesPurchasedInTurn,
             nrOfHotelsPurchasedInRound: this._nrOfHotelsPurchasedInRound,
         }
     }
@@ -177,6 +180,7 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
         this._isGameLost = val.isGameLost;
         this._strategyName = val.strategy;
         this._informAnyChange();
+        this._nrOfHousesPurchasedInTurn = val.nrOfHousesPurchasedInTurn || 0,
         this._nrOfHotelsPurchasedInRound = val.nrOfHotelsPurchasedInRound || 0;
     }
     getDoneFunction() {
