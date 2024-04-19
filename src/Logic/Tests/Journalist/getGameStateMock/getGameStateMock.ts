@@ -1,4 +1,5 @@
 import { tOwner } from "../../../../Data/types";
+import { applyStateModifiers } from "../../../../Functions/applyStateModifiers";
 import { tGameState } from "../../../../Functions/PersistRetrieveGameState/types";
 import { iNonCityEstatesFieldState, tEstateField } from "../../../boardTypes";
 import { iPlayerSnapshot } from "../../../Player/types";
@@ -97,19 +98,21 @@ const setTurnsToWait = getPlayerPropChanger('nrTurnsToWait', 'playersWait');
 
 type tStateModifier = (args: tStateModifierArgs) => tGameState
 
-const applyStateModifiers = (args: tStateModifierArgs, listOfModifiers: tStateModifier[]) => {
-  const {state, options} = args;
-  if (options === undefined) return state;
-  const result = listOfModifiers.reduce((modifeidState, modifier) => {
-    const nextState = modifier({state: modifeidState, options});
-    return nextState;
-  }, state)
-  return result;
-}
+const applyStateModifiersToGameState = applyStateModifiers<tGameState, tGetGameStateMockOptions>
+
+// const applyStateModifiers = (args: tStateModifierArgs, listOfModifiers: tStateModifier[]) => {
+//   const {state, options} = args;
+//   if (options === undefined) return state;
+//   const result = listOfModifiers.reduce((modifeidState, modifier) => {
+//     const nextState = modifier({state: modifeidState, options});
+//     return nextState;
+//   }, state)
+//   return result;
+// }
 
 export const getMockedGameState = (options?: tGetGameStateMockOptions) => {
     const state = getStateMock();
-    const readyState = applyStateModifiers({state, options} , [
+    const readyState = applyStateModifiersToGameState({state, options} as {state: tGameState, options: tGetGameStateMockOptions} , [
       applyEstatesDeltas,
       applyOwners,
       changeHotelsInRound,

@@ -26,26 +26,40 @@ type tRejection = {
     reason: string,
 }
 
-type tJurnalistOutput = tOption | tRejection;
+type tJournalistOutput = tOption | tRejection;
 
-type tJurnalistOutputArray = tJurnalistOutput[];
+type tJournalistOutputArray = tJournalistOutput[];
 // Rejection[] as array because there may be a different reason for each estate
 
-type tJurnalistOutputArrayOrRejection = tJurnalistOutputArray | tRejection;
+type tJournalistOutputArrayOrRejection = tJournalistOutputArray | tRejection;
 // When all entries are rejections, it may better to show a single reason?
 
-export type tJurnalistState = {
-    buyBuildings:  tJurnalistOutputArrayOrRejection;
-    sellBuildings: tJurnalistOutputArrayOrRejection;
-    buyEstate?: tJurnalistOutput;
-    sellEstates: tJurnalistOutputArrayOrRejection;
-    plegdeEstates: tJurnalistOutputArrayOrRejection;
-    unplegdeEstates: tJurnalistOutputArrayOrRejection;
-    pay?: tJurnalistOutput; // When on not guarded parking, there is no reason to explain why not to pay
-    getMoney?: tJurnalistOutput;
-    goToJail?: tJurnalistOutput;
+type tJournalistOutputBooleanOrRejection = boolean | tRejection;
+
+export type tJournalistState = {
+    buyBuildings:  tJournalistOutputArrayOrRejection;
+    sellBuildings: tJournalistOutputArrayOrRejection;
+    buyEstate?: tJournalistOutput;
+    sellEstates: tJournalistOutputArrayOrRejection;
+    plegdeEstates: tJournalistOutputArrayOrRejection;
+    unplegdeEstates: tJournalistOutputArrayOrRejection;
+    pay?: tJournalistOutput; // When on not guarded parking, there is no reason to explain why not to pay
+    getMoney?: tJournalistOutput;
+    goToJail?: tJournalistOutput;
     move: boolean;
     endPhase: boolean;
 }
 
-
+export type tJournalistOptionsUnderDevelopement = {
+    buyBuildings?:  tJournalistOutputArrayOrRejection;
+    sellBuildings?: tJournalistOutputArrayOrRejection;
+    buyEstate?: tJournalistOutput;
+    sellEstates?: tJournalistOutputArrayOrRejection;
+    plegdeEstates?: tJournalistOutputArrayOrRejection;
+    unplegdeEstates?: tJournalistOutputArrayOrRejection;
+    pay?: tJournalistOutput; // When on not guarded parking, there is no reason to explain why not to pay
+    getMoney?: tJournalistOutput;
+    goToJail?: tJournalistOutput;
+    move?: tJournalistOutputBooleanOrRejection;
+    endPhase?: tJournalistOutputBooleanOrRejection;
+}
