@@ -15,38 +15,38 @@ export const getStateForBlueChanceCardsTest = (cardIndex: number) => {
     return result
 }
 
-type tProps = {
-  [key: string]: any,
-}
+// type tProps = {
+//   [key: string]: any,
+// }
 
-type tChangeInEstate = {
-  estateName: string, 
-  props: tProps,
-}
+// type tChangeInEstate = {
+//   estateName: string, 
+//   props: tProps,
+// }
 
-const changeEstate = (state: tGameState, {estateName, props}: tChangeInEstate) => {
-  const fields = state.boardFields;
-  const field = fields.find((f) => f.name === estateName);
-  Object.entries(props).forEach(([key, value]) => {
-    (field as any)[key] = value
-  })
-  return state;
-}
+// const changeEstate = (state: tGameState, {estateName, props}: tChangeInEstate) => {
+//   const fields = state.boardFields;
+//   const field = fields.find((f) => f.name === estateName);
+//   Object.entries(props).forEach(([key, value]) => {
+//     (field as any)[key] = value
+//   })
+//   return state;
+// }
 
-export const changeEstates = (state: tGameState, deltas: tChangeInEstate[]) => {
-  deltas.forEach((delta) => changeEstate(state, delta));
-  return state;
-}
+// export const changeEstates = (state: tGameState, deltas: tChangeInEstate[]) => {
+//   deltas.forEach((delta) => changeEstate(state, delta));
+//   return state;
+// }
 
-export const changeEstatesOwner = (state: tGameState, listOfEstateNames: string[], ownerColor: string) => {
-  const fields = state.boardFields;
-  fields.forEach((field) => {
-    if (listOfEstateNames.includes(field.name)) {
-      (field as unknown as tEstateField).owner = ownerColor as unknown as tOwner
-    }
-  })
-  return state
-}
+// export const changeEstatesOwner = (state: tGameState, listOfEstateNames: string[], ownerColor: string) => {
+//   const fields = state.boardFields;
+//   fields.forEach((field) => {
+//     if (listOfEstateNames.includes(field.name)) {
+//       (field as unknown as tEstateField).owner = ownerColor as unknown as tOwner
+//     }
+//   })
+//   return state
+// }
 
 export const getStateForChanceCardsTest = (cardIndex: number, key: tCardType) => {
     const state = getStateMock();

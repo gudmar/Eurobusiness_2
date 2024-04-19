@@ -1,7 +1,7 @@
 import { AMSTERDAM, ATENY, AUSTRIA, BARCELONA, BENELUX, BONN, BRUKSELA, EAST_RAILWAYS, FRANKFURT, GLASGOW, GOTEBORG, GREECE, INSBRUK, ITALY, KOLONIA, LIVERPOOL, LONDON, MADRIT, MALMO, MEDIOLAN, NEAPOL, NORTH_RAILWAYS, PLANT, POWER_STATION, RAILWAYS, RED, RFN, ROME, ROTTERDAM, SALONIKI, SEWILLA, SOUTH_RAILWAY, SPAIN, SWEEDEN, SZTOKHOLM, UK, WATER_PLANT, WEST_RAILWAYS, WIEDEN } from "../../../Data/const";
 import { getEstatesInCountriesReport, getNrOfBuildings, getPlayerEstates } from "../../Journalist/utils/getPlayerPosessions";
 import { Players } from "../../Players/Players";
-import { changeEstates } from "./ChanceCardStateMocks";
+import { changeEstates } from "./getGameStateMock/getGameStateMock";
 import { getStateMock } from "./getGameStateMock/getStateTemplate";
 
 const COLOR = RED

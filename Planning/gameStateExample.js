@@ -721,6 +721,7 @@ const state = {
         nrTurnsToWait: 0,
         isGameLost: false,
         strategy: "manual",
+        nrOfHousesPurchasedInTurn: 0,
         nrOfHotelsPurchasedInRound: 0,
       },
       {
@@ -735,6 +736,7 @@ const state = {
         nrTurnsToWait: 0,
         isGameLost: false,
         strategy: "manual",
+        nrOfHousesPurchasedInTurn: 0,
         nrOfHotelsPurchasedInRound: 0,
       },
       {
@@ -749,6 +751,7 @@ const state = {
         nrTurnsToWait: 0,
         isGameLost: false,
         strategy: "manual",
+        nrOfHousesPurchasedInTurn: 0,
         nrOfHotelsPurchasedInRound: 0,
       },
       {
@@ -761,6 +764,7 @@ const state = {
         nrTurnsToWait: 0,
         isGameLost: false,
         strategy: "manual",
+        nrOfHousesPurchasedInTurn: 0,
         nrOfHotelsPurchasedInRound: 0,
       }
     ],
