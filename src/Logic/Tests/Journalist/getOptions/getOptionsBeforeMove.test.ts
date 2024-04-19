@@ -1,4 +1,5 @@
 import { getTestableOptions } from "../../../Journalist/getOptions"
+import { getMockedGameState } from "../getGameStateMock/getGameStateMock"
 
 describe('Testing getOptions', () => {
     xit('Should allow to move player in each of below cases, when player is not in prison', () => {
@@ -11,7 +12,8 @@ describe('Testing getOptions', () => {
 
                 })
                 it('Should not add a possiblity to buy buildings when player still did not move for the first time', () => {
-
+                    const state = getMockedGameState();
+                    const options = getTestableOptions(state);
                 })
                 it('Should not add possibility to buy houses when player does not control every city in some conutry', () => {
 
