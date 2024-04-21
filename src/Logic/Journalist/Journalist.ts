@@ -2,9 +2,9 @@ import { tGameState } from "../../Functions/PersistRetrieveGameState/types";
 import { getGameState } from "../../Functions/PersistRetrieveGameState/utils";
 import { SubscribtionsHandler } from "../SubscrbtionsHandler";
 import { getTestableOptions } from "./getOptions";
-import { Messages, tJurnalistState } from "./types";
+import { Messages, tJournalistState } from "./types";
 
-export abstract class Journalist  extends SubscribtionsHandler<Messages, tJurnalistState> {
+export abstract class Journalist  extends SubscribtionsHandler<Messages, tJournalistState> {
     // static interviewState(state: tGameState) {
 
     // }
