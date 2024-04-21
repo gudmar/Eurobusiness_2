@@ -1,5 +1,5 @@
 import { tOwner } from "../../../../Data/types";
-import { applyStateModifiers } from "../../../../Functions/applyStateModifiers";
+import { applyStateModifiers, tStateModifier } from "../../../../Functions/applyStateModifiers";
 import { tGameState } from "../../../../Functions/PersistRetrieveGameState/types";
 import { iNonCityEstatesFieldState, tEstateField } from "../../../boardTypes";
 import { iPlayerSnapshot } from "../../../Player/types";
@@ -36,7 +36,7 @@ const getPlayerColor = (state: tGameState, playerName: string) => {
 }
   
 
-const applyEstatesDeltas = ({state, options}: tStateModifierArgs) => {
+const applyEstatesDeltas: tStateModifier<tGameState, tGetGameStateMockOptions> = ({state, options}: tStateModifierArgs):tGameState => {
   const deltas = options?.estatesDelta;
   if (!deltas) return state;
   const result = changeEstates(state, deltas);
@@ -96,7 +96,7 @@ const setCards = getPlayerPropChanger('specialCards', 'setCards');
 const sendToJail = getPlayerPropChanger('isInPrison', 'toJail');
 const setTurnsToWait = getPlayerPropChanger('nrTurnsToWait', 'playersWait');
 
-type tStateModifier = (args: tStateModifierArgs) => tGameState
+type tGameStateModifier = (args: tStateModifierArgs) => tGameState
 
 const applyStateModifiersToGameState = applyStateModifiers<tGameState, tGetGameStateMockOptions>
 
@@ -112,7 +112,9 @@ const applyStateModifiersToGameState = applyStateModifiers<tGameState, tGetGameS
 
 export const getMockedGameState = (options?: tGetGameStateMockOptions) => {
     const state = getStateMock();
-    const readyState = applyStateModifiersToGameState({state, options} as {state: tGameState, options: tGetGameStateMockOptions} , [
+
+    // const modifiers: tGameStateModifier[] = [
+    const modifiers: tStateModifier<tGameState, tGetGameStateMockOptions>[] = [
       applyEstatesDeltas,
       applyOwners,
       changeHotelsInRound,
@@ -122,6 +124,10 @@ export const getMockedGameState = (options?: tGetGameStateMockOptions) => {
       setCards,
       sendToJail,
       setTurnsToWait
-    ]);
+    ]
+    const readyState = applyStateModifiersToGameState(
+      {state, options} as {state: tGameState, options: tGetGameStateMockOptions},
+      modifiers,
+    );
     return readyState;
 }
