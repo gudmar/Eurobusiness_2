@@ -1,5 +1,7 @@
-import { getTestableOptions } from "../../../Journalist/getOptions"
-import { getMockedGameState } from "../getGameStateMock/getGameStateMock"
+import { BARCELONA, LIVERPOOL, LONDON, MADRIT, MEDIOLAN, NEAPOL, SALONIKI } from "../../../../Data/const"
+import { getTestableOptions, NoBuildingPermitResults } from "../../../Journalist/getOptions"
+import { getMockedGameState, getPlayerColor } from "../getGameStateMock/getGameStateMock"
+import { DORIN } from "../getGameStateMock/getStateTemplate"
 
 describe('Testing getOptions', () => {
     xit('Should allow to move player in each of below cases, when player is not in prison', () => {
@@ -14,9 +16,27 @@ describe('Testing getOptions', () => {
                 it('Should not add a possiblity to buy buildings when player still did not move for the first time', () => {
                     const state = getMockedGameState();
                     const options = getTestableOptions(state);
+                    expect(options.buyBuildings).toEqual({reason: NoBuildingPermitResults.GameNotStartedYet})
                 })
                 it('Should not add possibility to buy houses when player does not control every city in some conutry', () => {
-
+                    const dorinEstates = [ SALONIKI, NEAPOL, MEDIOLAN, BARCELONA, MADRIT, LIVERPOOL, LONDON ];
+                    const state = getMockedGameState({
+                        estatesOwner: [DORIN, dorinEstates],
+                    });
+                    const listOfDorinsEstateNames = (() => {
+                        const dorinColor = getPlayerColor(state, DORIN);
+                        const ownedEstateNames = state.boardFields.filter((field) => {
+                            if ('owner' in field) {
+                                const owner = field?.owner;
+                                return field?.owner === dorinColor    
+                            }
+                            return false;
+                        }).map(({name}) => name);
+                        return ownedEstateNames;
+                    })()
+                    const options = getTestableOptions(state);
+                    expect(listOfDorinsEstateNames).toEqual(dorinEstates)
+                    expect(options.buyBuildings).toEqual({reason: NoBuildingPermitResults.NoFullCountries});
                 });
                 it('Should not add possiblity to buy houses when player already bought 3 houses in the round and has where to build houses', () => {
     
