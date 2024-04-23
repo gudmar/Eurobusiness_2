@@ -30,7 +30,7 @@ const changeEstate = (state: tGameState, {estateName, props}: tChangeInEstate) =
     return state
   }
 
-const getPlayerColor = (state: tGameState, playerName: string) => {
+export const getPlayerColor = (state: tGameState, playerName: string) => {
   const player = state.players.find(({ name }) => name === playerName);
   return player?.color;
 }

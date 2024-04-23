@@ -22,7 +22,7 @@ export type tOption = {
     payload?: any
 }
 
-type tRejection = {
+export type tRejection = {
     reason: string,
 }
 

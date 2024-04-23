@@ -1,7 +1,9 @@
 import { applyStateModifiers, tStateModifier } from "../../Functions/applyStateModifiers"
 import { tGameState } from "../../Functions/PersistRetrieveGameState/types"
 import { tGetGameStateMockOptions } from "../Tests/Journalist/getGameStateMock/types"
-import { tJournalistOptionsUnderDevelopement, tJournalistState } from "./types"
+import { tObject } from "../types"
+import { isBeforeFirstMove } from "./isBeforeFirstMove"
+import { tJournalistOptionsUnderDevelopement, tJournalistState, tRejection } from "./types"
 
 
 const BLANK_REJECTION = { reason: 'Dummy rejection' }
@@ -20,10 +22,87 @@ const BLANK_TESTABLE_OPTIONS_OUTPUT: tJournalistState = {
     // goToJail
 }
 
+export enum NoBuildingPermitResults {
+    GameNotStartedYet = 'Game is not satrted yet, player has no estates to build on.',
+    NoFullCountries = 'Player should own all estaes in a city to purchase a building'
+}
+
 type tStateModifierArgs = {state: tJournalistOptionsUnderDevelopement, options?: tGameState}
+
+const addNoBuildingPermitsResult = (options: tJournalistOptionsUnderDevelopement, result: string) => options.buyBuildings = { reason : result };
+const getCurrentPlayerName = (state: tGameState) => state.game.currentPlayer;
+const getPlayerColorFromPlayerName = (state: tGameState, playerName: string) => {
+    const currentPlayer = state.players.find(({name}) => {
+        if (name === playerName) return true;
+        return false;
+    })
+    return currentPlayer?.color
+}
+const getCurrentPlayerColor = (state: tGameState) => {
+    const currentPlayerName = getCurrentPlayerName(state);
+    const playerColor = getPlayerColorFromPlayerName(state, currentPlayerName);
+    return playerColor;
+}
+
+const getCountryEstateNames = (state: tGameState, countryName: string) => {
+    const result = state.boardFields.filter((estate) => {
+        if ('country' in estate) { return estate.country === countryName }
+        return false;
+    }).map(({name}) => name)
+    return result;
+}
+
+const getPlayerEstates = (state: tGameState, playerName: string) => {
+    const playerColor = getPlayerColorFromPlayerName(state, playerName);
+    const playersEstates = state.boardFields.filter((estate) => {
+        if ('owner' in estate) { return estate.owner === playerColor }
+        return false;
+    })
+    return playersEstates
+}
+
+const getCountryNamesOwnedByPlayer = (state: tGameState, playerName: string) => {
+    const playerEatates = getPlayerEstates(state, playerName);
+    const getPlayerEstateNamesFromCountry = (country: string) => playerEatates.filter(
+        (estate) => {
+            if ('country' in estate) return estate.country === country;
+            return false;
+        }
+    )
+    const doesPlayerOwnAllEstatesInCountry = (countryName: string) => {
+        const playerOwnedEstatesNamesFromCountry = getPlayerEstateNamesFromCountry(countryName);
+        const estateNamesInCountry = getCountryEstateNames(state, countryName);
+        return playerOwnedEstatesNamesFromCountry.length === estateNamesInCountry.length;
+    }
+    const countries = playerEatates.reduce((acc: tObject<unknown>, estate) => {
+        if ('owner' in estate) {
+            if (doesPlayerOwnAllEstatesInCountry(estate.country)) {
+                acc[estate.name] = true;
+            }
+        }
+        return acc
+    }, {})
+    const keys = Object.keys(countries);
+    return keys;
+}
+const getCountryNamesOwnedByCurrentPlayer = (state: tGameState) => {
+    const currentPlayerName = getCurrentPlayerName(state);
+    const result = getCountryNamesOwnedByPlayer(state, currentPlayerName);
+    return result;
+}
 
 const getTestableOptionsWithBuyBuildings = (args: tStateModifierArgs): tJournalistOptionsUnderDevelopement => {
     const { options, state } = args;
+    const isGameNotStartedYet = isBeforeFirstMove(options!);
+    if (isGameNotStartedYet) {
+        addNoBuildingPermitsResult(state!, NoBuildingPermitResults.GameNotStartedYet)
+        return state;
+    }
+    const playerOwnedCountryNames = getCountryNamesOwnedByCurrentPlayer(options!);
+    if (playerOwnedCountryNames.length === 0) {
+        addNoBuildingPermitsResult(state!, NoBuildingPermitResults.NoFullCountries);
+        return state;
+    }
     state.buyBuildings = []
     return state ;
 }
