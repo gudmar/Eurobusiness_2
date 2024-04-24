@@ -1,9 +1,10 @@
+import { BUILDING_PURCHASE_LIMIT } from "../../Constants/constants"
 import { applyStateModifiers, tStateModifier } from "../../Functions/applyStateModifiers"
 import { tGameState } from "../../Functions/PersistRetrieveGameState/types"
-import { tGetGameStateMockOptions } from "../Tests/Journalist/getGameStateMock/types"
+import { NR_OF_HOTELS_PURCHASED_IN_ROUND, NR_OF_HOUSES_PURCHASED_IN_TURN } from "../Player/types"
 import { tObject } from "../types"
 import { isBeforeFirstMove } from "./isBeforeFirstMove"
-import { tJournalistOptionsUnderDevelopement, tJournalistState, tRejection } from "./types"
+import { tJournalistOptionsUnderDevelopement, tJournalistState } from "./types"
 
 
 const BLANK_REJECTION = { reason: 'Dummy rejection' }
@@ -24,7 +25,9 @@ const BLANK_TESTABLE_OPTIONS_OUTPUT: tJournalistState = {
 
 export enum NoBuildingPermitResults {
     GameNotStartedYet = 'Game is not satrted yet, player has no estates to build on.',
-    NoFullCountries = 'Player should own all estaes in a city to purchase a building'
+    NoFullCountries = 'Player should own all estaes in a city to purchase a building',
+    HousePurchaseLimitReached = 'Player already bought 3 houses in a row',
+    HotelPurcahseLimitReached = 'Player already bought 3 hotels in a row',
 }
 
 type tStateModifierArgs = {state: tJournalistOptionsUnderDevelopement, options?: tGameState}
@@ -90,6 +93,27 @@ const getCountryNamesOwnedByCurrentPlayer = (state: tGameState) => {
     const result = getCountryNamesOwnedByPlayer(state, currentPlayerName);
     return result;
 }
+type tBuildingLimitKey = 'nrOfHotelsPurchasedInRound' | 'nrOfHousesPurchasedInTurn';
+
+const getIsBuildingPurchaseLimitReached = (propKey: tBuildingLimitKey) => (state: tGameState) => {
+    const currentPlayerName = getCurrentPlayerName(state);
+    const currentPlayer = state.players.find(({name}) => name === currentPlayerName);
+    if (currentPlayer === undefined) throw new Error(`No player named ${currentPlayerName}`);
+    const limit = currentPlayer?.[propKey];
+    return limit >= BUILDING_PURCHASE_LIMIT;
+}
+
+const isHousePurchaseTurnLimitReached = getIsBuildingPurchaseLimitReached(NR_OF_HOUSES_PURCHASED_IN_TURN);
+const isHotelPurchaseRoundLimitReached = getIsBuildingPurchaseLimitReached(NR_OF_HOTELS_PURCHASED_IN_ROUND);
+
+// const isHousePurchaseTurnLimitReached = (state: tGameState) => {
+//     const currentPlayerName = getCurrentPlayerName(state);
+//     const currentPlayer = state.players.find(({name}) => name === currentPlayerName);
+//     if (currentPlayer === undefined) throw new Error(`No player named ${currentPlayerName}`);
+//     const { nrOfHousesPurchasedInTurn } = currentPlayer;
+//     console.log('Nr of houses', nrOfHousesPurchasedInTurn)
+//     return nrOfHousesPurchasedInTurn >= HOUSE_PURCHASE_LIMIT;
+// }
 
 const getTestableOptionsWithBuyBuildings = (args: tStateModifierArgs): tJournalistOptionsUnderDevelopement => {
     const { options, state } = args;
@@ -103,6 +127,17 @@ const getTestableOptionsWithBuyBuildings = (args: tStateModifierArgs): tJournali
         addNoBuildingPermitsResult(state!, NoBuildingPermitResults.NoFullCountries);
         return state;
     }
+    const isHousePurchaseLimitReached = isHousePurchaseTurnLimitReached(options!)
+    if (isHousePurchaseLimitReached) {
+        addNoBuildingPermitsResult(state!, NoBuildingPermitResults.HousePurchaseLimitReached);
+        return state;
+    }
+    const isHotelPurchaseLimitReached = isHotelPurchaseRoundLimitReached(options!)
+    if (isHotelPurchaseLimitReached) {
+        addNoBuildingPermitsResult(state!, NoBuildingPermitResults.HotelPurcahseLimitReached);
+        return state;
+    }
+
     state.buyBuildings = []
     return state ;
 }

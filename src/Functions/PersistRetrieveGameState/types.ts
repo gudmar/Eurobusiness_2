@@ -1,6 +1,6 @@
 import { tColors } from "../../Data/types"
 import { tBankState } from "../../Logic/Bank/types"
-import { tField, tFieldState } from "../../Logic/boardTypes"
+import { tFieldState } from "../../Logic/boardTypes"
 import { tChanceCardsHolderState } from "../../Logic/Chance/types"
 import { tDiceState } from "../../Logic/Dice/types"
 import { tGameLogicState } from "../../Logic/Game/types"

@@ -72,6 +72,16 @@ const changeHotelsInRound = (args: tStateModifierArgs) => {
   return state;
 }
 
+const setCurrentPlayer = (args: tStateModifierArgs) => {
+  const { state, options } = args;
+  const currentPlayer = options?.currentPlayer?.[0];
+  if (currentPlayer === undefined) return state;
+  const color = getPlayerColor(state, currentPlayer);
+  if (color === undefined) throw new Error(`Players ${currentPlayer} color not found`)
+  state.game.currentPlayer = currentPlayer;
+  return state;
+}
+
 type tOptionsKeys = keyof tGetGameStateMockOptions;
 type tPlayerKeys = keyof iPlayerSnapshot;
 
@@ -123,7 +133,8 @@ export const getMockedGameState = (options?: tGetGameStateMockOptions) => {
       setMoney,
       setCards,
       sendToJail,
-      setTurnsToWait
+      setTurnsToWait,
+      setCurrentPlayer,
     ]
     const readyState = applyStateModifiersToGameState(
       {state, options} as {state: tGameState, options: tGetGameStateMockOptions},

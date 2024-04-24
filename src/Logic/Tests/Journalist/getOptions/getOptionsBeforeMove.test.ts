@@ -1,4 +1,4 @@
-import { BARCELONA, LIVERPOOL, LONDON, MADRIT, MEDIOLAN, NEAPOL, SALONIKI } from "../../../../Data/const"
+import { ATENY, BARCELONA, GLASGOW, GREEN, LIVERPOOL, LONDON, MADRIT, MEDIOLAN, NEAPOL, ROME, SALONIKI, SEWILLA } from "../../../../Data/const"
 import { getTestableOptions, NoBuildingPermitResults } from "../../../Journalist/getOptions"
 import { getMockedGameState, getPlayerColor } from "../getGameStateMock/getGameStateMock"
 import { DORIN } from "../getGameStateMock/getStateTemplate"
@@ -21,6 +21,7 @@ describe('Testing getOptions', () => {
                 it('Should not add possibility to buy houses when player does not control every city in some conutry', () => {
                     const dorinEstates = [ SALONIKI, NEAPOL, MEDIOLAN, BARCELONA, MADRIT, LIVERPOOL, LONDON ];
                     const state = getMockedGameState({
+                        currentPlayer: [DORIN],
                         estatesOwner: [DORIN, dorinEstates],
                     });
                     const listOfDorinsEstateNames = (() => {
@@ -39,13 +40,41 @@ describe('Testing getOptions', () => {
                     expect(options.buyBuildings).toEqual({reason: NoBuildingPermitResults.NoFullCountries});
                 });
                 it('Should not add possiblity to buy houses when player already bought 3 houses in the round and has where to build houses', () => {
-    
+                    const dorinEstates = [ SALONIKI, ATENY, NEAPOL, MEDIOLAN, ROME, BARCELONA, SEWILLA, MADRIT, LIVERPOOL, GLASGOW ];
+                    const state = getMockedGameState({
+                        estatesOwner: [DORIN, dorinEstates],
+                        currentPlayer: [DORIN],
+                        housesInTurn: [[3, DORIN]],
+                    });
+                    const options = getTestableOptions(state);
+                    expect(options.buyBuildings).toEqual({reason: NoBuildingPermitResults.HousePurchaseLimitReached})
                 });
                 it('Should not add possiblity to buy hotels when player already bought 3 of them in a round, but has where to build them', () => {
-    
+                    const dorinEstates = [ SALONIKI, ATENY, NEAPOL, MEDIOLAN, ROME, BARCELONA, SEWILLA, MADRIT, LIVERPOOL, GLASGOW ];
+                    const state = getMockedGameState({
+                        estatesOwner: [DORIN, dorinEstates],
+                        currentPlayer: [DORIN],
+                        hotelsInRound: [[3, DORIN]],
+                    });
+                    const options = getTestableOptions(state);
+                    expect(options.buyBuildings).toEqual({reason: NoBuildingPermitResults.HotelPurcahseLimitReached})
                 })
                 it('Should not add possiblity to buy buildings when player owns a country, but a city in it is mortgaged', () => {
-    
+                    const dorinEstates = [ SALONIKI, NEAPOL, MEDIOLAN, ROME, SEWILLA, MADRIT];
+                    const state = getMockedGameState({
+                        estatesOwner: [DORIN, dorinEstates],
+                        currentPlayer: [DORIN],
+                        estatesDelta: [
+                            {
+                                estateName: MEDIOLAN,
+                                props: {
+                                    owner: GREEN, isPlegded: true,
+                                }
+                            }
+                        ]
+                    });
+                    const options = getTestableOptions(state);
+                    expect(options.buyBuildings).toEqual([])
                 })
                 it('Should not add a possiblity to buy buildings when player is in prison and has turns to wait, but has where to build buildings', () => {
     
