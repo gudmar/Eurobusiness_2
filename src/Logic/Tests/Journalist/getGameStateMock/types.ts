@@ -1,10 +1,15 @@
 import { BLUE_CARDS_SET_NAME, RED_CARDS_SET_NAME, SPECIAL_CARD_BLUE, SPECIAL_CARD_RED } from "../../../../Data/chanceCards"
 import { tGameState } from "../../../../Functions/PersistRetrieveGameState/types"
-import { iCityFieldState, iNonCityEstatesFieldState } from "../../../boardTypes"
+// import { iCityFieldState, iNonCityEstatesFieldState } from "../../../boardTypes"
+
+type tProp = {
+  [key: string]: any
+}
 
 export type tChangePropsInEstateDelta = {
   estateName: string,
-  props: iCityFieldState | iNonCityEstatesFieldState
+  // props: iCityFieldState | iNonCityEstatesFieldState
+  props: tProp
 }
 
 export type tChangePropsInEstatesDelta = tChangePropsInEstateDelta[]
@@ -35,18 +40,24 @@ export type tSetTurnsToWaitOnPlayers = string[]
 
 export type tMakePlayersLoseGame = string[]
 
-export type tChangeNrOfHousesBoughtInTurn = [nrOfHousesInTurn: number, playerName: string]
+type tChangeNrOfHousesBoughtInTurn = [nrOfHousesInTurn: number, playerName: string]
+
+export type tChangeNrOfHousesBoughtInTurnByPlayers = [nrOfHousesInTurn: number, playerName: string][]
+
+export type tChangeCurrentPlayer = [name: string];
+
 
 export type tGetGameStateMockOptions = {
     estatesDelta?: tChangePropsInEstatesDelta,
     estatesOwner?: tChangeEstatesOwner,
     hotelsInRound?: tChangeNrHotelsBoughtInRoundByPlayers,
-    housesInTurn?: tChangeNrOfHousesBoughtInTurn,
+    housesInTurn?: tChangeNrOfHousesBoughtInTurnByPlayers,
     movePlayers?: tMovePlayers,
     setMoney?: tSetEachPlayerMoney,
     setCards?: tSetSpecialCardsToPlayers,
     toJail?: tPutPlayersWithNamesToJail,
     playersWait?: tSetTurnsToWaitOnPlayers,
+    currentPlayer?: tChangeCurrentPlayer,
 }
 
 export type tProps = {

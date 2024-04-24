@@ -14,6 +14,7 @@ export const NR_TURNS_TO_WAIT = 'nrTurnsToWait';
 export const IS_GAME_LOST = 'isGameLost';
 
 export const PAWN_DIAMETER = 32;
+export const BUILDING_PURCHASE_LIMIT = 3;
 export const MAX_NR_OF_HOUSES_TO_PURCHASE_IN_ONE_ROW = 4;
 export const NR_OF_HOUSES_MUCH_GREATER_THAN_BANK_MAY_HAVE = 77;
 export const INITIAL_NR_HOUSES = 32;
