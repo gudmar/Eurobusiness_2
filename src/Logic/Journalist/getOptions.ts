@@ -1,10 +1,13 @@
 import { BUILDING_PURCHASE_LIMIT } from "../../Constants/constants"
+import { descriptors } from "../../Data/boardFields"
+import { tBoard, tBoardField } from "../../Data/types"
 import { applyStateModifiers, tStateModifier } from "../../Functions/applyStateModifiers"
 import { tGameState } from "../../Functions/PersistRetrieveGameState/types"
 import { NR_OF_HOTELS_PURCHASED_IN_ROUND, NR_OF_HOUSES_PURCHASED_IN_TURN } from "../Player/types"
 import { tObject } from "../types"
 import { isBeforeFirstMove } from "./isBeforeFirstMove"
 import { tJournalistOptionsUnderDevelopement, tJournalistState } from "./types"
+import { getBuildingPermits } from "./utils/getBuildingPermits"
 
 
 const BLANK_REJECTION = { reason: 'Dummy rejection' }
@@ -28,6 +31,8 @@ export enum NoBuildingPermitResults {
     NoFullCountries = 'Player should own all estaes in a city to purchase a building',
     HousePurchaseLimitReached = 'Player already bought 3 houses in a row',
     HotelPurcahseLimitReached = 'Player already bought 3 hotels in a row',
+    InJail = 'Player cannot be in jail to purchase houses',
+    NoMoney = 'Player does not have enough money to purchase buildings on estates he could'
 }
 
 type tStateModifierArgs = {state: tJournalistOptionsUnderDevelopement, options?: tGameState}
@@ -45,6 +50,12 @@ const getCurrentPlayerColor = (state: tGameState) => {
     const currentPlayerName = getCurrentPlayerName(state);
     const playerColor = getPlayerColorFromPlayerName(state, currentPlayerName);
     return playerColor;
+}
+const getCurrentPlayer = (state: tGameState) => {
+    const currentPlayerName = getCurrentPlayerName(state);
+    const currentPlayer = state.players.find((player) => player.name === currentPlayerName);
+    if (!currentPlayer) throw new Error(`No player named ${currentPlayerName}`);
+    return currentPlayer;
 }
 
 const getCountryEstateNames = (state: tGameState, countryName: string) => {
@@ -64,7 +75,7 @@ const getPlayerEstates = (state: tGameState, playerName: string) => {
     return playersEstates
 }
 
-const getCountryNamesOwnedByPlayer = (state: tGameState, playerName: string) => {
+const getEstatesIfPlayerOwnsWholeCountry = (state: tGameState, playerName: string) => {
     const playerEatates = getPlayerEstates(state, playerName);
     const getPlayerEstateNamesFromCountry = (country: string) => playerEatates.filter(
         (estate) => {
@@ -88,9 +99,9 @@ const getCountryNamesOwnedByPlayer = (state: tGameState, playerName: string) => 
     const keys = Object.keys(countries);
     return keys;
 }
-const getCountryNamesOwnedByCurrentPlayer = (state: tGameState) => {
+const getCurrentPlayerEstatesIfOwnsWholeCountry = (state: tGameState) => {
     const currentPlayerName = getCurrentPlayerName(state);
-    const result = getCountryNamesOwnedByPlayer(state, currentPlayerName);
+    const result = getEstatesIfPlayerOwnsWholeCountry(state, currentPlayerName);
     return result;
 }
 type tBuildingLimitKey = 'nrOfHotelsPurchasedInRound' | 'nrOfHousesPurchasedInTurn';
@@ -105,15 +116,34 @@ const getIsBuildingPurchaseLimitReached = (propKey: tBuildingLimitKey) => (state
 
 const isHousePurchaseTurnLimitReached = getIsBuildingPurchaseLimitReached(NR_OF_HOUSES_PURCHASED_IN_TURN);
 const isHotelPurchaseRoundLimitReached = getIsBuildingPurchaseLimitReached(NR_OF_HOTELS_PURCHASED_IN_ROUND);
+const isCurrentPlayerInJail = (state: tGameState) => getCurrentPlayer(state)?.isInPrison;
+const hasPlayerMoneyToBuyBuildings = (state: tGameState) => {
+    const fullCountryEstateNames = getCurrentPlayerEstatesIfOwnsWholeCountry(state);
+    if (fullCountryEstateNames.length === 0) return true;
+    const { name, color, money } = getCurrentPlayer(state);
+    const boardFieldDescriptors: tObject<any> = descriptors;
+    console.log('OWNED BY PLAYER', fullCountryEstateNames)
+    const result = fullCountryEstateNames.reduce((acc, estateName: any) => {
+        if (acc === true) return acc;
+        const estate = boardFieldDescriptors[estateName];
+        if ('housePrice' in estate) {
+            if (estate.housePrice <= money) return true;
+        }
+        return false;
+    }, false)
+    // const prices = boardFieldDescriptors.reduce((acc: number[], boardField) => {
+    //     if ('country' in boardField && 'housePrice' in boardField) {
+    //         // console.log('Field', boardField.country, boardField.hotelPrice)
+    //         if ( fullCountryEstateNames.includes(boardField.country)) {
+    //             acc.push(boardField.housePrice);
+    //             // housePrica and hotelPrice are the same in each case
+    //         }
+    //     }
+    //     return acc;
+    // }, [])
+    return result
+}
 
-// const isHousePurchaseTurnLimitReached = (state: tGameState) => {
-//     const currentPlayerName = getCurrentPlayerName(state);
-//     const currentPlayer = state.players.find(({name}) => name === currentPlayerName);
-//     if (currentPlayer === undefined) throw new Error(`No player named ${currentPlayerName}`);
-//     const { nrOfHousesPurchasedInTurn } = currentPlayer;
-//     console.log('Nr of houses', nrOfHousesPurchasedInTurn)
-//     return nrOfHousesPurchasedInTurn >= HOUSE_PURCHASE_LIMIT;
-// }
 
 const getTestableOptionsWithBuyBuildings = (args: tStateModifierArgs): tJournalistOptionsUnderDevelopement => {
     const { options, state } = args;
@@ -122,7 +152,7 @@ const getTestableOptionsWithBuyBuildings = (args: tStateModifierArgs): tJournali
         addNoBuildingPermitsResult(state!, NoBuildingPermitResults.GameNotStartedYet)
         return state;
     }
-    const playerOwnedCountryNames = getCountryNamesOwnedByCurrentPlayer(options!);
+    const playerOwnedCountryNames = getCurrentPlayerEstatesIfOwnsWholeCountry(options!);
     if (playerOwnedCountryNames.length === 0) {
         addNoBuildingPermitsResult(state!, NoBuildingPermitResults.NoFullCountries);
         return state;
@@ -135,6 +165,16 @@ const getTestableOptionsWithBuyBuildings = (args: tStateModifierArgs): tJournali
     const isHotelPurchaseLimitReached = isHotelPurchaseRoundLimitReached(options!)
     if (isHotelPurchaseLimitReached) {
         addNoBuildingPermitsResult(state!, NoBuildingPermitResults.HotelPurcahseLimitReached);
+        return state;
+    }
+    const isInJail = isCurrentPlayerInJail(options!)
+    if (isInJail) {
+        addNoBuildingPermitsResult(state!, NoBuildingPermitResults.InJail);
+        return state;
+    }
+    const hasPlayerEnoughMoney = hasPlayerMoneyToBuyBuildings(options!);
+    if (!hasPlayerEnoughMoney) {
+        addNoBuildingPermitsResult(state!, NoBuildingPermitResults.NoMoney);
         return state;
     }
 
