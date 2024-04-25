@@ -1,4 +1,4 @@
-import { ATENY, BARCELONA, GLASGOW, GREEN, LIVERPOOL, LONDON, MADRIT, MEDIOLAN, NEAPOL, ROME, SALONIKI, SEWILLA } from "../../../../Data/const"
+import { ATENY, BARCELONA, GLASGOW, GREEN, INSBRUK, LIVERPOOL, LONDON, MADRIT, MEDIOLAN, NEAPOL, ROME, SALONIKI, SEWILLA, WIEDEN } from "../../../../Data/const"
 import { getTestableOptions, NoBuildingPermitResults } from "../../../Journalist/getOptions"
 import { getMockedGameState, getPlayerColor } from "../getGameStateMock/getGameStateMock"
 import { DORIN } from "../getGameStateMock/getStateTemplate"
@@ -18,7 +18,7 @@ describe('Testing getOptions', () => {
                     const options = getTestableOptions(state);
                     expect(options.buyBuildings).toEqual({reason: NoBuildingPermitResults.GameNotStartedYet})
                 })
-                it('Should not add possibility to buy houses when player does not control every city in some conutry', () => {
+                it('Should not add possibility to buy houses and return a reason NOFullCountries when player does not control every city in some conutry', () => {
                     const dorinEstates = [ SALONIKI, NEAPOL, MEDIOLAN, BARCELONA, MADRIT, LIVERPOOL, LONDON ];
                     const state = getMockedGameState({
                         currentPlayer: [DORIN],
@@ -77,32 +77,52 @@ describe('Testing getOptions', () => {
                     expect(options.buyBuildings).toEqual([])
                 })
                 it('Should not add a possiblity to buy buildings when player is in prison and has turns to wait, but has where to build buildings', () => {
-    
+                    const dorinEstates = [ SALONIKI, ATENY, NEAPOL, MEDIOLAN, ROME, SEWILLA, MADRIT];
+                    const state = getMockedGameState({
+                        estatesOwner: [DORIN, dorinEstates],
+                        currentPlayer: [DORIN],
+                        toJail: [DORIN],
+                    });
+                    const options = getTestableOptions(state);
+                    expect(options.buyBuildings).toEqual({ reason: NoBuildingPermitResults.InJail })    
                 })
                 it('Should not add a possiblity to buy buildings when player has a country, but no more room for buildings', () => {
                     // 1 full countrym, 2/3 of other country
+                    const dorinEstates = [ SALONIKI, ATENY, NEAPOL, MEDIOLAN, ROME, SEWILLA, MADRIT];
+                    const state = getMockedGameState({
+                        estatesOwner: [DORIN, dorinEstates],
+                        currentPlayer: [DORIN],
+                        estatesDelta: [
+                            { estateName: SALONIKI, props: { owner: GREEN, nrOfHotels: 4 } },
+                            { estateName: ATENY, props: { owner: GREEN, nrOfHotels: 4 } },
+                            { estateName: NEAPOL, props: { owner: GREEN, nrOfHotels: 4 } },
+                            { estateName: MEDIOLAN, props: { owner: GREEN, nrOfHotels: 4 } },
+                            { estateName: ROME, props: { owner: GREEN, nrOfHotels: 4 } },
+                        ]
+                    });
+                    const options = getTestableOptions(state);
+                    expect(options.buyBuildings).toEqual([])
                 })
                 describe('Collapse reasons', () => {
-                    it('Should return a single reason when player has no full countries', () => {
-                        // May controll all railways
-                    })
                     it('Should return a single reason when player has no money to buy a house on any estate he owns', () => {
-
-                    })
-                    it('Should return a single reason when player is still in jail', () => {
-
-                    })
-                    it('Should return a single reason when player already bought 3 houses in this turn and cannot afford a hotel yet', () => {
-                        // Includes cases when not owns some grounds    
-                    })
-                    it('Should return a single reason when player already bought 3 hotels in round and has no place to build a house', () => {
-
+                        const dorinEstates = [ MEDIOLAN, ROME, SEWILLA, MADRIT, INSBRUK, WIEDEN];
+                        const state = getMockedGameState({
+                            estatesOwner: [DORIN, dorinEstates],
+                            currentPlayer: [DORIN],
+                            setMoney: [[399, DORIN]]
+                        });
+                        const options = getTestableOptions(state);
+                        expect(options.buyBuildings).toEqual({reason: NoBuildingPermitResults.NoMoney})    
                     })
                 })
             });
             describe('Should buy cases', () => {
                 it('Should add a possiblity to buy houses when player has a not plegged country with space', () => {
-
+                    // {
+                    //     GREECE: buildingPossibilities,
+                    //     ITALY: buildingPossibilities,
+                    //     SPAIN: .....
+                    // }
                 })
             });
             describe('Should not sell buildings cases with reason', () => {

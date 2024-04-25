@@ -4,7 +4,10 @@ import { tGameState } from "../../../../Functions/PersistRetrieveGameState/types
 import { iNonCityEstatesFieldState, tEstateField } from "../../../boardTypes";
 import { iPlayerSnapshot } from "../../../Player/types";
 import { getStateMock } from "./getStateTemplate";
-import { tChangeInEstate, tGetGameStateMockOptions, tStateModifierArgs } from "./types";
+import { 
+  tChangeInEstate, tGetGameStateMockOptions,
+  tStateModifierArgs
+} from "./types";
 
 const changeEstate = (state: tGameState, {estateName, props}: tChangeInEstate) => {
     const fields = state.boardFields;
@@ -74,11 +77,28 @@ const changeHotelsInRound = (args: tStateModifierArgs) => {
 
 const setCurrentPlayer = (args: tStateModifierArgs) => {
   const { state, options } = args;
-  const currentPlayer = options?.currentPlayer?.[0];
-  if (currentPlayer === undefined) return state;
-  const color = getPlayerColor(state, currentPlayer);
-  if (color === undefined) throw new Error(`Players ${currentPlayer} color not found`)
-  state.game.currentPlayer = currentPlayer;
+  const currentPlayerName = options?.currentPlayer?.[0];
+  if (currentPlayerName === undefined) return state;
+  const color = getPlayerColor(state, currentPlayerName);
+  if (color === undefined) throw new Error(`Players ${currentPlayerName} color not found`)
+  state.game.currentPlayer = currentPlayerName;
+  return state;
+}
+
+const getPlayer = (args: tStateModifierArgs, playerName: string) => {
+  const players = args.state.players;
+  const player = players.find(({name}) => name === playerName);
+  return player;
+}
+
+const sendToJail = (args: tStateModifierArgs) => {
+  const { options, state } = args;
+  const playersInState = state.players;
+  const playersNamesToPrison = options?.toJail || [];
+  playersNamesToPrison.forEach((playerName) => {
+    const player = playersInState.find((playerInState) => playerInState.name === playerName);
+    if (player) player.isInPrison = true;
+  })
   return state;
 }
 
@@ -103,7 +123,7 @@ const changeHousesInTurn = getPlayerPropChanger('nrOfHousesPurchasedInTurn', 'ho
 const movePlayers = getPlayerPropChanger('fieldNr', 'movePlayers');
 const setMoney = getPlayerPropChanger('money', 'setMoney');
 const setCards = getPlayerPropChanger('specialCards', 'setCards');
-const sendToJail = getPlayerPropChanger('isInPrison', 'toJail');
+// const sendToJail = getPlayerPropChanger('isInPrison', 'toJail');
 const setTurnsToWait = getPlayerPropChanger('nrTurnsToWait', 'playersWait');
 
 type tGameStateModifier = (args: tStateModifierArgs) => tGameState

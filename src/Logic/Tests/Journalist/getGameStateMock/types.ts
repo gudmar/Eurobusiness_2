@@ -24,7 +24,7 @@ type tMovePlayer = [playerName: string, fieldNr: number];
 
 export type tMovePlayers = tMovePlayer[];
 
-type tSetPlayerMoney = [playerName: string, money: number]
+type tSetPlayerMoney = [ money: number, playerName: string]
 
 export type tSetEachPlayerMoney = tSetPlayerMoney[];
 
@@ -34,7 +34,9 @@ type tSetSpecialCardsToPlayer = [playerName: string, specialCards: tSpecialCard[
 
 export type tSetSpecialCardsToPlayers = tSetSpecialCardsToPlayer[]
 
-export type tPutPlayersWithNamesToJail = string[]
+type tPlayerName = string;
+
+export type tPutPlayersWithNamesToJail = tPlayerName[];
 
 export type tSetTurnsToWaitOnPlayers = string[]
 
