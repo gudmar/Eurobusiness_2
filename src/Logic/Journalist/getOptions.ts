@@ -7,7 +7,7 @@ import { NR_OF_HOTELS_PURCHASED_IN_ROUND, NR_OF_HOUSES_PURCHASED_IN_TURN } from 
 import { tObject } from "../types"
 import { isBeforeFirstMove } from "./isBeforeFirstMove"
 import { tJournalistOptionsUnderDevelopement, tJournalistState } from "./types"
-import { getBuildingPermits } from "./utils/getBuildingPermits"
+import { getBuildingPermits, getBuildingPermitsForEachCountry } from "./utils/getBuildingPermits"
 
 
 const BLANK_REJECTION = { reason: 'Dummy rejection' }
@@ -122,7 +122,6 @@ const hasPlayerMoneyToBuyBuildings = (state: tGameState) => {
     if (fullCountryEstateNames.length === 0) return true;
     const { name, color, money } = getCurrentPlayer(state);
     const boardFieldDescriptors: tObject<any> = descriptors;
-    console.log('OWNED BY PLAYER', fullCountryEstateNames)
     const result = fullCountryEstateNames.reduce((acc, estateName: any) => {
         if (acc === true) return acc;
         const estate = boardFieldDescriptors[estateName];
@@ -131,16 +130,6 @@ const hasPlayerMoneyToBuyBuildings = (state: tGameState) => {
         }
         return false;
     }, false)
-    // const prices = boardFieldDescriptors.reduce((acc: number[], boardField) => {
-    //     if ('country' in boardField && 'housePrice' in boardField) {
-    //         // console.log('Field', boardField.country, boardField.hotelPrice)
-    //         if ( fullCountryEstateNames.includes(boardField.country)) {
-    //             acc.push(boardField.housePrice);
-    //             // housePrica and hotelPrice are the same in each case
-    //         }
-    //     }
-    //     return acc;
-    // }, [])
     return result
 }
 
@@ -177,8 +166,8 @@ const getTestableOptionsWithBuyBuildings = (args: tStateModifierArgs): tJournali
         addNoBuildingPermitsResult(state!, NoBuildingPermitResults.NoMoney);
         return state;
     }
-
-    state.buyBuildings = []
+    const permits = getBuildingPermitsForEachCountry(options!, getCurrentPlayer(options!).name)
+    state.buyBuildings = permits
     return state ;
 }
 const getTestableOptionsWithSellBuildings = (args: tStateModifierArgs): tJournalistOptionsUnderDevelopement => {

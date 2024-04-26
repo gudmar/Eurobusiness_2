@@ -1,10 +1,11 @@
 import { CITY } from "../../../Data/const";
 import { range } from "../../../Functions/createRange";
+import { mapCitiesToCountries } from "../../../Functions/mapCitiesToCountries";
 import { tGameState } from "../../../Functions/PersistRetrieveGameState/types"
 import { sum } from "../../../Functions/sum";
 import { Bank } from "../../Bank/Bank";
 import { iCityFieldState, tFieldState } from "../../boardTypes";
-import { Players } from "../../Players/Players";
+import { tObject } from "../../types";
 
 export type tGetBuildingPermitsArgs = {
     gameState: tGameState,
@@ -442,9 +443,15 @@ const calculatePermitsForHotels = (args: tGetBuildingPermitsForNrOfBuildings): t
     return []
 }
 
+const getPlayerColorFromGameState = (state: tGameState, playerName: string) => {
+    const color = state.players.find(({name}) => name === playerName)?.color;
+    if (!color) throw new Error(`Player ${playerName} color not found`)
+    return color
+}
+
 const getNrHotelsBoughtInRound = (args: tGetBuildingPermitsArgs) => {
     const {gameState, playerName} = args;
-    const playerColor = Players.playerNameToPlayerColor(playerName);
+    const playerColor = getPlayerColorFromGameState(gameState, playerName);
     const player = gameState.players.find((player) => player.color === playerColor);
     const  nrOfHotelsPurchasedInRound = player?.nrOfHotelsPurchasedInRound;
     return nrOfHotelsPurchasedInRound || 0;
@@ -453,16 +460,17 @@ const getNrHotelsBoughtInRound = (args: tGetBuildingPermitsArgs) => {
 export const getBuildingPermits = (args: tGetBuildingPermitsArgs) => {
     const MAX_NR_OF_BUILDINGS = 3;
     const {gameState, playerName, cityName} = args;
-    const playerColor = Players.playerNameToPlayerColor(playerName);
+    const playerColor = getPlayerColorFromGameState(gameState, playerName);
     const estate = gameState.boardFields.find(({name}) => name === cityName)
     if (!estate) throw new Error(`No estate named ${cityName}`)
     if (estate.type !== CITY) {
         return {reason: BuildingPermitRejected.notACity}
     }
     const citiesFromSameCountry = getAllFromSameCountry(gameState, cityName);
-    if (checkIfSome(citiesFromSameCountry, isPlegdedConditionChecker)) { return { reason: BuildingPermitRejected.plegded }}
-    if (checkIfSome(citiesFromSameCountry, getIsNotOwnedConditionChecker(playerColor))) { return { reason: BuildingPermitRejected.ownsOnlyPart }}
-    if (checkIfEvery(citiesFromSameCountry, isCityHasAHotelConditionChecker)) { return { reason: BuildingPermitRejected.alreadyBuild}}
+    const country = (citiesFromSameCountry as iCityFieldState[])[0].country;
+    if (checkIfSome(citiesFromSameCountry, isPlegdedConditionChecker)) { return { reason: BuildingPermitRejected.plegded, country }}
+    if (checkIfSome(citiesFromSameCountry, getIsNotOwnedConditionChecker(playerColor))) { return { reason: BuildingPermitRejected.ownsOnlyPart, country }}
+    if (checkIfEvery(citiesFromSameCountry, isCityHasAHotelConditionChecker)) { return { reason: BuildingPermitRejected.alreadyBuild, country}}
     const response: tBuidlingApproved = {}
     const rangeMaxBuildings = range(1, MAX_NR_OF_BUILDINGS);
     const permits = rangeMaxBuildings.reduce((acc, index) => {
@@ -474,5 +482,24 @@ export const getBuildingPermits = (args: tGetBuildingPermitsArgs) => {
         country: (citiesFromSameCountry as iCityFieldState[])[0].country,
         permits,
     }
+    return result;
+}
+
+export const getBuildingPermitsForEachCountry = (gameState: tGameState, playerName: string) => {
+    const citiesInCountries = mapCitiesToCountries();
+    const firstCityInCountryNames = Object.values(citiesInCountries).map((cities) => cities[0].name)
+    const resultArray = firstCityInCountryNames.map((cityName) => {
+        const result = getBuildingPermits({gameState, playerName, cityName});
+        return result
+    })
+    const result = resultArray.reduce((acc: tObject<any>, item) => {
+        const country = item?.country
+        if (country) {
+            if (acc?.[country] === undefined) {acc[country] = {}}
+            else { throw new Error (`Permits for country ${country} already exist`) }
+            acc[country] = item
+        }
+        return acc;
+    }, {})
     return result;
 }
