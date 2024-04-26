@@ -1,3 +1,5 @@
+import { tObject } from "../types";
+
 export enum Messages {
     optionsChanged = 'Options changed',
 }
@@ -32,6 +34,7 @@ type tJournalistOutputArray = tJournalistOutput[];
 // Rejection[] as array because there may be a different reason for each estate
 
 type tJournalistOutputArrayOrRejection = tJournalistOutputArray | tRejection;
+type tJournalistOutputObject = tObject<any>;
 // When all entries are rejections, it may better to show a single reason?
 
 type tJournalistOutputBooleanOrRejection = boolean | tRejection;
@@ -51,7 +54,7 @@ export type tJournalistState = {
 }
 
 export type tJournalistOptionsUnderDevelopement = {
-    buyBuildings?:  tJournalistOutputArrayOrRejection;
+    buyBuildings?:  tJournalistOutputObject;
     sellBuildings?: tJournalistOutputArrayOrRejection;
     buyEstate?: tJournalistOutput;
     sellEstates?: tJournalistOutputArrayOrRejection;

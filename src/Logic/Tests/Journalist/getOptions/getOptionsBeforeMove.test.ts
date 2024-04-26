@@ -1,6 +1,8 @@
-import { ATENY, BARCELONA, GLASGOW, GREEN, INSBRUK, LIVERPOOL, LONDON, MADRIT, MEDIOLAN, NEAPOL, ROME, SALONIKI, SEWILLA, WIEDEN } from "../../../../Data/const"
+import { ATENY, AUSTRIA, BARCELONA, GLASGOW, GREECE, GREEN, INSBRUK, ITALY, LIVERPOOL, LONDON, MADRIT, MEDIOLAN, NEAPOL, ROME, SALONIKI, SEWILLA, WIEDEN } from "../../../../Data/const"
 import { getTestableOptions, NoBuildingPermitResults } from "../../../Journalist/getOptions"
+import { BuildingPermitRejected } from "../../../Journalist/utils/getBuildingPermits"
 import { getMockedGameState, getPlayerColor } from "../getGameStateMock/getGameStateMock"
+import { getMockResponse } from "../getGameStateMock/getResponse"
 import { DORIN } from "../getGameStateMock/getStateTemplate"
 
 describe('Testing getOptions', () => {
@@ -73,8 +75,11 @@ describe('Testing getOptions', () => {
                             }
                         ]
                     });
+                    const expected = getMockResponse({
+                        [ITALY]: BuildingPermitRejected.plegded,
+                    })
                     const options = getTestableOptions(state);
-                    expect(options.buyBuildings).toEqual([])
+                    expect(options.buyBuildings).toEqual(expected)
                 })
                 it('Should not add a possiblity to buy buildings when player is in prison and has turns to wait, but has where to build buildings', () => {
                     const dorinEstates = [ SALONIKI, ATENY, NEAPOL, MEDIOLAN, ROME, SEWILLA, MADRIT];
@@ -101,7 +106,11 @@ describe('Testing getOptions', () => {
                         ]
                     });
                     const options = getTestableOptions(state);
-                    expect(options.buyBuildings).toEqual([])
+                    const expectedResponse = getMockResponse({
+                        [GREECE]: BuildingPermitRejected.alreadyBuild,
+                        [ITALY]: BuildingPermitRejected.alreadyBuild,
+                    })
+                    expect(options.buyBuildings).toEqual(expectedResponse)
                 })
                 describe('Collapse reasons', () => {
                     it('Should return a single reason when player has no money to buy a house on any estate he owns', () => {
