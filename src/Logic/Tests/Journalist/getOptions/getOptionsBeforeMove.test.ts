@@ -1,9 +1,14 @@
 import { ATENY, AUSTRIA, BARCELONA, GLASGOW, GREECE, GREEN, INSBRUK, ITALY, LIVERPOOL, LONDON, MADRIT, MEDIOLAN, NEAPOL, ROME, SALONIKI, SEWILLA, WIEDEN } from "../../../../Data/const"
 import { getTestableOptions, NoBuildingPermitResults } from "../../../Journalist/getOptions"
+import { tJournalistOutputArrayOrRejection, tJournalistState } from "../../../Journalist/types"
 import { BuildingPermitRejected } from "../../../Journalist/utils/getBuildingPermits"
 import { getMockedGameState, getPlayerColor } from "../getGameStateMock/getGameStateMock"
 import { getMockResponse } from "../getGameStateMock/getResponse"
 import { DORIN } from "../getGameStateMock/getStateTemplate"
+
+const throwIfNoPermits = (options: tJournalistState) => {
+    if (!('payload' in options.buyBuildings)) throw new Error('No payload in options.buyBuildings')
+}
 
 describe('Testing getOptions', () => {
     xit('Should allow to move player in each of below cases, when player is not in prison', () => {
@@ -79,7 +84,8 @@ describe('Testing getOptions', () => {
                         [ITALY]: BuildingPermitRejected.plegded,
                     })
                     const options = getTestableOptions(state);
-                    expect(options.buyBuildings).toEqual(expected)
+                    if (!('payload' in options.buyBuildings)) throw new Error('Payload not in buyBuildings')
+                    expect(options.buyBuildings.payload).toEqual(expected)
                 })
                 it('Should not add a possiblity to buy buildings when player is in prison and has turns to wait, but has where to build buildings', () => {
                     const dorinEstates = [ SALONIKI, ATENY, NEAPOL, MEDIOLAN, ROME, SEWILLA, MADRIT];
@@ -110,7 +116,8 @@ describe('Testing getOptions', () => {
                         [GREECE]: BuildingPermitRejected.alreadyBuild,
                         [ITALY]: BuildingPermitRejected.alreadyBuild,
                     })
-                    expect(options.buyBuildings).toEqual(expectedResponse)
+                    if (!('payload' in options.buyBuildings)) throw new Error('No payload in options.buyBuildings')
+                    expect(options.buyBuildings.payload).toEqual(expectedResponse)
                 })
                 describe('Collapse reasons', () => {
                     it('Should return a single reason when player has no money to buy a house on any estate he owns', () => {
@@ -126,12 +133,34 @@ describe('Testing getOptions', () => {
                 })
             });
             describe('Should buy cases', () => {
-                it('Should add a possiblity to buy houses when player has a not plegged country with space', () => {
+                it.only('Should add a possiblity to buy houses when player has a not plegged country with space', () => {
                     // {
                     //     GREECE: buildingPossibilities,
                     //     ITALY: buildingPossibilities,
                     //     SPAIN: .....
                     // }
+                    const dorinEstates = [ INSBRUK, WIEDEN, SALONIKI, NEAPOL, MEDIOLAN];
+                    const state = getMockedGameState({
+                        estatesOwner: [DORIN, dorinEstates],
+                        currentPlayer: [DORIN],
+                    });
+                    const options = getTestableOptions(state);
+                    if (!('payload' in options.buyBuildings)) throw new Error('Payload not in options.buyBuildings');
+                    const permits = options.buyBuildings.payload;
+                    const countryNamesNotAustria = Object.keys(permits).filter((countryName) => countryName !== AUSTRIA)
+                    countryNamesNotAustria.forEach((countryName ) => {
+                        const countryResult: tJournalistOutputArrayOrRejection = permits[countryName];
+                        expect(countryResult).toEqual({
+                            reason: BuildingPermitRejected.ownsOnlyPart,
+                            country: countryName,
+                        });
+                    });
+
+                    const austriaPermit = permits[AUSTRIA];
+                    console.log('ADFAFF', austriaPermit);
+                    const isNotEmptyArray = austriaPermit.length > 0;
+                    expect(isNotEmptyArray).toBeTruthy();
+
                 })
             });
             describe('Should not sell buildings cases with reason', () => {

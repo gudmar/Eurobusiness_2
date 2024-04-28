@@ -6,7 +6,7 @@ import { tGameState } from "../../Functions/PersistRetrieveGameState/types"
 import { NR_OF_HOTELS_PURCHASED_IN_ROUND, NR_OF_HOUSES_PURCHASED_IN_TURN } from "../Player/types"
 import { tObject } from "../types"
 import { isBeforeFirstMove } from "./isBeforeFirstMove"
-import { tJournalistOptionsUnderDevelopement, tJournalistState } from "./types"
+import { OptionTypes, tJournalistOptionsUnderDevelopement, tJournalistState } from "./types"
 import { getBuildingPermits, getBuildingPermitsForEachCountry } from "./utils/getBuildingPermits"
 
 
@@ -167,7 +167,11 @@ const getTestableOptionsWithBuyBuildings = (args: tStateModifierArgs): tJournali
         return state;
     }
     const permits = getBuildingPermitsForEachCountry(options!, getCurrentPlayer(options!).name)
-    state.buyBuildings = permits
+    state.buyBuildings = {
+        payload: permits,
+        isMandatory: false,
+        type: OptionTypes.BuyBuildings
+    }
     return state ;
 }
 const getTestableOptionsWithSellBuildings = (args: tStateModifierArgs): tJournalistOptionsUnderDevelopement => {
