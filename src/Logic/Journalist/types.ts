@@ -33,14 +33,19 @@ type tJournalistOutput = tOption | tRejection;
 type tJournalistOutputArray = tJournalistOutput[];
 // Rejection[] as array because there may be a different reason for each estate
 
-type tJournalistOutputArrayOrRejection = tJournalistOutputArray | tRejection;
+export type tJournalistOutputArrayOrRejection = tJournalistOutputArray | tRejection;
 type tJournalistOutputObject = tObject<any>;
 // When all entries are rejections, it may better to show a single reason?
 
 type tJournalistOutputBooleanOrRejection = boolean | tRejection;
 
 export type tJournalistState = {
-    buyBuildings:  tJournalistOutputArrayOrRejection;
+    // buyBuildings:  tJournalistOutputArrayOrRejection[] | tJournalistOutputArrayOrRejection;
+    buyBuildings: tOption | tRejection,
+    // { reason: HousePurchaseLimitReached || 'not this turn phase' }  | 
+    // {
+    //     isMandatory: false, type: BuyBuildings, payload: { GREECE: [permits], ITALY: [permits]}
+    // }
     sellBuildings: tJournalistOutputArrayOrRejection;
     buyEstate?: tJournalistOutput;
     sellEstates: tJournalistOutputArrayOrRejection;
