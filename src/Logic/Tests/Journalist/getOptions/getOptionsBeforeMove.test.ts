@@ -3,6 +3,7 @@ import { getTestableOptions } from "../../../Journalist/getOptions"
 import { tJournalistOutputArrayOrRejection, tJournalistState } from "../../../Journalist/types"
 import { BuildingPermitRejected, NrOfHouses } from "../../../Journalist/utils/getBuildingPermits"
 import { NoBuildingPermitResults } from "../../../Journalist/utils/getBuyBuildingsOptions"
+import { SellBuildingsRejected } from "../../../Journalist/utils/getSellBuildingOptions"
 import { getMockedGameState, getPlayerColor } from "../getGameStateMock/getGameStateMock"
 import { getMockResponse } from "../getGameStateMock/getResponse"
 import { DORIN } from "../getGameStateMock/getStateTemplate"
@@ -185,10 +186,23 @@ describe('Testing getOptions', () => {
                         currentPlayer: [DORIN],
                     });
                     const options = getTestableOptions(state);
-                    const expected = { reason: 'asf'}
+                    const expected = { reason: SellBuildingsRejected.NoBuildings}
+                    expect(options.sellBuildings).toEqual(expected);
                 })
                 it('Should not allow to sell buildings when player is in jail', () => {
-
+                    const dorinEstates = [ INSBRUK, WIEDEN, SALONIKI, NEAPOL, MEDIOLAN];
+                    const state = getMockedGameState({
+                        estatesOwner: [DORIN, dorinEstates],
+                        currentPlayer: [DORIN],
+                        estatesDelta: [
+                            { estateName: INSBRUK, props: { owner: GREEN, nrOfHouses: 4 } },
+                            { estateName: WIEDEN, props: { owner: GREEN, nrOfHotels: 1 } },
+                        ],
+                        toJail: [DORIN],
+                    });
+                    const options = getTestableOptions(state);
+                    const expected = { reason: SellBuildingsRejected.InJail}
+                    expect(options.sellBuildings).toEqual(expected);
                 })
             })
             describe('Should sell buildings cases', () => {

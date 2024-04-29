@@ -46,7 +46,8 @@ export type tJournalistState = {
     // {
     //     isMandatory: false, type: BuyBuildings, payload: { GREECE: [permits], ITALY: [permits]}
     // }
-    sellBuildings: tJournalistOutputArrayOrRejection;
+    // sellBuildings: tJournalistOutputArrayOrRejection;
+    sellBuildings: tOption | tRejection,
     buyEstate?: tJournalistOutput;
     sellEstates: tJournalistOutputArrayOrRejection;
     plegdeEstates: tJournalistOutputArrayOrRejection;

@@ -2,6 +2,7 @@ import { applyStateModifiers, tStateModifier } from "../../Functions/applyStateM
 import { tGameState } from "../../Functions/PersistRetrieveGameState/types"
 import { tJournalistOptionsUnderDevelopement, tJournalistState } from "./types"
 import { getTestableOptionsWithBuyBuildings } from "./utils/getBuyBuildingsOptions"
+import { getTestableOptionsWithSellBuildings } from "./utils/getSellBuildingOptions"
 import { tStateModifierArgs } from "./utils/types"
 
 
@@ -22,11 +23,6 @@ const BLANK_TESTABLE_OPTIONS_OUTPUT: tJournalistState = {
 }
 
 
-const getTestableOptionsWithSellBuildings = (args: tStateModifierArgs): tJournalistOptionsUnderDevelopement => {
-    const { options, state } = args;
-    state.sellBuildings = []
-    return state;
-} 
 const getBuyEstate = (args: tStateModifierArgs): tJournalistOptionsUnderDevelopement => {
     const { options, state } = args;
     state.buyEstate = { reason: 'You are not on any estate at present' }
@@ -113,6 +109,7 @@ export const getTestableOptions = (state: tGameState): tJournalistState => {
         },
         [
             getTestableOptionsWithBuyBuildings,
+            getTestableOptionsWithSellBuildings
         ]
     )
     return result as tJournalistState;
