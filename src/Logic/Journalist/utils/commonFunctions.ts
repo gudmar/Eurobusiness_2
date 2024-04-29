@@ -1,5 +1,7 @@
 import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
+import { getEstate } from "../../BoardCaretaker";
 import { tObject } from "../../types";
+import { tStateModifierArgs } from "./types";
 
 export const getCurrentPlayerName = (state: tGameState) => state.game.currentPlayer;
 export const getPlayerColorFromPlayerName = (state: tGameState, playerName: string) => {
@@ -69,3 +71,19 @@ export const getCurrentPlayerEstatesIfOwnsWholeCountry = (state: tGameState) => 
 }
 
 export const isCurrentPlayerInJail = (state: tGameState) => getCurrentPlayer(state)?.isInPrison;
+
+export const getNrOfCurrentPlayerBuildings = (state: tGameState) => {
+    const currentPlayerName = getCurrentPlayer(state).name;
+    const currentPlayerEstates = getPlayerEstates(state, currentPlayerName);
+    const buildings = currentPlayerEstates.reduce((acc, item) => {
+        if ('nrOfHouses' in item && 'nrOfHotels' in item) {
+            const result = {
+                nrOfHouses: acc.nrOfHouses + item.nrOfHouses,
+                nrOfHotels: acc.nrOfHotels + item.nrOfHotels,
+            };
+            return result;
+        }
+        return acc;
+    }, {nrOfHotels: 0, nrOfHouses: 0})
+    return buildings;
+}
