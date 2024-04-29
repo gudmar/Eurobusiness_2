@@ -117,11 +117,13 @@ describe('Testing getBuildingPermits', () => {
     });
     it('Should return an object with rejected reason when bank has no houses and only houses might have been build in cities of some country', () => {
         Bank.nrOfHouses = 0;
+        stateChangedBuildings.bank.nrOfHouses = 0;
         const reasonNoHouses = getBuildingPermits({gameState: stateChangedBuildings, playerName: DWALIN, cityName: MEDIOLAN, });
         expect(reasonNoHouses).toEqual(noHousesInBankOutput)
     })
     it('Should return an object with rejected reason when bank has no hotels and there is a max nr of houses in each city in the country', () => {
         Bank.nrOfHotels = 0;
+        stateChangedBuildings.bank.nrOfHotels = 0;
         const reasonNoHouses = getBuildingPermits({gameState: stateChangedBuildings, playerName: DWALIN, cityName: WIEDEN, });
         expect(reasonNoHouses).toEqual(noHotelsInBankOutput)
     })
@@ -274,6 +276,7 @@ describe('Testing getBuildingPermits', () => {
             });
             it('Should return reason no hotels left if nr of hotels is 0 and otherwise there would be a possiblity to build up to 3 hotels', () => {
                 Bank.nrOfHotels = 0;
+                readyState3.bank.nrOfHotels = 0;
                 const permits = getBuildingPermits({gameState: readyState3, playerName: DWALIN, cityName: SEWILLA});
                 printHouses(permits)
                 expect(permits).toEqual(permits_4h0H_4h0H_4h0H_0HotelsLeft);
