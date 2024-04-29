@@ -1,4 +1,4 @@
-import { CITY } from "../../../Data/const";
+import { AUSTRIA, CITY } from "../../../Data/const";
 import { range } from "../../../Functions/createRange";
 import { mapCitiesToCountries } from "../../../Functions/mapCitiesToCountries";
 import { tGameState } from "../../../Functions/PersistRetrieveGameState/types"
@@ -327,7 +327,8 @@ type tHotelBalance = {
 
 const calculatePermitsForHouses = (args: tGetBuildingPermitsForNrOfBuildings): tHouseLocations[] => {
     const { gameState, citiesFromSameCountry, playerName, cityName, nrOfBuildings, response} = args;
-    if (Bank.nrOfHouses < nrOfBuildings) return []
+    const nrOfHouses = getHousesInBank(args);
+    if (!nrOfHouses) return []  // !!!!!!!!!!!!!!!11
     const existingHotels = citiesFromSameCountry.map((city) => (city as iCityFieldState).nrOfHotels)
     const { existingHouses } = getHouseBalance(citiesFromSameCountry);
     if (existingHotels.some((nr) => nr > 0)) return []
@@ -346,10 +347,22 @@ const calculateNrOfHousesThatMayStillBeBuild = (cities: iCityFieldState[]) => {
     return nrOfHousesThatMayStillBeBuild;
 }
 
+const getHousesInBank = (args: tGetBuildingPermitsArgs) => {
+    const housesFromGameState = args?.gameState?.bank?.nrOfHouses;
+    const result = Bank.nrOfHouses || housesFromGameState;
+    return result;
+}
+
+const getHotelsInBank = (args: tGetBuildingPermitsArgs) => {
+    const hotelsFromState = args?.gameState?.bank?.nrOfHotels;
+    const result = Bank.nrOfHotels || hotelsFromState;
+    return result;
+}
+
 const calculatePermitsForHousesWithRejectionApply = (args: tGetBuildingPermitsForNrOfBuildings): tBuidlingApproved => {
     const { nrOfBuildings, response, citiesFromSameCountry} = args;
     const cities = citiesFromSameCountry as iCityFieldState[];
-    const nrOfHousesInBank = Bank.nrOfHouses;
+    const nrOfHousesInBank = getHousesInBank(args);
     const result = calculatePermitsForHouses(args);
     const citiesTooBig = cities.every(({nrOfHouses, nrOfHotels}) => {
         const result = (nrOfHouses === MAX_NR_OF_HOUSES_ON_FIELD) || (nrOfHotels === 1);
@@ -380,7 +393,7 @@ const calculatePermitsForHousesWithRejectionApply = (args: tGetBuildingPermitsFo
 const calculatePermitsForHotelsWithRejectionApply = (args: tGetBuildingPermitsForNrOfBuildings): tBuidlingApproved => {
     const { nrOfBuildings, response, citiesFromSameCountry} = args;
     const cities = citiesFromSameCountry as iCityFieldState[];
-    const nrOfHotelsInBank = Bank.nrOfHotels;
+    const nrOfHotelsInBank = getHotelsInBank(args);
     
     const citiesBigEnough = cities.every(({nrOfHouses, nrOfHotels}) => {
         const result = (nrOfHouses === MAX_NR_OF_HOUSES_ON_FIELD) || (nrOfHotels === 1);
@@ -476,6 +489,7 @@ export const getBuildingPermits = (args: tGetBuildingPermitsArgs) => {
     const permits = rangeMaxBuildings.reduce((acc, index) => {
         const resultWithHouse = calculatePermitsForHousesWithRejectionApply({...args, citiesFromSameCountry, nrOfBuildings: index, response: acc})
         const resultWithHotel = calculatePermitsForHotelsWithRejectionApply({...args, citiesFromSameCountry, nrOfBuildings: index, response: resultWithHouse})
+        
         return resultWithHotel
     }, {})
     const result = {
@@ -494,6 +508,7 @@ export const getBuildingPermitsForEachCountry = (gameState: tGameState, playerNa
     })
     const result = resultArray.reduce((acc: tObject<any>, item) => {
         const country = item?.country
+
         if (country) {
             if (acc?.[country] === undefined) {acc[country] = {}}
             else { throw new Error (`Permits for country ${country} already exist`) }

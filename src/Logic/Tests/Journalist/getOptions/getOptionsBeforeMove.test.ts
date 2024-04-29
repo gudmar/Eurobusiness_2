@@ -1,7 +1,7 @@
 import { ATENY, AUSTRIA, BARCELONA, GLASGOW, GREECE, GREEN, INSBRUK, ITALY, LIVERPOOL, LONDON, MADRIT, MEDIOLAN, NEAPOL, ROME, SALONIKI, SEWILLA, WIEDEN } from "../../../../Data/const"
 import { getTestableOptions, NoBuildingPermitResults } from "../../../Journalist/getOptions"
 import { tJournalistOutputArrayOrRejection, tJournalistState } from "../../../Journalist/types"
-import { BuildingPermitRejected } from "../../../Journalist/utils/getBuildingPermits"
+import { BuildingPermitRejected, NrOfHouses } from "../../../Journalist/utils/getBuildingPermits"
 import { getMockedGameState, getPlayerColor } from "../getGameStateMock/getGameStateMock"
 import { getMockResponse } from "../getGameStateMock/getResponse"
 import { DORIN } from "../getGameStateMock/getStateTemplate"
@@ -133,7 +133,7 @@ describe('Testing getOptions', () => {
                 })
             });
             describe('Should buy cases', () => {
-                it.only('Should add a possiblity to buy houses when player has a not plegged country with space', () => {
+                it('Should add a possiblity to buy houses when player has a not plegged country with space', () => {
                     // {
                     //     GREECE: buildingPossibilities,
                     //     ITALY: buildingPossibilities,
@@ -157,9 +157,22 @@ describe('Testing getOptions', () => {
                     });
 
                     const austriaPermit = permits[AUSTRIA];
-                    console.log('ADFAFF', austriaPermit);
-                    const isNotEmptyArray = austriaPermit.length > 0;
-                    expect(isNotEmptyArray).toBeTruthy();
+                    const expectedAustriaPermit = {
+                        [NrOfHouses.one]: [
+                          { locationOne: [ "Insbruck", ], cost: 400, },
+                          { locationOne: [ "Wien", ], cost: 400, },
+                        ],
+                        hotelReason: "Each city should have at least 4 houses or 1 hotel",
+                        [NrOfHouses.two]: [
+                          { locationOne: [ "Insbruck", "Wien", ], cost: 800, },
+                        ],
+                        [NrOfHouses.three]: [
+                          { locationOne: ["Insbruck",], locationTwo: [ "Wien", ], cost: 1200, },
+                          { locationOne: [ "Wien", ], locationTwo: [ "Insbruck", ], cost: 1200, },
+                        ],
+                      }
+                    expect(austriaPermit.permits).toEqual(expectedAustriaPermit);
+                    expect(austriaPermit.country).toEqual(AUSTRIA)
 
                 })
             });

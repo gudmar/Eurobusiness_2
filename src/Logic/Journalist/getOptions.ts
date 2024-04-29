@@ -172,6 +172,8 @@ const getTestableOptionsWithBuyBuildings = (args: tStateModifierArgs): tJournali
         isMandatory: false,
         type: OptionTypes.BuyBuildings
     }
+    //HOTELS rejection is added properly. House permits seem NOT to be added,
+    // STILL, result is not an array like in the test
     return state ;
 }
 const getTestableOptionsWithSellBuildings = (args: tStateModifierArgs): tJournalistOptionsUnderDevelopement => {
