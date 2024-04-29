@@ -2,6 +2,7 @@ import { tGameState } from "../../../Functions/PersistRetrieveGameState/types"
 import { iAny } from "../../../Types/types"
 import { iCityFieldState } from "../../boardTypes"
 import { tObject } from "../../types"
+import { tJournalistOptionsUnderDevelopement } from "../types"
 
 export type tNrOfBuildings = {
     nrOfHouses: number,
@@ -38,3 +39,7 @@ type tCityBuildingsManagement = { nrOfHotels: number, nrOfHouses: number, houseP
 // export type tCityFieldsByCountry = iCityFieldState[];
 type tGenericCityFieldsByCountry<T extends tCityBuildingsManagement> = T;
 export type tCityFieldsByCountry = tGenericCityFieldsByCountry<tCityBuildingsManagement>[];
+
+export type tStateModifierArgs = {state: tJournalistOptionsUnderDevelopement, options?: tGameState}
+
+export type tBuildingLimitKey = 'nrOfHotelsPurchasedInRound' | 'nrOfHousesPurchasedInTurn';

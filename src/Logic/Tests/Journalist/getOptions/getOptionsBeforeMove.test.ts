@@ -1,7 +1,8 @@
 import { ATENY, AUSTRIA, BARCELONA, GLASGOW, GREECE, GREEN, INSBRUK, ITALY, LIVERPOOL, LONDON, MADRIT, MEDIOLAN, NEAPOL, ROME, SALONIKI, SEWILLA, WIEDEN } from "../../../../Data/const"
-import { getTestableOptions, NoBuildingPermitResults } from "../../../Journalist/getOptions"
+import { getTestableOptions } from "../../../Journalist/getOptions"
 import { tJournalistOutputArrayOrRejection, tJournalistState } from "../../../Journalist/types"
 import { BuildingPermitRejected, NrOfHouses } from "../../../Journalist/utils/getBuildingPermits"
+import { NoBuildingPermitResults } from "../../../Journalist/utils/getBuyBuildingsOptions"
 import { getMockedGameState, getPlayerColor } from "../getGameStateMock/getGameStateMock"
 import { getMockResponse } from "../getGameStateMock/getResponse"
 import { DORIN } from "../getGameStateMock/getStateTemplate"
@@ -178,7 +179,13 @@ describe('Testing getOptions', () => {
             });
             describe('Should not sell buildings cases with reason', () => {
                 it('Should not allow to sell buildings when player has no buildings but has a country', () => {
-
+                    const dorinEstates = [ INSBRUK, WIEDEN, SALONIKI, NEAPOL, MEDIOLAN];
+                    const state = getMockedGameState({
+                        estatesOwner: [DORIN, dorinEstates],
+                        currentPlayer: [DORIN],
+                    });
+                    const options = getTestableOptions(state);
+                    const expected = { reason: 'asf'}
                 })
                 it('Should not allow to sell buildings when player is in jail', () => {
 
