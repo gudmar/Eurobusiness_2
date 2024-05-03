@@ -3,28 +3,58 @@ import { BuildingPermitRejected } from "../../../Journalist/utils/getBuildingPer
 import { tObject } from "../../../types";
 
 type tCountry = string;
+type tPermits = any[];
 
 type delta = {
-    [key: tCountry]: string,
+    [key: tCountry]: string | tPermits,
 }
 
-export const getMockResponse = (delta:delta) => {
+export const getMockResponseGetter  = (defaultReason: string) => (delta: delta) => {
     const citiesInCountries = mapCitiesToCountries();
     const countries = Object.keys(citiesInCountries);
     const result = countries.reduce((acc: tObject<any>, country) => {
         if (!acc?.[country]) {
             acc[country] = {
-                reason: BuildingPermitRejected.ownsOnlyPart,
+                reason: defaultReason,
                 country,
             }
         }
-        if (delta?.[country]) {
-            acc[country] = {
-                reason: delta[country],
-                country
-            };
+        const solution = delta?.[country]
+        if (solution) {
+            if (typeof solution === 'string') {
+                acc[country] = {
+                    reason: solution,
+                    country
+                };    
+            } else if (typeof solution === 'object') {
+                acc[country] = {
+                    ...solution,
+                    country
+                };    
+            }
         }
         return acc;
     }, {});
     return result;
 }
+
+// export const getMockResponse = (delta:delta) => {
+//     const citiesInCountries = mapCitiesToCountries();
+//     const countries = Object.keys(citiesInCountries);
+//     const result = countries.reduce((acc: tObject<any>, country) => {
+//         if (!acc?.[country]) {
+//             acc[country] = {
+//                 reason: BuildingPermitRejected.ownsOnlyPart,
+//                 country,
+//             }
+//         }
+//         if (delta?.[country]) {
+//             acc[country] = {
+//                 reason: delta[country],
+//                 country
+//             };
+//         }
+//         return acc;
+//     }, {});
+//     return result;
+// }

@@ -1,16 +1,19 @@
 import { ATENY, AUSTRIA, BARCELONA, GLASGOW, GREECE, GREEN, INSBRUK, ITALY, LIVERPOOL, LONDON, MADRIT, MEDIOLAN, NEAPOL, ROME, SALONIKI, SEWILLA, WIEDEN } from "../../../../Data/const"
 import { getTestableOptions } from "../../../Journalist/getOptions"
 import { tJournalistOutputArrayOrRejection, tJournalistState } from "../../../Journalist/types"
+import { SellBuildingsRejected } from "../../../Journalist/utils/constants"
 import { BuildingPermitRejected, NrOfHouses } from "../../../Journalist/utils/getBuildingPermits"
 import { NoBuildingPermitResults } from "../../../Journalist/utils/getBuyBuildingsOptions"
-import { SellBuildingsRejected } from "../../../Journalist/utils/getSellBuildingOptions"
 import { getMockedGameState, getPlayerColor } from "../getGameStateMock/getGameStateMock"
-import { getMockResponse } from "../getGameStateMock/getResponse"
+import { getMockResponseGetter } from "../getGameStateMock/getResponse"
 import { DORIN } from "../getGameStateMock/getStateTemplate"
 
 const throwIfNoPermits = (options: tJournalistState) => {
     if (!('payload' in options.buyBuildings)) throw new Error('No payload in options.buyBuildings')
 }
+
+const getBuyBuildingsExpectedResponse = getMockResponseGetter(BuildingPermitRejected.ownsOnlyPart);
+const getSellBuildingsExpectedResponse = getMockResponseGetter(SellBuildingsRejected.NoBuildings);
 
 describe('Testing getOptions', () => {
     xit('Should allow to move player in each of below cases, when player is not in prison', () => {
@@ -82,7 +85,7 @@ describe('Testing getOptions', () => {
                             }
                         ]
                     });
-                    const expected = getMockResponse({
+                    const expected = getBuyBuildingsExpectedResponse({
                         [ITALY]: BuildingPermitRejected.plegded,
                     })
                     const options = getTestableOptions(state);
@@ -114,7 +117,7 @@ describe('Testing getOptions', () => {
                         ]
                     });
                     const options = getTestableOptions(state);
-                    const expectedResponse = getMockResponse({
+                    const expectedResponse = getBuyBuildingsExpectedResponse({
                         [GREECE]: BuildingPermitRejected.alreadyBuild,
                         [ITALY]: BuildingPermitRejected.alreadyBuild,
                     })
@@ -207,7 +210,22 @@ describe('Testing getOptions', () => {
             })
             describe('Should sell buildings cases', () => {
                 it('Should allow to sell buildings when player has buildings and is not in prison', () => {
-
+                    const dorinEstates = [ ROME, MEDIOLAN, NEAPOL, SALONIKI, BARCELONA ];
+                    const state = getMockedGameState({
+                        estatesOwner: [DORIN, dorinEstates],
+                        currentPlayer: [DORIN],
+                        estatesDelta: [
+                            { estateName: ROME, props: { owner: GREEN, nrOfHouses: 1 } },
+                            { estateName: MEDIOLAN, props: { owner: GREEN, nrOfHouses: 1 } },
+                        ],
+                    });
+                    const options = getTestableOptions(state);
+                    const expected = getSellBuildingsExpectedResponse({
+                        [ITALY]: [],
+                    })
+                    if (!('payload' in options.sellBuildings)) throw new Error('No payload in options.sellBuildings')
+                    const result = options.sellBuildings.payload;
+                    expect(options.sellBuildings.payload).toEqual(expected);
                 })
             })
         })

@@ -82,6 +82,7 @@ const setCurrentPlayer = (args: tStateModifierArgs) => {
   const color = getPlayerColor(state, currentPlayerName);
   if (color === undefined) throw new Error(`Players ${currentPlayerName} color not found`)
   state.game.currentPlayer = currentPlayerName;
+  state.currentPlayerName = currentPlayerName;
   return state;
 }
 

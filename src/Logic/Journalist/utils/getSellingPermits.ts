@@ -4,11 +4,21 @@ import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
 import { tBuildingLocations, tCityFieldsByCountry, tKeyCreator, tNrOfBuildings, tSellingPermit, tSellingPermits } from "./types";
 import { getCityFieldsByCountryIfOwnedBy } from "./getCityFieldsByCountry";
 import { getAllFeasableBuildingLocations } from "./getEveryPossibleQuantityOfHouses";
-import { Bank } from "../../Bank/Bank";
+import { mapCitiesToCountries } from "../../../Functions/mapCitiesToCountries";
+import { getHotelsInBank, getHousesInBank } from "./getBuildingsInBank";
+import { tObject } from "../../types";
+import { SellBuildingsRejected } from "./constants";
+
+export const SELL_NOTHING = "Sell nothing";
 
 export type tGetSellingPermitsArgs = {
     gameState: tGameState,
     country: tCountries,
+    playerName: string,
+}
+
+export type tGetSellingPermitsForEachCountryArgs = {
+    gameState: tGameState,
     playerName: string,
 }
 
@@ -31,7 +41,7 @@ const getNrOfBuildings = (permit: tBuildingLocations, cities: tCityFieldsByCount
 export const calculatePrice = (cities: tCityFieldsByCountry, permit: tNrOfBuildings[], initialLocation: tNrOfBuildings[]) => { 
     const price = permit.reduce((acc, {nrOfHotels, nrOfHouses}, index) => {
         const baseNrOfHotels = initialLocation[index].nrOfHotels;
-        const baseNrOfHouses = initialLocation[index].nrOfHouses + 4 * (baseNrOfHotels - nrOfHotels);
+        const baseNrOfHouses: number = initialLocation[index].nrOfHouses + 4 * (baseNrOfHotels - nrOfHotels);
         const hotelsPrice: number = cities[index].hotelPrice * (baseNrOfHotels - nrOfHotels);
         const housesPrice = cities[index].housePrice * (baseNrOfHouses - nrOfHouses);
         const result = acc + 0.5 * (housesPrice + hotelsPrice);
@@ -80,10 +90,31 @@ export const getSellingPermits = (args: tGetSellingPermitsArgs) => {
     const {gameState, playerName, country} = args;
     const citiesInCountry = getCityFieldsByCountryIfOwnedBy({ gameState, countryName: country, playerName });
     const buildingLocations = citiesInCountry.map(({nrOfHouses, nrOfHotels}) => ({nrOfHotels, nrOfHouses}));
-    const bankOwnedBuildings = {nrOfHouses: Bank.nrOfHouses, nrOfHotels: Bank.nrOfHotels};
+    const housesInBank = getHousesInBank(args);
+    const hotelsInBank = getHotelsInBank(args);
+    const bankOwnedBuildings = {nrOfHouses: housesInBank, nrOfHotels: hotelsInBank};
     const permits = getAllFeasableBuildingLocations( buildingLocations, bankOwnedBuildings );
     const sortedPermits = sortPermits(permits, buildingLocations, citiesInCountry);
     return sortedPermits;
+}
+
+export const getSellingPermitsForEachCountry = (args: tGetSellingPermitsForEachCountryArgs) => {
+    const {gameState, playerName} = args;
+    const citiesInCountries = mapCitiesToCountries();
+    const countries = Object.keys(citiesInCountries) as tCountries[];
+    const sellPossibilities = countries.reduce((acc: tObject<any>, country) => {
+        if (!(country in acc)) {
+            const possibilities = getSellingPermits({gameState, playerName, country});
+            const isRejection = SELL_NOTHING in possibilities;
+            const possiblitiesWithComments = isRejection ? { reason: SellBuildingsRejected.NoBuildings } : possibilities;
+            acc[country] = {
+                ...possiblitiesWithComments,
+                country,
+            }
+        }
+        return acc;
+    }, {})
+    return sellPossibilities;
 }
 
 const getBuildingsWithUnit = (nrOfBuildings: number, unit: string) => {
@@ -105,7 +136,7 @@ export const getSellingPermitsCategory = ({ nrOfSoldHotels, nrOfSoldHouses, pric
         return `Sell ${getBuildingsWithUnit(nrOfSoldHouses, HOUSE)}, get ${price}`
     }
     if (nrOfSoldHotels === 0 && nrOfSoldHouses === 0) {
-        return 'Sell nothing'
+        return SELL_NOTHING;
     }
     throw new Error(`getSellingPermitsCategory did not produce any reasonable output for ${nrOfSoldHotels} hotels and ${nrOfSoldHouses} houses`)
 }

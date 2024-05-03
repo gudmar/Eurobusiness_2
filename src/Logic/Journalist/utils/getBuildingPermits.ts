@@ -6,6 +6,7 @@ import { sum } from "../../../Functions/sum";
 import { Bank } from "../../Bank/Bank";
 import { iCityFieldState, tFieldState } from "../../boardTypes";
 import { tObject } from "../../types";
+import { getHotelsInBank, getHousesInBank } from "./getBuildingsInBank";
 
 export type tGetBuildingPermitsArgs = {
     gameState: tGameState,
@@ -345,18 +346,6 @@ const calculateNrOfHousesThatMayStillBeBuild = (cities: iCityFieldState[]) => {
         return newAcc;
     }, 0)
     return nrOfHousesThatMayStillBeBuild;
-}
-
-const getHousesInBank = (args: tGetBuildingPermitsArgs) => {
-    const housesFromGameState = args?.gameState?.bank?.nrOfHouses;
-    const result = Bank.nrOfHouses || housesFromGameState;
-    return result;
-}
-
-const getHotelsInBank = (args: tGetBuildingPermitsArgs) => {
-    const hotelsFromState = args?.gameState?.bank?.nrOfHotels;
-    const result = Bank.nrOfHotels || hotelsFromState;
-    return result;
 }
 
 const calculatePermitsForHousesWithRejectionApply = (args: tGetBuildingPermitsForNrOfBuildings): tBuidlingApproved => {
