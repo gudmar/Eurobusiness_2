@@ -3,7 +3,7 @@ import { BuildingPermitRejected } from "../../../Journalist/utils/getBuildingPer
 import { tObject } from "../../../types";
 
 type tCountry = string;
-type tPermits = any[];
+type tPermits = tObject<any>;
 
 type delta = {
     [key: tCountry]: string | tPermits,

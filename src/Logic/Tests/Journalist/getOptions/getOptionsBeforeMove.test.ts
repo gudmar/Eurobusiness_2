@@ -4,6 +4,8 @@ import { tJournalistOutputArrayOrRejection, tJournalistState } from "../../../Jo
 import { SellBuildingsRejected } from "../../../Journalist/utils/constants"
 import { BuildingPermitRejected, NrOfHouses } from "../../../Journalist/utils/getBuildingPermits"
 import { NoBuildingPermitResults } from "../../../Journalist/utils/getBuyBuildingsOptions"
+import { getSellingPermitsCategory } from "../../../Journalist/utils/getSellingPermits"
+import { expandTestData } from "../../../Journalist/utils/sellingPermitsMock"
 import { getMockedGameState, getPlayerColor } from "../getGameStateMock/getGameStateMock"
 import { getMockResponseGetter } from "../getGameStateMock/getResponse"
 import { DORIN } from "../getGameStateMock/getStateTemplate"
@@ -220,8 +222,20 @@ describe('Testing getOptions', () => {
                         ],
                     });
                     const options = getTestableOptions(state);
+                    const EXPECTED_ITALY = expandTestData({
+                        [getSellingPermitsCategory({ nrOfSoldHotels: 0, nrOfSoldHouses: 0, price: 0 })]: [
+                            {solution: '0h_1h_1h', price: 0},
+                        ],                    
+                        [getSellingPermitsCategory({nrOfSoldHotels: 0, nrOfSoldHouses: 1, price: 50})]: [
+                            {solution: '0h_1h_0h', price: 50},
+                            {solution: '0h_0h_1h',  price: 50}
+                        ],
+                        [getSellingPermitsCategory({nrOfSoldHotels: 0, nrOfSoldHouses: 2, price: 100})]: [
+                            {solution: '0h_0h_0h', price: 100},
+                        ],
+                    }, [NEAPOL, MEDIOLAN, ROME])
                     const expected = getSellBuildingsExpectedResponse({
-                        [ITALY]: [],
+                        [ITALY]: EXPECTED_ITALY,
                     })
                     if (!('payload' in options.sellBuildings)) throw new Error('No payload in options.sellBuildings')
                     const result = options.sellBuildings.payload;
