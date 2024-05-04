@@ -105,12 +105,23 @@ export const getSellingPermitsForEachCountry = (args: tGetSellingPermitsForEachC
     const sellPossibilities = countries.reduce((acc: tObject<any>, country) => {
         if (!(country in acc)) {
             const possibilities = getSellingPermits({gameState, playerName, country});
-            const isRejection = SELL_NOTHING in possibilities;
-            const possiblitiesWithComments = isRejection ? { reason: SellBuildingsRejected.NoBuildings } : possibilities;
+            const isRejection = (SELL_NOTHING in possibilities) && Object.keys(possibilities).length === 1;
+            if (isRejection) {
+                acc[country] = {
+                    reason: SellBuildingsRejected.NoBuildings,
+                    country,
+                }
+                return acc;
+            }
             acc[country] = {
-                ...possiblitiesWithComments,
+                ...possibilities,
                 country,
             }
+            // const possiblitiesWithComments = isRejection ? { reason: SellBuildingsRejected.NoBuildings } : possibilities;
+            // acc[country] = {
+            //     ...possiblitiesWithComments,
+            //     country,
+            // }
         }
         return acc;
     }, {})
