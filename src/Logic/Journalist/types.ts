@@ -49,7 +49,7 @@ export type tJournalistState = {
     // sellBuildings: tJournalistOutputArrayOrRejection;
     sellBuildings: tJournalistOutput,
     buyEstate?: tJournalistOutput;
-    sellEstates: tJournalistOutputArrayOrRejection;
+    sellEstates: tJournalistOutput;
     plegdeEstates: tJournalistOutputArrayOrRejection;
     unplegdeEstates: tJournalistOutputArrayOrRejection;
     pay?: tJournalistOutput; // When on not guarded parking, there is no reason to explain why not to pay
