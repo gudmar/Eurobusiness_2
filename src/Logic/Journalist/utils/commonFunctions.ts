@@ -1,7 +1,10 @@
+import { tBoardField, tBoardFieldName } from "../../../Data/types";
 import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
 import { getEstate } from "../../BoardCaretaker";
+import { tFieldState } from "../../boardTypes";
 import { tObject } from "../../types";
 import { tStateModifierArgs } from "./types";
+import { descriptors } from '../../../Data/boardFields';
 
 export const getCurrentPlayerName = (state: tGameState) => state.game.currentPlayer;
 export const getPlayerColorFromPlayerName = (state: tGameState, playerName: string) => {
@@ -87,3 +90,88 @@ export const getNrOfCurrentPlayerBuildings = (state: tGameState) => {
     }, {nrOfHotels: 0, nrOfHouses: 0})
     return buildings;
 }
+
+export const getCurrentPlayerEstates = (state: tGameState) => {
+    const currentPlayerName = getCurrentPlayer(state).name;
+    const currentPlayerEstates = getPlayerEstates(state, currentPlayerName);
+    return currentPlayerEstates;
+}
+
+type tGetPlayerEstateCheckerConditionFunction = (estateDescriptor: tBoardField, boardFieldFromState: tFieldState) => boolean
+export enum EstateCheckerVariant {
+    None = 'No estate meets criteria',
+    Each = 'Each estate meets cirteria',
+    Some = 'Some estates meet cirteria',
+    OwnesSome = 'Player ownes some estates'
+}
+
+export const getPlayerEstateChecker = (
+        conditionFunction: tGetPlayerEstateCheckerConditionFunction,
+        variant: EstateCheckerVariant,
+    ) => 
+        (playerName: string, gameState: tGameState) => {
+    const playerColor = getPlayerColorFromPlayerName(gameState, playerName);
+    const getFieldByName = (fieldName: string) => {
+        const result = gameState.boardFields.find((field) => {
+            if (field?.name === fieldName) return true;
+            return false
+        })
+    }
+    const reduced = gameState.boardFields.reduce((acc, boardField) => {
+        const currentFieldName: tBoardFieldName = boardField?.name as tBoardFieldName;
+        if (!currentFieldName) throw new Error(`Field ${currentFieldName} is not in descriptors`);
+        const descriptor: tBoardField | undefined = descriptors?.[currentFieldName] as tBoardField;
+        if (!('owner' in boardField)) return acc;
+        if (boardField?.owner !== playerColor) return acc;
+        const callbackResult = conditionFunction(descriptor, boardField);
+        const result = {
+            owned: acc.owned + 1,
+            passingCondition: callbackResult ? acc.passingCondition + 1 : acc.passingCondition
+        }
+        return result;
+    }, {owned: 0, passingCondition: 0})
+    const checkSome = () => {
+        const { owned, passingCondition } = reduced;
+        if (passingCondition > 0) return true;
+        return false;
+    }
+    const checkEach = () => {
+        const { owned, passingCondition } = reduced;
+        if (owned === 0 && owned !== passingCondition) return false
+        return true;
+    }
+    const checkNone = () => {
+        const { owned, passingCondition } = reduced;
+        return passingCondition === 0
+    }
+    const checkOwnesSomeEstates = () => {
+        const { owned, passingCondition } = reduced;
+        return owned === 0
+    }
+    const checkers = {
+        [EstateCheckerVariant.Each]: checkEach,
+        [EstateCheckerVariant.None]: checkNone,
+        [EstateCheckerVariant.Some]: checkSome,
+        [EstateCheckerVariant.OwnesSome]: checkOwnesSomeEstates
+    }
+    const result = checkers[variant]();
+    return result;
+}
+
+export const getCurrentPlayerEstateChecker = (
+    conditionFunction: tGetPlayerEstateCheckerConditionFunction,
+    variant: EstateCheckerVariant,
+) => 
+    (gameState: tGameState) => {
+    const currentPlayerName = getCurrentPlayer(gameState).name;
+    const checkerFunction = getPlayerEstateChecker(conditionFunction, variant);
+    const result = checkerFunction(currentPlayerName, gameState);
+    return result;
+}
+
+export const isCurrentPlayerOwnerOfSomeEstates = getCurrentPlayerEstateChecker(() => true, EstateCheckerVariant.OwnesSome);
+export const isCurrentPlayerEachEstatePlegded = getCurrentPlayerEstateChecker((estateDescriptor: tBoardField, boardField: tFieldState) => {
+    if (!('isPlegded' in boardField)) return true;
+    const isPlegded = boardField?.isPlegded;
+    return isPlegded;
+}, EstateCheckerVariant.Each)

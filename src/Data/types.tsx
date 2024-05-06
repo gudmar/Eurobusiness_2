@@ -160,7 +160,7 @@ export type tBoard = {
     [WIEDEN]: iCityField,
 }
 
-
+export type tBoardFieldName = keyof tBoard;
 
 
 export interface iDescriptionsInLanguages {

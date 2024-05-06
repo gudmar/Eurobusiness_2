@@ -1,9 +1,10 @@
-import { ATENY, AUSTRIA, BARCELONA, GLASGOW, GREECE, GREEN, INSBRUK, ITALY, LIVERPOOL, LONDON, MADRIT, MEDIOLAN, NEAPOL, ROME, SALONIKI, SEWILLA, WIEDEN } from "../../../../Data/const"
+import { ATENY, AUSTRIA, BARCELONA, GLASGOW, GREECE, GREEN, INSBRUK, ITALY, LIVERPOOL, LONDON, MADRIT, MEDIOLAN, NEAPOL, RED, ROME, SALONIKI, SEWILLA, WIEDEN, YELLOW } from "../../../../Data/const"
 import { getTestableOptions } from "../../../Journalist/getOptions"
 import { tJournalistOutputArrayOrRejection, tJournalistState } from "../../../Journalist/types"
 import { SellBuildingsRejected } from "../../../Journalist/utils/constants"
 import { BuildingPermitRejected, NrOfHouses } from "../../../Journalist/utils/getBuildingPermits"
 import { NoBuildingPermitResults } from "../../../Journalist/utils/getBuyBuildingsOptions"
+import { PlegdeEstatesReasons } from "../../../Journalist/utils/getPlegdeOptions"
 import { getSellingPermitsCategory } from "../../../Journalist/utils/getSellingPermits"
 import { expandTestData } from "../../../Journalist/utils/sellingPermitsMock"
 import { getMockedGameState, getPlayerColor } from "../getGameStateMock/getGameStateMock"
@@ -245,18 +246,41 @@ describe('Testing getOptions', () => {
         })
         describe('Estates', () => {
             describe( 'No options case with explanation', () => {
-                it('Should not add any entry to options in case player has no estates', () => {
-
+                it('Should not add any key sellEstates to options in case player has no estates', () => {
+                    const state = getMockedGameState({});
+                    const options = getTestableOptions(state);
+                    const isSellEstateKey = 'sellEstates' in options;
+                    expect(isSellEstateKey).toBeFalsy();
                 })
                 it('Should not allow to plegde any estate when player has all estates plegded', () => {
+                    const dorinEstates = [ ROME, MEDIOLAN, NEAPOL, SALONIKI, BARCELONA ];
+                    const state = getMockedGameState({
+                        estatesOwner: [DORIN, dorinEstates],
+                        currentPlayer: [DORIN],
+                        estatesDelta: [
+                            { estateName: ROME, props: { owner: GREEN, isPlegded: true } },
+                            { estateName: MEDIOLAN, props: { owner: GREEN, isPlegded: true } },
+                            { estateName: NEAPOL, props: { owner: GREEN, isPlegded: true } },
+                            { estateName: SALONIKI, props: { owner: GREEN, isPlegded: true } },
+                            { estateName: BARCELONA, props: { owner: GREEN, isPlegded: true } },
 
+                            { estateName: LONDON, props: { owner: RED, isPlegded: true } },
+                            { estateName: ATENY, props: { owner: YELLOW, isPlegded: true } },
+                        ],
+                    });
+                    const options = getTestableOptions(state);
+                    expect(options.plegdeEstates).toEqual({reason: PlegdeEstatesReasons.EveryPlegded})
                 })
                 it('Should not add entry when player is still in prison', () => {
 
                 })
-                it('Should not add any entries when player has buildings on each estate', () => {
+                it('Should not allow to sell estates when player has buildings on each estate', () => {
 
                 })  
+                it('Should not allow to plegde estates when player has buildings on each estate', () => {
+
+                })  
+
                 it('Should not allow to sell an estate when there are no houses on it, but there are still houses on other cities in the same country', () => {
                     // Though plegding this estate may be possible
                 })
