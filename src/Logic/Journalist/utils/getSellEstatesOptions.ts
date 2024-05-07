@@ -1,9 +1,9 @@
 import BoardField from "../../../Components/Board/BoardField/BoardFiled";
-import { tBoard, tBoardField } from "../../../Data/types";
+import { tBoardField } from "../../../Data/types";
 import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
 import { tObject } from "../../types";
 import { tJournalistOptionsUnderDevelopement } from "../types"
-import { getCurrentPlayer, getCurrentPlayerEstates, getPlayerColorFromPlayerName, isCurrentPlayerInJail, processEachCountry } from "./commonFunctions";
+import { getPlayerColorFromPlayerName, getPlayerEstates, isPlayerInJail, processEachCountry } from "./commonFunctions";
 import { tProcessEachCountryCalbackArgs, tStateModifierArgs } from "./types"
 
 export enum SellEstatesReasons {
@@ -74,16 +74,15 @@ const calculateSellEstatePermits = (gameState: tGameState, playerName: string) =
 }
 
 export const getSellEstatesOptions = (args: tStateModifierArgs): tJournalistOptionsUnderDevelopement => {
-    const { options, state } = args;
-    const currentPlayerName = getCurrentPlayer(options!).name;
-    const hasCurrentPlayerEstates = getCurrentPlayerEstates(options!).length > 0;
+    const { options, state, playerName } = args;
+    const hasCurrentPlayerEstates = getPlayerEstates(options!, playerName).length > 0;
     if (!hasCurrentPlayerEstates) return state;
-    const isInJail = isCurrentPlayerInJail(options!);
+    const isInJail = isPlayerInJail(options!, playerName);
     if (isInJail) {
         state.sellEstates = { reason: SellEstatesReasons.InJail }
         return state;
     }
-    const sellEstatePermits = calculateSellEstatePermits(options!, currentPlayerName)
+    const sellEstatePermits = calculateSellEstatePermits(options!, playerName)
     state.sellEstates = sellEstatePermits;
     return state;
 }

@@ -27,6 +27,17 @@ export const getCurrentPlayer = (state: tGameState) => {
     return currentPlayer;
 }
 
+export const getPlayer = (state: tGameState, playerName: string) => {
+    const player = state.players.find(({name}) => name === playerName);
+    if (!player) throw new Error(`Cannot find player named ${playerName}`)
+    return player;
+}
+
+export const getCurrentGamePhase = (state: tGameState) => {
+    const phase = state.game.turnPhase;
+    return phase;
+}
+
 export const getCountryEstateNames = (state: tGameState, countryName: string) => {
     const result = state.boardFields.filter((estate) => {
         if ('country' in estate) { return estate.country === countryName }
@@ -75,10 +86,10 @@ export const getCurrentPlayerEstatesIfOwnsWholeCountry = (state: tGameState) => 
 }
 
 export const isCurrentPlayerInJail = (state: tGameState) => getCurrentPlayer(state)?.isInPrison;
+export const isPlayerInJail = (state: tGameState, playerName: string) => getPlayer(state, playerName)?.isInPrison;
 
-export const getNrOfCurrentPlayerBuildings = (state: tGameState) => {
-    const currentPlayerName = getCurrentPlayer(state).name;
-    const currentPlayerEstates = getPlayerEstates(state, currentPlayerName);
+export const getNrOfPlayerBuildings = (state: tGameState, playerName: string) => {
+    const currentPlayerEstates = getPlayerEstates(state, playerName);
     const buildings = currentPlayerEstates.reduce((acc, item) => {
         if ('nrOfHouses' in item && 'nrOfHotels' in item) {
             const result = {
@@ -169,6 +180,24 @@ export const getCurrentPlayerEstateChecker = (
     const result = checkerFunction(currentPlayerName, gameState);
     return result;
 }
+
+export const getNamedPlayerEstateChecker = (
+    conditionFunction: tGetPlayerEstateCheckerConditionFunction,
+    variant: EstateCheckerVariant,
+) => 
+    (gameState: tGameState, playerName: string) => {
+    const checkerFunction = getPlayerEstateChecker(conditionFunction, variant);
+    const result = checkerFunction(playerName, gameState);
+    return result;
+}
+
+export const isPlayerOwnerOfSomeEstates = getNamedPlayerEstateChecker(() => true, EstateCheckerVariant.OwnesSome);
+export const isPlayerEachEstatePlegded =  getNamedPlayerEstateChecker((estateDescriptor: tBoardField, boardField: tFieldState) => {
+    if (!('isPlegded' in boardField)) return true;
+    const isPlegded = boardField?.isPlegded;
+    return isPlegded;
+}, EstateCheckerVariant.Each)
+
 
 export const isCurrentPlayerOwnerOfSomeEstates = getCurrentPlayerEstateChecker(() => true, EstateCheckerVariant.OwnesSome);
 export const isCurrentPlayerEachEstatePlegded = getCurrentPlayerEstateChecker((estateDescriptor: tBoardField, boardField: tFieldState) => {

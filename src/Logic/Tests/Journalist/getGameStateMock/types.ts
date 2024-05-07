@@ -1,5 +1,6 @@
 import { BLUE_CARDS_SET_NAME, RED_CARDS_SET_NAME, SPECIAL_CARD_BLUE, SPECIAL_CARD_RED } from "../../../../Data/chanceCards"
 import { tGameState } from "../../../../Functions/PersistRetrieveGameState/types"
+import { TurnPhases } from "../../../types"
 // import { iCityFieldState, iNonCityEstatesFieldState } from "../../../boardTypes"
 
 type tProp = {
@@ -60,6 +61,7 @@ export type tGetGameStateMockOptions = {
     toJail?: tPutPlayersWithNamesToJail,
     playersWait?: tSetTurnsToWaitOnPlayers,
     currentPlayer?: tChangeCurrentPlayer,
+    setGamePhase?: TurnPhases,
 }
 
 export type tProps = {
