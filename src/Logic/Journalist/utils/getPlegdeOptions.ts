@@ -1,9 +1,10 @@
 import { tJournalistOptionsUnderDevelopement } from "../types";
-import { isCurrentPlayerEachEstatePlegded } from "./commonFunctions";
+import { isCurrentPlayerEachEstatePlegded, isCurrentPlayerInJail } from "./commonFunctions";
 import { tStateModifierArgs } from "./types";
 
 export enum PlegdeEstatesReasons {
     EveryPlegded = 'Every estate owned by player is already plegded',
+    InJail = 'When player is in jail, he cannot mortgage estates'
 }
 
 export const getPlegdeOptions = (args: tStateModifierArgs): tJournalistOptionsUnderDevelopement => {
@@ -14,5 +15,11 @@ export const getPlegdeOptions = (args: tStateModifierArgs): tJournalistOptionsUn
         state.plegdeEstates = { reason: PlegdeEstatesReasons.EveryPlegded }
         return state;
     }
+    const isInJail = isCurrentPlayerInJail(options!);
+    if (isInJail) {
+        state.plegdeEstates = {reason: PlegdeEstatesReasons.InJail}
+        return state;
+    }
+    
     return state
 }

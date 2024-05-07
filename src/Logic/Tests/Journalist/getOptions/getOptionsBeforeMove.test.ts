@@ -5,6 +5,7 @@ import { SellBuildingsRejected } from "../../../Journalist/utils/constants"
 import { BuildingPermitRejected, NrOfHouses } from "../../../Journalist/utils/getBuildingPermits"
 import { NoBuildingPermitResults } from "../../../Journalist/utils/getBuyBuildingsOptions"
 import { PlegdeEstatesReasons } from "../../../Journalist/utils/getPlegdeOptions"
+import { SellEstatesReasons } from "../../../Journalist/utils/getSellEstatesOptions"
 import { getSellingPermitsCategory } from "../../../Journalist/utils/getSellingPermits"
 import { expandTestData } from "../../../Journalist/utils/sellingPermitsMock"
 import { getMockedGameState, getPlayerColor } from "../getGameStateMock/getGameStateMock"
@@ -271,13 +272,31 @@ describe('Testing getOptions', () => {
                     const options = getTestableOptions(state);
                     expect(options.plegdeEstates).toEqual({reason: PlegdeEstatesReasons.EveryPlegded})
                 })
-                it('Should not add entry when player is still in prison', () => {
+                it('Should add reason when for plegding estates when player is in preason', () => {
+                    const dorinEstates = [ ROME, MEDIOLAN, NEAPOL, SALONIKI, BARCELONA ];
+                    const state = getMockedGameState({
+                        estatesOwner: [DORIN, dorinEstates],
+                        currentPlayer: [DORIN],
+                        toJail: [DORIN],
+                    });
+                    const options = getTestableOptions(state);
+                    expect(options.plegdeEstates).toEqual({reason: PlegdeEstatesReasons.InJail})
 
                 })
-                it('Should not allow to sell estates when player has buildings on each estate', () => {
-
+                it('Should add reason when for selling estates when player is in preason', () => {
+                    const dorinEstates = [ ROME, MEDIOLAN, NEAPOL, SALONIKI, BARCELONA ];
+                    const state = getMockedGameState({
+                        estatesOwner: [DORIN, dorinEstates],
+                        currentPlayer: [DORIN],
+                        toJail: [DORIN],
+                    });
+                    const options = getTestableOptions(state);
+                    expect(options.sellEstates).toEqual({reason: SellEstatesReasons.InJail})
+                })
+                it('Should not allow to sell estates when player has buildings on it', () => {
+                            
                 })  
-                it('Should not allow to plegde estates when player has buildings on each estate', () => {
+                it('Should not allow to plegde estates when player has buildings on it', () => {
 
                 })  
 
