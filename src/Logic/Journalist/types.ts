@@ -63,7 +63,7 @@ export type tJournalistOptionsUnderDevelopement = {
     buyBuildings?:  tJournalistOutputObject;
     sellBuildings?: tJournalistOutputObject;
     buyEstate?: tJournalistOutput;
-    sellEstates?: tJournalistOutputArrayOrRejection;
+    sellEstates?: tSellEstatesOptions;
     plegdeEstates?: tJournalistOutputArrayOrRejection;
     unplegdeEstates?: tJournalistOutputArrayOrRejection;
     pay?: tJournalistOutput; // When on not guarded parking, there is no reason to explain why not to pay
@@ -72,3 +72,14 @@ export type tJournalistOptionsUnderDevelopement = {
     move?: tJournalistOutputBooleanOrRejection;
     endPhase?: tJournalistOutputBooleanOrRejection;
 }
+
+export type tSellEstatePrivilage = {
+    reason: string,
+    initilaPrice: number,
+}
+
+export type tSellEstatesOptions = {
+    [countryName: string]: {
+        [cityName: string]: tRejection
+    } | tRejection
+} | tRejection;

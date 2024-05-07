@@ -3,8 +3,9 @@ import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
 import { getEstate } from "../../BoardCaretaker";
 import { tFieldState } from "../../boardTypes";
 import { tObject } from "../../types";
-import { tStateModifierArgs } from "./types";
+import { tProcessEachCountryCallback, tStateModifierArgs } from "./types";
 import { descriptors } from '../../../Data/boardFields';
+import { mapCitiesToCountries, mapEstatesToCountries } from "../../../Functions/mapCitiesToCountries";
 
 export const getCurrentPlayerName = (state: tGameState) => state.game.currentPlayer;
 export const getPlayerColorFromPlayerName = (state: tGameState, playerName: string) => {
@@ -124,7 +125,7 @@ export const getPlayerEstateChecker = (
         if (!('owner' in boardField)) return acc;
         if (boardField?.owner !== playerColor) return acc;
         const callbackResult = conditionFunction(descriptor, boardField);
-        const result = {
+        const result: any = {
             owned: acc.owned + 1,
             passingCondition: callbackResult ? acc.passingCondition + 1 : acc.passingCondition
         }
@@ -137,7 +138,7 @@ export const getPlayerEstateChecker = (
     }
     const checkEach = () => {
         const { owned, passingCondition } = reduced;
-        if (owned === 0 && owned !== passingCondition) return false
+        if (owned === 0 || owned !== passingCondition) return false
         return true;
     }
     const checkNone = () => {
@@ -175,3 +176,15 @@ export const isCurrentPlayerEachEstatePlegded = getCurrentPlayerEstateChecker((e
     const isPlegded = boardField?.isPlegded;
     return isPlegded;
 }, EstateCheckerVariant.Each)
+
+export const processEachCountry = (callback: tProcessEachCountryCallback, gameState: tGameState) => {
+    const countries = mapEstatesToCountries();
+    const countryEntries = Object.entries(countries);
+    const processedCountries = countryEntries.reduce((acc, [countryName, cities]) => {
+        const processedCountry = callback({
+            gameState, countryName, countryBoardFields: cities
+        });
+        return {...acc, ...processedCountry}
+    }, {});
+    return processedCountries;
+}

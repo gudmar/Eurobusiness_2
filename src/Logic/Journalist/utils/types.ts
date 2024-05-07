@@ -1,6 +1,5 @@
+import { tEstateFieldWithName } from "../../../Functions/mapCitiesToCountries"
 import { tGameState } from "../../../Functions/PersistRetrieveGameState/types"
-import { iAny } from "../../../Types/types"
-import { iCityFieldState } from "../../boardTypes"
 import { tObject } from "../../types"
 import { tJournalistOptionsUnderDevelopement } from "../types"
 
@@ -43,3 +42,11 @@ export type tCityFieldsByCountry = tGenericCityFieldsByCountry<tCityBuildingsMan
 export type tStateModifierArgs = {state: tJournalistOptionsUnderDevelopement, options?: tGameState}
 
 export type tBuildingLimitKey = 'nrOfHotelsPurchasedInRound' | 'nrOfHousesPurchasedInTurn';
+
+export type tProcessEachCountryCalbackArgs = {
+    gameState: tGameState,
+    countryName: string,
+    countryBoardFields: tEstateFieldWithName[]
+}
+
+export type tProcessEachCountryCallback = (args: tProcessEachCountryCalbackArgs) => tObject<any>
