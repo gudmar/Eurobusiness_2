@@ -30,11 +30,11 @@ const getBuyEstate = (args: tStateModifierArgs): tJournalistOptionsUnderDevelope
     state.buyEstate = { reason: 'You are not on any estate at present' }
     return state;
 } 
-const getTestableOptionsWithSellEstates = (args: tStateModifierArgs): tJournalistOptionsUnderDevelopement => {
-    const { options, state } = args;
-    state.sellEstates = []
-    return state;
-}
+// const getTestableOptionsWithSellEstates = (args: tStateModifierArgs): tJournalistOptionsUnderDevelopement => {
+//     const { options, state } = args;
+//     state.sellEstates = []
+//     return state;
+// }
 const getTestableOptionsWithPlegdeEstates = (args: tStateModifierArgs): tJournalistOptionsUnderDevelopement => {
     const { options, state } = args;
     state.plegdeEstates = []
@@ -102,12 +102,13 @@ const applyStateToJournalistOptions = applyStateModifiers<tJournalistOptionsUnde
 // WARNING:
 // This is not for chance card actions. Chance card actions
 // are a separate responsiblity
-export const getTestableOptions = (state: tGameState): tJournalistState => {
+export const getTestableOptions = (state: tGameState, playerName: string): tJournalistState => {
     // const result = {};
     const result = applyStateToJournalistOptions(
         {
             state: {},
             options: state,
+            playerName,
         },
         [
             getTestableOptionsWithBuyBuildings,

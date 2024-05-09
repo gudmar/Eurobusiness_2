@@ -1,4 +1,4 @@
-import { ATENY, AUSTRIA, BARCELONA, GLASGOW, GREECE, GREEN, INSBRUK, ITALY, LIVERPOOL, LONDON, MADRIT, MEDIOLAN, NEAPOL, RED, ROME, SALONIKI, SEWILLA, WIEDEN, YELLOW } from "../../../../Data/const"
+import { ATENY, AUSTRIA, BARCELONA, EAST_RAILWAYS, GLASGOW, GREECE, GREEN, INSBRUK, ITALY, LIVERPOOL, LONDON, MADRIT, MEDIOLAN, NEAPOL, POWER_STATION, RED, ROME, SALONIKI, SEWILLA, UK, WIEDEN, YELLOW } from "../../../../Data/const"
 import { getTestableOptions } from "../../../Journalist/getOptions"
 import { tJournalistOutputArrayOrRejection, tJournalistState } from "../../../Journalist/types"
 import { SellBuildingsRejected } from "../../../Journalist/utils/constants"
@@ -8,9 +8,10 @@ import { PlegdeEstatesReasons } from "../../../Journalist/utils/getPlegdeOptions
 import { SellEstatesReasons } from "../../../Journalist/utils/getSellEstatesOptions"
 import { getSellingPermitsCategory } from "../../../Journalist/utils/getSellingPermits"
 import { expandTestData } from "../../../Journalist/utils/sellingPermitsMock"
+import { TurnPhases } from "../../../types"
 import { getMockedGameState, getPlayerColor } from "../getGameStateMock/getGameStateMock"
 import { getMockResponseGetter } from "../getGameStateMock/getResponse"
-import { DORIN } from "../getGameStateMock/getStateTemplate"
+import { BALIN, DORIN } from "../getGameStateMock/getStateTemplate"
 
 const throwIfNoPermits = (options: tJournalistState) => {
     if (!('payload' in options.buyBuildings)) throw new Error('No payload in options.buyBuildings')
@@ -29,9 +30,57 @@ describe('Testing getOptions', () => {
                 xit('Should return a reason for no permit to buy houses, when player cannot purchase them', () => {
 
                 })
+                it('Should return reason notPlayerTurn, for buying houses when options cauculated for player not being a current player', () => {
+                    const dorinEstates = [ SALONIKI, ATENY, NEAPOL, MEDIOLAN, BARCELONA, MADRIT, LIVERPOOL, LONDON, GLASGOW ];
+                    const state = getMockedGameState({
+                        currentPlayer: [BALIN],
+                        estatesOwner: [DORIN, dorinEstates],
+                        estatesDelta: [
+                            {
+                                estateName: WIEDEN,
+                                props: {
+                                    owner: YELLOW,
+                                }
+                            },
+                            {
+                                estateName: INSBRUK,
+                                props: {
+                                    owner: YELLOW,
+                                }
+                            }
+                        ]
+
+                    });
+                    const options = getTestableOptions(state, DORIN);
+                    expect(options.buyBuildings).toEqual({reason: NoBuildingPermitResults.NotGoodMoment});
+                })
+                it('Should return reaosn notPlayerTurn for buying houses when palayer already moved', () => {
+                    const dorinEstates = [ SALONIKI, ATENY, NEAPOL, MEDIOLAN, BARCELONA, MADRIT, LIVERPOOL, LONDON, GLASGOW ];
+                    const state = getMockedGameState({
+                        currentPlayer: [DORIN],
+                        estatesOwner: [DORIN, dorinEstates],
+                        estatesDelta: [
+                            {
+                                estateName: WIEDEN,
+                                props: {
+                                    owner: YELLOW,
+                                }
+                            },
+                            {
+                                estateName: INSBRUK,
+                                props: {
+                                    owner: YELLOW,
+                                }
+                            }
+                        ],
+                        setGamePhase: TurnPhases.AfterMove,
+                    });
+                    const options = getTestableOptions(state, DORIN);
+                    expect(options.buyBuildings).toEqual({reason: NoBuildingPermitResults.NotGoodMoment});
+                })
                 it('Should not add a possiblity to buy buildings when player still did not move for the first time', () => {
                     const state = getMockedGameState();
-                    const options = getTestableOptions(state);
+                    const options = getTestableOptions(state, DORIN);
                     expect(options.buyBuildings).toEqual({reason: NoBuildingPermitResults.GameNotStartedYet})
                 })
                 it('Should not add possibility to buy houses and return a reason NOFullCountries when player does not control every city in some conutry', () => {
@@ -51,7 +100,7 @@ describe('Testing getOptions', () => {
                         }).map(({name}) => name);
                         return ownedEstateNames;
                     })()
-                    const options = getTestableOptions(state);
+                    const options = getTestableOptions(state, DORIN);
                     expect(listOfDorinsEstateNames).toEqual(dorinEstates)
                     expect(options.buyBuildings).toEqual({reason: NoBuildingPermitResults.NoFullCountries});
                 });
@@ -62,7 +111,7 @@ describe('Testing getOptions', () => {
                         currentPlayer: [DORIN],
                         housesInTurn: [[3, DORIN]],
                     });
-                    const options = getTestableOptions(state);
+                    const options = getTestableOptions(state, DORIN);
                     expect(options.buyBuildings).toEqual({reason: NoBuildingPermitResults.HousePurchaseLimitReached})
                 });
                 it('Should not add possiblity to buy hotels when player already bought 3 of them in a round, but has where to build them', () => {
@@ -72,7 +121,7 @@ describe('Testing getOptions', () => {
                         currentPlayer: [DORIN],
                         hotelsInRound: [[3, DORIN]],
                     });
-                    const options = getTestableOptions(state);
+                    const options = getTestableOptions(state, DORIN);
                     expect(options.buyBuildings).toEqual({reason: NoBuildingPermitResults.HotelPurcahseLimitReached})
                 })
                 it('Should not add possiblity to buy buildings when player owns a country, but a city in it is mortgaged', () => {
@@ -92,7 +141,7 @@ describe('Testing getOptions', () => {
                     const expected = getBuyBuildingsExpectedResponse({
                         [ITALY]: BuildingPermitRejected.plegded,
                     })
-                    const options = getTestableOptions(state);
+                    const options = getTestableOptions(state, DORIN);
                     if (!('payload' in options.buyBuildings)) throw new Error('Payload not in buyBuildings')
                     expect(options.buyBuildings.payload).toEqual(expected)
                 })
@@ -103,7 +152,7 @@ describe('Testing getOptions', () => {
                         currentPlayer: [DORIN],
                         toJail: [DORIN],
                     });
-                    const options = getTestableOptions(state);
+                    const options = getTestableOptions(state, DORIN);
                     expect(options.buyBuildings).toEqual({ reason: NoBuildingPermitResults.InJail })    
                 })
                 it('Should not add a possiblity to buy buildings when player has a country, but no more room for buildings', () => {
@@ -120,7 +169,7 @@ describe('Testing getOptions', () => {
                             { estateName: ROME, props: { owner: GREEN, nrOfHotels: 4 } },
                         ]
                     });
-                    const options = getTestableOptions(state);
+                    const options = getTestableOptions(state, DORIN);
                     const expectedResponse = getBuyBuildingsExpectedResponse({
                         [GREECE]: BuildingPermitRejected.alreadyBuild,
                         [ITALY]: BuildingPermitRejected.alreadyBuild,
@@ -136,7 +185,7 @@ describe('Testing getOptions', () => {
                             currentPlayer: [DORIN],
                             setMoney: [[399, DORIN]]
                         });
-                        const options = getTestableOptions(state);
+                        const options = getTestableOptions(state, DORIN);
                         expect(options.buyBuildings).toEqual({reason: NoBuildingPermitResults.NoMoney})    
                     })
                 })
@@ -153,7 +202,7 @@ describe('Testing getOptions', () => {
                         estatesOwner: [DORIN, dorinEstates],
                         currentPlayer: [DORIN],
                     });
-                    const options = getTestableOptions(state);
+                    const options = getTestableOptions(state, DORIN);
                     if (!('payload' in options.buyBuildings)) throw new Error('Payload not in options.buyBuildings');
                     const permits = options.buyBuildings.payload;
                     const countryNamesNotAustria = Object.keys(permits).filter((countryName) => countryName !== AUSTRIA)
@@ -192,7 +241,7 @@ describe('Testing getOptions', () => {
                         estatesOwner: [DORIN, dorinEstates],
                         currentPlayer: [DORIN],
                     });
-                    const options = getTestableOptions(state);
+                    const options = getTestableOptions(state, DORIN);
                     const expected = { reason: SellBuildingsRejected.NoBuildings}
                     expect(options.sellBuildings).toEqual(expected);
                 })
@@ -207,7 +256,7 @@ describe('Testing getOptions', () => {
                         ],
                         toJail: [DORIN],
                     });
-                    const options = getTestableOptions(state);
+                    const options = getTestableOptions(state, DORIN);
                     const expected = { reason: SellBuildingsRejected.InJail}
                     expect(options.sellBuildings).toEqual(expected);
                 })
@@ -223,7 +272,7 @@ describe('Testing getOptions', () => {
                             { estateName: MEDIOLAN, props: { owner: GREEN, nrOfHouses: 1 } },
                         ],
                     });
-                    const options = getTestableOptions(state);
+                    const options = getTestableOptions(state, DORIN);
                     const EXPECTED_ITALY = expandTestData({
                         [getSellingPermitsCategory({ nrOfSoldHotels: 0, nrOfSoldHouses: 0, price: 0 })]: [
                             {solution: '0h_1h_1h', price: 0},
@@ -249,7 +298,7 @@ describe('Testing getOptions', () => {
             describe( 'No options case with explanation', () => {
                 it('Should not add any key sellEstates to options in case player has no estates', () => {
                     const state = getMockedGameState({});
-                    const options = getTestableOptions(state);
+                    const options = getTestableOptions(state, DORIN);
                     const isSellEstateKey = 'sellEstates' in options;
                     expect(isSellEstateKey).toBeFalsy();
                 })
@@ -269,7 +318,7 @@ describe('Testing getOptions', () => {
                             { estateName: ATENY, props: { owner: YELLOW, isPlegded: true } },
                         ],
                     });
-                    const options = getTestableOptions(state);
+                    const options = getTestableOptions(state, DORIN);
                     expect(options.plegdeEstates).toEqual({reason: PlegdeEstatesReasons.EveryPlegded})
                 })
                 it('Should add reason when for plegding estates when player is in preason', () => {
@@ -279,7 +328,7 @@ describe('Testing getOptions', () => {
                         currentPlayer: [DORIN],
                         toJail: [DORIN],
                     });
-                    const options = getTestableOptions(state);
+                    const options = getTestableOptions(state, DORIN);
                     expect(options.plegdeEstates).toEqual({reason: PlegdeEstatesReasons.InJail})
 
                 })
@@ -290,12 +339,58 @@ describe('Testing getOptions', () => {
                         currentPlayer: [DORIN],
                         toJail: [DORIN],
                     });
-                    const options = getTestableOptions(state);
+                    const options = getTestableOptions(state, DORIN);
                     expect(options.sellEstates).toEqual({reason: SellEstatesReasons.InJail})
                 })
                 it('Should not allow to sell estates when player has buildings on it', () => {
-                            
+                        const dorinEstates = [ ROME, MEDIOLAN, NEAPOL, SALONIKI, BARCELONA, ATENY ];
+                        const state = getMockedGameState({
+                            estatesOwner: [DORIN, dorinEstates],
+                            currentPlayer: [DORIN],
+                            estatesDelta: [
+                                { estateName: ROME, props: { owner: GREEN } },
+                                { estateName: MEDIOLAN, props: { owner: GREEN } },
+                                { estateName: NEAPOL, props: { owner: GREEN, nrOfHouses: 2} },
+                                { estateName: SALONIKI, props: { owner: GREEN } },
+                                { estateName: ATENY, props: { owner: GREEN, nrOfHotels: 1 } }, // Not a valid case, normally 1 hotel with no houses on neighbour shouls not happen
+                                { estateName: BARCELONA, props: { owner: GREEN } },
+    
+                                { estateName: LONDON, props: { owner: RED} },
+                            ],
+                        });
+                        const options = getTestableOptions(state, DORIN);
+                        if (!('payload' in options.sellEstates)) {
+                            console.log('Received ', options.sellEstates)
+                            throw new Error('Payload expected')
+                        }
+                        const outputForItaly = options.sellEstates.payload[ITALY]
+                        const outputForGreece = options.sellEstates.payload[GREECE]
+                        const outputForLondon = options.sellEstates.payload[UK][LONDON]
+                        const outputForLiverpol = options.sellEstates.payload[UK][LIVERPOOL]
+
+                        expect(outputForItaly).toEqual({reason: SellEstatesReasons.Buildings})
+                        expect(outputForGreece).toEqual({reason: SellEstatesReasons.Buildings})
+                        expect(outputForLondon).toEqual({reason: SellEstatesReasons.NotOwner})
+                        expect(outputForLiverpol).toEqual({reason: SellEstatesReasons.NotOwner})
                 })  
+                it('Should return reason not an owner for estates other then city when player is not an owner', () => {
+                    const dorinEstates = [ ROME, MEDIOLAN, NEAPOL, SALONIKI, BARCELONA, ATENY ];
+                    const state = getMockedGameState({
+                        estatesOwner: [DORIN, dorinEstates],
+                        currentPlayer: [DORIN],
+                    });
+                    const options = getTestableOptions(state, DORIN);
+                    if (!('payload' in options.sellEstates)) {
+                        console.log('Received ', options.sellEstates)
+                        throw new Error('Payload expected')
+                    }
+                    const outputForRailway = options.sellEstates.payload[EAST_RAILWAYS]
+                    const outputForPowerPlant = options.sellEstates.payload[POWER_STATION]
+
+                    expect(outputForRailway).toEqual({reason: SellEstatesReasons.NotOwner})
+                    expect(outputForPowerPlant).toEqual({reason: SellEstatesReasons.NotOwner})
+
+                })
                 it('Should not allow to plegde estates when player has buildings on it', () => {
 
                 })  

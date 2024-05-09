@@ -3,6 +3,7 @@ import { applyStateModifiers, tStateModifier } from "../../../../Functions/apply
 import { tGameState } from "../../../../Functions/PersistRetrieveGameState/types";
 import { iNonCityEstatesFieldState, tEstateField } from "../../../boardTypes";
 import { iPlayerSnapshot } from "../../../Player/types";
+import { TurnPhases } from "../../../types";
 import { getStateMock } from "./getStateTemplate";
 import { 
   tChangeInEstate, tGetGameStateMockOptions,
@@ -109,7 +110,7 @@ type tPlayerKeys = keyof iPlayerSnapshot;
 const getPlayerPropChanger = (propName: tPlayerKeys, keyInOptions: tOptionsKeys) => (args: tStateModifierArgs) => {
   const { state, options } = args;
   const deltas = options?.[keyInOptions];
-  if (deltas === undefined) return state;
+  if (deltas === undefined || !(Array.isArray(deltas))) return state;
   deltas?.forEach((delta) => {
     const [value, playerName] = delta as [unknown, string];
     const playerIndex = state.players.findIndex(({name}) => name === playerName);
@@ -126,6 +127,14 @@ const setMoney = getPlayerPropChanger('money', 'setMoney');
 const setCards = getPlayerPropChanger('specialCards', 'setCards');
 // const sendToJail = getPlayerPropChanger('isInPrison', 'toJail');
 const setTurnsToWait = getPlayerPropChanger('nrTurnsToWait', 'playersWait');
+
+const setGamePhase = (args: tStateModifierArgs) => {
+  const { options, state } = args;
+  if ('setGamePhase' in options!) {
+    state.game.turnPhase = options.setGamePhase as TurnPhases
+  }
+  return state
+}
 
 type tGameStateModifier = (args: tStateModifierArgs) => tGameState
 
@@ -156,9 +165,10 @@ export const getMockedGameState = (options?: tGetGameStateMockOptions) => {
       sendToJail,
       setTurnsToWait,
       setCurrentPlayer,
+      setGamePhase,
     ]
     const readyState = applyStateModifiersToGameState(
-      {state, options} as {state: tGameState, options: tGetGameStateMockOptions},
+      {state, options} as {state: tGameState, options: tGetGameStateMockOptions, playerName: string},
       modifiers,
     );
     return readyState;

@@ -27,9 +27,7 @@ export const playerColorFromNameInState = (playerName: string, state: tGameState
 
 export const getCityFieldsByCountryIfOwnedBy = (args: tGetCityFieldByCountryIfOwnedByArgs): tCityFieldsByCountry => {
     const { gameState, playerName } = args;
-    console.log(Players.players)
     const playerColor = playerColorFromNameInState(playerName, gameState)
-    // const playerColor = Players.playerNameToPlayerColor(playerName);
     const cities = getCityFieldsByCountry(args);
     const citiesOwned = cities.filter(({owner}) => owner === playerColor)
     const result = cities.length === citiesOwned.length ? cities : []

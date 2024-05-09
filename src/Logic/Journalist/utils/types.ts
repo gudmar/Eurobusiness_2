@@ -39,7 +39,7 @@ type tCityBuildingsManagement = { nrOfHotels: number, nrOfHouses: number, houseP
 type tGenericCityFieldsByCountry<T extends tCityBuildingsManagement> = T;
 export type tCityFieldsByCountry = tGenericCityFieldsByCountry<tCityBuildingsManagement>[];
 
-export type tStateModifierArgs = {state: tJournalistOptionsUnderDevelopement, options?: tGameState}
+export type tStateModifierArgs = {state: tJournalistOptionsUnderDevelopement, options?: tGameState, playerName: string}
 
 export type tBuildingLimitKey = 'nrOfHotelsPurchasedInRound' | 'nrOfHousesPurchasedInTurn';
 
