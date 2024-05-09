@@ -1,8 +1,10 @@
 import BoardField from "../../../Components/Board/BoardField/BoardFiled";
-import { tBoardField } from "../../../Data/types";
+import { iCityField, iNonCityEstates, tBoardField } from "../../../Data/types";
+import { createPath } from "../../../Functions/createPath";
 import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
+import { tFieldState } from "../../boardTypes";
 import { tObject } from "../../types";
-import { tJournalistOptionsUnderDevelopement } from "../types"
+import { OptionTypes, tJournalistOptionsUnderDevelopement } from "../types"
 import { getPlayerColorFromPlayerName, getPlayerEstates, isPlayerInJail, processEachCountry } from "./commonFunctions";
 import { tProcessEachCountryCalbackArgs, tStateModifierArgs } from "./types"
 
@@ -13,7 +15,7 @@ export enum SellEstatesReasons {
     Allowed = 'Player is privilaged to sell this estate'
 }
 
-const areBuildings = (boardFields: tBoardField[]) => {
+const areBuildings = (boardFields: tFieldState[]) => {
     const result = boardFields.some((boardField) => {
         if (!('nrOfHotels' in boardField)) return false;
         if (!('nrOfHouses' in boardField)) return false;
@@ -23,21 +25,32 @@ const areBuildings = (boardFields: tBoardField[]) => {
     return result;
 }
 
-const checkIfPlayerOwnsEveryEstate = (boardFields: tBoardField[], playerColor: string) => {
-    const result = boardFields.every((boardField: tBoardField) => {
+const checkIfPlayerOwnsEveryEstate = (boardFields: tFieldState[], playerColor: string) => {
+    const result = boardFields.every((boardField: tFieldState) => {
         if (!('owner' in boardField)) return false;
         return boardField.owner === playerColor
     })
     return result;
 }
 
-const getQuotation = (boardField: tBoardField) => {
+const getQuotation = (boardField: tFieldState) => {
     if (!('price' in boardField) || !('isPlegded' in boardField)) throw new Error('Cannot get quotation for board field');
     const initilaPrice = boardField.isPlegded ? boardField.price / 4 : boardField.price / 2;
     return {
         reason: SellEstatesReasons.Allowed,
         initilaPrice
     }
+}
+
+type tEstateBoardField = iCityField | iNonCityEstates;
+
+const getCountryBoardFieldsFromGameState = (gameState: tGameState, countryName: string): tFieldState[] => {
+    const result = gameState.boardFields.filter((filed) => {
+        if (!('country' in filed)) { return false }
+        if (filed.country === countryName) return true;
+        return false;
+    })
+    return result;
 }
 
 const calculateSellEstatePermits = (gameState: tGameState, playerName: string) => {
@@ -47,8 +60,10 @@ const calculateSellEstatePermits = (gameState: tGameState, playerName: string) =
         countryBoardFields,
     }: tProcessEachCountryCalbackArgs) => {
         const playerColor = getPlayerColorFromPlayerName(gameState, playerName);
-        const doesPlayerOwnEveryEstate = checkIfPlayerOwnsEveryEstate(countryBoardFields, playerColor!);
-        const areAnyBuildings = areBuildings(countryBoardFields);
+        const countryBoardFieldsFromGameState = getCountryBoardFieldsFromGameState(gameState, countryName);
+        console.log('countryBoardFieldsFromGameState', countryBoardFieldsFromGameState)
+        const doesPlayerOwnEveryEstate = checkIfPlayerOwnsEveryEstate(countryBoardFieldsFromGameState, playerColor!);
+        const areAnyBuildings = areBuildings(countryBoardFieldsFromGameState);
         if (doesPlayerOwnEveryEstate && areAnyBuildings) {
             const result = {
                 [countryName]: {
@@ -57,14 +72,16 @@ const calculateSellEstatePermits = (gameState: tGameState, playerName: string) =
             }
             return result;
         }
-        const result = countryBoardFields.reduce((acc: tObject<any>, boardField) => {
-            if (!('owner' in boardField) && !('name' in boardField)) return acc;
-            if (boardField.owner !== playerName) {
-                acc[boardField.name] = { reason: SellEstatesReasons.NotOwner }
+        const result = countryBoardFieldsFromGameState.reduce((acc: tObject<any>, boardField) => {
+            if (!('owner' in boardField) || !('name' in boardField)) return acc;
+            createPath(acc, [countryName, boardField.name])
+            if (boardField.owner !== playerColor) {
+                // console.log('BOARD FIELD', boardField)
+                acc[countryName][boardField.name] = { reason: SellEstatesReasons.NotOwner }
                 return acc;
             };
             const quotation = getQuotation(boardField);
-            acc[boardField.name] = quotation;
+            acc[countryName][boardField.name] = quotation;
             return acc;
         }, {})
         return result;
@@ -82,7 +99,11 @@ export const getSellEstatesOptions = (args: tStateModifierArgs): tJournalistOpti
         state.sellEstates = { reason: SellEstatesReasons.InJail }
         return state;
     }
-    const sellEstatePermits = calculateSellEstatePermits(options!, playerName)
+    const sellEstatePermits = {
+        isMandatory: false,
+        type:  OptionTypes.AuctionEstate,
+        payload: calculateSellEstatePermits(options!, playerName)
+    }
     state.sellEstates = sellEstatePermits;
     return state;
 }
