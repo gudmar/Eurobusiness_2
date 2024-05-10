@@ -2,7 +2,7 @@ import { createPath } from "../../../Functions/createPath";
 import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
 import { roundToMultiplicity } from "../../../Functions/round";
 import { tFieldState } from "../../boardTypes";
-import { tObject } from "../../types";
+import { tObject, TurnPhases } from "../../types";
 import { OptionTypes, tJournalistOptionsUnderDevelopement } from "../types";
 import { areBuildings, arePlegded, getCountryBoardFieldsFromGameState, getPlayerColorFromPlayerName, isCurrentPlayerEachEstatePlegded, isCurrentPlayerInJail, isPlayerEachEstatePlegded, hasPlayerEachEstateUnplegded, processEachCountry, getPlayer } from "./commonFunctions";
 import { tProcessEachCountryCalbackArgs, tStateModifierArgs } from "./types";
@@ -12,7 +12,9 @@ export enum UnplegdeEstatesReasons {
     InJail = 'Not possible when player is in jail',
     Allowed = 'Allowed',
     NotOwner = 'Player has to be an owner',
-    NoMoney = 'Player has not enough money to buy out this estate'
+    NoMoney = 'Player has not enough money to buy out this estate',
+    NotGoodMoment = 'Cannot buyout from mortgage after move',
+    WrongTurn = 'Cannot buyout from mortgage in another players turn'
 }
 
 const SMALLEST_DENOMINATION = 5;
@@ -71,6 +73,16 @@ export const getUnplegdeOptions = (args: tStateModifierArgs): tJournalistOptions
     }
     if (isEveryUnplegded) {
         state.unplegdeEstates = { reason: UnplegdeEstatesReasons.EveryUnplegded }
+        return state;
+    }
+    const isProperGamePhase = options!.game.turnPhase === TurnPhases.BeforeMove;
+    if (!isProperGamePhase) {
+        state.unplegdeEstates = { reason: UnplegdeEstatesReasons.NotGoodMoment }
+        return state;
+    }
+    const isThisPlayersTurn = options!.game.currentPlayer === playerName
+    if (!isThisPlayersTurn) {
+        state.unplegdeEstates = { reason: UnplegdeEstatesReasons.WrongTurn }
         return state;
     }
     const unplegdePermits = {
