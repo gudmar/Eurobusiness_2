@@ -181,6 +181,43 @@ export const getCurrentPlayerEstateChecker = (
     return result;
 }
 
+export const getCountryBoardFieldsFromGameState = (gameState: tGameState, countryName: string): tFieldState[] => {
+    const result = gameState.boardFields.filter((filed) => {
+        if (!('country' in filed)) { return false }
+        if (filed.country === countryName) return true;
+        return false;
+    })
+    return result;
+}
+
+export const arePlegded = (boardFields: tFieldState[]) => {
+    const result = boardFields.some((boardField) => {
+        if (!('isPlegded' in boardField)) return false;
+        const result = boardField.isPlegded;
+        return result;
+    })
+    return result;
+}
+
+export const areBuildings = (boardFields: tFieldState[]) => {
+    const result = boardFields.some((boardField) => {
+        if (!('nrOfHotels' in boardField)) return false;
+        if (!('nrOfHouses' in boardField)) return false;
+        const result = boardField.nrOfHotels > 0 || boardField.nrOfHouses > 0;
+        return result;
+    })
+    return result;
+}
+
+export const checkIfPlayerOwnsEveryEstate = (boardFields: tFieldState[], playerColor: string) => {
+    const result = boardFields.every((boardField: tFieldState) => {
+        if (!('owner' in boardField)) return false;
+        return boardField.owner === playerColor
+    })
+    return result;
+}
+
+
 export const getNamedPlayerEstateChecker = (
     conditionFunction: tGetPlayerEstateCheckerConditionFunction,
     variant: EstateCheckerVariant,

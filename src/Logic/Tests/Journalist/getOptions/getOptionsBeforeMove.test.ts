@@ -1,4 +1,5 @@
-import { ATENY, AUSTRIA, BARCELONA, EAST_RAILWAYS, GLASGOW, GREECE, GREEN, INSBRUK, ITALY, LIVERPOOL, LONDON, MADRIT, MEDIOLAN, NEAPOL, POWER_STATION, RED, ROME, SALONIKI, SEWILLA, UK, WIEDEN, YELLOW } from "../../../../Data/const"
+import { descriptors } from "../../../../Data/boardFields"
+import { ATENY, AUSTRIA, BARCELONA, EAST_RAILWAYS, GLASGOW, GREECE, GREEN, INSBRUK, ITALY, LIVERPOOL, LONDON, MADRIT, MEDIOLAN, NEAPOL, PLANT, POWER_STATION, RAILWAYS, RED, ROME, SALONIKI, SEWILLA, UK, WEST_RAILWAYS, WIEDEN, YELLOW } from "../../../../Data/const"
 import { getTestableOptions } from "../../../Journalist/getOptions"
 import { tJournalistOutputArrayOrRejection, tJournalistState } from "../../../Journalist/types"
 import { SellBuildingsRejected } from "../../../Journalist/utils/constants"
@@ -348,13 +349,8 @@ describe('Testing getOptions', () => {
                             estatesOwner: [DORIN, dorinEstates],
                             currentPlayer: [DORIN],
                             estatesDelta: [
-                                { estateName: ROME, props: { owner: GREEN } },
-                                { estateName: MEDIOLAN, props: { owner: GREEN } },
                                 { estateName: NEAPOL, props: { owner: GREEN, nrOfHouses: 2} },
-                                { estateName: SALONIKI, props: { owner: GREEN } },
-                                { estateName: ATENY, props: { owner: GREEN, nrOfHotels: 1 } }, // Not a valid case, normally 1 hotel with no houses on neighbour shouls not happen
-                                { estateName: BARCELONA, props: { owner: GREEN } },
-    
+                                { estateName: ATENY, props: { owner: GREEN, nrOfHotels: 1 } }, // Not a valid case, normally 1 hotel with no houses on neighbour shouls not happen    
                                 { estateName: LONDON, props: { owner: RED} },
                             ],
                         });
@@ -373,7 +369,7 @@ describe('Testing getOptions', () => {
                         expect(outputForLondon).toEqual({reason: SellEstatesReasons.NotOwner})
                         expect(outputForLiverpol).toEqual({reason: SellEstatesReasons.NotOwner})
                 })  
-                it('Should return reason not an owner for estates other then city when player is not an owner', () => {
+                it('Should not allow to sell esate player does not own. Not city estates case', () => {
                     const dorinEstates = [ ROME, MEDIOLAN, NEAPOL, SALONIKI, BARCELONA, ATENY ];
                     const state = getMockedGameState({
                         estatesOwner: [DORIN, dorinEstates],
@@ -384,31 +380,122 @@ describe('Testing getOptions', () => {
                         console.log('Received ', options.sellEstates)
                         throw new Error('Payload expected')
                     }
-                    const outputForRailway = options.sellEstates.payload[EAST_RAILWAYS]
-                    const outputForPowerPlant = options.sellEstates.payload[POWER_STATION]
+                    const outputForRailway = options.sellEstates.payload[RAILWAYS][EAST_RAILWAYS]
+                    const outputForPowerPlant = options.sellEstates.payload[PLANT][POWER_STATION]
 
                     expect(outputForRailway).toEqual({reason: SellEstatesReasons.NotOwner})
                     expect(outputForPowerPlant).toEqual({reason: SellEstatesReasons.NotOwner})
 
                 })
-                it('Should not allow to plegde estates when player has buildings on it', () => {
+                it('Should not allow to plegde estates that player does not own', () => {
+                    const dorinEstates = [ ROME, MEDIOLAN, NEAPOL, SALONIKI, BARCELONA, ATENY ];
+                    const state = getMockedGameState({
+                        estatesOwner: [DORIN, dorinEstates],
+                        currentPlayer: [DORIN],
+                    });
+                    const options = getTestableOptions(state, DORIN);
+                    if (!('payload' in options.plegdeEstates)) {
+                        throw new Error('Payload expected')
+                    }
+                    const outputForRailway = options.plegdeEstates.payload[RAILWAYS][EAST_RAILWAYS]
+                    const outputForPowerPlant = options.plegdeEstates.payload[PLANT][POWER_STATION]
+                    const outputForLondon = options.plegdeEstates.payload[UK][LONDON]
 
+                    expect(outputForRailway).toEqual({reason: PlegdeEstatesReasons.NotOwner})
+                    expect(outputForPowerPlant).toEqual({reason: PlegdeEstatesReasons.NotOwner})
+                    expect(outputForLondon).toEqual({reason: PlegdeEstatesReasons.NotOwner})
+                })
+
+                it('Should not allow to plegde estates when player has buildings on it', () => {
+                    const dorinEstates = [ ROME, MEDIOLAN, SALONIKI, BARCELONA, ATENY ];
+                    const state = getMockedGameState({
+                        estatesOwner: [DORIN, dorinEstates],
+                        currentPlayer: [DORIN],
+                        estatesDelta: [
+                            { estateName: ROME, props: { owner: GREEN, nrOfHouses: 1 } },
+                            { estateName: MEDIOLAN, props: { owner: GREEN, nrOfHotels: 1 } },
+                        ],
+                    });
+                    const options = getTestableOptions(state, DORIN);
+                    if (!('payload' in options.plegdeEstates)) {
+                        throw new Error('Payload expected')
+                    }
+                    const outputForRome = options.plegdeEstates.payload[ITALY][ROME];
+                    const outputForMediolan = options.plegdeEstates.payload[ITALY][MEDIOLAN];
+
+                    expect(outputForRome).toEqual({reason: PlegdeEstatesReasons.Buildings})
+                    expect(outputForMediolan).toEqual({reason: PlegdeEstatesReasons.Buildings})
+                    
+                })  
+                it('Should not allow to plegde estates when it is already plegded', () => {
+                    const dorinEstates = [ ROME, MEDIOLAN, SALONIKI, BARCELONA, ATENY ];
+                    const state = getMockedGameState({
+                        estatesOwner: [DORIN, dorinEstates],
+                        currentPlayer: [DORIN],
+                        estatesDelta: [
+                            { estateName: ROME, props: { owner: GREEN, isPlegded: true } },
+                            { estateName: WEST_RAILWAYS, props: {owner: GREEN, isPlegded: true}},
+                            { estateName: POWER_STATION, props: {owner: GREEN, isPlegded: true}}
+                        ],
+                    });
+                    const options = getTestableOptions(state, DORIN);
+                    if (!('payload' in options.plegdeEstates)) {
+                        throw new Error('Payload expected')
+                    }
+                    const outputForRome = options.plegdeEstates.payload[ITALY][ROME];
+                    const outputForRailway = options.plegdeEstates.payload[RAILWAYS][WEST_RAILWAYS];
+                    const outputForPlant = options.plegdeEstates.payload[PLANT][POWER_STATION];
+
+                    expect(outputForRome).toEqual({reason: PlegdeEstatesReasons.Plegded})
+                    expect(outputForRailway).toEqual({reason: PlegdeEstatesReasons.Plegded})
+                    expect(outputForPlant).toEqual({reason: PlegdeEstatesReasons.Plegded})
                 })  
 
-                it('Should not allow to sell an estate when there are no houses on it, but there are still houses on other cities in the same country', () => {
-                    // Though plegding this estate may be possible
+                it('Should allow to plegde estate, when other estate in the same country has buildings on it', () => {
+                    const dorinEstates = [ ROME, MEDIOLAN, NEAPOL, SALONIKI, BARCELONA, ATENY ];
+                    const state = getMockedGameState({
+                        estatesOwner: [DORIN, dorinEstates],
+                        currentPlayer: [DORIN],
+                        estatesDelta: [
+                            { estateName: ROME, props: { owner: GREEN, nrOfHouses: 4 } },
+                            { estateName: MEDIOLAN, props: { owner: GREEN, nrOfHotels: 1 } },
+                        ],
+                    });
+                    const options = getTestableOptions(state, DORIN);
+                    if (!('payload' in options.plegdeEstates)) {
+                        throw new Error('Payload expected')
+                    }
+                    const outputForNeapol = options.plegdeEstates.payload[ITALY][NEAPOL];
+                    expect(outputForNeapol).toEqual({
+                        reason: PlegdeEstatesReasons.Allowed,
+                        price: descriptors.Neapol.mortgage,
+                    })
+                })
+                it ('Should not allow to sell estate when it is plegded, and there are buildings in other cities of this country', () => {
+                    const dorinEstates = [ ROME, MEDIOLAN, NEAPOL, SALONIKI, BARCELONA, ATENY ];
+                    const state = getMockedGameState({
+                        estatesOwner: [DORIN, dorinEstates],
+                        currentPlayer: [DORIN],
+                        estatesDelta: [
+                            { estateName: ROME, props: { owner: GREEN, nrOfHouses: 4 } },
+                            { estateName: MEDIOLAN, props: { owner: GREEN, nrOfHotels: 1 } },
+                            { estateName: NEAPOL, props: { owner: GREEN, isPlegded: true } },
+                        ],
+                    });
+                    const options = getTestableOptions(state, DORIN);
+                    if (!('payload' in options.sellEstates)) {
+                        throw new Error('Payload expected')
+                    }
+                    const outputForItaly = options.sellEstates.payload[ITALY];
+                    expect(outputForItaly).toEqual({
+                        reason: SellEstatesReasons.Buildings,
+                    })
                 })
                 it('Should not allow to unpleged an estate when player has not plegede estates', () => {
 
                 })
                 it('Should NOT allow to unplegde an estate when player has a plegded estate, and has NO MONEY to unplegde it', () => {
                     
-                })
-                it('Should not allow to sell estates when there are buildings on it', () => {
-
-                })
-                it ('Should not allow to sell estate when it is plegded, and thre are buildings in other cities of this country', () => {
-
                 })
                 it ('Should not allow to buy an estate when it has no owner, when this is a before move phase', () => {
 

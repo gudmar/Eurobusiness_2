@@ -5,7 +5,7 @@ import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
 import { tFieldState } from "../../boardTypes";
 import { tObject } from "../../types";
 import { OptionTypes, tJournalistOptionsUnderDevelopement } from "../types"
-import { getPlayerColorFromPlayerName, getPlayerEstates, isPlayerInJail, processEachCountry } from "./commonFunctions";
+import { areBuildings, checkIfPlayerOwnsEveryEstate, getCountryBoardFieldsFromGameState, getPlayerColorFromPlayerName, getPlayerEstates, isPlayerInJail, processEachCountry } from "./commonFunctions";
 import { tProcessEachCountryCalbackArgs, tStateModifierArgs } from "./types"
 
 export enum SellEstatesReasons {
@@ -13,24 +13,6 @@ export enum SellEstatesReasons {
     NotOwner = 'Player has to own an estate to sell it',
     Buildings = 'Player cannot sell an estate if any city in the country of the estate has buildings',
     Allowed = 'Player is privilaged to sell this estate'
-}
-
-const areBuildings = (boardFields: tFieldState[]) => {
-    const result = boardFields.some((boardField) => {
-        if (!('nrOfHotels' in boardField)) return false;
-        if (!('nrOfHouses' in boardField)) return false;
-        const result = boardField.nrOfHotels > 0 || boardField.nrOfHouses > 0;
-        return result;
-    })
-    return result;
-}
-
-const checkIfPlayerOwnsEveryEstate = (boardFields: tFieldState[], playerColor: string) => {
-    const result = boardFields.every((boardField: tFieldState) => {
-        if (!('owner' in boardField)) return false;
-        return boardField.owner === playerColor
-    })
-    return result;
 }
 
 const getQuotation = (boardField: tFieldState) => {
@@ -44,15 +26,6 @@ const getQuotation = (boardField: tFieldState) => {
 
 type tEstateBoardField = iCityField | iNonCityEstates;
 
-const getCountryBoardFieldsFromGameState = (gameState: tGameState, countryName: string): tFieldState[] => {
-    const result = gameState.boardFields.filter((filed) => {
-        if (!('country' in filed)) { return false }
-        if (filed.country === countryName) return true;
-        return false;
-    })
-    return result;
-}
-
 const calculateSellEstatePermits = (gameState: tGameState, playerName: string) => {
     const callback = ({
         gameState,
@@ -61,7 +34,6 @@ const calculateSellEstatePermits = (gameState: tGameState, playerName: string) =
     }: tProcessEachCountryCalbackArgs) => {
         const playerColor = getPlayerColorFromPlayerName(gameState, playerName);
         const countryBoardFieldsFromGameState = getCountryBoardFieldsFromGameState(gameState, countryName);
-        console.log('countryBoardFieldsFromGameState', countryBoardFieldsFromGameState)
         const doesPlayerOwnEveryEstate = checkIfPlayerOwnsEveryEstate(countryBoardFieldsFromGameState, playerColor!);
         const areAnyBuildings = areBuildings(countryBoardFieldsFromGameState);
         if (doesPlayerOwnEveryEstate && areAnyBuildings) {
@@ -76,7 +48,6 @@ const calculateSellEstatePermits = (gameState: tGameState, playerName: string) =
             if (!('owner' in boardField) || !('name' in boardField)) return acc;
             createPath(acc, [countryName, boardField.name])
             if (boardField.owner !== playerColor) {
-                // console.log('BOARD FIELD', boardField)
                 acc[countryName][boardField.name] = { reason: SellEstatesReasons.NotOwner }
                 return acc;
             };
