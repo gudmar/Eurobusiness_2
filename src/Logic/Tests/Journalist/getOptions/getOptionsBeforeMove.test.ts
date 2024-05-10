@@ -8,6 +8,7 @@ import { NoBuildingPermitResults } from "../../../Journalist/utils/getBuyBuildin
 import { PlegdeEstatesReasons } from "../../../Journalist/utils/getPlegdeOptions"
 import { SellEstatesReasons } from "../../../Journalist/utils/getSellEstatesOptions"
 import { getSellingPermitsCategory } from "../../../Journalist/utils/getSellingPermits"
+import { UnplegdeEstatesReasons } from "../../../Journalist/utils/getUnplegdeOptions"
 import { expandTestData } from "../../../Journalist/utils/sellingPermitsMock"
 import { TurnPhases } from "../../../types"
 import { getMockedGameState, getPlayerColor } from "../getGameStateMock/getGameStateMock"
@@ -491,11 +492,84 @@ describe('Testing getOptions', () => {
                         reason: SellEstatesReasons.Buildings,
                     })
                 })
-                it('Should not allow to unpleged an estate when player has not plegede estates', () => {
-
+                it('Should not allow to plegde when player in jail', () => {
+                    const dorinEstates = [ ROME, MEDIOLAN, NEAPOL];
+                    const state = getMockedGameState({
+                        estatesOwner: [DORIN, dorinEstates],
+                        currentPlayer: [DORIN],
+                        toJail: [DORIN]
+                    });
+                    const options = getTestableOptions(state, DORIN);
+                    const output = options.plegdeEstates;
+                    expect(output).toEqual({
+                        reason: PlegdeEstatesReasons.InJail,
+                    })
+                })
+                it('Should not allow to unpleged an estate when player has not plegeded estates', () => {
+                    const dorinEstates = [ ROME, MEDIOLAN, NEAPOL];
+                    const state = getMockedGameState({
+                        estatesOwner: [DORIN, dorinEstates],
+                        currentPlayer: [DORIN],
+                        estatesDelta: [
+                            { estateName: ROME, props: { owner: GREEN, isPlegded: false } },
+                            { estateName: MEDIOLAN, props: { owner: GREEN, isPlegded: false } },
+                            { estateName: NEAPOL, props: { owner: GREEN, isPlegded: false } },
+                        ],
+                    });
+                    const options = getTestableOptions(state, DORIN);
+                    const output = options.unplegdeEstates;
+                    expect(output).toEqual({
+                        reason: UnplegdeEstatesReasons.EveryUnplegded,
+                    })
+                })
+                it('Should not allow to unpleged an estate when player is in jail', () => {
+                    const dorinEstates = [ ROME, MEDIOLAN, NEAPOL];
+                    const state = getMockedGameState({
+                        estatesOwner: [DORIN, dorinEstates],
+                        currentPlayer: [DORIN],
+                        toJail: [DORIN],
+                        estatesDelta: [
+                            { estateName: ROME, props: { owner: GREEN, isPlegded: true } },
+                            { estateName: MEDIOLAN, props: { owner: GREEN, isPlegded: true } },
+                            { estateName: NEAPOL, props: { owner: GREEN, isPlegded: true } },
+                        ],
+                    });
+                    const options = getTestableOptions(state, DORIN);
+                    const output = options.unplegdeEstates;
+                    expect(output).toEqual({
+                        reason: UnplegdeEstatesReasons.InJail,
+                    })
                 })
                 it('Should NOT allow to unplegde an estate when player has a plegded estate, and has NO MONEY to unplegde it', () => {
-                    
+                    const dorinEstates = [ ROME, MEDIOLAN, NEAPOL];
+                    const state = getMockedGameState({
+                        estatesOwner: [DORIN, dorinEstates],
+                        currentPlayer: [DORIN],
+                        setMoney: [[0, DORIN]],
+                        estatesDelta: [
+                            { estateName: ROME, props: { owner: GREEN, isPlegded: true } },
+                            { estateName: MEDIOLAN, props: { owner: GREEN, isPlegded: true } },
+                            { estateName: NEAPOL, props: { owner: GREEN, isPlegded: true } },
+                        ],
+                    });
+                    const options = getTestableOptions(state, DORIN);
+                    if (!('payload' in options.unplegdeEstates)) throw new Error('No payload')
+                    const outputRome = options.unplegdeEstates.payload[ITALY][ROME];
+                    const outputMediolan = options.unplegdeEstates.payload[ITALY][MEDIOLAN];
+                    const outputNeapol = options.unplegdeEstates.payload[ITALY][NEAPOL];
+                    expect(outputMediolan).toEqual({ 
+                        reason: UnplegdeEstatesReasons.NoMoney, 
+                        price: 100
+                    });
+                    expect(outputNeapol).toEqual({ 
+                        reason: UnplegdeEstatesReasons.NoMoney, 
+                        price: 100
+                    });
+                    expect(outputRome).toEqual({ 
+                        reason: UnplegdeEstatesReasons.NoMoney, 
+                        price: 120
+                    });
+
                 })
                 it ('Should not allow to buy an estate when it has no owner, when this is a before move phase', () => {
 

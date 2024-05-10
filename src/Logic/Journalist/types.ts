@@ -51,7 +51,7 @@ export type tJournalistState = {
     buyEstate?: tJournalistOutput;
     sellEstates: tJournalistOutput;
     plegdeEstates: tJournalistOutput;
-    unplegdeEstates: tJournalistOutputArrayOrRejection;
+    unplegdeEstates: tJournalistOutput;
     pay?: tJournalistOutput; // When on not guarded parking, there is no reason to explain why not to pay
     getMoney?: tJournalistOutput;
     goToJail?: tJournalistOutput;
@@ -65,7 +65,7 @@ export type tJournalistOptionsUnderDevelopement = {
     buyEstate?: tJournalistOutput;
     sellEstates?: tJournalistOutput;
     plegdeEstates?: tJournalistOutput;
-    unplegdeEstates?: tJournalistOutputArrayOrRejection;
+    unplegdeEstates?: tJournalistOutput;
     pay?: tJournalistOutput; // When on not guarded parking, there is no reason to explain why not to pay
     getMoney?: tJournalistOutput;
     goToJail?: tJournalistOutput;

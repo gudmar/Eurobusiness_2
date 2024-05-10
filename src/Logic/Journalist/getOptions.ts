@@ -5,6 +5,7 @@ import { getTestableOptionsWithBuyBuildings } from "./utils/getBuyBuildingsOptio
 import { getPlegdeOptions } from "./utils/getPlegdeOptions"
 import { getTestableOptionsWithSellBuildings } from "./utils/getSellBuildingOptions"
 import { getSellEstatesOptions } from "./utils/getSellEstatesOptions"
+import { getUnplegdeOptions } from "./utils/getUnplegdeOptions"
 import { tStateModifierArgs } from "./utils/types"
 
 
@@ -35,16 +36,16 @@ const getBuyEstate = (args: tStateModifierArgs): tJournalistOptionsUnderDevelope
 //     state.sellEstates = []
 //     return state;
 // }
-const getTestableOptionsWithPlegdeEstates = (args: tStateModifierArgs): tJournalistOptionsUnderDevelopement => {
-    const { options, state } = args;
-    state.plegdeEstates = []
-    return state;
-}
-const getTestableOptionsWithUnplegdeEstates = (args: tStateModifierArgs): tJournalistOptionsUnderDevelopement => {
-    const { options, state } = args;
-    state.plegdeEstates = []
-    return state;
-}
+// const getTestableOptionsWithPlegdeEstates = (args: tStateModifierArgs): tJournalistOptionsUnderDevelopement => {
+//     const { options, state } = args;
+//     state.plegdeEstates = []
+//     return state;
+// }
+// const getTestableOptionsWithUnplegdeEstates = (args: tStateModifierArgs): tJournalistOptionsUnderDevelopement => {
+//     const { options, state } = args;
+//     state.plegdeEstates = []
+//     return state;
+// }
 const getPay = (args: tStateModifierArgs): tJournalistOptionsUnderDevelopement => {
     // options.pay = { reason: `You don't have anything to pay for`}
     const { options, state } = args;
@@ -115,6 +116,7 @@ export const getTestableOptions = (state: tGameState, playerName: string): tJour
             getTestableOptionsWithSellBuildings,
             getSellEstatesOptions,
             getPlegdeOptions,
+            getUnplegdeOptions,
         ]
     )
     return result as tJournalistState;

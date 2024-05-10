@@ -8,11 +8,15 @@ import { descriptors } from '../../../Data/boardFields';
 import { mapCitiesToCountries, mapEstatesToCountries } from "../../../Functions/mapCitiesToCountries";
 
 export const getCurrentPlayerName = (state: tGameState) => state.game.currentPlayer;
+
+export const getPlayer = (state: tGameState, playerName: string) => {
+    const player = state.players.find(({name}) => name === playerName);
+    if (!player) throw new Error(`Cannot find player named ${playerName}`)
+    return player;
+}
+
 export const getPlayerColorFromPlayerName = (state: tGameState, playerName: string) => {
-    const currentPlayer = state.players.find(({name}) => {
-        if (name === playerName) return true;
-        return false;
-    })
+    const currentPlayer = getPlayer(state, playerName);
     return currentPlayer?.color
 }
 export const getCurrentPlayerColor = (state: tGameState) => {
@@ -25,12 +29,6 @@ export const getCurrentPlayer = (state: tGameState) => {
     const currentPlayer = state.players.find((player) => player.name === currentPlayerName);
     if (!currentPlayer) throw new Error(`No player named ${currentPlayerName}`);
     return currentPlayer;
-}
-
-export const getPlayer = (state: tGameState, playerName: string) => {
-    const player = state.players.find(({name}) => name === playerName);
-    if (!player) throw new Error(`Cannot find player named ${playerName}`)
-    return player;
 }
 
 export const getCurrentGamePhase = (state: tGameState) => {
@@ -233,6 +231,12 @@ export const isPlayerEachEstatePlegded =  getNamedPlayerEstateChecker((estateDes
     if (!('isPlegded' in boardField)) return true;
     const isPlegded = boardField?.isPlegded;
     return isPlegded;
+}, EstateCheckerVariant.Each)
+
+export const hasPlayerEachEstateUnplegded =  getNamedPlayerEstateChecker((estateDescriptor: tBoardField, boardField: tFieldState) => {
+    if (!('isPlegded' in boardField)) return true;
+    const isUnplegded = boardField?.isPlegded === false;
+    return isUnplegded;
 }, EstateCheckerVariant.Each)
 
 
