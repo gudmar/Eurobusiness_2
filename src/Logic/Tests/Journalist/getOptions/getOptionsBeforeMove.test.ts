@@ -569,7 +569,37 @@ describe('Testing getOptions', () => {
                         reason: UnplegdeEstatesReasons.NoMoney, 
                         price: 120
                     });
-
+                })
+                it('Should not allow to buyout from mortgage when not proper game phase', () => {
+                    const dorinEstates = [ ROME, MEDIOLAN, NEAPOL];
+                    const state = getMockedGameState({
+                        estatesOwner: [DORIN, dorinEstates],
+                        currentPlayer: [DORIN],
+                        setGamePhase: TurnPhases.AfterMove,
+                        estatesDelta: [
+                            { estateName: ROME, props: { owner: GREEN, isPlegded: true } },
+                            { estateName: MEDIOLAN, props: { owner: GREEN, isPlegded: true } },
+                            { estateName: NEAPOL, props: { owner: GREEN, isPlegded: true } },
+                        ],
+                    });
+                    const options = getTestableOptions(state, DORIN);
+                    const result = options.unplegdeEstates;
+                    expect(result).toEqual({reason: UnplegdeEstatesReasons.NotGoodMoment})
+                })
+                it('Should not allow to buyout from mortgage when not players turn', () => {
+                    const dorinEstates = [ ROME, MEDIOLAN, NEAPOL];
+                    const state = getMockedGameState({
+                        estatesOwner: [DORIN, dorinEstates],
+                        currentPlayer: [BALIN],
+                        estatesDelta: [
+                            { estateName: ROME, props: { owner: GREEN, isPlegded: true } },
+                            { estateName: MEDIOLAN, props: { owner: GREEN, isPlegded: true } },
+                            { estateName: NEAPOL, props: { owner: GREEN, isPlegded: true } },
+                        ],
+                    });
+                    const options = getTestableOptions(state, DORIN);
+                    const result = options.unplegdeEstates;
+                    expect(result).toEqual({reason: UnplegdeEstatesReasons.WrongTurn})
                 })
                 it ('Should not allow to buy an estate when it has no owner, when this is a before move phase', () => {
 
