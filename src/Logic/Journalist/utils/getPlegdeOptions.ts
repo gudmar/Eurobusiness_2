@@ -3,18 +3,14 @@ import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
 import { tFieldState } from "../../boardTypes";
 import { tObject } from "../../types";
 import { OptionTypes, tJournalistOptionsUnderDevelopement } from "../types";
-import { areBuildings, arePlegded, checkIfPlayerOwnsEveryEstate, getCountryBoardFieldsFromGameState, getPlayerColorFromPlayerName, isCurrentPlayerEachEstatePlegded, isCurrentPlayerInJail, isPlayerEachEstatePlegded, processEachCountry } from "./commonFunctions";
-import { SellEstatesReasons } from "./getSellEstatesOptions";
+import { areBuildings, arePlegded, getCountryBoardFieldsFromGameState, getPlayerColorFromPlayerName, isCurrentPlayerEachEstatePlegded, isCurrentPlayerInJail, isPlayerEachEstatePlegded, processEachCountry } from "./commonFunctions";
 import { tProcessEachCountryCalbackArgs, tStateModifierArgs } from "./types";
 
 export enum PlegdeEstatesReasons {
     EveryPlegded = 'Every estate owned by player is already plegded',
     InJail = 'When player is in jail, he cannot mortgage estates',
     Plegded = 'Cannot plegde already plegded estates',
-    Allowed = 'Allowed'
-}
-
-export enum PlegdeEstatesReasons {
+    Allowed = 'Allowed',
     Buildings = 'One may not plegde an estate with any buildings on it',
     NotOwner = 'Player may not plegde an estate when he is not an owner of the estate'
 }
@@ -31,7 +27,6 @@ const getPlegdeEstatesPermits = (gameState: tGameState, playerName: string) => {
     const callback = ({
         gameState,
         countryName,
-        countryBoardFields,
     }: tProcessEachCountryCalbackArgs) => {
         const playerColor = getPlayerColorFromPlayerName(gameState, playerName);
         const countryBoardFieldsFromGameState = getCountryBoardFieldsFromGameState(gameState, countryName);
