@@ -15,7 +15,9 @@ export enum OptionTypes {
     BuyOut = 'Buy out from mortgage',
     DrawChanceCard = 'Draw a chance card',
     Pay = 'Pay some fee',
-    GoToJail = 'Go to jail'
+    GoToJail = 'Go to jail',
+    UseSpecialCard = 'Use special card',
+    SellSpecialCard = 'Sell special card',
 }
 
 export type tOption = {
@@ -55,6 +57,7 @@ export type tJournalistState = {
     pay?: tJournalistOutput; // When on not guarded parking, there is no reason to explain why not to pay
     getMoney?: tJournalistOutput;
     goToJail?: tJournalistOutput;
+    specialCards?: tJournalistOutput;
     move: boolean;
     endPhase: boolean;
 }
@@ -66,6 +69,7 @@ export type tJournalistOptionsUnderDevelopement = {
     sellEstates?: tJournalistOutput;
     plegdeEstates?: tJournalistOutput;
     unplegdeEstates?: tJournalistOutput;
+    specialCards?: tJournalistOutput;
     pay?: tJournalistOutput; // When on not guarded parking, there is no reason to explain why not to pay
     getMoney?: tJournalistOutput;
     goToJail?: tJournalistOutput;

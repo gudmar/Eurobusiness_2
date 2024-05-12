@@ -51,5 +51,29 @@ describe('Options after player move', () => {
         it('Should add a mandatory action to pay for a visit at other players estate, when player just stepped on one', () => {
 
         })
+        describe('Buy estate', () => {
+            it('Should add an alternative: buy estate or set it in auction when player stands on a field with estate', () => {
+
+            });
+            it('Should add a mandatory option to set an auction for estate player is on when is current player, is on target field, player has not enough money fo estate', () => {
+
+            });
+            it('Should add an alternative to buy estate or auction it with mandatory severity when currentPlayer is player and is on target filed, when it is after move', () => {
+
+            });
+            it ('Should not allow to buy an estate when it is owned by Bank, but it is before move phase', () => {
+
+            })
+            it('Should not allow to buy estate when it is owned by a player', () => {
+
+            })
+            it('Should not allow to buy estate when current player is on a non estate field', () => {
+
+            })
+            it('Should not allow to buy estate when player is not a current player', () => {
+
+            })
+
+        })
     })
 })
