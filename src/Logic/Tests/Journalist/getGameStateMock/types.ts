@@ -31,7 +31,7 @@ export type tSetEachPlayerMoney = tSetPlayerMoney[];
 
 type tSpecialCard = typeof SPECIAL_CARD_RED | typeof SPECIAL_CARD_BLUE;
 
-type tSetSpecialCardsToPlayer = [playerName: string, specialCards: tSpecialCard[]]
+type tSetSpecialCardsToPlayer = [ specialCards: tSpecialCard[], playerName: string]
 
 export type tSetSpecialCardsToPlayers = tSetSpecialCardsToPlayer[]
 

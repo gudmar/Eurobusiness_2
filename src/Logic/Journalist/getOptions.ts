@@ -2,6 +2,7 @@ import { applyStateModifiers, tStateModifier } from "../../Functions/applyStateM
 import { tGameState } from "../../Functions/PersistRetrieveGameState/types"
 import { tJournalistOptionsUnderDevelopement, tJournalistState } from "./types"
 import { getTestableOptionsWithBuyBuildings } from "./utils/getBuyBuildingsOptions"
+import { getSpecialCardsOptions } from "./utils/getGetOutFromPrisonCardOptions"
 import { getPlegdeOptions } from "./utils/getPlegdeOptions"
 import { getTestableOptionsWithSellBuildings } from "./utils/getSellBuildingOptions"
 import { getSellEstatesOptions } from "./utils/getSellEstatesOptions"
@@ -117,6 +118,7 @@ export const getTestableOptions = (state: tGameState, playerName: string): tJour
             getSellEstatesOptions,
             getPlegdeOptions,
             getUnplegdeOptions,
+            getSpecialCardsOptions,
         ]
     )
     return result as tJournalistState;

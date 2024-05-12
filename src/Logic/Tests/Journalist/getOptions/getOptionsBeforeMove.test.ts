@@ -1,10 +1,12 @@
 import { descriptors } from "../../../../Data/boardFields"
-import { ATENY, AUSTRIA, BARCELONA, EAST_RAILWAYS, GLASGOW, GREECE, GREEN, INSBRUK, ITALY, LIVERPOOL, LONDON, MADRIT, MEDIOLAN, NEAPOL, PLANT, POWER_STATION, RAILWAYS, RED, ROME, SALONIKI, SEWILLA, UK, WEST_RAILWAYS, WIEDEN, YELLOW } from "../../../../Data/const"
+import { CHANCE_CARDS_BLUE, CHANCE_CARDS_RED } from "../../../../Data/chanceCards"
+import { ATENY, AUSTRIA, BARCELONA, CHANCE_RED, EAST_RAILWAYS, GLASGOW, GREECE, GREEN, INSBRUK, ITALY, LIVERPOOL, LONDON, MADRIT, MEDIOLAN, NEAPOL, PLANT, POWER_STATION, RAILWAYS, RED, ROME, SALONIKI, SEWILLA, UK, WEST_RAILWAYS, WIEDEN, YELLOW } from "../../../../Data/const"
 import { getTestableOptions } from "../../../Journalist/getOptions"
-import { tJournalistOutputArrayOrRejection, tJournalistState } from "../../../Journalist/types"
+import { OptionTypes, tJournalistOutputArrayOrRejection, tJournalistState } from "../../../Journalist/types"
 import { SellBuildingsRejected } from "../../../Journalist/utils/constants"
 import { BuildingPermitRejected, NrOfHouses } from "../../../Journalist/utils/getBuildingPermits"
 import { NoBuildingPermitResults } from "../../../Journalist/utils/getBuyBuildingsOptions"
+import { SpecialCardsReasons } from "../../../Journalist/utils/getGetOutFromPrisonCardOptions"
 import { PlegdeEstatesReasons } from "../../../Journalist/utils/getPlegdeOptions"
 import { SellEstatesReasons } from "../../../Journalist/utils/getSellEstatesOptions"
 import { getSellingPermitsCategory } from "../../../Journalist/utils/getSellingPermits"
@@ -14,6 +16,7 @@ import { TurnPhases } from "../../../types"
 import { getMockedGameState, getPlayerColor } from "../getGameStateMock/getGameStateMock"
 import { getMockResponseGetter } from "../getGameStateMock/getResponse"
 import { BALIN, DORIN } from "../getGameStateMock/getStateTemplate"
+import { tSetSpecialCardsToPlayers } from "../getGameStateMock/types"
 
 const throwIfNoPermits = (options: tJournalistState) => {
     if (!('payload' in options.buyBuildings)) throw new Error('No payload in options.buyBuildings')
@@ -601,49 +604,54 @@ describe('Testing getOptions', () => {
                     const result = options.unplegdeEstates;
                     expect(result).toEqual({reason: UnplegdeEstatesReasons.WrongTurn})
                 })
-                it ('Should not allow to buy an estate when it has no owner, when this is a before move phase', () => {
-
-                })
-                describe('Collapse options', () => {
-                    it('Should return a single plegde option when no unplegded estates owned', () => {
-
-                    })
-                    it('Should return a single unplegde option when no plegded estates owned', () => {
-
-                    })
-                    it('Should return a single not sell option when no estates owned', () => {
-
-                    })
-                    it('Should return a single not sell option when only COUNTRIES with buildings owned', () => {
-
-                    })
-                })
-            })
-            describe('Add options', () => {
-                it('Should allow to plegde an estate when player has no houses on it but has houses on other estates from this country', () => {
-
-                })
-                it('Should allow to unplegde an estate when player has plegede estates and enought money to perform this operation', () => {
-
-                })
-                it('Should allow to sell an estate that has no buildings on it as long as there are not buildings in other citeis of the some country', () => {
-
-                })
-                it('Should allow to sell a plegded estate when there are no buildings in other cities of this country', () => {
-
-                })
+                
             })
         });
         describe('Get out of prison cards', () => {
             it('Should not allow to sell a get out of prison card when player has no such a card', () => {
-
+                const state = getMockedGameState({
+                    currentPlayer: [DORIN],
+                    setGamePhase: TurnPhases.BeforeMove
+                });
+                const options = getTestableOptions(state, DORIN);
+                const result = options.specialCards;
+                expect(result).toEqual({reason: SpecialCardsReasons.NotOwner})
             })
-            it('Should not allow to sell a get out of prison card when player is still in jail', () => {
-
+            it('Should not allow to sell a get out of prison card when player is still in jail, should allow to use it', () => {
+                const redSpecialCardDescription = CHANCE_CARDS_RED[15].descriptions.en;
+                const setCards:  tSetSpecialCardsToPlayers = [[ [redSpecialCardDescription], DORIN,]];
+                const state = getMockedGameState({
+                    currentPlayer: [DORIN],
+                    setGamePhase: TurnPhases.BeforeMove,
+                    toJail: [DORIN],
+                    setCards
+                });
+                const options = getTestableOptions(state, DORIN);
+                const result = options.specialCards;
+                expect(result).toEqual({
+                    type: OptionTypes.UseSpecialCard,
+                    isMandatory: false,
+                    payload: [redSpecialCardDescription],
+                })
             })
             it('Should allow to sell a get out of prison card when player has one', () => {
-
-            })
+                const redSpecialCardDescription = CHANCE_CARDS_RED[15].descriptions.en;
+                const blueSpecialCardDescription = CHANCE_CARDS_BLUE[6].descriptions.en;
+                const cards = [blueSpecialCardDescription, redSpecialCardDescription]
+                const setCards:  tSetSpecialCardsToPlayers = [[ cards, DORIN,]];
+                const state = getMockedGameState({
+                    currentPlayer: [DORIN],
+                    setGamePhase: TurnPhases.BeforeMove,
+                    setCards
+                });
+                const options = getTestableOptions(state, DORIN);
+                const result = options.specialCards;
+                expect(result).toEqual({
+                    isMandatory: false,
+                    type: OptionTypes.SellSpecialCard,
+                    payload: cards,
+                })
+            });
         })
         describe('Fields: chance, tax, guarded parking, first field after start, start field', () => {
             it('Should not charge for a tax field when it is beforeMove phase, as player was already charged for it', () =>{

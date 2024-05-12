@@ -212,6 +212,8 @@ export const CHANCE_CARDS_RED: iChanceCardsData = {
 
 }
 
+
+
 export const CHANCE_CARDS_BLUE: iChanceCardsData= {
     cardsSetName: BLUE_CARDS_SET_NAME,
     0: {
