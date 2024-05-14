@@ -655,10 +655,36 @@ describe('Testing getOptions', () => {
         })
         describe('Fields: chance, tax, guarded parking, first field after start, start field', () => {
             it('Should not charge for a tax field when it is beforeMove phase, as player was already charged for it', () =>{
-
+                const TAX_FIELD_INDEX = 38;
+                const state = getMockedGameState({
+                    currentPlayer: [DORIN],
+                    setGamePhase: TurnPhases.BeforeMove,
+                    movePlayers: [[TAX_FIELD_INDEX, DORIN]],
+                });
+                const options = getTestableOptions(state, DORIN);
+                const result = options.pay;
+                expect(result).toBeUndefined();
+            })
+            it('Should not change for tax when not players turn', () => {
+                const state = getMockedGameState({
+                    currentPlayer: [BALIN],
+                    setGamePhase: TurnPhases.AfterMove,
+                    movePlayers: [[38, DORIN]],
+                });
+                const options = getTestableOptions(state, DORIN);
+                const result = options.pay;
+                expect(result).toBeUndefined();
             })
             it('Should not charge for a guarded parking when it is beforeMove phase, as player was already charged for it', () => {
-
+                const GUARDED_PARKING_FIELD_INDEX = 4;
+                const state = getMockedGameState({
+                    currentPlayer: [DORIN],
+                    setGamePhase: TurnPhases.BeforeMove,
+                    movePlayers: [[GUARDED_PARKING_FIELD_INDEX, DORIN]],
+                });
+                const options = getTestableOptions(state, DORIN);
+                const result = options.pay;
+                expect(result).toBeUndefined();
             })
             it('Should not give money for start when there is beforeMove phase', () => {
 

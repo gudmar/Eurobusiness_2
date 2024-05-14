@@ -7,7 +7,7 @@ import { iStrategy, StrategyNames } from "../Strategies/types";
 import { SubscribtionsHandler } from "../SubscrbtionsHandler";
 import { ANY_CHANGE, MOVE } from "../Messages/constants";
 import { getStrategyProvider } from "../Strategies/getStrategyProvider";
-import { iPlayerMemento, iPlayerSnapshot } from "./types";
+import { iPlayerMemento, iPlayerSnapshot, PassStartPayments } from "./types";
 import { YELLOW } from "../../Data/const";
 
 export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | iAnyChange> implements iPlayer {//, iStateHandler<iPlayerSnapshot, iPlayerMemento> {
@@ -17,6 +17,8 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
     private _specialCards: tToBeImplemented;
     private _color: tColors;
     private _fieldNr: number; // indexed from 1
+    private _lastFieldNr: number; // last field index, for telling if start was passed purposes
+    private _shouldPayForPassingStart = PassStartPayments.DoNot;
     private _isInPrison: boolean;
     private _nrTurnsToWait: number;
     private _isGameLost: boolean;
@@ -36,6 +38,7 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
         this._specialCards = [];
         this._color = color;
         this._fieldNr = 0;
+        this._lastFieldNr = 0;
         this._isInPrison = false;
         this._nrTurnsToWait = 0;
         this._isGameLost = false;
@@ -57,13 +60,26 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
     set money(val: number) { this._money = val; this._informAnyChange(); }
     // set specialCards(val: []) { this._specialCards = val; this._informAnyChange(); }
     // instead: addSpecialCard, deleteSpecialCard
-    set fieldNr(val: number) { this._fieldNr = val; this._informAnyChange(); }
+    set fieldNr(val: number) {
+        this._lastFieldNr = this._fieldNr;
+        this._fieldNr = val;
+        this._informAnyChange();
+    }
     set isInPrison(val: boolean) { this._isInPrison = val; this._informAnyChange(); }
     // this is a part of more complicated transaction
     set nrTurnsToWait(val: number) { this._nrTurnsToWait = val; this._informAnyChange(); }
     set isGameLost(val: boolean) { this._isGameLost = val; this._informAnyChange(); }
     set strategy(val: StrategyNames) {this._strategyName = val; this._strategy = getStrategyProvider(val)}
+    set shouldPayForPassingStart(val: PassStartPayments) {this._shouldPayForPassingStart = val; this._informAnyChange(); };
+    get shouldPayForPassingStart() { return this._shouldPayForPassingStart; };
     get strategy() {return this._strategyName}
+
+    get lastFieldNr() { return this._lastFieldNr }
+    setLastFieldNrForTestingPurposes(val:number) {
+        if (val < 0 || val > 39) throw new Error('Last field nr has to be in the range 0 to 39');
+        this._lastFieldNr = val;
+        this._informAnyChange();
+    }
     
     // set strategy(val: string) { this._name = val; this._informAnyChange(); }
 
@@ -96,11 +112,12 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
             money: 0,
             specialCards: [],
             color: YELLOW,
+            lastFieldNr: 0,
             fieldNr: 0,
             isInPrison: false,
             nrTurnsToWait: 0,
             isGameLost: false,
-            strategy: StrategyNames.manual
+            strategy: StrategyNames.manual,
         }
     }
 
@@ -111,11 +128,14 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
             specialCards: this._specialCards,
             color: this._color,
             fieldNr: this._fieldNr,
+            lastFieldNr: this._lastFieldNr,
             isInPrison: this._isInPrison,
             nrTurnsToWait: this._nrTurnsToWait,
             isGameLost: this._isGameLost,
             strategy: this._strategyName,
             nrOfHotelsPurchasedInRound: this._nrOfHotelsPurchasedInRound,
+            nrOfHousesPurcahsedInTurn: this._nrOfHousesPurchasedInTurn,
+            shouldPayForPassingStart: this._shouldPayForPassingStart,
         })
     }
 
@@ -133,6 +153,10 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
                 if (val < 1 || val > 40) throw new Error('Field number shoud be 1..40')
                 this._fieldNr = val;
             },
+            lastFieldNr: (val: number) => {
+                if (val < 0 || val > 39) throw new Error('Last field number shoud be 1..40')
+                this._lastFieldNr = val;
+            },
             isInPrison: (val: boolean) => this._isInPrison = val,
             nrTurnsToWait: (val: number) => {
                 if (val < 0 || val > 2) throw new Error('Player cannot wait longer then 2 tunrs and shorter then 0')
@@ -141,6 +165,8 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
             isGameLost: (val: boolean) => this._isGameLost = true,
             strategy: (val: iStrategy) => this._strategy = val,
             nrOfHotelsPurchasedInRound: (val: number) => this._nrOfHotelsPurchasedInRound = val ?? 0,
+            nrOfHousesPurchasedInTurn: (val: number) => this._nrOfHousesPurchasedInTurn = val ?? 0,
+            shouldPayForPassingStart: (val: PassStartPayments) => this._shouldPayForPassingStart = val ?? PassStartPayments.DoNot,
         }
         const stateEntries = Object.entries(newState);
         stateEntries.forEach(([key, value]) => { setters[key](value) })
@@ -161,12 +187,14 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
             specialCards: this._specialCards,
             color: this._color,
             fieldNr: this._fieldNr,
+            lastFieldNr: this._lastFieldNr,
             isInPrison: this._isInPrison,
             nrTurnsToWait: this._nrTurnsToWait,
             isGameLost: this._isGameLost,
             strategy: this._strategyName,
             nrOfHousesPurchasedInTurn: this._nrOfHousesPurchasedInTurn,
             nrOfHotelsPurchasedInRound: this._nrOfHotelsPurchasedInRound,
+            shouldPayForPassingStart: this._shouldPayForPassingStart,
         }
     }
     set state(val) {
@@ -180,8 +208,10 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
         this._isGameLost = val.isGameLost;
         this._strategyName = val.strategy;
         this._informAnyChange();
+        this._lastFieldNr = val.lastFieldNr || 0,
         this._nrOfHousesPurchasedInTurn = val.nrOfHousesPurchasedInTurn || 0,
         this._nrOfHotelsPurchasedInRound = val.nrOfHotelsPurchasedInRound || 0;
+        this._shouldPayForPassingStart = val.shouldPayForPassingStart || PassStartPayments.DoNot;
     }
     getDoneFunction() {
         let outsideResolve;

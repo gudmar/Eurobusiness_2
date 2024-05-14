@@ -21,7 +21,7 @@ type tChangeNrOfHotelsBoughtInRound = [nrOfHotelsInRound: number, playerName: st
 
 export type tChangeNrHotelsBoughtInRoundByPlayers = tChangeNrOfHotelsBoughtInRound[]
 
-type tMovePlayer = [playerName: string, fieldNr: number];
+type tMovePlayer = [ fieldNr: number, playerName: string];
 
 export type tMovePlayers = tMovePlayer[];
 

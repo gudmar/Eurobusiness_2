@@ -717,6 +717,7 @@ const state = {
         specialCards: [],
         color: "yellow",
         fieldNr: 0,
+        //lastFieldNr: 0, // optional, for counting if start field was passed
         isInPrison: false,
         nrTurnsToWait: 0,
         isGameLost: false,
@@ -728,6 +729,7 @@ const state = {
         name: DWALIN,
         money: 3000,
         specialCards: [],
+        //lastFieldNr: 0, // optional, for counting if start field was passed
         color: "red",
         fieldNr: 0,
         isInPrison: false,
@@ -742,6 +744,7 @@ const state = {
         money: 3000,
         specialCards: [],
         color: "green",
+        //lastFieldNr: 0, // optional, for counting if start field was passed
         fieldNr: 0,
         isInPrison: false,
         nrTurnsToWait: 0,
@@ -755,6 +758,7 @@ const state = {
         money: 3000,
         specialCards: [],
         color: "blue",
+        //lastFieldNr: 0, // optional, for counting if start field was passed
         fieldNr: 0,
         isInPrison: false,
         nrTurnsToWait: 0,

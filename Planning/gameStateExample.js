@@ -717,6 +717,7 @@ const state = {
         specialCards: [],
         color: "yellow",
         fieldNr: 9,
+        lastFieldNr: 0, // optional, for counting if start field was passed
         isInPrison: false,
         nrTurnsToWait: 0,
         isGameLost: false,
@@ -732,6 +733,7 @@ const state = {
         ],
         color: "red",
         fieldNr: 13,
+        lastFieldNr: 0, // optional, for counting if start field was passed
         isInPrison: false,
         nrTurnsToWait: 0,
         isGameLost: false,
@@ -747,6 +749,7 @@ const state = {
         ],
         color: "green",
         fieldNr: 24,
+        lastFieldNr: 0, // optional, for counting if start field was passed
         isInPrison: false,
         nrTurnsToWait: 0,
         isGameLost: false,
@@ -760,6 +763,7 @@ const state = {
         specialCards: [],
         color: "blue",
         fieldNr: 39,
+        lastFieldNr: 0, // optional, for counting if start field was passed
         isInPrison: false,
         nrTurnsToWait: 0,
         isGameLost: false,

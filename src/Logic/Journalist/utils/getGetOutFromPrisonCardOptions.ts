@@ -82,6 +82,7 @@ export const getSpecialCardsOptions = (args: tStateModifierArgs): tJournalistOpt
             type: OptionTypes.UseSpecialCard,
             payload: playersSpecialCards,
         }
+        return state
     }
     const specialCards = {
         isMandatory: false,

@@ -1,8 +1,11 @@
+import { PassStartPayments } from "../../Logic/Player/types";
 import { iPlayerState } from "../../Logic/Players/types";
 import { iAction } from "../../Logic/types";
 
-type tPayload = string | number | [] | iPlayerReducerState
+type tPayload = string | number | [] | iPlayerReducerState | PassStartPayments
 type iPlayerReducerState = any;
+
+const DONT_PAY = PassStartPayments.DoNot;
 
 enum EditPlayerTypes {
     changeName = 'changeName',
@@ -13,6 +16,8 @@ enum EditPlayerTypes {
     changeTurnsToWait = 'changeTurnsToWait',
     changeGameLost = 'changeGameLost',
     changeState = 'changeState',
+    changeLastFieldNr = 'changeLastFieldNr',
+    setShouldPayForPassingStart = "setShouldPayForPassingStart"// DONT_PAY,
     // changeColor = 'changeColor'
 }
 
@@ -72,6 +77,8 @@ export const REDUCER = {
     [EditPlayerTypes.changeTurnsToWait]:   getNewState,//changeTrurnsToWait,
     [EditPlayerTypes.changeGameLost]:      getNewState,//changeGameLost,
     [EditPlayerTypes.changeState]:         getNewState,//changeState,
+    [EditPlayerTypes.changeLastFieldNr]:   getNewState,
+    [EditPlayerTypes.setShouldPayForPassingStart]: getNewState,
 }
 
 type tPlayerReducerTypes = keyof typeof EditPlayerTypes
@@ -91,6 +98,8 @@ export const changeIsInPrisonAction = (isInPrison: string) => ({type: EditPlayer
 export const changeTurnsToWaitAction = (turnsToWait: number) => ({type: EditPlayerTypes.changeTurnsToWait, payload: turnsToWait});
 export const changeGameLostAction = (isGameLost: string) => ({type: EditPlayerTypes.changeGameLost, payload: isGameLost});
 export const changeStateAction = (state: iPlayerReducerState) => ({type: EditPlayerTypes.changeName, payload: state});
+export const changeLastFieldNrAction = (lastFieldNr: number) => ({type: EditPlayerTypes.changeLastFieldNr, payload: lastFieldNr})
+export const changeShouldPayForPassingStartAction = (value: PassStartPayments) => ({type: EditPlayerTypes.setShouldPayForPassingStart, payload: value})
 
 export const getUpdateName = (dispatch: any) => ({name}: any) => { dispatch(changeNameAction(name))};
 export const getUpdateMoney = (dispatch: any) => ({money}: any) => { dispatch(changeMoneyAction(money))};
@@ -100,3 +109,5 @@ export const getUpdateIsInPrison = (dispatch: any) => ({isInPrison}: any) => { d
 export const getUpdateTurnsToWait = (dispatch: any) => ({turnsToWait}: any) => { dispatch(changeTurnsToWaitAction(turnsToWait))};
 export const getUpdateGameLost = (dispatch: any) => ({gameLost}: any) => { dispatch(changeGameLostAction(gameLost))};
 export const getUpdateState = (dispatch: any) => (state: any) => { dispatch(changeStateAction(state))};
+export const getUpdateLastFieldNr = (dispatch: any) => (state: any) => { dispatch(changeLastFieldNrAction(state))}
+export const getUpdateShouldPayForPassingStart = (dispatch: any) => (state: any) => dispatch(changeShouldPayForPassingStartAction(state));
