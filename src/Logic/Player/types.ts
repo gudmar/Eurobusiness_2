@@ -6,6 +6,13 @@ import { StrategyNames } from "../Strategies/types";
 export const NR_OF_HOTELS_PURCHASED_IN_ROUND = 'nrOfHotelsPurchasedInRound';
 export const NR_OF_HOUSES_PURCHASED_IN_TURN = 'nrOfHousesPurchasedInTurn';
 
+export enum PassStartPayments {
+    Force = "Pass start (Force payment for start pass)",
+    ForceForward = "Forward (Force payment for pass start only if in forward direction)",
+    ForceBackward = "Backward (Force payment for pass start only if in reverse direction)",
+    DoNot = "Do not (Don't pay for passing start)"
+}
+
 export interface iPlayerSnapshot {
     name: string,
     money: number,

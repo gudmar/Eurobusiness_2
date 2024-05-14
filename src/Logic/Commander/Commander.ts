@@ -12,6 +12,7 @@ import { DiceTestModeDecorator } from "../Dice/Dice";
 import { TestModes } from "../Dice/types";
 import { Game } from "../Game/Game";
 import { Player } from "../Player/Player";
+import { PassStartPayments } from "../Player/types";
 import { Players } from "../Players/Players";
 import { iPlayer } from "../Players/types";
 import { tChanceCardPayload } from "./types";

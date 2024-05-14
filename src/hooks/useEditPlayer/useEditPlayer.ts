@@ -4,10 +4,11 @@ import { PRISON_FIELD_NR_INDEXED_FROM_0 } from "../../Constants/constants";
 import { tColors } from "../../Data/types";
 import { clearArray } from "../../Functions/clearArray";
 import { ANY_CHANGE } from "../../Logic/Messages/constants";
+import { PassStartPayments } from "../../Logic/Player/types";
 import { Players } from "../../Logic/Players/Players";
 import { iPlayer } from "../../Logic/Players/types";
 import { iSubscription, tSubscription } from "../../Types/types";
-import { changeStateAction, getUpdateFieldNr, getUpdateGameLost, getUpdateIsInPrison, getUpdateMoney, getUpdateName, getUpdateSpecialCards, getUpdateState, getUpdateTurnsToWait, reducer,} from "./utils";
+import { changeStateAction, getUpdateFieldNr, getUpdateGameLost, getUpdateIsInPrison, getUpdateMoney, getUpdateName, getUpdateShouldPayForPassingStart, getUpdateSpecialCards, getUpdateState, getUpdateTurnsToWait, reducer,} from "./utils";
 
 const getPlayerInstance = (instances: iPlayer[], color: tColors) => (instances.find((instance: iPlayer) => instance.color === color) || null)
 
@@ -36,6 +37,7 @@ const subscribtionsStructure = [
     {propName: 'turnsToWait',  callback: getUpdateTurnsToWait},
     {propName: 'gameLost',     callback: getUpdateGameLost},
     {propName: 'state',        callback: getUpdateState},
+    {propName: 'shouldPayForPassingStart', callback: getUpdateShouldPayForPassingStart}
 ]
 
 export const getUseEditPlayer = (instanceId: string) => (wantedColor: tColors) => {
@@ -45,10 +47,8 @@ export const getUseEditPlayer = (instanceId: string) => (wantedColor: tColors) =
     const specialCards = player.specialCards;
     const initialState = {...player.state }
     const [{
-        name, money, color, fieldNr, isInPrison, nrTurnsToWait, isGameLost
+        name, money, color, fieldNr, isInPrison, nrTurnsToWait, isGameLost, lastFieldNr, shouldPayForPassingStart
     }, dispatch ] = useReducer(reducer, initialState)
-useEffect(() => console.log(wantedColor, [wantedColor]))
-useEffect(() => console.log(player), [player])
     useEffect(() => {
         const subscribtions: (()=>void)[] = [];
         const unsubscribtions: (()=>void)[] = [];
@@ -83,12 +83,26 @@ useEffect(() => console.log(player), [player])
     }, [wantedColor])
     const setFieldNr = useCallback((val: string) => {
         if (player  && !player.isInPrison) {
+            player.setLastFieldNrForTestingPurposes(parseInt(val))
             player.fieldNr = parseInt(val)
         } else {
             infromator.displayError(
                 {
                     title: 'Operation not allowed',
                     message: 'Player cannot be moved as long as he is in prison'
+                }
+            )
+        }
+    }, [wantedColor])
+
+    const setLastFieldNr = useCallback((val: string) => {
+        if (player) {
+            player.setLastFieldNrForTestingPurposes(parseInt(val))
+        } else {
+            infromator.displayError(
+                {
+                    title: 'Operation not allowed',
+                    message: 'Player does not exist'
                 }
             )
         }
@@ -118,12 +132,16 @@ useEffect(() => console.log(player), [player])
             player.isGameLost = val
         }
     }, [wantedColor])
+    const setShouldPayForPassingStart = useCallback((val: PassStartPayments) => {
+        if(player) player.shouldPayForPassingStart = val;
+    }, [wantedColor]);
 
     return {
         name, setName, setMoney, money, 
         specialCards, color, fieldNr, setFieldNr, 
         isInPrison, setIsInPrison, nrTurnsToWait, 
-        setNrTurnsToWait, isGameLost, setIsGameLost,
+        setNrTurnsToWait, isGameLost, setIsGameLost, setLastFieldNr, lastFieldNr, shouldPayForPassingStart,
+        setShouldPayForPassingStart,
     }
 }
 
