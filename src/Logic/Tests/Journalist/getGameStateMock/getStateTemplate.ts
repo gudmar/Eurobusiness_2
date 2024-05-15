@@ -5,7 +5,7 @@ import { tFieldState } from "../../../boardTypes";
 import { tChanceCardsHolderState } from "../../../Chance/types";
 import { Commands } from "../../../Commander/commands";
 import { TestModes } from "../../../Dice/types";
-import { iPlayerSnapshot } from "../../../Player/types";
+import { iPlayerSnapshot, PassStartPayments } from "../../../Player/types";
 import { StrategyNames } from "../../../Strategies/types";
 import { TurnPhases } from "../../../types";
 
@@ -777,6 +777,8 @@ const getPlayersStateTemplate = (): iPlayerSnapshot[] => ([
           strategy: StrategyNames.manual,
           nrOfHousesPurchasedInTurn: 0,
           nrOfHotelsPurchasedInRound: 0,
+          shouldPayForPassingStart: PassStartPayments.NotSet,
+          lastFieldNr: 0,
         },
         {
           name: "Dwalin",
@@ -790,6 +792,8 @@ const getPlayersStateTemplate = (): iPlayerSnapshot[] => ([
           strategy: StrategyNames.manual,
           nrOfHousesPurchasedInTurn: 0,
           nrOfHotelsPurchasedInRound: 0,
+          shouldPayForPassingStart: PassStartPayments.NotSet,
+          lastFieldNr: 0,
         },
         {
           name: "Dorin",
@@ -803,6 +807,8 @@ const getPlayersStateTemplate = (): iPlayerSnapshot[] => ([
           strategy: StrategyNames.manual, 
           nrOfHousesPurchasedInTurn: 0,
           nrOfHotelsPurchasedInRound: 0,
+          shouldPayForPassingStart: PassStartPayments.NotSet,
+          lastFieldNr: 0,
         },
         {
           name: "Gloin",
@@ -816,6 +822,8 @@ const getPlayersStateTemplate = (): iPlayerSnapshot[] => ([
           strategy: StrategyNames.manual,
           nrOfHousesPurchasedInTurn: 0,
           nrOfHotelsPurchasedInRound: 0,
+          shouldPayForPassingStart: PassStartPayments.NotSet,
+          lastFieldNr: 0,
         }
       ])
 

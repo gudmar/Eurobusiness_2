@@ -44,3 +44,5 @@ export const TURNS_TO_WAIT_TO_GET_OUT_OF_JAIL = 2;
 //=========================
 export const INFORMATION_TIMEOUT = 5000;
 export const MAX_PLAYER_NAME_LENGTH = 20;
+
+export const PASS_START_AMMOUNT = 400;

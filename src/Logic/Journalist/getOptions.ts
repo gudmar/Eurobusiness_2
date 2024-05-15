@@ -6,6 +6,7 @@ import { getSpecialCardsOptions } from "./utils/getGetOutFromPrisonCardOptions"
 import { getPlegdeOptions } from "./utils/getPlegdeOptions"
 import { getTestableOptionsWithSellBuildings } from "./utils/getSellBuildingOptions"
 import { getSellEstatesOptions } from "./utils/getSellEstatesOptions"
+import { getShouldPayForPassingStartOptions } from "./utils/getShouldPayForPassingStartOptions"
 import { getUnplegdeOptions } from "./utils/getUnplegdeOptions"
 import { tStateModifierArgs } from "./utils/types"
 
@@ -119,6 +120,7 @@ export const getTestableOptions = (state: tGameState, playerName: string): tJour
             getPlegdeOptions,
             getUnplegdeOptions,
             getSpecialCardsOptions,
+            getShouldPayForPassingStartOptions,
         ]
     )
     return result as tJournalistState;

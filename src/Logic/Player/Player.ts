@@ -18,7 +18,7 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
     private _color: tColors;
     private _fieldNr: number; // indexed from 1
     private _lastFieldNr: number; // last field index, for telling if start was passed purposes
-    private _shouldPayForPassingStart = PassStartPayments.DoNot;
+    private _shouldPayForPassingStart = PassStartPayments.NotSet;
     private _isInPrison: boolean;
     private _nrTurnsToWait: number;
     private _isGameLost: boolean;

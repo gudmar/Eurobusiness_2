@@ -7,6 +7,7 @@ export const NR_OF_HOTELS_PURCHASED_IN_ROUND = 'nrOfHotelsPurchasedInRound';
 export const NR_OF_HOUSES_PURCHASED_IN_TURN = 'nrOfHousesPurchasedInTurn';
 
 export enum PassStartPayments {
+    NotSet = "Not set",
     Force = "Pass start (Force payment for start pass)",
     ForceForward = "Forward (Force payment for pass start only if in forward direction)",
     ForceBackward = "Backward (Force payment for pass start only if in reverse direction)",
@@ -23,6 +24,8 @@ export interface iPlayerSnapshot {
     nrTurnsToWait: number,
     isGameLost: boolean,
     strategy: StrategyNames,
+    shouldPayForPassingStart: PassStartPayments,
+    lastFieldNr: number,
     [NR_OF_HOTELS_PURCHASED_IN_ROUND]: number
     // nrOfHotelsPurchasedInRound: number,
     // nrOfHousesPurchasedInTurn: number,

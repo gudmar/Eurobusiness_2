@@ -123,6 +123,8 @@ const getPlayerPropChanger = (propName: tPlayerKeys, keyInOptions: tOptionsKeys)
 
 const changeHousesInTurn = getPlayerPropChanger('nrOfHousesPurchasedInTurn', 'housesInTurn');
 const movePlayers = getPlayerPropChanger('fieldNr', 'movePlayers');
+const lastPlayersField = getPlayerPropChanger('lastFieldNr', 'lastPlayersField');
+const shouldPayForStart = getPlayerPropChanger('shouldPayForPassingStart', 'shouldPayForStart');
 const setMoney = getPlayerPropChanger('money', 'setMoney');
 const setCards = getPlayerPropChanger('specialCards', 'setCards');
 // const sendToJail = getPlayerPropChanger('isInPrison', 'toJail');
@@ -166,6 +168,8 @@ export const getMockedGameState = (options?: tGetGameStateMockOptions) => {
       setTurnsToWait,
       setCurrentPlayer,
       setGamePhase,
+      lastPlayersField,
+      shouldPayForStart
     ]
     const readyState = applyStateModifiersToGameState(
       {state, options} as {state: tGameState, options: tGetGameStateMockOptions, playerName: string},
