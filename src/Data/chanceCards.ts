@@ -4,6 +4,16 @@ import { iChanceCardsData } from "./types";
 export const RED_CARDS_SET_NAME = 'Chance cards red';
 export const BLUE_CARDS_SET_NAME = 'Chance cards blue';
 
+    // Cofasz się o 3 pola,
+    // Wracasz do Madrytu => Prawdopodobnie trzeba dodać didPassStart do playera
+    // Wracasz na start => z automatu dodać => jeżeli index 1 a potem inny to płać
+    // Idziesz do więzienia, nie przechodzisz przez start, nie dostajesz 400 // Tutaj flaga didPassStart
+    // Idziesz do Neapolu, jeżeli przechodzisz przez start otrzymujesz ...  // Flagi nie trzeba
+    // Wracasz do bruxeli, jeżeli przechodzisz przez start dostajesz 400 ... // Wracasz, więc jeszcze kierunek dochodzi.. Jeżeli byłeś na 5 a wracasz na 6 to przechodzisz przez start cofając się
+    // Idziesz do kolei wschodnich, jeżeli przechodzisz...
+    // Wracasz do wiednia... Nie ma nic o starcie, więc trzeba wymusić nie płacenie podczas tej operacji // Flaga
+//Flage shouldPayForPassingStart decyduje o wypłaceniu kasy, i tu trzeba ją ustawić, w każdym handlerze
+
 export const CHANCE_CARDS_RED: iChanceCardsData = {
     cardsSetName: RED_CARDS_SET_NAME,
     0: {

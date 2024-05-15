@@ -143,7 +143,7 @@ export class Commander {
         const {throws, sum, doublets} = Commander._testDice.throwToMove(fieldNr);
         if (doublets >=2) Commander.putPlayerToJail(playerColor)
         // const nextFieldNr = (sum + player.fieldNr) % BOARD_SIZE;
-        const nextFieldNr = shiftBoardIndexBy1(sum+player.fieldNr);
+        const nextFieldNr = shiftBoardIndexBy1(sum + player.fieldNr);
         if (testMode === TestModes.none) {
             displayInfo({title: 'Dice throw result:', message: `Dice throws shows: [${throws.flat().join(', ')}]. Moving ${playerColor} player to field nr ${nextFieldNr}`})
         } else {

@@ -1,3 +1,5 @@
+
+
 const BALIN = 'Balin';
 const DWALIN = 'Dwalin';
 const DORIN = 'Dorin';
@@ -724,6 +726,7 @@ const state = {
         strategy: "manual",
         nrOfHousesPurchasedInTurn: 0,
         nrOfHotelsPurchasedInRound: 0,
+        shouldPayForPassingStart: PassStartPayments.DoNot 
       },
       {
         name: DWALIN,
@@ -738,6 +741,7 @@ const state = {
         strategy: "manual",
         nrOfHousesPurchasedInTurn: 0,
         nrOfHotelsPurchasedInRound: 0,
+        shouldPayForPassingStart: PassStartPayments.DoNot 
       },
       {
         name: DORIN,
@@ -752,6 +756,7 @@ const state = {
         strategy: "manual",
         nrOfHousesPurchasedInTurn: 0,
         nrOfHotelsPurchasedInRound: 0,
+        shouldPayForPassingStart: PassStartPayments.DoNot 
       },
       {
         name: GLOIN,
@@ -766,6 +771,7 @@ const state = {
         strategy: "manual",
         nrOfHousesPurchasedInTurn: 0,
         nrOfHotelsPurchasedInRound: 0,
+        shouldPayForPassingStart: PassStartPayments.DoNot 
       }
     ],
     chanceCards: {

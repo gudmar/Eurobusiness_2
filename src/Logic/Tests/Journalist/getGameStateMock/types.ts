@@ -1,5 +1,6 @@
 import { BLUE_CARDS_SET_NAME, RED_CARDS_SET_NAME, SPECIAL_CARD_BLUE, SPECIAL_CARD_RED } from "../../../../Data/chanceCards"
 import { tGameState } from "../../../../Functions/PersistRetrieveGameState/types"
+import { PassStartPayments } from "../../../Player/types"
 import { TurnPhases } from "../../../types"
 // import { iCityFieldState, iNonCityEstatesFieldState } from "../../../boardTypes"
 
@@ -49,6 +50,9 @@ export type tChangeNrOfHousesBoughtInTurnByPlayers = [nrOfHousesInTurn: number, 
 
 export type tChangeCurrentPlayer = [name: string];
 
+export type tChangeShouldPayForStart = [newValue: PassStartPayments, playerName: string];
+
+type tChangeShouldStartPayments = tChangeShouldPayForStart[]
 
 export type tGetGameStateMockOptions = {
     estatesDelta?: tChangePropsInEstatesDelta,
@@ -62,6 +66,8 @@ export type tGetGameStateMockOptions = {
     playersWait?: tSetTurnsToWaitOnPlayers,
     currentPlayer?: tChangeCurrentPlayer,
     setGamePhase?: TurnPhases,
+    lastPlayersField?: tMovePlayers,
+    shouldPayForStart?: tChangeShouldStartPayments,
 }
 
 export type tProps = {

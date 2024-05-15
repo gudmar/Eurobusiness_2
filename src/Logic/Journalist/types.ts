@@ -1,4 +1,5 @@
 import { tObject } from "../types";
+import { GET_MONEY, PAY } from "./const";
 
 export enum Messages {
     optionsChanged = 'Options changed',
@@ -18,6 +19,7 @@ export enum OptionTypes {
     GoToJail = 'Go to jail',
     UseSpecialCard = 'Use special card',
     SellSpecialCard = 'Sell special card',
+    GetMoney = 'Get money'
 }
 
 export type tOption = {
@@ -41,6 +43,17 @@ type tJournalistOutputObject = tObject<any>;
 
 type tJournalistOutputBooleanOrRejection = boolean | tRejection;
 
+type tPayments = {   
+    visigingOtherPlayersEstate: tJournalistOutput,
+    visitingPaymentField: tJournalistOutput,
+    chanceCardPayment: tJournalistOutput
+}
+
+type tGetMoney = {
+    passingStart: tJournalistOutput,
+    otherPlayerVisited: tJournalistOutput,
+}
+
 export type tJournalistState = {
     // buyBuildings:  tJournalistOutputArrayOrRejection[] | tJournalistOutputArrayOrRejection;
     buyBuildings: tOption | tRejection,
@@ -54,8 +67,8 @@ export type tJournalistState = {
     sellEstates: tJournalistOutput;
     plegdeEstates: tJournalistOutput;
     unplegdeEstates: tJournalistOutput;
-    pay?: tJournalistOutput; // When on not guarded parking, there is no reason to explain why not to pay
-    getMoney?: tJournalistOutput;
+    [PAY]?: tPayments; // When on not guarded parking, there is no reason to explain why not to pay
+    [GET_MONEY]?: tGetMoney;
     goToJail?: tJournalistOutput;
     specialCards?: tJournalistOutput;
     move: boolean;
@@ -70,8 +83,8 @@ export type tJournalistOptionsUnderDevelopement = {
     plegdeEstates?: tJournalistOutput;
     unplegdeEstates?: tJournalistOutput;
     specialCards?: tJournalistOutput;
-    pay?: tJournalistOutput; // When on not guarded parking, there is no reason to explain why not to pay
-    getMoney?: tJournalistOutput;
+    pay?: tPayments; // When on not guarded parking, there is no reason to explain why not to pay
+    [GET_MONEY]?: tGetMoney;
     goToJail?: tJournalistOutput;
     move?: tJournalistOutputBooleanOrRejection;
     endPhase?: tJournalistOutputBooleanOrRejection;
