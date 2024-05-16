@@ -34,6 +34,18 @@ const isJustStartPassedCase =  (state: tGameState) => {
     return lastFieldNr > fieldNr;
 }
 
+const didPassInBackwordDirection = (state: tGameState) => {
+    const {fieldNr, lastFieldNr, shouldPayForPassingStart} = getCurrentPlayer(state);
+    const result = lastFieldNr < fieldNr && shouldPayForPassingStart === PassStartPayments.ForceBackward;
+    return result;
+}
+
+const PAYMENT = {
+    [IS_MANDATORY]: true,
+    [TYPE]: OptionTypes.GetMoney,
+    [PAYLOAD]: PASS_START_AMMOUNT,
+}
+
 export const getShouldPayForPassingStartOptions = (args: tStateModifierArgs) => {
     const { options, state, playerName } = args;
     const isCurrentPlayer = checkIfCurrentPlayer(options!, playerName);
@@ -57,11 +69,7 @@ export const getShouldPayForPassingStartOptions = (args: tStateModifierArgs) => 
     const isJustStartPassed = isJustStartPassedCase(options!);
     if (isJustStartPassed) {
         createPath(state, [GET_MONEY, PASSING_START,]);
-        (state[GET_MONEY]![PASSING_START] as tOption) = {
-            [IS_MANDATORY]: true,
-            [TYPE]: OptionTypes.GetMoney,
-            [PAYLOAD]: PASS_START_AMMOUNT,
-        }
+        (state[GET_MONEY]![PASSING_START] as tOption) = PAYMENT
         return state;
     }
     const isForbidden = getCurrentPlayer(options).shouldPayForPassingStart === PassStartPayments.DoNot;
@@ -70,5 +78,13 @@ export const getShouldPayForPassingStartOptions = (args: tStateModifierArgs) => 
         (state[GET_MONEY]![PASSING_START] as tRejection)!.reason = PassingStartPaymentErrors.Forbidden;
         return state;
     }
+    const isInBackwordDirection = didPassInBackwordDirection(options!);
+    if (isInBackwordDirection) {
+        createPath(state, [GET_MONEY, PASSING_START, REASON]);
+        (state[GET_MONEY]![PASSING_START] as tOption) = PAYMENT
+        return state;
+    }
+    createPath(state, [GET_MONEY, PASSING_START, REASON]);
+    (state[GET_MONEY]![PASSING_START] as tRejection)!.reason = PassingStartPaymentErrors.NotPassed;
     return state;
 };

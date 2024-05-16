@@ -3,6 +3,7 @@ import { tGameState } from "../../Functions/PersistRetrieveGameState/types"
 import { tJournalistOptionsUnderDevelopement, tJournalistState } from "./types"
 import { getTestableOptionsWithBuyBuildings } from "./utils/getBuyBuildingsOptions"
 import { getSpecialCardsOptions } from "./utils/getGetOutFromPrisonCardOptions"
+import { getMayPlayerEndGameOptions } from "./utils/getMayPlayerEndGameOptions"
 import { getPlegdeOptions } from "./utils/getPlegdeOptions"
 import { getTestableOptionsWithSellBuildings } from "./utils/getSellBuildingOptions"
 import { getSellEstatesOptions } from "./utils/getSellEstatesOptions"
@@ -107,21 +108,26 @@ const applyStateToJournalistOptions = applyStateModifiers<tJournalistOptionsUnde
 // are a separate responsiblity
 export const getTestableOptions = (state: tGameState, playerName: string): tJournalistState => {
     // const result = {};
+    const builderSequence = [
+        getTestableOptionsWithBuyBuildings,
+        getTestableOptionsWithSellBuildings,
+        getSellEstatesOptions,
+        getPlegdeOptions,
+        getUnplegdeOptions,
+        getSpecialCardsOptions,
+        getShouldPayForPassingStartOptions,
+        getMayPlayerEndGameOptions,
+    ];
+    if (builderSequence[builderSequence.length - 1] !== getMayPlayerEndGameOptions) {
+        throw new Error('getMayPlayerEndGameOptions should be the last function in optionsBuilder')
+    }
     const result = applyStateToJournalistOptions(
         {
             state: {},
             options: state,
             playerName,
         },
-        [
-            getTestableOptionsWithBuyBuildings,
-            getTestableOptionsWithSellBuildings,
-            getSellEstatesOptions,
-            getPlegdeOptions,
-            getUnplegdeOptions,
-            getSpecialCardsOptions,
-            getShouldPayForPassingStartOptions,
-        ]
+        builderSequence,
     )
     return result as tJournalistState;
     return BLANK_TESTABLE_OPTIONS_OUTPUT
