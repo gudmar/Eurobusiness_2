@@ -1,6 +1,9 @@
+import { AUSTRIA, INSBRUK, MEDIOLAN, NEAPOL, SALONIKI, WIEDEN } from "../../../../Data/const"
 import { GET_MONEY, IS_MANDATORY, PASSING_START, PAYLOAD, REASON, TYPE } from "../../../Journalist/const"
 import { getTestableOptions } from "../../../Journalist/getOptions"
-import { OptionTypes } from "../../../Journalist/types"
+import { OptionTypes, tJournalistOutputArrayOrRejection } from "../../../Journalist/types"
+import { BuildingPermitRejected, NrOfHouses } from "../../../Journalist/utils/getBuildingPermits"
+import { NoBuildingPermitResults } from "../../../Journalist/utils/getBuyBuildingsOptions"
 import { PassingStartPaymentErrors } from "../../../Journalist/utils/getShouldPayForPassingStartOptions"
 import { PassStartPayments } from "../../../Player/types"
 import { DoneThisTurn, TurnPhases } from "../../../types"
@@ -19,15 +22,16 @@ describe('Options after player move', () => {
         // + Wracasz do Madrytu => Prawdopodobnie trzeba dodać didPassStart do playera
         // + Wracasz na start => z automatu dodać => jeżeli index 1 a potem inny to płać
         // + Idziesz do więzienia, nie przechodzisz przez start, nie dostajesz 400 // Tutaj flaga didPassStart
-        // Idziesz do Neapolu, jeżeli przechodzisz przez start otrzymujesz ...  // Flagi nie trzeba
-        // Wracasz do bruxeli, jeżeli przechodzisz przez start dostajesz 400 ... // Wracasz, więc jeszcze kierunek dochodzi.. Jeżeli byłeś na 5 a wracasz na 6 to przechodzisz przez start cofając się
-        // Idziesz do kolei wschodnich, jeżeli przechodzisz...
-        // Wracasz do wiednia... Nie ma nic o starcie, więc trzeba wymusić nie płacenie podczas tej operacji // Flaga
+        // + Idziesz do Neapolu, jeżeli przechodzisz przez start otrzymujesz ...  // Flagi nie trzeba
+        // + Wracasz do bruxeli, jeżeli przechodzisz przez start dostajesz 400 ... // Wracasz, więc jeszcze kierunek dochodzi.. Jeżeli byłeś na 5 a wracasz na 6 to przechodzisz przez start cofając się
+        // + Idziesz do kolei wschodnich, jeżeli przechodzisz...
+        // + Wracasz do wiednia... Nie ma nic o starcie, więc trzeba wymusić nie płacenie podczas tej operacji // Flaga
         const START_FIELD_INDEX = 0;
         const AFTER_START_FIELD_INDEX = 1;
         const BEFORE_START_FIELD_INDEX = 39;
         const MADRIT_INDEX = 14;
         const NEAPOL_INDEX = 6;
+        const AFTER_NEAPOL_FIELD_INDEX = 20
 
         it('Should return not proper player when current player is different than given player', () => {
             const state = getMockedGameState({
@@ -144,7 +148,7 @@ describe('Options after player move', () => {
                 [PAYLOAD]: 400
             });
         })
-        it('Should not accept payment when player goes (back) to Neapoly and does not pass start)', () => {
+        it('Should not accept payment when player goes to Neapoly and does not pass start)', () => {
             const state = getMockedGameState({
                 currentPlayer: [DORIN],
                 setGamePhase: TurnPhases.AfterMove,
@@ -154,19 +158,44 @@ describe('Options after player move', () => {
             });
             const options = getTestableOptions(state, DORIN);
             const result = options[GET_MONEY]?.[PASSING_START];
-            expect(result).not.toEqual({
+            expect(result).toEqual({ [REASON]: PassingStartPaymentErrors.NotPassed});
+        })
+        it('Should not accept payment when player goes (back) to Neapoly and does not pass start)', () => {
+            const state = getMockedGameState({
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[NEAPOL_INDEX, DORIN]],
+                lastPlayersField: [[AFTER_NEAPOL_FIELD_INDEX, DORIN]],
+                shouldPayForStart: [[PassStartPayments.ForceBackward, DORIN]],
+            });
+            const options = getTestableOptions(state, DORIN);
+            const result = options[GET_MONEY]?.[PASSING_START];
+            expect(result).toEqual({ [REASON]: PassingStartPaymentErrors.NotPassed});
+        })
+        it('Should accept payment when player goes (back) to Neapoly and does passes start)', () => {
+            const state = getMockedGameState({
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[NEAPOL_INDEX, DORIN]],
+                lastPlayersField: [[AFTER_START_FIELD_INDEX, DORIN]],
+                shouldPayForStart: [[PassStartPayments.ForceBackward, DORIN]],
+            });
+            const options = getTestableOptions(state, DORIN);
+            const result = options[GET_MONEY]?.[PASSING_START];
+            expect(result).toEqual({
                 [IS_MANDATORY]: true,
                 [TYPE]: OptionTypes.GetMoney,
                 [PAYLOAD]: 400
             });
         })
+
         it('Should not give money option for start, when money already payed', () => {
             // some new state variable needed
             const state = getMockedGameState({
                 currentPlayer: [DORIN],
                 setGamePhase: TurnPhases.AfterMove,
                 movePlayers: [[NEAPOL_INDEX, DORIN]],
-                lastPlayersField: [[BEFORE_START_FIELD_INDEX, DORIN]],
+                lastPlayersField: [[AFTER_NEAPOL_FIELD_INDEX, DORIN]],
                 shouldPayForStart: [[PassStartPayments.NotSet, DORIN]],
                 addDoneThisTurn: [DoneThisTurn.GotMoneyForStart]
             });
@@ -175,12 +204,25 @@ describe('Options after player move', () => {
             expect(result).toEqual({ [REASON]: PassingStartPaymentErrors.AlreadyGotMoney });
         })
     });
+
     describe('Should not cases', () => {
         it('Should not allow to build anything when in after move phase', () => {
             // const options = getTestableOptions();
+            const dorinEstates = [ INSBRUK, WIEDEN, SALONIKI, NEAPOL, MEDIOLAN];
+            const state = getMockedGameState({
+                estatesOwner: [DORIN, dorinEstates],
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+            });
+            const options = getTestableOptions(state, DORIN);
+            const result = options.buyBuildings
+
+            expect(result).toEqual({ reason: NoBuildingPermitResults.NotGoodMoment })
+
         })
         it('Should not allow to end turn when there is a pending mandatory action', () => {
-
+            // Mandatory actions occure in after move phase, and buildings may be purchased in before move phases
+                        
         })
     })
     describe('Should cases', () => {

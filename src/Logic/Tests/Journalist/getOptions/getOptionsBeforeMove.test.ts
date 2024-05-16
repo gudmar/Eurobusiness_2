@@ -191,7 +191,7 @@ describe('Testing getOptions', () => {
                             setMoney: [[399, DORIN]]
                         });
                         const options = getTestableOptions(state, DORIN);
-                        expect(options.buyBuildings).toEqual({reason: NoBuildingPermitResults.NoMoney})    
+                        expect(options.buyBuildings).toEqual({reason: NoBuildingPermitResults.NoMoney})
                     })
                 })
             });
