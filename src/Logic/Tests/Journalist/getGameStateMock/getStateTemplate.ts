@@ -53,7 +53,8 @@ const getGameLogicState = () => {
   const gameLogicState = {
     currentPlayer: BALIN,
     playersOrder: [BALIN, DWALIN, DORIN, GLOIN],
-    turnPhase: TurnPhases.BeforeMove
+    turnPhase: TurnPhases.BeforeMove,
+    doneThisTurn: []
   };
   return gameLogicState;
 }

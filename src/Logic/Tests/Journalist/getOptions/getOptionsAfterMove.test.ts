@@ -3,7 +3,7 @@ import { getTestableOptions } from "../../../Journalist/getOptions"
 import { OptionTypes } from "../../../Journalist/types"
 import { PassingStartPaymentErrors } from "../../../Journalist/utils/getShouldPayForPassingStartOptions"
 import { PassStartPayments } from "../../../Player/types"
-import { TurnPhases } from "../../../types"
+import { DoneThisTurn, TurnPhases } from "../../../types"
 import { getMockedGameState } from "../getGameStateMock/getGameStateMock"
 import { BALIN, DORIN } from "../getGameStateMock/getStateTemplate"
 
@@ -133,7 +133,7 @@ describe('Options after player move', () => {
                 currentPlayer: [DORIN],
                 setGamePhase: TurnPhases.AfterMove,
                 movePlayers: [[NEAPOL_INDEX, DORIN]],
-                lastPlayersField: [[AFTER_START_FIELD_INDEX, DORIN]],
+                lastPlayersField: [[BEFORE_START_FIELD_INDEX, DORIN]],
                 shouldPayForStart: [[PassStartPayments.NotSet, DORIN]],
             });
             const options = getTestableOptions(state, DORIN);
@@ -149,7 +149,7 @@ describe('Options after player move', () => {
                 currentPlayer: [DORIN],
                 setGamePhase: TurnPhases.AfterMove,
                 movePlayers: [[NEAPOL_INDEX, DORIN]],
-                lastPlayersField: [[BEFORE_START_FIELD_INDEX, DORIN]],
+                lastPlayersField: [[AFTER_START_FIELD_INDEX, DORIN]],
                 shouldPayForStart: [[PassStartPayments.NotSet, DORIN]],
             });
             const options = getTestableOptions(state, DORIN);
@@ -160,7 +160,20 @@ describe('Options after player move', () => {
                 [PAYLOAD]: 400
             });
         })
-
+        it('Should not give money option for start, when money already payed', () => {
+            // some new state variable needed
+            const state = getMockedGameState({
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[NEAPOL_INDEX, DORIN]],
+                lastPlayersField: [[BEFORE_START_FIELD_INDEX, DORIN]],
+                shouldPayForStart: [[PassStartPayments.NotSet, DORIN]],
+                addDoneThisTurn: [DoneThisTurn.GotMoneyForStart]
+            });
+            const options = getTestableOptions(state, DORIN);
+            const result = options[GET_MONEY]?.[PASSING_START];
+            expect(result).toEqual({ [REASON]: PassingStartPaymentErrors.AlreadyGotMoney });
+        })
     });
     describe('Should not cases', () => {
         it('Should not allow to build anything when in after move phase', () => {

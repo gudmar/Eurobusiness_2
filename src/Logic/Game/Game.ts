@@ -8,7 +8,7 @@ import { tPlayerName } from "../Player/types";
 import { Players } from "../Players/Players";
 import { iPlayerDescriptor } from "../Players/types";
 import { SubscribtionsHandler } from "../SubscrbtionsHandler";
-import { TurnPhases } from "../types";
+import { DoneThisTurn, TurnPhases } from "../types";
 import { Messages, tGameConstructionArgs, tGameLogicState } from "./types";
 
 export class Game extends SubscribtionsHandler<Messages, tGameLogicState | string>  {
@@ -17,12 +17,14 @@ export class Game extends SubscribtionsHandler<Messages, tGameLogicState | strin
         return {
             currentPlayer: Game?.instance?._currentPlayer || '',
             turnPhase: Game?.instance?._turnPhase || TurnPhases.BeforeMove,
-            playersOrder: Game?.instance?._playersOrder || []
+            playersOrder: Game?.instance?._playersOrder || [],
+            doneThisTurn: Game?.instance?._doneThisTurn || [],
         }
     }
     private _turnPhase = TurnPhases.BeforeMove;
     private _playersOrder: tPlayerName[] = [];
     private _currentPlayer: tPlayerName = '';
+    private _doneThisTurn: DoneThisTurn[] = []
     constructor({
         playersData
     }: tGameConstructionArgs){
@@ -53,13 +55,15 @@ export class Game extends SubscribtionsHandler<Messages, tGameLogicState | strin
         this._currentPlayer = this._playersOrder[0];
         Game.instance = this;
         this._turnPhase =TurnPhases.BeforeMove
+        this._doneThisTurn = []
     }
 
     get state() {
         return {
             currentPlayer: this._currentPlayer,
             playersOrder: this._playersOrder,
-            turnPhase: this._turnPhase
+            turnPhase: this._turnPhase,
+            doneThisTurn: this._doneThisTurn,
         }
     }
 

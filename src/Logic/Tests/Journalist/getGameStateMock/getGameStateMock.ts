@@ -127,8 +127,16 @@ const lastPlayersField = getPlayerPropChanger('lastFieldNr', 'lastPlayersField')
 const shouldPayForStart = getPlayerPropChanger('shouldPayForPassingStart', 'shouldPayForStart');
 const setMoney = getPlayerPropChanger('money', 'setMoney');
 const setCards = getPlayerPropChanger('specialCards', 'setCards');
-// const sendToJail = getPlayerPropChanger('isInPrison', 'toJail');
 const setTurnsToWait = getPlayerPropChanger('nrTurnsToWait', 'playersWait');
+
+const setDoneThisTurn = (args: tStateModifierArgs) => {
+  const { options, state } = args;
+  if ('addDoneThisTurn' in options!) {
+    const doneSoFar = state.game.doneThisTurn;
+    state.game.doneThisTurn = [...doneSoFar, ...options.addDoneThisTurn!]
+  }
+  return state;
+}
 
 const setGamePhase = (args: tStateModifierArgs) => {
   const { options, state } = args;
@@ -138,19 +146,7 @@ const setGamePhase = (args: tStateModifierArgs) => {
   return state
 }
 
-type tGameStateModifier = (args: tStateModifierArgs) => tGameState
-
 const applyStateModifiersToGameState = applyStateModifiers<tGameState, tGetGameStateMockOptions>
-
-// const applyStateModifiers = (args: tStateModifierArgs, listOfModifiers: tStateModifier[]) => {
-//   const {state, options} = args;
-//   if (options === undefined) return state;
-//   const result = listOfModifiers.reduce((modifeidState, modifier) => {
-//     const nextState = modifier({state: modifeidState, options});
-//     return nextState;
-//   }, state)
-//   return result;
-// }
 
 export const getMockedGameState = (options?: tGetGameStateMockOptions) => {
     const state = getStateMock();
@@ -169,7 +165,8 @@ export const getMockedGameState = (options?: tGetGameStateMockOptions) => {
       setCurrentPlayer,
       setGamePhase,
       lastPlayersField,
-      shouldPayForStart
+      shouldPayForStart,
+      setDoneThisTurn,
     ]
     const readyState = applyStateModifiersToGameState(
       {state, options} as {state: tGameState, options: tGetGameStateMockOptions, playerName: string},

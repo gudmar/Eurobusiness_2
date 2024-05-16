@@ -1,7 +1,7 @@
 import { BLUE_CARDS_SET_NAME, RED_CARDS_SET_NAME, SPECIAL_CARD_BLUE, SPECIAL_CARD_RED } from "../../../../Data/chanceCards"
 import { tGameState } from "../../../../Functions/PersistRetrieveGameState/types"
 import { PassStartPayments } from "../../../Player/types"
-import { TurnPhases } from "../../../types"
+import { DoneThisTurn, TurnPhases } from "../../../types"
 // import { iCityFieldState, iNonCityEstatesFieldState } from "../../../boardTypes"
 
 type tProp = {
@@ -54,6 +54,8 @@ export type tChangeShouldPayForStart = [newValue: PassStartPayments, playerName:
 
 type tChangeShouldStartPayments = tChangeShouldPayForStart[]
 
+type tAddDoneThisTurn = DoneThisTurn[]
+
 export type tGetGameStateMockOptions = {
     estatesDelta?: tChangePropsInEstatesDelta,
     estatesOwner?: tChangeEstatesOwner,
@@ -68,6 +70,7 @@ export type tGetGameStateMockOptions = {
     setGamePhase?: TurnPhases,
     lastPlayersField?: tMovePlayers,
     shouldPayForStart?: tChangeShouldStartPayments,
+    addDoneThisTurn?: tAddDoneThisTurn,
 }
 
 export type tProps = {
@@ -81,4 +84,6 @@ export type tChangeInEstate = {
 
 export type tCardType = typeof BLUE_CARDS_SET_NAME | typeof RED_CARDS_SET_NAME;
 
-export type tStateModifierArgs = {state: tGameState, options?: tGetGameStateMockOptions}
+export type tStateModifierArgs = {
+  state: tGameState, options?: tGetGameStateMockOptions
+}

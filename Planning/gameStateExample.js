@@ -1219,7 +1219,14 @@ const state = {
     game: {
       currentPlayer: BALIN,
       playersOrder: [BALIN, DWALIN, DORIN, GLOIN],
-      turnPhase: 'Before move'
+      turnPhase: 'Before move',
+      doneThisTurn: [
+        DoneThisTurn.GotMoneyForStart,
+        DoneThisTurn.PayedForVisit,
+        DoneThisTurn.DrawnChanceCard,
+        DoneThisTurn.IncrementedTurnsToWait
+        
+      ]
     },
     name: "ChanceCards",
     description: "1. Chance cards sold\n2. Players saved as an array"
