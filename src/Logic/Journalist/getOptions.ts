@@ -4,6 +4,7 @@ import { tJournalistOptionsUnderDevelopement, tJournalistState } from "./types"
 import { getTestableOptionsWithBuyBuildings } from "./utils/getBuyBuildingsOptions"
 import { getSpecialCardsOptions } from "./utils/getGetOutFromPrisonCardOptions"
 import { getMayPlayerEndGameOptions } from "./utils/getMayPlayerEndGameOptions"
+import { getPaymentOptions } from "./utils/getPaymentOptions"
 import { getPlegdeOptions } from "./utils/getPlegdeOptions"
 import { getTestableOptionsWithSellBuildings } from "./utils/getSellBuildingOptions"
 import { getSellEstatesOptions } from "./utils/getSellEstatesOptions"
@@ -116,6 +117,7 @@ export const getTestableOptions = (state: tGameState, playerName: string): tJour
         getUnplegdeOptions,
         getSpecialCardsOptions,
         getShouldPayForPassingStartOptions,
+        getPaymentOptions,
         getMayPlayerEndGameOptions,
     ];
     if (builderSequence[builderSequence.length - 1] !== getMayPlayerEndGameOptions) {
