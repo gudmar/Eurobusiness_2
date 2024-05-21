@@ -130,7 +130,7 @@ describe('Testing getAllEntreisWithKey', () => {
         const result = getAllEntreisWithKey(NESTED_ARRAY_KEY, SEARCHED);
         expect(result).toEqual(NESTED_ARRAY_KEY_OUTPUT)
     })
-    it('Should return a entry when simplest case given', () => {
+    it('Should return a entry when array case given', () => {
         const result = getAllEntreisWithKey(ARRAY_KEY, SEARCHED);
         expect(result).toEqual(ARRAY_KEY_OUTPUT)
     })

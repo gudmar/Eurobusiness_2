@@ -44,9 +44,10 @@ type tJournalistOutputObject = tObject<any>;
 type tJournalistOutputBooleanOrRejection = boolean | tRejection;
 
 type tPayments = {   
-    visigingOtherPlayersEstate: tJournalistOutput,
-    visitingPaymentField: tJournalistOutput,
-    chanceCardPayment: tJournalistOutput
+    visigingOtherPlayersEstate?: tJournalistOutput,
+    // payload: {target: player name / bank, ammount: number}
+    visitingPaymentField?: tJournalistOutput,
+    chanceCardPayment?: tJournalistOutput,
 }
 
 type tGetMoney = {
