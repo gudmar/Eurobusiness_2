@@ -1,5 +1,5 @@
 import { descriptors } from "../../../../Data/boardFields"
-import { ATENY, AUSTRIA, BANK, BARCELONA, GREEN, INSBRUK, ITALY, MEDIOLAN, NEAPOL, ROME, SALONIKI, WIEDEN, YELLOW } from "../../../../Data/const"
+import { ATENY, AUSTRIA, BANK, BARCELONA, EAST_RAILWAYS, GREEN, INSBRUK, ITALY, MEDIOLAN, NEAPOL, POWER_STATION, ROME, SALONIKI, SOUTH_RAILWAY, WATER_PLANT, WEST_RAILWAYS, WIEDEN, YELLOW } from "../../../../Data/const"
 import { GUARDED_PARKING_FEE, TAX_FEE } from "../../../../Data/fees"
 import { GET_MONEY, IS_MANDATORY, PASSING_START, PAY, PAYLOAD, REASON, TYPE } from "../../../Journalist/const"
 import { getTestableOptions } from "../../../Journalist/getOptions"
@@ -31,6 +31,10 @@ const AFTER_NEAPOL_FIELD_INDEX = 20
 const NEAPOL_FEE = 15
 const NEAPOL_WITH_4_HOUSES_FEE = 800
 const NEAPOL_WITH_HOTEL_FEE = 1100
+const SOUTH_RAILWAY_FIELD_INDEX = 5
+const WATER_PLANT_FIELD_INDEX = 28
+const BLUE_CHANCE_FIELD_INDEX = 2;
+const RED_CHANCE_FIELD_INDEX = 7;
 
 describe('Options after player move', () => {
     // * End turn actions on start, not guarded parking, visit jail are added authomaticaly
@@ -273,6 +277,41 @@ describe('Options after player move', () => {
             const paymentStatus = options.pay;
             expect(paymentStatus).toBeUndefined();
         })
+
+        it('Should not add anything to draw chance card option when player not on chance card field', () => {
+            const state = getMockedGameState({
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[GUARDED_PARKING_FIELD_INDEX, DORIN], [TAX_FIELD_INDEX, BALIN]],
+                addDoneThisTurn: [DoneThisTurn.PayedForVisit],
+                
+            })
+            const options = getTestableOptions(state, DORIN);
+            const specialCardsStatus = options.specialCards;
+            expect(specialCardsStatus).toBeUndefined();
+        })
+        it('Should not add anything to draw chance card option when player on chance field but chance card was already drawn', () => {
+            const state = getMockedGameState({
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[BLUE_CHANCE_FIELD_INDEX, DORIN] ],
+                addDoneThisTurn: [DoneThisTurn.DrawnChanceCard],
+            })
+            const options = getTestableOptions(state, DORIN);
+            const specialCardsStatus = options.specialCards;
+            expect(specialCardsStatus).toBeUndefined();
+        })
+        it('Should not add anything to draw chance card option when player on chance field but it is before move phase0', () => {
+            const state = getMockedGameState({
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.BeforeMove,
+                movePlayers: [[BLUE_CHANCE_FIELD_INDEX, DORIN] ],
+            })
+            const options = getTestableOptions(state, DORIN);
+            const specialCardsStatus = options.specialCards;
+            expect(specialCardsStatus).toBeUndefined();
+        })
+
     })
     describe('Should cases', () => {
         it('Should allow to sell houses when player has some and in after move phase', () => {
@@ -460,15 +499,115 @@ describe('Options after player move', () => {
             const expectedResult = {reason: DontPayForVisitReasons.Plegded}
             expect(result).toEqual(expectedResult)
         })
-        it('Should add mandatory payment when railways owned by an oponent', () => {
-
+        it('Should add mandatory payment when railways owned by an oponent, 2 railway case', () => {
+            const balinEstates = [ ROME, MEDIOLAN, NEAPOL, SOUTH_RAILWAY, WEST_RAILWAYS];
+            const state = getMockedGameState({
+                estatesOwner: [BALIN, balinEstates],
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[SOUTH_RAILWAY_FIELD_INDEX, DORIN]],
+                estatesDelta: [
+                    { estateName: NEAPOL, props: { owner: YELLOW, isPlegded: true } },
+                ],
+            });
+            const options = getTestableOptions(state, DORIN);
+            const result = options.pay?.visigingOtherPlayersEstate;
+            const expectedResult = {
+                [IS_MANDATORY]: true,
+                type: OptionTypes.Pay,
+                [PAYLOAD]: {
+                    target: BALIN,
+                    ammount: 100,
+                }
+            }
+            expect(result).toEqual(expectedResult)
         })
+        it('Should add mandatory payment when railways owned by an oponent, 3 railway case', () => {
+            const balinEstates = [ ROME, MEDIOLAN, NEAPOL, SOUTH_RAILWAY, WEST_RAILWAYS, EAST_RAILWAYS];
+            const state = getMockedGameState({
+                estatesOwner: [BALIN, balinEstates],
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[SOUTH_RAILWAY_FIELD_INDEX, DORIN]],
+                estatesDelta: [
+                    { estateName: NEAPOL, props: { owner: YELLOW, isPlegded: true } },
+                ],
+            });
+            const options = getTestableOptions(state, DORIN);
+            const result = options.pay?.visigingOtherPlayersEstate;
+            const expectedResult = {
+                [IS_MANDATORY]: true,
+                type: OptionTypes.Pay,
+                [PAYLOAD]: {
+                    target: BALIN,
+                    ammount: 200
+                }
+            }
+            expect(result).toEqual(expectedResult)
+        })
+        it('Should not add payment on railway field if plegded', () => {
+            const balinEstates = [ ROME, MEDIOLAN, NEAPOL, SOUTH_RAILWAY, WEST_RAILWAYS, EAST_RAILWAYS];
+            const state = getMockedGameState({
+                estatesOwner: [BALIN, balinEstates],
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[SOUTH_RAILWAY_FIELD_INDEX, DORIN]],
+                estatesDelta: [
+                    { estateName: SOUTH_RAILWAY, props: { owner: YELLOW, isPlegded: true } },
+                ],
+            });
+            const options = getTestableOptions(state, DORIN);
+            const result = options.pay?.visigingOtherPlayersEstate;
+            const expectedResult = {
+                reason: DontPayForVisitReasons.Plegded
+            }            
+            expect(result).toEqual(expectedResult)
+        })
+
         it('Should add mandatory payment when plant owned by an opponent', () => {
-            
+            const balinEstates = [ ROME, MEDIOLAN, NEAPOL, WATER_PLANT, POWER_STATION];
+            const state = getMockedGameState({
+                estatesOwner: [BALIN, balinEstates],
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[WATER_PLANT_FIELD_INDEX, DORIN]],
+                estatesDelta: [
+                    { estateName: WATER_PLANT, props: { owner: YELLOW, isPlegded: false } },
+                ],
+            });
+            const options = getTestableOptions(state, DORIN);
+            const result = options.pay?.visigingOtherPlayersEstate;
+            const expectedResult = {
+                [IS_MANDATORY]: true,
+                [TYPE]: OptionTypes.Pay,
+                [PAYLOAD]: {
+                    ammount: descriptors[WATER_PLANT].visit[1],
+                    target: BALIN,
+                }
+            }            
+            expect(result).toEqual(expectedResult)
         })
 
         it('Should return a mandatory draw a chance card when player stepped on a chance field', () => {
-
+            const state = getMockedGameState({
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[WATER_PLANT_FIELD_INDEX, DORIN]],
+                estatesDelta: [
+                    { estateName: WATER_PLANT, props: { owner: YELLOW, isPlegded: false } },
+                ],
+            });
+            const options = getTestableOptions(state, DORIN);
+            const result = options.pay?.visigingOtherPlayersEstate;
+            const expectedResult = {
+                [IS_MANDATORY]: true,
+                [TYPE]: OptionTypes.Pay,
+                [PAYLOAD]: {
+                    ammount: descriptors[WATER_PLANT].visit[1],
+                    target: BALIN,
+                }
+            }            
+            expect(result).toEqual(expectedResult)
         })
         it('Should allow to end turn when there are no pending mandatory actions,', () => {
 

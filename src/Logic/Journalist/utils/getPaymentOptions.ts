@@ -1,4 +1,4 @@
-import { BANK } from "../../../Data/const";
+import { BANK, PLANT, RAILWAY } from "../../../Data/const";
 import { GUARDED_PARKING_FEE, TAX_FEE } from "../../../Data/fees";
 import { iCityField, iNonCityEstates } from "../../../Data/types";
 import { createPath } from "../../../Functions/createPath";
@@ -7,7 +7,7 @@ import { iChanceFieldState, iCityFieldState, iFieldState, iNonCityEstatesFieldSt
 import { DoneThisTurn, TurnPhases } from "../../types";
 import { IS_MANDATORY, PAY, PAYLOAD, TYPE } from "../const";
 import { OptionTypes, tJournalistOptionsUnderDevelopement } from "../types";
-import { getCurrentPlayer, getFieldData, getFieldIfOwned, getPlayer, getPlayerByColor } from "./commonFunctions";
+import { getCurrentPlayer, getFieldData, getFieldIfOwned, getNrPlantsPlayerOwns, getNrRailwaysPlayerOwns, getPlayer, getPlayerByColor } from "./commonFunctions";
 import {tStateModifierArgs } from "./types";
 
 export const TAX_FIELD_INDEX = 38;
@@ -73,17 +73,49 @@ const getCityStopByFee = (field: iFieldState) => {
     return result;
 }
 
+type tGetStopByFee = {
+    gameState: tGameState, field: iFieldState, type: string
+}
+
+const fieldTypeToOwnedEstatesMap = {
+    [PLANT]: getNrPlantsPlayerOwns,
+    [RAILWAY]: getNrRailwaysPlayerOwns,
+}
+
+const getStopByFee = ({ gameState, field, type }: tGetStopByFee) => {
+    const fieldData = getFieldData(field.name)
+    if (!('visit' in fieldData && 'owner' in field)) throw new Error(`${field.name} is not an estate field`)
+    const visitFees = fieldData.visit;
+    const estatesPlayerOwnsCounter = fieldTypeToOwnedEstatesMap[type as keyof typeof fieldTypeToOwnedEstatesMap];
+    const nrOfOwnedPlants = estatesPlayerOwnsCounter(gameState, field.owner)
+    const visitFeeIndex = nrOfOwnedPlants - 1;
+    const result = visitFees![visitFeeIndex];
+    return result;
+}
+
+const getRailwayStopByFee = (gameState: tGameState, field: iFieldState) => {
+    const result = getStopByFee({gameState, field, type: RAILWAY});
+    return result;
+}
+
+const getPlantStopByFee = (gameState: tGameState, field: iFieldState) => {
+    const result = getStopByFee({gameState, field, type: PLANT});
+    return result;
+}
+
 const isCityField = (field: iFieldState) => {
     const result = ('nrOfHouses' in field);
     return result;
 }
 
 const isRailway = (field: iFieldState) => {
-
+    if (!('type' in field)) return false;
+    return field.type === RAILWAY;
 }
 
 const isPlant = (field: iFieldState) => {
-
+    if (!('type' in field)) return false;
+    return field.type === PLANT;
 }
 
 const addPayForEstateVisitOptions = (args: tStateModifierArgs) => {
@@ -111,7 +143,7 @@ const addPayForEstateVisitOptions = (args: tStateModifierArgs) => {
     };
     const { color: playerColor } = getPlayer(options!, playerName)
     const isQueriedPlayerOwner = playerColor === field.owner;
-    if (isQueriedPlayerOwner) return false;
+    if (isQueriedPlayerOwner) return state;
     const ownerPlayer = getPlayerByColor(options!, field.owner);
     const isOwnerInJail = ownerPlayer.isInPrison;
     if (isOwnerInJail) {
@@ -127,6 +159,30 @@ const addPayForEstateVisitOptions = (args: tStateModifierArgs) => {
             [PAYLOAD]: {
                 target: ownerPlayer.name,
                 ammount: getCityStopByFee(field)
+            }
+        }
+        return state;
+    }
+    if (isRailway(field)) {
+        const ammount = getRailwayStopByFee(options!, field);
+        state.pay!.visigingOtherPlayersEstate = {
+            [IS_MANDATORY]: true,
+            [TYPE]: OptionTypes.Pay,
+            [PAYLOAD]: {
+                target: ownerPlayer.name,
+                ammount
+            }
+        }
+        return state
+    }
+    if (isPlant(field)) {
+        const ammount = getPlantStopByFee(options!, field);
+        state.pay!.visigingOtherPlayersEstate = {
+            [IS_MANDATORY]: true,
+            [TYPE]: OptionTypes.Pay,
+            [PAYLOAD]: {
+                target: ownerPlayer.name,
+                ammount
             }
         }
     }

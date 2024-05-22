@@ -118,6 +118,7 @@ export const getTestableOptions = (state: tGameState, playerName: string): tJour
         getSpecialCardsOptions,
         getShouldPayForPassingStartOptions,
         getPaymentOptions,
+        getDrawChanceCardOption,
         getMayPlayerEndGameOptions,
     ];
     if (builderSequence[builderSequence.length - 1] !== getMayPlayerEndGameOptions) {
