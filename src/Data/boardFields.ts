@@ -61,15 +61,8 @@ export const descriptors: tBoard = {
         owner: BANK,
         nrOfHouses: 0,
         nrOfHotels: 0,
-        // nrInSet: 2, // 2 cities in the country
-        // nrOfHousesToPurchase: 0,
-        // nrOfHousesToSell: 0,
-        // nrOfHotelsToSell: 0,
-        // nrOfHotelsToBuy: 0,        
-        // boardFieldNumber: 2,
         isPlegded: false, // zastawiony
         color: YELLOW,
-        
     },
     [CHANCE_BLUE_BOTTOM]: {
         type: CHANCE_BLUE,

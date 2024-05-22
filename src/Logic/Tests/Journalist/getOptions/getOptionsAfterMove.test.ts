@@ -1,13 +1,13 @@
 import { descriptors } from "../../../../Data/boardFields"
-import { ATENY, AUSTRIA, BANK, BARCELONA, GREEN, INSBRUK, ITALY, MEDIOLAN, NEAPOL, ROME, SALONIKI, WIEDEN } from "../../../../Data/const"
-import { GUARDED_PARKING_FEE } from "../../../../Data/fees"
+import { ATENY, AUSTRIA, BANK, BARCELONA, GREEN, INSBRUK, ITALY, MEDIOLAN, NEAPOL, ROME, SALONIKI, WIEDEN, YELLOW } from "../../../../Data/const"
+import { GUARDED_PARKING_FEE, TAX_FEE } from "../../../../Data/fees"
 import { GET_MONEY, IS_MANDATORY, PASSING_START, PAY, PAYLOAD, REASON, TYPE } from "../../../Journalist/const"
 import { getTestableOptions } from "../../../Journalist/getOptions"
 import { OptionTypes, tJournalistOutputArrayOrRejection } from "../../../Journalist/types"
 import { SellBuildingsRejected } from "../../../Journalist/utils/constants"
 import { BuildingPermitRejected, NrOfHouses } from "../../../Journalist/utils/getBuildingPermits"
 import { NoBuildingPermitResults } from "../../../Journalist/utils/getBuyBuildingsOptions"
-import { GUARDED_PARKING_FIELD_INDEX, TAX_FIELD_INDEX } from "../../../Journalist/utils/getPaymentOptions"
+import { DontPayForVisitReasons, GUARDED_PARKING_FIELD_INDEX, TAX_FIELD_INDEX } from "../../../Journalist/utils/getPaymentOptions"
 import { PlegdeEstatesReasons } from "../../../Journalist/utils/getPlegdeOptions"
 import { getSellingPermitsCategory } from "../../../Journalist/utils/getSellingPermits"
 import { PassingStartPaymentErrors } from "../../../Journalist/utils/getShouldPayForPassingStartOptions"
@@ -29,6 +29,8 @@ const MADRIT_INDEX = 14;
 const NEAPOL_INDEX = 6;
 const AFTER_NEAPOL_FIELD_INDEX = 20
 const NEAPOL_FEE = 15
+const NEAPOL_WITH_4_HOUSES_FEE = 800
+const NEAPOL_WITH_HOTEL_FEE = 1100
 
 describe('Options after player move', () => {
     // * End turn actions on start, not guarded parking, visit jail are added authomaticaly
@@ -271,19 +273,6 @@ describe('Options after player move', () => {
             const paymentStatus = options.pay;
             expect(paymentStatus).toBeUndefined();
         })
-        it('Should not give an option to pay when stepped on other players posession, but that owner is in jail', () => {
-            const balinEstates = [ ROME, MEDIOLAN, NEAPOL];
-            const state = getMockedGameState({
-                estatesOwner: [BALIN, balinEstates],
-                currentPlayer: [DORIN],
-                setGamePhase: TurnPhases.AfterMove,
-                movePlayers: [[NEAPOL_INDEX, DORIN]],
-                toJail: [BALIN]
-            });
-            const options = getTestableOptions(state, DORIN);
-            const result = options.pay?.visigingOtherPlayersEstate;
-            expect(result).toBeUndefined();
-        })
     })
     describe('Should cases', () => {
         it('Should allow to sell houses when player has some and in after move phase', () => {
@@ -356,7 +345,7 @@ describe('Options after player move', () => {
             const paymentStatus = options.pay?.visigingOtherPlayersEstate;
             expect(paymentStatus).toEqual(expectedPaymentStatus);
         })
-        it('Should add a mandatory payment when stepped on other players posession', () => {
+        it('Should add a mandatory payment when stepped on other players posession: no houses case', () => {
             const balinEstates = [ ROME, MEDIOLAN, NEAPOL];
             const state = getMockedGameState({
                 estatesOwner: [BALIN, balinEstates],
@@ -376,6 +365,108 @@ describe('Options after player move', () => {
             }
             expect(result).toEqual(expectedResult)
         })
+        it('Should add a mandatory payment when stepped on other players posession: houses case', () => {
+            const balinEstates = [ ROME, MEDIOLAN, NEAPOL];
+            const state = getMockedGameState({
+                estatesOwner: [BALIN, balinEstates],
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[NEAPOL_INDEX, DORIN]],
+                estatesDelta: [
+                    { estateName: NEAPOL, props: { owner: YELLOW, nrOfHouses: 4 } },
+                ]
+
+            });
+            const options = getTestableOptions(state, DORIN);
+            const result = options.pay?.visigingOtherPlayersEstate;
+            const expectedResult = {
+                [IS_MANDATORY]: true,
+                [TYPE]: OptionTypes.Pay,
+                [PAYLOAD]: {
+                    target: BALIN,
+                    ammount: NEAPOL_WITH_4_HOUSES_FEE,
+                }
+            }
+            expect(result).toEqual(expectedResult)
+        })
+
+        it('Should add a mandatory payment when stepped on other players posession: hotel case', () => {
+            const balinEstates = [ ROME, MEDIOLAN, NEAPOL];
+            const state = getMockedGameState({
+                estatesOwner: [BALIN, balinEstates],
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[NEAPOL_INDEX, DORIN]],
+                estatesDelta: [
+                    { estateName: NEAPOL, props: { owner: YELLOW, nrOfHotels: 1 } },
+                ]
+
+            });
+            const options = getTestableOptions(state, DORIN);
+            const result = options.pay?.visigingOtherPlayersEstate;
+            const expectedResult = {
+                [IS_MANDATORY]: true,
+                [TYPE]: OptionTypes.Pay,
+                [PAYLOAD]: {
+                    target: BALIN,
+                    ammount: NEAPOL_WITH_HOTEL_FEE,
+                }
+            }
+            expect(result).toEqual(expectedResult)
+        })
+
+        it('Should not add a payment for field, when owner is in jail', () => {
+            const balinEstates = [ ROME, MEDIOLAN, NEAPOL];
+            const state = getMockedGameState({
+                estatesOwner: [BALIN, balinEstates],
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[NEAPOL_INDEX, DORIN]],
+                estatesDelta: [
+                    { estateName: NEAPOL, props: { owner: YELLOW, nrOfHouses: 4 } },
+                ],
+                toJail: [BALIN]
+            });
+            const options = getTestableOptions(state, DORIN);
+            const result = options.pay?.visigingOtherPlayersEstate;
+            const expectedResult = {reason: DontPayForVisitReasons.OwnerInPrison}
+            expect(result).toEqual(expectedResult)
+        })
+
+        it('Should not add a payment for field, when owner is bank', () => {
+            const state = getMockedGameState({
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[NEAPOL_INDEX, DORIN]],
+            });
+            const options = getTestableOptions(state, DORIN);
+            const result = options.pay?.visigingOtherPlayersEstate;
+            const expectedResult = {reason: DontPayForVisitReasons.BankOwned}
+            expect(result).toEqual(expectedResult)
+        })
+        it('Should not add a payment for field, when plegded', () => {
+            const balinEstates = [ ROME, MEDIOLAN, NEAPOL];
+            const state = getMockedGameState({
+                estatesOwner: [BALIN, balinEstates],
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[NEAPOL_INDEX, DORIN]],
+                estatesDelta: [
+                    { estateName: NEAPOL, props: { owner: YELLOW, isPlegded: true } },
+                ],
+            });
+            const options = getTestableOptions(state, DORIN);
+            const result = options.pay?.visigingOtherPlayersEstate;
+            const expectedResult = {reason: DontPayForVisitReasons.Plegded}
+            expect(result).toEqual(expectedResult)
+        })
+        it('Should add mandatory payment when railways owned by an oponent', () => {
+
+        })
+        it('Should add mandatory payment when plant owned by an opponent', () => {
+            
+        })
+
         it('Should return a mandatory draw a chance card when player stepped on a chance field', () => {
 
         })
@@ -389,6 +480,22 @@ describe('Options after player move', () => {
 
         })
         it('Should add a mandatory action to pay the tax, when player stepps on the tax field', () => {
+            const state = getMockedGameState({
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[TAX_FIELD_INDEX, DORIN], [GUARDED_PARKING_FIELD_INDEX, BALIN]]
+            })
+            const options = getTestableOptions(state, DORIN);
+            const expectedPaymentStatus = {
+                [IS_MANDATORY]: true,
+                [TYPE]: OptionTypes.Pay,
+                [PAYLOAD]: {
+                    target: BANK,
+                    ammount: TAX_FEE,
+                }
+            }
+            const paymentStatus = options.pay?.visigingOtherPlayersEstate;
+            expect(paymentStatus).toEqual(expectedPaymentStatus);
 
         })
         it('Should add a mandatory action to auction estate when player just stepped on it but has not money to purchase it', () => {

@@ -1,4 +1,4 @@
-import { tBoardField, tBoardFieldName } from "../../../Data/types";
+import { tBoard, tBoardField, tBoardFieldName } from "../../../Data/types";
 import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
 import { getEstate } from "../../BoardCaretaker";
 import { tFieldState } from "../../boardTypes";
@@ -12,6 +12,12 @@ export const getCurrentPlayerName = (state: tGameState) => state.game.currentPla
 export const getPlayer = (state: tGameState, playerName: string) => {
     const player = state.players.find(({name}) => name === playerName);
     if (!player) throw new Error(`Cannot find player named ${playerName}`)
+    return player;
+}
+
+export const getPlayerByColor = (state: tGameState, playerColor: string) => {
+    const player = state.players.find(({color}) => color === playerColor);
+    if (!player) throw new Error(`Cannot find player with color ${playerColor}`)
     return player;
 }
 
@@ -257,4 +263,18 @@ export const processEachCountry = (callback: tProcessEachCountryCallback, gameSt
         return {...acc, ...processedCountry}
     }, {});
     return processedCountries;
+}
+
+export const getFieldIfOwned = (state: tGameState, playerName: string) => {
+    const {fieldNr} = getPlayer(state, playerName);
+    const field = state.boardFields[fieldNr];
+    if (!('owner' in field)) return null;
+    return field;
+}
+
+type tFieldName = keyof typeof descriptors;
+export const getFieldData = (fieldName: string) => {
+    const result = descriptors[fieldName  as tFieldName]
+    if (!result) throw new Error(`There is no field named ${fieldName}`)
+    return result;
 }

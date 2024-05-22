@@ -42,6 +42,8 @@ export interface iOtherFieldTypesFieldState {
     index: number,
 }
 
+export type iFieldState = iCityFieldState | iNonCityEstatesFieldState | iChanceFieldState | iOtherFieldTypesFieldState
+
 export interface iOtherFieldTypesField extends iOtherFieldTypesFieldState{
     Icon: tIcon,
 }
