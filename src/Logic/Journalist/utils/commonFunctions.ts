@@ -6,6 +6,7 @@ import { tObject } from "../../types";
 import { tProcessEachCountryCallback, tStateModifierArgs } from "./types";
 import { descriptors } from '../../../Data/boardFields';
 import { mapCitiesToCountries, mapEstatesToCountries } from "../../../Functions/mapCitiesToCountries";
+import { PLANT, RAILWAY } from "../../../Data/const";
 
 export const getCurrentPlayerName = (state: tGameState) => state.game.currentPlayer;
 
@@ -277,4 +278,31 @@ export const getFieldData = (fieldName: string) => {
     const result = descriptors[fieldName  as tFieldName]
     if (!result) throw new Error(`There is no field named ${fieldName}`)
     return result;
+}
+
+const getPlayerColorFromNameOrColor = (state: tGameState, playerNameOrColor: string ) => {
+    const player = state.players.find(({color, name}) => playerNameOrColor === color || playerNameOrColor === name);
+    if (!state) throw new Error(`player ${playerNameOrColor} not found`)
+    return player?.color
+}
+
+type tGetNrEstatesOfTypeArgs = { state: tGameState, playerNameOrColor: string, type: string}
+
+export const getNrOfEstatesOfType = ({state, playerNameOrColor, type}: tGetNrEstatesOfTypeArgs) => {
+    const playerColor = getPlayerColorFromNameOrColor(state, playerNameOrColor);
+    const railwayFieldsOwnedByPlayer = state.boardFields.filter((field) => {
+        if (!('owner' in field && 'type' in field)) return false;
+        return field.owner === playerColor && field.type === type;
+    })
+    return railwayFieldsOwnedByPlayer.length;
+}
+
+export const getNrRailwaysPlayerOwns = (state: tGameState, playerNameOrColor: string) => {
+    const result = getNrOfEstatesOfType({ state, playerNameOrColor, type: RAILWAY});
+    return result
+}
+
+export const getNrPlantsPlayerOwns = (state: tGameState, playerNameOrColor: string) => {
+    const result = getNrOfEstatesOfType({ state, playerNameOrColor, type: PLANT});
+    return result
 }
