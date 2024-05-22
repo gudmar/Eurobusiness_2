@@ -1,5 +1,6 @@
 import { tEstateFieldWithName } from "../../../Functions/mapCitiesToCountries"
 import { tGameState } from "../../../Functions/PersistRetrieveGameState/types"
+import { iChanceFieldState, iCityFieldState, iNonCityEstatesFieldState, iOtherFieldTypesFieldState } from "../../boardTypes"
 import { tObject } from "../../types"
 import { tJournalistOptionsUnderDevelopement } from "../types"
 

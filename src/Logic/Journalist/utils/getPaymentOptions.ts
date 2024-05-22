@@ -1,12 +1,14 @@
 import { BANK } from "../../../Data/const";
 import { GUARDED_PARKING_FEE, TAX_FEE } from "../../../Data/fees";
+import { iCityField, iNonCityEstates } from "../../../Data/types";
 import { createPath } from "../../../Functions/createPath";
 import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
+import { iChanceFieldState, iCityFieldState, iFieldState, iNonCityEstatesFieldState, iOtherFieldTypesFieldState, isCityFieldState } from "../../boardTypes";
 import { DoneThisTurn, TurnPhases } from "../../types";
 import { IS_MANDATORY, PAY, PAYLOAD, TYPE } from "../const";
 import { OptionTypes, tJournalistOptionsUnderDevelopement } from "../types";
-import { getCurrentPlayer } from "./commonFunctions";
-import { tStateModifierArgs } from "./types";
+import { getCurrentPlayer, getFieldData, getFieldIfOwned, getPlayer, getPlayerByColor } from "./commonFunctions";
+import {tStateModifierArgs } from "./types";
 
 export const TAX_FIELD_INDEX = 38;
 export const GUARDED_PARKING_FIELD_INDEX = 4;
@@ -44,6 +46,93 @@ const checkIfGoodMomentForPayment = (options: tGameState) => {
     return true;
 }
 
+export enum DontPayForVisitReasons {
+    NotEstate = 'No need to pay for a non estate field,',
+    BankOwned = 'Stoping by on the bank owned field is for free',
+    OwnerInPrison = 'No need to pay for stopping by if owner is in prison',
+    Plegded = 'No need to pay if estate is plegded',
+}
+
+const getVisitFeesIndex = ({ nrOfHouses, nrOfHotels }: iCityFieldState) => {
+    const NO_BUILDINGS_INDEX = 0;
+    const HOTEL_INDEX = 5;
+    if (nrOfHotels > 1 || nrOfHouses > 4) throw new Error('Too many buildings in getVisitFeesIndex')
+    if (nrOfHotels === 1) return HOTEL_INDEX;
+    if (nrOfHouses > 0) return nrOfHouses;
+    return NO_BUILDINGS_INDEX;
+}
+
+const getCityStopByFee = (field: iFieldState) => {
+    if (!('nrOfHouses' in field)) throw new Error('Field is not a city field')
+    const { nrOfHotels, nrOfHouses, name } = field;
+    const fieldData = getFieldData(name)
+    if (!('visit' in fieldData)) throw new Error(`${name} is not a city field`)
+    const visitFees = fieldData.visit;
+    const visitFeeIndex = getVisitFeesIndex(field);
+    const result = visitFees![visitFeeIndex];
+    return result;
+}
+
+const isCityField = (field: iFieldState) => {
+    const result = ('nrOfHouses' in field);
+    return result;
+}
+
+const isRailway = (field: iFieldState) => {
+
+}
+
+const isPlant = (field: iFieldState) => {
+
+}
+
+const addPayForEstateVisitOptions = (args: tStateModifierArgs) => {
+    const { options, state, playerName } = args;
+    const field = getFieldIfOwned(options!, playerName);
+    createPath(state, [PAY]);
+    if (!field) {
+        state.pay!.visigingOtherPlayersEstate = {
+            reason: DontPayForVisitReasons.NotEstate
+        }
+        return state
+    };
+    const isBankOwner = field.owner === BANK;
+    if (isBankOwner) {
+        state.pay!.visigingOtherPlayersEstate = {
+            reason: DontPayForVisitReasons.BankOwned
+        }
+        return state
+    }
+    if (field.isPlegded) {
+        state.pay!.visigingOtherPlayersEstate = {
+            reason: DontPayForVisitReasons.Plegded
+        }
+        return state
+    };
+    const { color: playerColor } = getPlayer(options!, playerName)
+    const isQueriedPlayerOwner = playerColor === field.owner;
+    if (isQueriedPlayerOwner) return false;
+    const ownerPlayer = getPlayerByColor(options!, field.owner);
+    const isOwnerInJail = ownerPlayer.isInPrison;
+    if (isOwnerInJail) {
+        state.pay!.visigingOtherPlayersEstate = {
+            reason: DontPayForVisitReasons.OwnerInPrison
+        }
+        return state
+    };
+    if (isCityField(field)) {
+        state.pay!.visigingOtherPlayersEstate = {
+            [IS_MANDATORY]: true,
+            [TYPE]: OptionTypes.Pay,
+            [PAYLOAD]: {
+                target: ownerPlayer.name,
+                ammount: getCityStopByFee(field)
+            }
+        }
+    }
+    return state;
+}
+
 export const getPaymentOptions = (args: tStateModifierArgs): tJournalistOptionsUnderDevelopement => {
     const { options, state, playerName } = args;
     const isCurrentPlayer = isCurrentPlayerQueried(options!, playerName);
@@ -66,5 +155,6 @@ export const getPaymentOptions = (args: tStateModifierArgs): tJournalistOptionsU
         state.pay!.visigingOtherPlayersEstate = payment;
         return state;
     }
+    addPayForEstateVisitOptions(args)
     return state
 }
