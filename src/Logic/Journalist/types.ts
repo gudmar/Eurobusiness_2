@@ -72,6 +72,7 @@ export type tJournalistState = {
     [GET_MONEY]?: tGetMoney;
     goToJail?: tJournalistOutput;
     specialCards?: tJournalistOutput;
+    drawChanceCard?: tJournalistOutput;
     move: boolean;
     endPhase: boolean;
 }
@@ -84,6 +85,7 @@ export type tJournalistOptionsUnderDevelopement = {
     plegdeEstates?: tJournalistOutput;
     unplegdeEstates?: tJournalistOutput;
     specialCards?: tJournalistOutput;
+    drawChanceCard?: tJournalistOutput;
     pay?: tPayments; // When on not guarded parking, there is no reason to explain why not to pay
     [GET_MONEY]?: tGetMoney;
     goToJail?: tJournalistOutput;

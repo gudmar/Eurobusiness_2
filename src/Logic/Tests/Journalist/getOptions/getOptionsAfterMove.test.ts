@@ -1,5 +1,6 @@
 import { descriptors } from "../../../../Data/boardFields"
-import { ATENY, AUSTRIA, BANK, BARCELONA, EAST_RAILWAYS, GREEN, INSBRUK, ITALY, MEDIOLAN, NEAPOL, POWER_STATION, ROME, SALONIKI, SOUTH_RAILWAY, WATER_PLANT, WEST_RAILWAYS, WIEDEN, YELLOW } from "../../../../Data/const"
+import { RED_CARDS_SET_NAME } from "../../../../Data/chanceCards"
+import { ATENY, AUSTRIA, BANK, BARCELONA, CHANCE_BLUE, CHANCE_RED, EAST_RAILWAYS, GREEN, INSBRUK, ITALY, MEDIOLAN, NEAPOL, POWER_STATION, ROME, SALONIKI, SOUTH_RAILWAY, WATER_PLANT, WEST_RAILWAYS, WIEDEN, YELLOW } from "../../../../Data/const"
 import { GUARDED_PARKING_FEE, TAX_FEE } from "../../../../Data/fees"
 import { GET_MONEY, IS_MANDATORY, PASSING_START, PAY, PAYLOAD, REASON, TYPE } from "../../../Journalist/const"
 import { getTestableOptions } from "../../../Journalist/getOptions"
@@ -287,8 +288,8 @@ describe('Options after player move', () => {
                 
             })
             const options = getTestableOptions(state, DORIN);
-            const specialCardsStatus = options.specialCards;
-            expect(specialCardsStatus).toBeUndefined();
+            const  drawChanceCardStatus = options.drawChanceCard;
+            expect(drawChanceCardStatus).toBeUndefined();
         })
         it('Should not add anything to draw chance card option when player on chance field but chance card was already drawn', () => {
             const state = getMockedGameState({
@@ -298,8 +299,8 @@ describe('Options after player move', () => {
                 addDoneThisTurn: [DoneThisTurn.DrawnChanceCard],
             })
             const options = getTestableOptions(state, DORIN);
-            const specialCardsStatus = options.specialCards;
-            expect(specialCardsStatus).toBeUndefined();
+            const  drawChanceCardStatus = options.drawChanceCard;
+            expect(drawChanceCardStatus).toBeUndefined();
         })
         it('Should not add anything to draw chance card option when player on chance field but it is before move phase0', () => {
             const state = getMockedGameState({
@@ -308,8 +309,8 @@ describe('Options after player move', () => {
                 movePlayers: [[BLUE_CHANCE_FIELD_INDEX, DORIN] ],
             })
             const options = getTestableOptions(state, DORIN);
-            const specialCardsStatus = options.specialCards;
-            expect(specialCardsStatus).toBeUndefined();
+            const  drawChanceCardStatus = options.drawChanceCard;
+            expect(drawChanceCardStatus).toBeUndefined();
         })
 
     })
@@ -588,27 +589,37 @@ describe('Options after player move', () => {
             expect(result).toEqual(expectedResult)
         })
 
-        it('Should return a mandatory draw a chance card when player stepped on a chance field', () => {
+        it('Should return a mandatory draw a RED chance card when player stepped on a chance field', () => {
             const state = getMockedGameState({
                 currentPlayer: [DORIN],
                 setGamePhase: TurnPhases.AfterMove,
-                movePlayers: [[WATER_PLANT_FIELD_INDEX, DORIN]],
-                estatesDelta: [
-                    { estateName: WATER_PLANT, props: { owner: YELLOW, isPlegded: false } },
-                ],
+                movePlayers: [[RED_CHANCE_FIELD_INDEX, DORIN]],
             });
             const options = getTestableOptions(state, DORIN);
-            const result = options.pay?.visigingOtherPlayersEstate;
+            const result = options.drawChanceCard;
             const expectedResult = {
                 [IS_MANDATORY]: true,
-                [TYPE]: OptionTypes.Pay,
-                [PAYLOAD]: {
-                    ammount: descriptors[WATER_PLANT].visit[1],
-                    target: BALIN,
-                }
+                [TYPE]: OptionTypes.DrawChanceCard,
+                [PAYLOAD]: CHANCE_RED,
             }            
             expect(result).toEqual(expectedResult)
         })
+        it('Should return a mandatory draw a BLUE chance card when player stepped on a chance field', () => {
+            const state = getMockedGameState({
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[BLUE_CHANCE_FIELD_INDEX, DORIN]],
+            });
+            const options = getTestableOptions(state, DORIN);
+            const result = options.drawChanceCard;
+            const expectedResult = {
+                [IS_MANDATORY]: true,
+                [TYPE]: OptionTypes.DrawChanceCard,
+                [PAYLOAD]: CHANCE_BLUE,
+            }            
+            expect(result).toEqual(expectedResult)
+        })
+
         it('Should allow to end turn when there are no pending mandatory actions,', () => {
 
         })
@@ -635,13 +646,85 @@ describe('Options after player move', () => {
             }
             const paymentStatus = options.pay?.visigingOtherPlayersEstate;
             expect(paymentStatus).toEqual(expectedPaymentStatus);
+        })
+        it('Should not add a mandatory action to auction or buy an estate when player just stepped bank owned estate but player is not current player', () => {
+            const state = getMockedGameState({
+                currentPlayer: [BALIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[WATER_PLANT_FIELD_INDEX, DORIN]],
+            });
+            const options = getTestableOptions(state, DORIN);
+            const result = options.buyEstate
+            expect(result).toBeUndefined();
+        })
+
+        it('Should not add a mandatory action to auction or buy an estate when player just stepped on owned by some player estate', () => {
+            const balinEstates = [ ROME, MEDIOLAN, NEAPOL, WATER_PLANT, POWER_STATION];
+            const state = getMockedGameState({
+                estatesOwner: [BALIN, balinEstates],
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[WATER_PLANT_FIELD_INDEX, DORIN]],
+                estatesDelta: [
+                    { estateName: WATER_PLANT, props: { owner: YELLOW, isPlegded: false } },
+                ],
+            });
+            const options = getTestableOptions(state, DORIN);
+            const result = options.buyEstate;
+            expect(result).toBeUndefined();
+        })
+        it('Should not add a mandatory action to auction or buy an estate when player just stepped on not an estate field', () => {
+            const state = getMockedGameState({
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[RED_CHANCE_FIELD_INDEX, DORIN]],
+            });
+            const options = getTestableOptions(state, DORIN);
+            const result = options.buyEstate;
+            expect(result).toBeUndefined();
+        })
+        it('Should not add a mandatory action to auction or buy an estate when player just stepped on banks estate but it is before move phase', () => {
+            const state = getMockedGameState({
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.BeforeMove,
+                movePlayers: [[RED_CHANCE_FIELD_INDEX, DORIN]],
+            });
+            const options = getTestableOptions(state, DORIN);
+            const result = options.buyEstate;
+            expect(result).toBeUndefined();
+        })
+        it('Should not add a mandatory action to auction or buy an estate when player just stepped on banks estate but selling estate is already done', () => {
+            const state = getMockedGameState({
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[WATER_PLANT_FIELD_INDEX, DORIN]],
+                addDoneThisTurn: [DoneThisTurn.BoughtEstate]
+            });
+            const options = getTestableOptions(state, DORIN);
+            const result = options.buyEstate;
+            expect(result).toBeUndefined();
 
         })
         it('Should add a mandatory action to auction estate when player just stepped on it but has not money to purchase it', () => {
-            // Mandatory is ok, because it locks ONLY next turn, and player may sell / plegde as normal, so
-            // player may sell something, state gets recalculated, and perhaps this mandatory action will change to 
-            // auction or purchase action
+            const balinEstates = [ ROME, MEDIOLAN, NEAPOL, POWER_STATION];
+            const state = getMockedGameState({
+                estatesOwner: [BALIN, balinEstates],
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[WATER_PLANT_FIELD_INDEX, DORIN]],
+            });
+            const options = getTestableOptions(state, DORIN);
+            const result = options.buyEstate;
+            const estate = state.boardFields.find(({name}) => name === WATER_PLANT);
+            const expectedValue = {
+                [IS_MANDATORY]: true,
+                [TYPE]: OptionTypes.BuyEstate,
+                [PAYLOAD]: estate
+                // [PAYLOAD]: descriptors[WATER_PLANT]
+            }
+            expect(result).toEqual(expectedValue);
         })
+
         it('Should add a mandatory action to auction or buy an estate when player just stepped on not owned estate and has money for it', () => {
 
         })

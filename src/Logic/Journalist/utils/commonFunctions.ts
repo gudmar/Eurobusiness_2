@@ -7,6 +7,7 @@ import { tProcessEachCountryCallback, tStateModifierArgs } from "./types";
 import { descriptors } from '../../../Data/boardFields';
 import { mapCitiesToCountries, mapEstatesToCountries } from "../../../Functions/mapCitiesToCountries";
 import { PLANT, RAILWAY } from "../../../Data/const";
+import { isDefined } from "../../../Functions/isDefined";
 
 export const getCurrentPlayerName = (state: tGameState) => state.game.currentPlayer;
 
@@ -305,4 +306,27 @@ export const getNrRailwaysPlayerOwns = (state: tGameState, playerNameOrColor: st
 export const getNrPlantsPlayerOwns = (state: tGameState, playerNameOrColor: string) => {
     const result = getNrOfEstatesOfType({ state, playerNameOrColor, type: PLANT});
     return result
+}
+
+export const getFieldIndexesOfType = (state: tGameState, fieldType: string): number[] => {
+    const fields = state.boardFields;
+    descriptors
+    const result = fields.reduce((acc: number[], field, index) => {
+        if (!('type' in field)) return acc;
+        if (field.type.includes(fieldType)) acc.push(index);
+        return acc;
+    }, [])
+    return result;
+}
+
+export const getPlayerFromState = (state: tGameState) => {
+    const player = state.players.find(({name}) => name === state.game.currentPlayer);
+    if (!isDefined(player)) throw new Error(`Player ${name} not defined`)
+    return player
+}
+
+export const getFieldCurrentPlayerStandsOn = (state: tGameState) => {
+    const player = getPlayerFromState(state);
+    const field = state.boardFields[player!.fieldNr];
+    return field;
 }

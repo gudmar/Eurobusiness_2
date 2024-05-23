@@ -35,7 +35,8 @@ export enum DoneThisTurn {
     GotMoneyForStart = 'Got money for start',
     PayedForVisit = 'Payed for visit',
     DrawnChanceCard = 'Drawn chance card',
-    IncrementedTurnsToWait = 'Incremented turns to wait'
+    IncrementedTurnsToWait = 'Incremented turns to wait',
+    BoughtEstate = 'Bought an estate',
     // Turn phases, so move could be included here,
     // Nr of houses build this turn could be inculded here
     // However too much implementation already done

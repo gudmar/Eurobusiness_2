@@ -2,6 +2,7 @@ import { applyStateModifiers, tStateModifier } from "../../Functions/applyStateM
 import { tGameState } from "../../Functions/PersistRetrieveGameState/types"
 import { tJournalistOptionsUnderDevelopement, tJournalistState } from "./types"
 import { getTestableOptionsWithBuyBuildings } from "./utils/getBuyBuildingsOptions"
+import { getDrawChanceCardOption } from "./utils/getDrawChanceCardOption"
 import { getSpecialCardsOptions } from "./utils/getGetOutFromPrisonCardOptions"
 import { getMayPlayerEndGameOptions } from "./utils/getMayPlayerEndGameOptions"
 import { getPaymentOptions } from "./utils/getPaymentOptions"
@@ -9,6 +10,7 @@ import { getPlegdeOptions } from "./utils/getPlegdeOptions"
 import { getTestableOptionsWithSellBuildings } from "./utils/getSellBuildingOptions"
 import { getSellEstatesOptions } from "./utils/getSellEstatesOptions"
 import { getShouldPayForPassingStartOptions } from "./utils/getShouldPayForPassingStartOptions"
+import { getStoppedOnBankOwnedEstateOptions } from "./utils/getStoppedOnBankOwnedEstatesOptions"
 import { getUnplegdeOptions } from "./utils/getUnplegdeOptions"
 import { tStateModifierArgs } from "./utils/types"
 
@@ -119,6 +121,8 @@ export const getTestableOptions = (state: tGameState, playerName: string): tJour
         getShouldPayForPassingStartOptions,
         getPaymentOptions,
         getDrawChanceCardOption,
+        getStoppedOnBankOwnedEstateOptions,
+
         getMayPlayerEndGameOptions,
     ];
     if (builderSequence[builderSequence.length - 1] !== getMayPlayerEndGameOptions) {
