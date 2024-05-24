@@ -7,7 +7,7 @@ import { iChanceFieldState, iCityFieldState, iFieldState, iNonCityEstatesFieldSt
 import { DoneThisTurn, TurnPhases } from "../../types";
 import { IS_MANDATORY, PAY, PAYLOAD, TYPE } from "../const";
 import { OptionTypes, tJournalistOptionsUnderDevelopement } from "../types";
-import { getCurrentPlayer, getFieldData, getFieldIfOwned, getNrPlantsPlayerOwns, getNrRailwaysPlayerOwns, getPlayer, getPlayerByColor } from "./commonFunctions";
+import { getCurrentPlayer, getFieldData, getFieldIfOwned, getNrPlantsPlayerOwns, getNrRailwaysPlayerOwns, getPlayer, getPlayerByColor, isCurrentPlayerQueried } from "./commonFunctions";
 import {tStateModifierArgs } from "./types";
 
 export const TAX_FIELD_INDEX = 38;
@@ -24,12 +24,6 @@ const checkIfOnTaxableField = (options: tGameState) => {
     const currentPlayer = getCurrentPlayer(options);
     const isOnTaxableField = TAX_FIELD_INDEXES.includes(currentPlayer.fieldNr);
     return isOnTaxableField;
-}
-
-const isCurrentPlayerQueried = (options: tGameState, playerName: string) => {
-    const currentPlayerName = getCurrentPlayer(options).name;
-    const result = currentPlayerName === playerName
-    return result;
 }
 
 const getTaxFee = (options: tGameState) => {

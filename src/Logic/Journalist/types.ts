@@ -17,7 +17,7 @@ export enum OptionTypes {
     DrawChanceCard = 'Draw a chance card',
     Pay = 'Pay some fee',
     GoToJail = 'Go to jail',
-    UseSpecialCard = 'Use special card',
+    UseSpecialCardOrGoToJail = 'Use special card',
     SellSpecialCard = 'Sell special card',
     GetMoney = 'Get money'
 }
@@ -65,6 +65,7 @@ export type tJournalistState = {
     // sellBuildings: tJournalistOutputArrayOrRejection;
     sellBuildings: tJournalistOutput,
     buyEstate?: tJournalistOutput;
+    auctionEstate?: tJournalistOutput;
     sellEstates: tJournalistOutput;
     plegdeEstates: tJournalistOutput;
     unplegdeEstates: tJournalistOutput;
@@ -81,6 +82,7 @@ export type tJournalistOptionsUnderDevelopement = {
     buyBuildings?:  tJournalistOutputObject;
     sellBuildings?: tJournalistOutputObject;
     buyEstate?: tJournalistOutput;
+    auctionEstate?: tJournalistOutput;
     sellEstates?: tJournalistOutput;
     plegdeEstates?: tJournalistOutput;
     unplegdeEstates?: tJournalistOutput;

@@ -617,7 +617,7 @@ describe('Testing getOptions', () => {
                 const result = options.specialCards;
                 expect(result).toEqual({reason: SpecialCardsReasons.NotOwner})
             })
-            it('Should not allow to sell a get out of prison card when player is still in jail, should allow to use it', () => {
+            it('Should not allow to sell a get out of prison card when player is still in jail, should NOT allow to use it', () => {
                 const redSpecialCardDescription = CHANCE_CARDS_RED[15].descriptions.en;
                 const setCards:  tSetSpecialCardsToPlayers = [[ [redSpecialCardDescription], DORIN,]];
                 const state = getMockedGameState({
@@ -627,12 +627,12 @@ describe('Testing getOptions', () => {
                     setCards
                 });
                 const options = getTestableOptions(state, DORIN);
-                const result = options.specialCards;
-                expect(result).toEqual({
-                    type: OptionTypes.UseSpecialCard,
-                    isMandatory: false,
-                    payload: [redSpecialCardDescription],
-                })
+                expect(options.specialCards).toBeUndefined();
+                // expect(result).toEqual({
+                //     type: OptionTypes.UseSpecialCard,
+                //     isMandatory: false,
+                //     payload: [redSpecialCardDescription],
+                // })
             })
             it('Should allow to sell a get out of prison card when player has one', () => {
                 const redSpecialCardDescription = CHANCE_CARDS_RED[15].descriptions.en;

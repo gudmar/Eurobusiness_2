@@ -77,11 +77,11 @@ export const getSpecialCardsOptions = (args: tStateModifierArgs): tJournalistOpt
     const playersSpecialCards = getPlayerSpecialCards(options!, playerName);
     const isInJail = isPlayerInJail(options!, playerName);
     if (isInJail) {        
-        state.specialCards = {
-            isMandatory: false,
-            type: OptionTypes.UseSpecialCard,
-            payload: playersSpecialCards,
-        }
+        // state.specialCards = {
+        //     isMandatory: false,
+        //     type: OptionTypes.UseSpecialCard,
+        //     payload: playersSpecialCards,
+        // }
         return state
     }
     const specialCards = {

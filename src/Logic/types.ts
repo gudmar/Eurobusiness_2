@@ -37,6 +37,7 @@ export enum DoneThisTurn {
     DrawnChanceCard = 'Drawn chance card',
     IncrementedTurnsToWait = 'Incremented turns to wait',
     BoughtEstate = 'Bought an estate',
+    GoneToJail = 'Player went to prison this turn'
     // Turn phases, so move could be included here,
     // Nr of houses build this turn could be inculded here
     // However too much implementation already done
