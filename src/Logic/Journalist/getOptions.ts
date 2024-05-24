@@ -4,6 +4,7 @@ import { tJournalistOptionsUnderDevelopement, tJournalistState } from "./types"
 import { getTestableOptionsWithBuyBuildings } from "./utils/getBuyBuildingsOptions"
 import { getDrawChanceCardOption } from "./utils/getDrawChanceCardOption"
 import { getSpecialCardsOptions } from "./utils/getGetOutFromPrisonCardOptions"
+import { getGoToJailOptions } from "./utils/getGoToJailOptions"
 import { getMayPlayerEndGameOptions } from "./utils/getMayPlayerEndGameOptions"
 import { getPaymentOptions } from "./utils/getPaymentOptions"
 import { getPlegdeOptions } from "./utils/getPlegdeOptions"
@@ -122,6 +123,7 @@ export const getTestableOptions = (state: tGameState, playerName: string): tJour
         getPaymentOptions,
         getDrawChanceCardOption,
         getStoppedOnBankOwnedEstateOptions,
+        getGoToJailOptions,
 
         getMayPlayerEndGameOptions,
     ];

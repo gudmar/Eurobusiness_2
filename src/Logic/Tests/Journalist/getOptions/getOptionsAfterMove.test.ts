@@ -1,5 +1,5 @@
 import { descriptors } from "../../../../Data/boardFields"
-import { RED_CARDS_SET_NAME } from "../../../../Data/chanceCards"
+import { RED_CARDS_SET_NAME, SPECIAL_CARD_BLUE } from "../../../../Data/chanceCards"
 import { ATENY, AUSTRIA, BANK, BARCELONA, CHANCE_BLUE, CHANCE_RED, EAST_RAILWAYS, GREEN, INSBRUK, ITALY, MEDIOLAN, NEAPOL, POWER_STATION, ROME, SALONIKI, SOUTH_RAILWAY, WATER_PLANT, WEST_RAILWAYS, WIEDEN, YELLOW } from "../../../../Data/const"
 import { GUARDED_PARKING_FEE, TAX_FEE } from "../../../../Data/fees"
 import { GET_MONEY, IS_MANDATORY, PASSING_START, PAY, PAYLOAD, REASON, TYPE } from "../../../Journalist/const"
@@ -8,6 +8,7 @@ import { OptionTypes, tJournalistOutputArrayOrRejection } from "../../../Journal
 import { SellBuildingsRejected } from "../../../Journalist/utils/constants"
 import { BuildingPermitRejected, NrOfHouses } from "../../../Journalist/utils/getBuildingPermits"
 import { NoBuildingPermitResults } from "../../../Journalist/utils/getBuyBuildingsOptions"
+import { GO_TO_JAIL_INDEX } from "../../../Journalist/utils/getGoToJailOptions"
 import { DontPayForVisitReasons, GUARDED_PARKING_FIELD_INDEX, TAX_FIELD_INDEX } from "../../../Journalist/utils/getPaymentOptions"
 import { PlegdeEstatesReasons } from "../../../Journalist/utils/getPlegdeOptions"
 import { getSellingPermitsCategory } from "../../../Journalist/utils/getSellingPermits"
@@ -619,14 +620,56 @@ describe('Options after player move', () => {
             }            
             expect(result).toEqual(expectedResult)
         })
+        it('Should add a mandatory option to go to jail when player has no get out of jail card and steps on the go to jail field', () => {
+            const state = getMockedGameState({
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[GO_TO_JAIL_INDEX, DORIN]],
+            });
+            const options = getTestableOptions(state, DORIN);
+            const result = options.goToJail;
+            const expectedResult = {
+                [IS_MANDATORY]: true,
+                [TYPE]: OptionTypes.GoToJail,
+            }            
+            expect(result).toEqual(expectedResult)
+        })
+        it('Should add a mandatory option to go to jail or use get out of jail card when player stepps on the go to jail field', () => {
+            const state = getMockedGameState({
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[GO_TO_JAIL_INDEX, DORIN]],
+                setCards: [[[SPECIAL_CARD_BLUE], DORIN]]
+            });
+            const options = getTestableOptions(state, DORIN);
+            const expectedResult = {
+                [IS_MANDATORY]: true,
+                [TYPE]: OptionTypes.UseSpecialCardOrGoToJail,
+            }            
+            expect(options.goToJail).toEqual(expectedResult)
+        })
+        it('Should not add a mandatory option to go to jail when player already went there this turn', () => {
 
+        });
+        it('Should allow to end turn when player is in jail', () => {
+
+        })
         it('Should allow to end turn when there are no pending mandatory actions,', () => {
 
         })
-        it('Should add a mandatory option to go to jail when player has no get out of jail card and steps on the go to jail field', () => {
+        it('Should not allow to end turn when there are pending chance cards', () => {
 
         })
-        it('Should add a mandatory option to go to jail or use get out of jail card when player stepps on the go to jail field', () => {
+        it('Should not allow to end turn when there is a payment for staying at other players field', () => {
+
+        })
+        it('Should not allow to end turn when there is a necessity to buy or auction an estate', () => {
+
+        })
+        it('Should not allow to end turn when there is money for the start pass to be payed', () => {
+
+        })
+        it('Should not allow to end turn when player has to go to jail', () => {
 
         })
         it('Should add a mandatory action to pay the tax, when player stepps on the tax field', () => {
@@ -656,6 +699,7 @@ describe('Options after player move', () => {
             const options = getTestableOptions(state, DORIN);
             const result = options.buyEstate
             expect(result).toBeUndefined();
+            expect(options.auctionEstate).toBeUndefined();
         })
 
         it('Should not add a mandatory action to auction or buy an estate when player just stepped on owned by some player estate', () => {
@@ -672,6 +716,7 @@ describe('Options after player move', () => {
             const options = getTestableOptions(state, DORIN);
             const result = options.buyEstate;
             expect(result).toBeUndefined();
+            expect(options.auctionEstate).toBeUndefined();
         })
         it('Should not add a mandatory action to auction or buy an estate when player just stepped on not an estate field', () => {
             const state = getMockedGameState({
@@ -682,6 +727,7 @@ describe('Options after player move', () => {
             const options = getTestableOptions(state, DORIN);
             const result = options.buyEstate;
             expect(result).toBeUndefined();
+            expect(options.auctionEstate).toBeUndefined();
         })
         it('Should not add a mandatory action to auction or buy an estate when player just stepped on banks estate but it is before move phase', () => {
             const state = getMockedGameState({
@@ -692,6 +738,7 @@ describe('Options after player move', () => {
             const options = getTestableOptions(state, DORIN);
             const result = options.buyEstate;
             expect(result).toBeUndefined();
+            expect(options.auctionEstate).toBeUndefined();
         })
         it('Should not add a mandatory action to auction or buy an estate when player just stepped on banks estate but selling estate is already done', () => {
             const state = getMockedGameState({
@@ -702,10 +749,32 @@ describe('Options after player move', () => {
             });
             const options = getTestableOptions(state, DORIN);
             const result = options.buyEstate;
+            const resultAuction = options.auctionEstate;
             expect(result).toBeUndefined();
-
+            expect(resultAuction).toBeUndefined();
         })
         it('Should add a mandatory action to auction estate when player just stepped on it but has not money to purchase it', () => {
+            const balinEstates = [ ROME, MEDIOLAN, NEAPOL, POWER_STATION];
+            const state = getMockedGameState({
+                estatesOwner: [BALIN, balinEstates],
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                setMoney: [[5, DORIN]],
+                movePlayers: [[WATER_PLANT_FIELD_INDEX, DORIN]],
+            });
+            const options = getTestableOptions(state, DORIN);
+            const resultBuyEstate = options.buyEstate;
+            const estate = state.boardFields.find(({name}) => name === WATER_PLANT);
+            const expectedAuction = {
+                [IS_MANDATORY]: true,
+                [TYPE]: OptionTypes.AuctionEstate,
+                [PAYLOAD]: estate
+            }
+            expect(resultBuyEstate).toBeUndefined();
+            expect(options.auctionEstate).toEqual(expectedAuction)
+        })
+
+        it('Should add a mandatory action to auction or buy an estate when player just stepped on not owned estate and has money for it', () => {
             const balinEstates = [ ROME, MEDIOLAN, NEAPOL, POWER_STATION];
             const state = getMockedGameState({
                 estatesOwner: [BALIN, balinEstates],
@@ -716,43 +785,20 @@ describe('Options after player move', () => {
             const options = getTestableOptions(state, DORIN);
             const result = options.buyEstate;
             const estate = state.boardFields.find(({name}) => name === WATER_PLANT);
-            const expectedValue = {
+            const expectedBuy = {
                 [IS_MANDATORY]: true,
                 [TYPE]: OptionTypes.BuyEstate,
                 [PAYLOAD]: estate
                 // [PAYLOAD]: descriptors[WATER_PLANT]
             }
-            expect(result).toEqual(expectedValue);
-        })
+            const expectedAuction = {
+                [IS_MANDATORY]: true,
+                [TYPE]: OptionTypes.AuctionEstate,
+                [PAYLOAD]: estate
+            }
 
-        it('Should add a mandatory action to auction or buy an estate when player just stepped on not owned estate and has money for it', () => {
-
-        })
-        it('Should add a mandatory action to pay for a visit at other players estate, when player just stepped on one', () => {
-
-        })
-        describe('Buy estate', () => {
-            it('Should add an alternative: buy estate or set it in auction when player stands on a field with estate', () => {
-
-            });
-            it('Should add a mandatory option to set an auction for estate player is on when is current player, is on target field, player has not enough money fo estate', () => {
-
-            });
-            it('Should add an alternative to buy estate or auction it with mandatory severity when currentPlayer is player and is on target filed, when it is after move', () => {
-
-            });
-            it ('Should not allow to buy an estate when it is owned by Bank, but it is before move phase', () => {
-
-            })
-            it('Should not allow to buy estate when it is owned by a player', () => {
-
-            })
-            it('Should not allow to buy estate when current player is on a non estate field', () => {
-
-            })
-            it('Should not allow to buy estate when player is not a current player', () => {
-
-            })
+            expect(result).toEqual(expectedBuy);
+            expect(options.auctionEstate).toEqual(expectedAuction);
         })
     })
 })

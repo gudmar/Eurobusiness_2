@@ -330,3 +330,9 @@ export const getFieldCurrentPlayerStandsOn = (state: tGameState) => {
     const field = state.boardFields[player!.fieldNr];
     return field;
 }
+
+export const isCurrentPlayerQueried = (options: tGameState, playerName: string) => {
+    const currentPlayerName = getCurrentPlayer(options).name;
+    const result = currentPlayerName === playerName
+    return result;
+}
