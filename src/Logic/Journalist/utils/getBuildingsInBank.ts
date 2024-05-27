@@ -6,12 +6,14 @@ type tWrappedGameState = { gameState: tGameState }
 
 export const getHousesInBank = (args: tWrappedGameState) => {
     const housesFromGameState = args?.gameState?.bank?.nrOfHouses;
-    const result = Bank.nrOfHouses || housesFromGameState;
+    const housesFromBankClass = Bank.nrOfHouses
+    const result = housesFromBankClass ?? housesFromGameState;
     return result;
 }
 
 export const getHotelsInBank = (args: tWrappedGameState) => {
     const hotelsFromState = args?.gameState?.bank?.nrOfHotels;
-    const result = Bank.nrOfHotels || hotelsFromState;
+    const hotelsFromBankClass = Bank.nrOfHotels;
+    const result = hotelsFromBankClass ?? hotelsFromState;
     return result;
 }

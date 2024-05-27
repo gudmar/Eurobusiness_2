@@ -70,7 +70,7 @@ export type tJournalistState = {
     sellBuildings: tJournalistOutput,
     // buyEstate?: tJournalistOutput;
     // auctionEstate?: tJournalistOutput;
-    handleStayOnBankOwnedEstate: tJournalistOutput;
+    handleStayOnBankOwnedEstate?: tJournalistOutput;
     sellEstates: tJournalistOutput;
     plegdeEstates: tJournalistOutput;
     unplegdeEstates: tJournalistOutput;
@@ -87,7 +87,7 @@ export type tJournalistOptionsUnderDevelopement = {
     buyBuildings?:  tJournalistOutputObject;
     sellBuildings?: tJournalistOutputObject;
     // buyEstate?: tJournalistOutput;
-    handleStayOnBankOwnedEstate: tJournalistOutput;
+    handleStayOnBankOwnedEstate?: tJournalistOutput;
     // auctionEstate?: tJournalistOutput;
     sellEstates?: tJournalistOutput;
     plegdeEstates?: tJournalistOutput;
