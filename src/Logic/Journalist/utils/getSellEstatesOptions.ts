@@ -4,6 +4,7 @@ import { createPath } from "../../../Functions/createPath";
 import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
 import { tFieldState } from "../../boardTypes";
 import { tObject } from "../../types";
+import { ACTIONS, PAYLOAD, TYPE } from "../const";
 import { OptionTypes, tJournalistOptionsUnderDevelopement } from "../types"
 import { areBuildings, checkIfPlayerOwnsEveryEstate, getCountryBoardFieldsFromGameState, getPlayerColorFromPlayerName, getPlayerEstates, isPlayerInJail, processEachCountry } from "./commonFunctions";
 import { tProcessEachCountryCalbackArgs, tStateModifierArgs } from "./types"
@@ -72,8 +73,12 @@ export const getSellEstatesOptions = (args: tStateModifierArgs): tJournalistOpti
     }
     const sellEstatePermits = {
         isMandatory: false,
-        type:  OptionTypes.AuctionEstate,
-        payload: calculateSellEstatePermits(options!, playerName)
+        [ACTIONS]: [
+            {
+                [TYPE]:  OptionTypes.AuctionEstate,
+                [PAYLOAD]: calculateSellEstatePermits(options!, playerName)
+            }
+        ]
     }
     state.sellEstates = sellEstatePermits;
     return state;

@@ -16,3 +16,4 @@ export const REASON = 'reason'
 export const IS_MANDATORY = 'isMandatory';
 export const TYPE = 'type';
 export const PAYLOAD = 'payload';
+export const ACTIONS = 'actions';

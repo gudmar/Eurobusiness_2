@@ -3,6 +3,7 @@ import { descriptors } from "../../../Data/boardFields";
 import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
 import { NR_OF_HOTELS_PURCHASED_IN_ROUND, NR_OF_HOUSES_PURCHASED_IN_TURN } from "../../Player/types";
 import { tObject, TurnPhases } from "../../types";
+import { ACTIONS } from "../const";
 import { isBeforeFirstMove } from "../isBeforeFirstMove";
 import { OptionTypes, tJournalistOptionsUnderDevelopement } from "../types";
 import { getCurrentGamePhase, getCurrentPlayer, getCurrentPlayerEstatesIfOwnsWholeCountry, getCurrentPlayerName, getEstatesIfPlayerOwnsWholeCountry, getPlayer, isCurrentPlayerInJail, isPlayerInJail } from "./commonFunctions";
@@ -93,9 +94,13 @@ export const getTestableOptionsWithBuyBuildings = (args: tStateModifierArgs): tJ
     }
     const permits = getBuildingPermitsForEachCountry(options!, getPlayer(options!, playerName).name)
     state.buyBuildings = {
-        payload: permits,
         isMandatory: false,
-        type: OptionTypes.BuyBuildings
+        [ACTIONS]: [
+            {
+                type: OptionTypes.BuyBuildings,
+                payload: permits,
+            }
+        ]
     }
     return state ;
 }

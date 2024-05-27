@@ -5,7 +5,7 @@ import { createPath } from "../../../Functions/createPath";
 import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
 import { iChanceFieldState, iCityFieldState, iFieldState, iNonCityEstatesFieldState, iOtherFieldTypesFieldState, isCityFieldState } from "../../boardTypes";
 import { DoneThisTurn, TurnPhases } from "../../types";
-import { IS_MANDATORY, PAY, PAYLOAD, TYPE } from "../const";
+import { ACTIONS, IS_MANDATORY, PAY, PAYLOAD, TYPE } from "../const";
 import { OptionTypes, tJournalistOptionsUnderDevelopement } from "../types";
 import { getCurrentPlayer, getFieldData, getFieldIfOwned, getNrPlantsPlayerOwns, getNrRailwaysPlayerOwns, getPlayer, getPlayerByColor, isCurrentPlayerQueried } from "./commonFunctions";
 import {tStateModifierArgs } from "./types";
@@ -149,11 +149,15 @@ const addPayForEstateVisitOptions = (args: tStateModifierArgs) => {
     if (isCityField(field)) {
         state.pay!.visigingOtherPlayersEstate = {
             [IS_MANDATORY]: true,
-            [TYPE]: OptionTypes.Pay,
-            [PAYLOAD]: {
-                target: ownerPlayer.name,
-                ammount: getCityStopByFee(field)
-            }
+            [ACTIONS]: [
+                {
+                    [TYPE]: OptionTypes.Pay,
+                    [PAYLOAD]: {
+                        target: ownerPlayer.name,
+                        ammount: getCityStopByFee(field)
+                    }        
+                }
+            ]
         }
         return state;
     }
@@ -161,11 +165,15 @@ const addPayForEstateVisitOptions = (args: tStateModifierArgs) => {
         const ammount = getRailwayStopByFee(options!, field);
         state.pay!.visigingOtherPlayersEstate = {
             [IS_MANDATORY]: true,
-            [TYPE]: OptionTypes.Pay,
-            [PAYLOAD]: {
-                target: ownerPlayer.name,
-                ammount
-            }
+            [ACTIONS]: [
+                {
+                    [TYPE]: OptionTypes.Pay,
+                    [PAYLOAD]: {
+                        target: ownerPlayer.name,
+                        ammount
+                    }        
+                }
+            ]
         }
         return state
     }
@@ -173,11 +181,15 @@ const addPayForEstateVisitOptions = (args: tStateModifierArgs) => {
         const ammount = getPlantStopByFee(options!, field);
         state.pay!.visigingOtherPlayersEstate = {
             [IS_MANDATORY]: true,
-            [TYPE]: OptionTypes.Pay,
-            [PAYLOAD]: {
-                target: ownerPlayer.name,
-                ammount
-            }
+            [ACTIONS]: [
+                {
+                    [TYPE]: OptionTypes.Pay,
+                    [PAYLOAD]: {
+                        target: ownerPlayer.name,
+                        ammount
+                    }        
+                }
+            ]
         }
     }
     return state;
@@ -195,11 +207,15 @@ export const getPaymentOptions = (args: tStateModifierArgs): tJournalistOptionsU
     if (isOnTaxableField) {
         const payment = {
             [IS_MANDATORY]: true,
-            [TYPE]: OptionTypes.Pay,
-            [PAYLOAD]: {
-                target: BANK,
-                ammount: getTaxFee(options!)
-            }
+            [ACTIONS]: [
+                {
+                    [TYPE]: OptionTypes.Pay,
+                    [PAYLOAD]: {
+                        target: BANK,
+                        ammount: getTaxFee(options!)
+                    }        
+                }
+            ]
         };
         createPath(state, [PAY]);
         state.pay!.visigingOtherPlayersEstate = payment;

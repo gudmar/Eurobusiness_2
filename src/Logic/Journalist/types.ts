@@ -17,15 +17,19 @@ export enum OptionTypes {
     DrawChanceCard = 'Draw a chance card',
     Pay = 'Pay some fee',
     GoToJail = 'Go to jail',
-    UseSpecialCardOrGoToJail = 'Use special card',
+    UseSpecialCard = 'Use special card',
     SellSpecialCard = 'Sell special card',
     GetMoney = 'Get money'
 }
 
-export type tOption = {
-    isMandatory: boolean,
+export type tOptionAction = {
     type: OptionTypes,
     payload?: any
+}
+
+export type tOption = {
+    isMandatory: boolean,
+    actions: tOptionAction[],
 }
 
 export type tRejection = {
@@ -64,8 +68,9 @@ export type tJournalistState = {
     // }
     // sellBuildings: tJournalistOutputArrayOrRejection;
     sellBuildings: tJournalistOutput,
-    buyEstate?: tJournalistOutput;
-    auctionEstate?: tJournalistOutput;
+    // buyEstate?: tJournalistOutput;
+    // auctionEstate?: tJournalistOutput;
+    handleStayOnBankOwnedEstate: tJournalistOutput;
     sellEstates: tJournalistOutput;
     plegdeEstates: tJournalistOutput;
     unplegdeEstates: tJournalistOutput;
@@ -81,8 +86,9 @@ export type tJournalistState = {
 export type tJournalistOptionsUnderDevelopement = {
     buyBuildings?:  tJournalistOutputObject;
     sellBuildings?: tJournalistOutputObject;
-    buyEstate?: tJournalistOutput;
-    auctionEstate?: tJournalistOutput;
+    // buyEstate?: tJournalistOutput;
+    handleStayOnBankOwnedEstate: tJournalistOutput;
+    // auctionEstate?: tJournalistOutput;
     sellEstates?: tJournalistOutput;
     plegdeEstates?: tJournalistOutput;
     unplegdeEstates?: tJournalistOutput;

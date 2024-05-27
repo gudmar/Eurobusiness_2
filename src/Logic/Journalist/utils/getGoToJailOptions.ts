@@ -21,22 +21,40 @@ const checkIsOnGoToJailField = (state: tGameState) => {
 
 const checkIfPlayerInJail = (state: tGameState) => getCurrentPlayer(state).isInPrison;
 
+const checkIfCurrentPlayerHasSpecialCard = (state: tGameState) => {
+    const player = getCurrentPlayer(state);
+    const result = player.specialCards.length;
+    return result;
+}
+
 export const getGoToJailOptions = (args: tStateModifierArgs): tJournalistOptionsUnderDevelopement => {
     const { options, state, playerName } = args;
     const isCurrentPlayer = isCurrentPlayerQueried(options!, playerName);
     const didPlayerAlreadyGoToJail = didCurrentPlayerAlreadyGoToJail(options!);
     const isOnGoToJailField = checkIsOnGoToJailField(options!);
     const isInPrison = checkIfPlayerInJail(options!)
-    const noJailConditions = [
-        !isCurrentPlayer,
-        didPlayerAlreadyGoToJail,
-        !isOnGoToJailField,
-        isInPrison,
-    ];
-    if (noJailConditions) { return state; }
+    if (!isCurrentPlayer) return state;
+    if (didPlayerAlreadyGoToJail) return state;
+    if (!isOnGoToJailField) return state;
+    if (isInPrison) return state;
+    // const noJailConditions = [
+    //     !isCurrentPlayer,
+    //     didPlayerAlreadyGoToJail,
+    //     !isOnGoToJailField,
+    //     isInPrison,
+    // ];
+    // const shouldNotGoToJail = noJailConditions.some((condition) => !condition)
+    // if (shouldNotGoToJail) { return state; }
+    const actions = [
+        { [TYPE]: OptionTypes.GoToJail },
+    ]
+    const hasGetOutOfJailCard = checkIfCurrentPlayerHasSpecialCard(options!)
+    if (hasGetOutOfJailCard) {
+        actions.push({ [TYPE]: OptionTypes.UseSpecialCard})
+    }
     state.goToJail = {
         [IS_MANDATORY]: true,
-        [TYPE]: OptionTypes.GoToJail,
+        actions,
     }
     return state
 }

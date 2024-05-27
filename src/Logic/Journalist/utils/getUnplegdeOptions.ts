@@ -3,6 +3,7 @@ import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
 import { roundToMultiplicity } from "../../../Functions/round";
 import { tFieldState } from "../../boardTypes";
 import { tObject, TurnPhases } from "../../types";
+import { ACTIONS } from "../const";
 import { OptionTypes, tJournalistOptionsUnderDevelopement } from "../types";
 import { areBuildings, arePlegded, getCountryBoardFieldsFromGameState, getPlayerColorFromPlayerName, isCurrentPlayerEachEstatePlegded, isCurrentPlayerInJail, isPlayerEachEstatePlegded, hasPlayerEachEstateUnplegded, processEachCountry, getPlayer } from "./commonFunctions";
 import { tProcessEachCountryCalbackArgs, tStateModifierArgs } from "./types";
@@ -87,8 +88,13 @@ export const getUnplegdeOptions = (args: tStateModifierArgs): tJournalistOptions
     }
     const unplegdePermits = {
         isMandatory: false,
-        type:  OptionTypes.BuyOut,
-        payload: getUnplegdeEstatesPermits(options!, playerName)
+        [ACTIONS]: [
+            {
+                type:  OptionTypes.BuyOut,
+                payload: getUnplegdeEstatesPermits(options!, playerName)
+
+            }
+        ]
     }
     state.unplegdeEstates = unplegdePermits;
     return state

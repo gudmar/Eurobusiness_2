@@ -1,8 +1,8 @@
 import { BANK } from "../../../Data/const";
 import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
 import { DoneThisTurn, TurnPhases } from "../../types";
-import { IS_MANDATORY, PAYLOAD, TYPE } from "../const";
-import { OptionTypes, tJournalistOptionsUnderDevelopement } from "../types";
+import { ACTIONS, IS_MANDATORY, PAYLOAD, TYPE } from "../const";
+import { OptionTypes, tJournalistOptionsUnderDevelopement, tOptionAction } from "../types";
 import { getFieldCurrentPlayerStandsOn, getFieldData, getPlayerFromState } from "./commonFunctions";
 import { tStateModifierArgs } from "./types";
 
@@ -36,20 +36,24 @@ export const getStoppedOnBankOwnedEstateOptions = (args: tStateModifierArgs): tJ
     const { canBePurchased, canBeAuctioned } = whatToDoWithEstate(options!, playerName);
     const field = getFieldCurrentPlayerStandsOn(options!);
     if (!('name' in field)) return state;
-    if (canBeAuctioned) {
-        state.auctionEstate = {
-            [IS_MANDATORY]: true,
+    const actions: tOptionAction[] = [];
+    if (canBeAuctioned) actions.push(
+        {
             [TYPE]: OptionTypes.AuctionEstate,
-            [PAYLOAD]: field,
-        };
-    }
-    if (canBePurchased) {
-        state.buyEstate = {
-            [IS_MANDATORY]: true,
+            [PAYLOAD]: field
+        }
+    )
+    if (canBePurchased) actions.push(
+        {
             [TYPE]: OptionTypes.BuyEstate,
-            [PAYLOAD]: field,
-        };
-        return state;
+            [PAYLOAD]: field
+        }
+    );
+    if (canBeAuctioned) {
+        state.handleStayOnBankOwnedEstate = {
+            [IS_MANDATORY]: true,
+            [ACTIONS]: actions,
+        }
     }
     return state;
 }

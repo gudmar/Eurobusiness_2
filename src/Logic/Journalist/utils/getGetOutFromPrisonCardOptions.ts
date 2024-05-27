@@ -3,6 +3,7 @@ import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
 import { roundToMultiplicity } from "../../../Functions/round";
 import { tFieldState } from "../../boardTypes";
 import { tObject, TurnPhases } from "../../types";
+import { ACTIONS, IS_MANDATORY, PAYLOAD, TYPE } from "../const";
 import { OptionTypes, tJournalistOptionsUnderDevelopement } from "../types";
 import { areBuildings, arePlegded, getCountryBoardFieldsFromGameState, getPlayerColorFromPlayerName, isCurrentPlayerEachEstatePlegded, isCurrentPlayerInJail, isPlayerEachEstatePlegded, hasPlayerEachEstateUnplegded, processEachCountry, getPlayer, isPlayerInJail } from "./commonFunctions";
 import { tProcessEachCountryCalbackArgs, tStateModifierArgs } from "./types";
@@ -77,17 +78,16 @@ export const getSpecialCardsOptions = (args: tStateModifierArgs): tJournalistOpt
     const playersSpecialCards = getPlayerSpecialCards(options!, playerName);
     const isInJail = isPlayerInJail(options!, playerName);
     if (isInJail) {        
-        // state.specialCards = {
-        //     isMandatory: false,
-        //     type: OptionTypes.UseSpecialCard,
-        //     payload: playersSpecialCards,
-        // }
         return state
     }
     const specialCards = {
-        isMandatory: false,
-        payload: playersSpecialCards,
-        type: OptionTypes.SellSpecialCard,
+        [IS_MANDATORY]: false,
+        [ACTIONS] : [
+            {
+                [PAYLOAD]: playersSpecialCards,
+                [TYPE]: OptionTypes.SellSpecialCard,        
+            }
+        ]
     }
     return { ...state, specialCards }
 }

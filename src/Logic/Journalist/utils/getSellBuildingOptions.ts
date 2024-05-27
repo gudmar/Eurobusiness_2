@@ -1,4 +1,5 @@
 import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
+import { ACTIONS } from "../const";
 import { OptionTypes, tJournalistOptionsUnderDevelopement } from "../types";
 import { getCurrentPlayerName, getNrOfPlayerBuildings, isCurrentPlayerInJail, isPlayerInJail } from "./commonFunctions";
 import { SellBuildingsRejected } from "./constants";
@@ -31,9 +32,13 @@ export const getTestableOptionsWithSellBuildings = (args: tStateModifierArgs): t
     }
     const sellingPossibilities = getSellingPossiblitiesForPlayer(args);
     const result = {
-        payload: sellingPossibilities,
-        type: OptionTypes.SellBuildings,
         isMandatory: false,
+        [ACTIONS]: [
+            {
+                type: OptionTypes.SellBuildings,
+                payload: sellingPossibilities,
+            }
+        ]
     };
     state.sellBuildings = result;
     return state;
