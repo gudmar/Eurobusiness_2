@@ -2,6 +2,7 @@ import { createPath } from "../../../Functions/createPath";
 import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
 import { tFieldState } from "../../boardTypes";
 import { tObject } from "../../types";
+import { ACTIONS, IS_MANDATORY, PAYLOAD, TYPE } from "../const";
 import { OptionTypes, tJournalistOptionsUnderDevelopement } from "../types";
 import { areBuildings, arePlegded, getCountryBoardFieldsFromGameState, getPlayerColorFromPlayerName, isCurrentPlayerEachEstatePlegded, isCurrentPlayerInJail, isPlayerEachEstatePlegded, processEachCountry } from "./commonFunctions";
 import { tProcessEachCountryCalbackArgs, tStateModifierArgs } from "./types";
@@ -70,9 +71,13 @@ export const getPlegdeOptions = (args: tStateModifierArgs): tJournalistOptionsUn
         return state;
     }
     const plegdePermits = {
-        isMandatory: false,
-        type:  OptionTypes.Mortgage,
-        payload: getPlegdeEstatesPermits(options!, playerName)
+        [IS_MANDATORY]: false,
+        [ACTIONS]: [
+            {
+                [TYPE]:  OptionTypes.Mortgage,
+                [PAYLOAD]: getPlegdeEstatesPermits(options!, playerName)        
+            }
+        ]
     }
     state.plegdeEstates = plegdePermits;
     return state

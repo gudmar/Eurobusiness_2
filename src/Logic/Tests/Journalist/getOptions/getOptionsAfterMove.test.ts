@@ -1,7 +1,8 @@
 import { descriptors } from "../../../../Data/boardFields"
 import { RED_CARDS_SET_NAME, SPECIAL_CARD_BLUE } from "../../../../Data/chanceCards"
 import { ATENY, AUSTRIA, BANK, BARCELONA, CHANCE_BLUE, CHANCE_RED, EAST_RAILWAYS, GREEN, INSBRUK, ITALY, MEDIOLAN, NEAPOL, POWER_STATION, ROME, SALONIKI, SOUTH_RAILWAY, WATER_PLANT, WEST_RAILWAYS, WIEDEN, YELLOW } from "../../../../Data/const"
-import { GUARDED_PARKING_FEE, TAX_FEE } from "../../../../Data/fees"
+import { GUARDED_PARKING_FEE, START_FIELD_MONEY, TAX_FEE } from "../../../../Data/fees"
+import { ACTIONS } from "../../../Chance/ChanceCardHolder"
 import { GET_MONEY, IS_MANDATORY, PASSING_START, PAY, PAYLOAD, REASON, TYPE } from "../../../Journalist/const"
 import { getTestableOptions } from "../../../Journalist/getOptions"
 import { OptionTypes, tJournalistOutputArrayOrRejection } from "../../../Journalist/types"
@@ -96,8 +97,12 @@ describe('Options after player move', () => {
             const result = options[GET_MONEY]?.[PASSING_START];
             expect(result).toEqual({
                 [IS_MANDATORY]: true,
-                [TYPE]: OptionTypes.GetMoney,
-                [PAYLOAD]: 400
+                [ACTIONS]: [
+                    {
+                        [TYPE]: OptionTypes.GetMoney,
+                        [PAYLOAD]: START_FIELD_MONEY,
+                    }
+                ]
             });
         })
         it('Should accept payment when player just passed start (from field > current field)', () => {
@@ -112,8 +117,12 @@ describe('Options after player move', () => {
             const result = options[GET_MONEY]?.[PASSING_START];
             expect(result).toEqual({
                 [IS_MANDATORY]: true,
-                [TYPE]: OptionTypes.GetMoney,
-                [PAYLOAD]: 400
+                [ACTIONS]: [
+                    {
+                        [TYPE]: OptionTypes.GetMoney,
+                        [PAYLOAD]: START_FIELD_MONEY,
+                    }
+                ]
             });
         })
         it('Should not accept payment when player was moved 3 fields back and shouldPayForPassingStart was set to not-to-pay', () => {
@@ -166,8 +175,12 @@ describe('Options after player move', () => {
             const result = options[GET_MONEY]?.[PASSING_START];
             expect(result).toEqual({
                 [IS_MANDATORY]: true,
-                [TYPE]: OptionTypes.GetMoney,
-                [PAYLOAD]: 400
+                [ACTIONS]: [
+                    {
+                        [TYPE]: OptionTypes.GetMoney,
+                        [PAYLOAD]: 400        
+                    }
+                ]
             });
         })
         it('Should not accept payment when player goes to Neapoly and does not pass start)', () => {
@@ -206,8 +219,12 @@ describe('Options after player move', () => {
             const result = options[GET_MONEY]?.[PASSING_START];
             expect(result).toEqual({
                 [IS_MANDATORY]: true,
-                [TYPE]: OptionTypes.GetMoney,
-                [PAYLOAD]: 400
+                [ACTIONS]: [
+                    {
+                        [TYPE]: OptionTypes.GetMoney,
+                        [PAYLOAD]: START_FIELD_MONEY,
+                    }
+                ]
             });
         })
 
@@ -343,9 +360,8 @@ describe('Options after player move', () => {
             const expected = getSellBuildingsExpectedResponse({
                 [ITALY]: EXPECTED_ITALY,
             })
-            if (!('payload' in options.sellBuildings)) throw new Error('No payload in options.sellBuildings')
-            const result = options.sellBuildings.payload;
-            expect(options.sellBuildings.payload).toEqual(expected);
+            const result = (options as any).sellBuildings.actions[0].payload;
+            expect(result).toEqual(expected);
         })
         it('Should allow to plegde an estate when player has an estate that may be plegeded in after move phase', () => {
             const dorinEstates = [ ROME, MEDIOLAN, NEAPOL, SALONIKI, BARCELONA, ATENY ];
@@ -359,10 +375,7 @@ describe('Options after player move', () => {
                 setGamePhase: TurnPhases.AfterMove,
             });
             const options = getTestableOptions(state, DORIN);
-            if (!('payload' in options.plegdeEstates)) {
-                throw new Error('Payload expected')
-            }
-            const outputForNeapol = options.plegdeEstates.payload[ITALY][NEAPOL];
+            const outputForNeapol = (options as any).plegdeEstates.actions![0].payload[ITALY][NEAPOL];
             expect(outputForNeapol).toEqual({
                 reason: PlegdeEstatesReasons.Allowed,
                 price: descriptors.Neapol.mortgage,
@@ -377,11 +390,15 @@ describe('Options after player move', () => {
             const options = getTestableOptions(state, DORIN);
             const expectedPaymentStatus = {
                 [IS_MANDATORY]: true,
-                [TYPE]: OptionTypes.Pay,
-                [PAYLOAD]: {
-                    target: BANK,
-                    ammount: GUARDED_PARKING_FEE,
-                }
+                [ACTIONS]: [
+                    {
+                        [TYPE]: OptionTypes.Pay,
+                        [PAYLOAD]: {
+                            target: BANK,
+                            ammount: GUARDED_PARKING_FEE,
+                        }        
+                    }
+                ]
             }
             const paymentStatus = options.pay?.visigingOtherPlayersEstate;
             expect(paymentStatus).toEqual(expectedPaymentStatus);
@@ -398,11 +415,15 @@ describe('Options after player move', () => {
             const result = options.pay?.visigingOtherPlayersEstate;
             const expectedResult = {
                 [IS_MANDATORY]: true,
-                [TYPE]: OptionTypes.Pay,
-                [PAYLOAD]: {
-                    target: BALIN,
-                    ammount: NEAPOL_FEE,
-                }
+                [ACTIONS]: [
+                    {
+                        [TYPE]: OptionTypes.Pay,
+                        [PAYLOAD]: {
+                            target: BALIN,
+                            ammount: NEAPOL_FEE,
+                        }        
+                    }
+                ]
             }
             expect(result).toEqual(expectedResult)
         })
@@ -422,11 +443,15 @@ describe('Options after player move', () => {
             const result = options.pay?.visigingOtherPlayersEstate;
             const expectedResult = {
                 [IS_MANDATORY]: true,
-                [TYPE]: OptionTypes.Pay,
-                [PAYLOAD]: {
-                    target: BALIN,
-                    ammount: NEAPOL_WITH_4_HOUSES_FEE,
-                }
+                [ACTIONS]: [
+                    {
+                        [TYPE]: OptionTypes.Pay,
+                        [PAYLOAD]: {
+                            target: BALIN,
+                            ammount: NEAPOL_WITH_4_HOUSES_FEE,
+                        }        
+                    }
+                ]
             }
             expect(result).toEqual(expectedResult)
         })
@@ -447,11 +472,15 @@ describe('Options after player move', () => {
             const result = options.pay?.visigingOtherPlayersEstate;
             const expectedResult = {
                 [IS_MANDATORY]: true,
-                [TYPE]: OptionTypes.Pay,
-                [PAYLOAD]: {
-                    target: BALIN,
-                    ammount: NEAPOL_WITH_HOTEL_FEE,
-                }
+                [ACTIONS]: [
+                    {
+                        [TYPE]: OptionTypes.Pay,
+                        [PAYLOAD]: {
+                            target: BALIN,
+                            ammount: NEAPOL_WITH_HOTEL_FEE,
+                        }        
+                    }
+                ]
             }
             expect(result).toEqual(expectedResult)
         })
@@ -516,11 +545,15 @@ describe('Options after player move', () => {
             const result = options.pay?.visigingOtherPlayersEstate;
             const expectedResult = {
                 [IS_MANDATORY]: true,
-                type: OptionTypes.Pay,
-                [PAYLOAD]: {
-                    target: BALIN,
-                    ammount: 100,
-                }
+                [ACTIONS]: [
+                    {
+                        [TYPE]: OptionTypes.Pay,
+                        [PAYLOAD]: {
+                            target: BALIN,
+                            ammount: 100,
+                        }        
+                    }
+                ]
             }
             expect(result).toEqual(expectedResult)
         })
@@ -539,11 +572,15 @@ describe('Options after player move', () => {
             const result = options.pay?.visigingOtherPlayersEstate;
             const expectedResult = {
                 [IS_MANDATORY]: true,
-                type: OptionTypes.Pay,
-                [PAYLOAD]: {
-                    target: BALIN,
-                    ammount: 200
-                }
+                [ACTIONS]: [
+                    {
+                        [TYPE]: OptionTypes.Pay,
+                        [PAYLOAD]: {
+                            target: BALIN,
+                            ammount: 200
+                        }        
+                    }
+                ]
             }
             expect(result).toEqual(expectedResult)
         })
@@ -581,11 +618,15 @@ describe('Options after player move', () => {
             const result = options.pay?.visigingOtherPlayersEstate;
             const expectedResult = {
                 [IS_MANDATORY]: true,
-                [TYPE]: OptionTypes.Pay,
-                [PAYLOAD]: {
-                    ammount: descriptors[WATER_PLANT].visit[1],
-                    target: BALIN,
-                }
+                [ACTIONS]: [
+                    {
+                        [TYPE]: OptionTypes.Pay,
+                        [PAYLOAD]: {
+                            ammount: descriptors[WATER_PLANT].visit[1],
+                            target: BALIN,
+                        }        
+                    }
+                ]
             }            
             expect(result).toEqual(expectedResult)
         })
@@ -600,8 +641,12 @@ describe('Options after player move', () => {
             const result = options.drawChanceCard;
             const expectedResult = {
                 [IS_MANDATORY]: true,
-                [TYPE]: OptionTypes.DrawChanceCard,
-                [PAYLOAD]: CHANCE_RED,
+                [ACTIONS]: [
+                    {
+                        [TYPE]: OptionTypes.DrawChanceCard,
+                        [PAYLOAD]: CHANCE_RED,        
+                    }
+                ]
             }            
             expect(result).toEqual(expectedResult)
         })
@@ -615,8 +660,12 @@ describe('Options after player move', () => {
             const result = options.drawChanceCard;
             const expectedResult = {
                 [IS_MANDATORY]: true,
-                [TYPE]: OptionTypes.DrawChanceCard,
-                [PAYLOAD]: CHANCE_BLUE,
+                [ACTIONS]: [
+                    {
+                        [TYPE]: OptionTypes.DrawChanceCard,
+                        [PAYLOAD]: CHANCE_BLUE,        
+                    }
+                ]
             }            
             expect(result).toEqual(expectedResult)
         })
@@ -630,7 +679,9 @@ describe('Options after player move', () => {
             const result = options.goToJail;
             const expectedResult = {
                 [IS_MANDATORY]: true,
-                [TYPE]: OptionTypes.GoToJail,
+                [ACTIONS]: [
+                    { [TYPE]: OptionTypes.GoToJail },
+                ]
             }            
             expect(result).toEqual(expectedResult)
         })
@@ -644,7 +695,11 @@ describe('Options after player move', () => {
             const options = getTestableOptions(state, DORIN);
             const expectedResult = {
                 [IS_MANDATORY]: true,
-                [TYPE]: OptionTypes.UseSpecialCardOrGoToJail,
+                [ACTIONS]: [
+                    { [TYPE]: OptionTypes.GoToJail },
+                    { [TYPE]: OptionTypes.UseSpecialCard },
+                ]
+                
             }            
             expect(options.goToJail).toEqual(expectedResult)
         })
@@ -681,11 +736,15 @@ describe('Options after player move', () => {
             const options = getTestableOptions(state, DORIN);
             const expectedPaymentStatus = {
                 [IS_MANDATORY]: true,
-                [TYPE]: OptionTypes.Pay,
-                [PAYLOAD]: {
-                    target: BANK,
-                    ammount: TAX_FEE,
-                }
+                [ACTIONS]: [
+                    {
+                        [TYPE]: OptionTypes.Pay,
+                        [PAYLOAD]: {
+                            target: BANK,
+                            ammount: TAX_FEE,
+                        }        
+                    }
+                ]
             }
             const paymentStatus = options.pay?.visigingOtherPlayersEstate;
             expect(paymentStatus).toEqual(expectedPaymentStatus);
@@ -697,9 +756,8 @@ describe('Options after player move', () => {
                 movePlayers: [[WATER_PLANT_FIELD_INDEX, DORIN]],
             });
             const options = getTestableOptions(state, DORIN);
-            const result = options.buyEstate
+            const result = options.handleStayOnBankOwnedEstate
             expect(result).toBeUndefined();
-            expect(options.auctionEstate).toBeUndefined();
         })
 
         it('Should not add a mandatory action to auction or buy an estate when player just stepped on owned by some player estate', () => {
@@ -714,9 +772,8 @@ describe('Options after player move', () => {
                 ],
             });
             const options = getTestableOptions(state, DORIN);
-            const result = options.buyEstate;
+            const result = options.handleStayOnBankOwnedEstate;
             expect(result).toBeUndefined();
-            expect(options.auctionEstate).toBeUndefined();
         })
         it('Should not add a mandatory action to auction or buy an estate when player just stepped on not an estate field', () => {
             const state = getMockedGameState({
@@ -725,9 +782,8 @@ describe('Options after player move', () => {
                 movePlayers: [[RED_CHANCE_FIELD_INDEX, DORIN]],
             });
             const options = getTestableOptions(state, DORIN);
-            const result = options.buyEstate;
+            const result = options.handleStayOnBankOwnedEstate;
             expect(result).toBeUndefined();
-            expect(options.auctionEstate).toBeUndefined();
         })
         it('Should not add a mandatory action to auction or buy an estate when player just stepped on banks estate but it is before move phase', () => {
             const state = getMockedGameState({
@@ -736,9 +792,8 @@ describe('Options after player move', () => {
                 movePlayers: [[RED_CHANCE_FIELD_INDEX, DORIN]],
             });
             const options = getTestableOptions(state, DORIN);
-            const result = options.buyEstate;
+            const result = options.handleStayOnBankOwnedEstate;
             expect(result).toBeUndefined();
-            expect(options.auctionEstate).toBeUndefined();
         })
         it('Should not add a mandatory action to auction or buy an estate when player just stepped on banks estate but selling estate is already done', () => {
             const state = getMockedGameState({
@@ -748,10 +803,8 @@ describe('Options after player move', () => {
                 addDoneThisTurn: [DoneThisTurn.BoughtEstate]
             });
             const options = getTestableOptions(state, DORIN);
-            const result = options.buyEstate;
-            const resultAuction = options.auctionEstate;
+            const result = options.handleStayOnBankOwnedEstate;
             expect(result).toBeUndefined();
-            expect(resultAuction).toBeUndefined();
         })
         it('Should add a mandatory action to auction estate when player just stepped on it but has not money to purchase it', () => {
             const balinEstates = [ ROME, MEDIOLAN, NEAPOL, POWER_STATION];
@@ -763,15 +816,17 @@ describe('Options after player move', () => {
                 movePlayers: [[WATER_PLANT_FIELD_INDEX, DORIN]],
             });
             const options = getTestableOptions(state, DORIN);
-            const resultBuyEstate = options.buyEstate;
             const estate = state.boardFields.find(({name}) => name === WATER_PLANT);
-            const expectedAuction = {
+            const expected = {
                 [IS_MANDATORY]: true,
-                [TYPE]: OptionTypes.AuctionEstate,
-                [PAYLOAD]: estate
+                [ACTIONS]: [
+                    {
+                        [TYPE]: OptionTypes.AuctionEstate,
+                        [PAYLOAD]: estate        
+                    }
+                ]
             }
-            expect(resultBuyEstate).toBeUndefined();
-            expect(options.auctionEstate).toEqual(expectedAuction)
+            expect(options.handleStayOnBankOwnedEstate).toEqual(expected)
         })
 
         it('Should add a mandatory action to auction or buy an estate when player just stepped on not owned estate and has money for it', () => {
@@ -783,22 +838,23 @@ describe('Options after player move', () => {
                 movePlayers: [[WATER_PLANT_FIELD_INDEX, DORIN]],
             });
             const options = getTestableOptions(state, DORIN);
-            const result = options.buyEstate;
+            const result = options.handleStayOnBankOwnedEstate;
             const estate = state.boardFields.find(({name}) => name === WATER_PLANT);
-            const expectedBuy = {
+            const expected = {
                 [IS_MANDATORY]: true,
-                [TYPE]: OptionTypes.BuyEstate,
-                [PAYLOAD]: estate
+                [ACTIONS]: [
+                    {
+                        [TYPE]: OptionTypes.AuctionEstate,
+                        [PAYLOAD]: estate        
+                    },
+                    {
+                        [TYPE]: OptionTypes.BuyEstate,
+                        [PAYLOAD]: estate        
+                    }
+                ]
                 // [PAYLOAD]: descriptors[WATER_PLANT]
             }
-            const expectedAuction = {
-                [IS_MANDATORY]: true,
-                [TYPE]: OptionTypes.AuctionEstate,
-                [PAYLOAD]: estate
-            }
-
-            expect(result).toEqual(expectedBuy);
-            expect(options.auctionEstate).toEqual(expectedAuction);
+            expect(result).toEqual(expected);
         })
     })
 })

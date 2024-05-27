@@ -1,6 +1,7 @@
 import { descriptors } from "../../../../Data/boardFields"
 import { CHANCE_CARDS_BLUE, CHANCE_CARDS_RED } from "../../../../Data/chanceCards"
 import { ATENY, AUSTRIA, BARCELONA, CHANCE_RED, EAST_RAILWAYS, GLASGOW, GREECE, GREEN, INSBRUK, ITALY, LIVERPOOL, LONDON, MADRIT, MEDIOLAN, NEAPOL, PLANT, POWER_STATION, RAILWAYS, RED, ROME, SALONIKI, SEWILLA, UK, WEST_RAILWAYS, WIEDEN, YELLOW } from "../../../../Data/const"
+import { ACTIONS } from "../../../Chance/ChanceCardHolder"
 import { getTestableOptions } from "../../../Journalist/getOptions"
 import { OptionTypes, tJournalistOutputArrayOrRejection, tJournalistState } from "../../../Journalist/types"
 import { SellBuildingsRejected } from "../../../Journalist/utils/constants"
@@ -147,8 +148,8 @@ describe('Testing getOptions', () => {
                         [ITALY]: BuildingPermitRejected.plegded,
                     })
                     const options = getTestableOptions(state, DORIN);
-                    if (!('payload' in options.buyBuildings)) throw new Error('Payload not in buyBuildings')
-                    expect(options.buyBuildings.payload).toEqual(expected)
+                    // if (!('payload' in options.buyBuildings)) throw new Error('Payload not in buyBuildings')
+                    expect((options as any).buyBuildings.actions[0].payload).toEqual(expected)
                 })
                 it('Should not add a possiblity to buy buildings when player is in prison and has turns to wait, but has where to build buildings', () => {
                     const dorinEstates = [ SALONIKI, ATENY, NEAPOL, MEDIOLAN, ROME, SEWILLA, MADRIT];
@@ -179,8 +180,7 @@ describe('Testing getOptions', () => {
                         [GREECE]: BuildingPermitRejected.alreadyBuild,
                         [ITALY]: BuildingPermitRejected.alreadyBuild,
                     })
-                    if (!('payload' in options.buyBuildings)) throw new Error('No payload in options.buyBuildings')
-                    expect(options.buyBuildings.payload).toEqual(expectedResponse)
+                    expect((options as any).buyBuildings.actions[0].payload).toEqual(expectedResponse)
                 })
                 describe('Collapse reasons', () => {
                     it('Should return a single reason when player has no money to buy a house on any estate he owns', () => {
@@ -191,7 +191,7 @@ describe('Testing getOptions', () => {
                             setMoney: [[399, DORIN]]
                         });
                         const options = getTestableOptions(state, DORIN);
-                        expect(options.buyBuildings).toEqual({reason: NoBuildingPermitResults.NoMoney})
+                        expect((options as any).buyBuildings).toEqual({reason: NoBuildingPermitResults.NoMoney})
                     })
                 })
             });
@@ -208,8 +208,7 @@ describe('Testing getOptions', () => {
                         currentPlayer: [DORIN],
                     });
                     const options = getTestableOptions(state, DORIN);
-                    if (!('payload' in options.buyBuildings)) throw new Error('Payload not in options.buyBuildings');
-                    const permits = options.buyBuildings.payload;
+                    const permits = (options as any).buyBuildings.actions[0].payload;
                     const countryNamesNotAustria = Object.keys(permits).filter((countryName) => countryName !== AUSTRIA)
                     countryNamesNotAustria.forEach((countryName ) => {
                         const countryResult: tJournalistOutputArrayOrRejection = permits[countryName];
@@ -293,9 +292,7 @@ describe('Testing getOptions', () => {
                     const expected = getSellBuildingsExpectedResponse({
                         [ITALY]: EXPECTED_ITALY,
                     })
-                    if (!('payload' in options.sellBuildings)) throw new Error('No payload in options.sellBuildings')
-                    const result = options.sellBuildings.payload;
-                    expect(options.sellBuildings.payload).toEqual(expected);
+                    expect((options as any).sellBuildings.actions[0].payload).toEqual(expected);
                 })
             })
         })
@@ -359,14 +356,11 @@ describe('Testing getOptions', () => {
                             ],
                         });
                         const options = getTestableOptions(state, DORIN);
-                        if (!('payload' in options.sellEstates)) {
-                            console.log('Received ', options.sellEstates)
-                            throw new Error('Payload expected')
-                        }
-                        const outputForItaly = options.sellEstates.payload[ITALY]
-                        const outputForGreece = options.sellEstates.payload[GREECE]
-                        const outputForLondon = options.sellEstates.payload[UK][LONDON]
-                        const outputForLiverpol = options.sellEstates.payload[UK][LIVERPOOL]
+                        const payload = (options as any).sellEstates.actions[0].payload
+                        const outputForItaly =    payload[ITALY]
+                        const outputForGreece =   payload[GREECE]
+                        const outputForLondon =   payload[UK][LONDON]
+                        const outputForLiverpol = payload[UK][LIVERPOOL]
 
                         expect(outputForItaly).toEqual({reason: SellEstatesReasons.Buildings})
                         expect(outputForGreece).toEqual({reason: SellEstatesReasons.Buildings})
@@ -380,12 +374,9 @@ describe('Testing getOptions', () => {
                         currentPlayer: [DORIN],
                     });
                     const options = getTestableOptions(state, DORIN);
-                    if (!('payload' in options.sellEstates)) {
-                        console.log('Received ', options.sellEstates)
-                        throw new Error('Payload expected')
-                    }
-                    const outputForRailway = options.sellEstates.payload[RAILWAYS][EAST_RAILWAYS]
-                    const outputForPowerPlant = options.sellEstates.payload[PLANT][POWER_STATION]
+                    const payload = (options as any).sellEstates.actions[0].payload;
+                    const outputForRailway = payload[RAILWAYS][EAST_RAILWAYS]
+                    const outputForPowerPlant = payload[PLANT][POWER_STATION]
 
                     expect(outputForRailway).toEqual({reason: SellEstatesReasons.NotOwner})
                     expect(outputForPowerPlant).toEqual({reason: SellEstatesReasons.NotOwner})
@@ -398,12 +389,10 @@ describe('Testing getOptions', () => {
                         currentPlayer: [DORIN],
                     });
                     const options = getTestableOptions(state, DORIN);
-                    if (!('payload' in options.plegdeEstates)) {
-                        throw new Error('Payload expected')
-                    }
-                    const outputForRailway = options.plegdeEstates.payload[RAILWAYS][EAST_RAILWAYS]
-                    const outputForPowerPlant = options.plegdeEstates.payload[PLANT][POWER_STATION]
-                    const outputForLondon = options.plegdeEstates.payload[UK][LONDON]
+                    const payload = (options as any).plegdeEstates.actions[0].payload;
+                    const outputForRailway =    payload[RAILWAYS][EAST_RAILWAYS]
+                    const outputForPowerPlant = payload[PLANT][POWER_STATION]
+                    const outputForLondon =     payload[UK][LONDON]
 
                     expect(outputForRailway).toEqual({reason: PlegdeEstatesReasons.NotOwner})
                     expect(outputForPowerPlant).toEqual({reason: PlegdeEstatesReasons.NotOwner})
@@ -421,11 +410,9 @@ describe('Testing getOptions', () => {
                         ],
                     });
                     const options = getTestableOptions(state, DORIN);
-                    if (!('payload' in options.plegdeEstates)) {
-                        throw new Error('Payload expected')
-                    }
-                    const outputForRome = options.plegdeEstates.payload[ITALY][ROME];
-                    const outputForMediolan = options.plegdeEstates.payload[ITALY][MEDIOLAN];
+                    const payload = (options as any).plegdeEstates.actions[0].payload;
+                    const outputForRome = payload[ITALY][ROME];
+                    const outputForMediolan = payload[ITALY][MEDIOLAN];
 
                     expect(outputForRome).toEqual({reason: PlegdeEstatesReasons.Buildings})
                     expect(outputForMediolan).toEqual({reason: PlegdeEstatesReasons.Buildings})
@@ -443,12 +430,10 @@ describe('Testing getOptions', () => {
                         ],
                     });
                     const options = getTestableOptions(state, DORIN);
-                    if (!('payload' in options.plegdeEstates)) {
-                        throw new Error('Payload expected')
-                    }
-                    const outputForRome = options.plegdeEstates.payload[ITALY][ROME];
-                    const outputForRailway = options.plegdeEstates.payload[RAILWAYS][WEST_RAILWAYS];
-                    const outputForPlant = options.plegdeEstates.payload[PLANT][POWER_STATION];
+                    const payload = (options as any).plegdeEstates.actions[0].payload
+                    const outputForRome =    payload[ITALY][ROME];
+                    const outputForRailway = payload[RAILWAYS][WEST_RAILWAYS];
+                    const outputForPlant =   payload[PLANT][POWER_STATION];
 
                     expect(outputForRome).toEqual({reason: PlegdeEstatesReasons.Plegded})
                     expect(outputForRailway).toEqual({reason: PlegdeEstatesReasons.Plegded})
@@ -466,10 +451,7 @@ describe('Testing getOptions', () => {
                         ],
                     });
                     const options = getTestableOptions(state, DORIN);
-                    if (!('payload' in options.plegdeEstates)) {
-                        throw new Error('Payload expected')
-                    }
-                    const outputForNeapol = options.plegdeEstates.payload[ITALY][NEAPOL];
+                    const outputForNeapol = (options as any).plegdeEstates.actions[0].payload[ITALY][NEAPOL];
                     expect(outputForNeapol).toEqual({
                         reason: PlegdeEstatesReasons.Allowed,
                         price: descriptors.Neapol.mortgage,
@@ -487,10 +469,7 @@ describe('Testing getOptions', () => {
                         ],
                     });
                     const options = getTestableOptions(state, DORIN);
-                    if (!('payload' in options.sellEstates)) {
-                        throw new Error('Payload expected')
-                    }
-                    const outputForItaly = options.sellEstates.payload[ITALY];
+                    const outputForItaly = (options as any).sellEstates.actions[0].payload[ITALY];
                     expect(outputForItaly).toEqual({
                         reason: SellEstatesReasons.Buildings,
                     })
@@ -556,10 +535,10 @@ describe('Testing getOptions', () => {
                         ],
                     });
                     const options = getTestableOptions(state, DORIN);
-                    if (!('payload' in options.unplegdeEstates)) throw new Error('No payload')
-                    const outputRome = options.unplegdeEstates.payload[ITALY][ROME];
-                    const outputMediolan = options.unplegdeEstates.payload[ITALY][MEDIOLAN];
-                    const outputNeapol = options.unplegdeEstates.payload[ITALY][NEAPOL];
+                    const payload = (options as any).unplegdeEstates.actions[0].payload;
+                    const outputRome =     payload[ITALY][ROME];
+                    const outputMediolan = payload[ITALY][MEDIOLAN];
+                    const outputNeapol =   payload[ITALY][NEAPOL];
                     expect(outputMediolan).toEqual({ 
                         reason: UnplegdeEstatesReasons.NoMoney, 
                         price: 100
@@ -648,8 +627,12 @@ describe('Testing getOptions', () => {
                 const result = options.specialCards;
                 expect(result).toEqual({
                     isMandatory: false,
-                    type: OptionTypes.SellSpecialCard,
-                    payload: cards,
+                    [ACTIONS]: [
+                        {
+                            type: OptionTypes.SellSpecialCard,
+                            payload: cards,        
+                        }
+                    ]
                 })
             });
         })

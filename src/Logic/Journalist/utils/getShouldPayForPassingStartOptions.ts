@@ -3,8 +3,8 @@ import { createPath } from "../../../Functions/createPath";
 import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
 import { PassStartPayments } from "../../Player/types";
 import { DoneThisTurn, TurnPhases } from "../../types";
-import { GET_MONEY, IS_MANDATORY, PASSING_START, PAY, PAYLOAD, REASON, TYPE } from "../const";
-import { OptionTypes, tOption, tRejection } from "../types";
+import { ACTIONS, GET_MONEY, IS_MANDATORY, PASSING_START, PAY, PAYLOAD, REASON, TYPE } from "../const";
+import { OptionTypes, tJournalistOptionsUnderDevelopement, tOption, tRejection } from "../types";
 import { getCurrentPlayer } from "./commonFunctions";
 import { tStateModifierArgs } from "./types";
 
@@ -42,45 +42,50 @@ const didPassInBackwordDirection = (state: tGameState) => {
 
 const PAYMENT = {
     [IS_MANDATORY]: true,
-    [TYPE]: OptionTypes.GetMoney,
-    [PAYLOAD]: PASS_START_AMMOUNT,
+    [ACTIONS]: [
+        {
+            [TYPE]: OptionTypes.GetMoney,
+            [PAYLOAD]: PASS_START_AMMOUNT,        
+        }
+    ]
+}
+
+const setReasonForNotGettingMoney = (options: tJournalistOptionsUnderDevelopement, description: PassingStartPaymentErrors) => {
+    createPath(options, [GET_MONEY, PASSING_START, REASON]);
+    (options[GET_MONEY]![PASSING_START] as tRejection)!.reason = description;
 }
 
 export const getShouldPayForPassingStartOptions = (args: tStateModifierArgs) => {
     const { options, state, playerName } = args;
     const isCurrentPlayer = checkIfCurrentPlayer(options!, playerName);
     if (!isCurrentPlayer) {
-        createPath(state, [GET_MONEY, PASSING_START, REASON]);
-        (state[GET_MONEY]![PASSING_START] as tRejection)!.reason = PassingStartPaymentErrors.NotCurrentPlayer;
+        setReasonForNotGettingMoney(state, PassingStartPaymentErrors.NotCurrentPlayer)
         return state;
     }
     const isPayedForStart = isAlreadyPayedForStart(options!)
     if (isPayedForStart) {
-        createPath(state, [GET_MONEY, PASSING_START, REASON]);
-        (state[GET_MONEY]![PASSING_START] as tRejection)!.reason = PassingStartPaymentErrors.AlreadyGotMoney;        
+        setReasonForNotGettingMoney(state, PassingStartPaymentErrors.AlreadyGotMoney)
         return state;
     };
     const isAfterMove = options?.game.turnPhase === TurnPhases.AfterMove;
     if (!isAfterMove) {
-        createPath(state, [GET_MONEY, PASSING_START, REASON]);
-        (state[GET_MONEY]![PASSING_START] as tRejection)!.reason = PassingStartPaymentErrors.NotGoodMoment;
+        setReasonForNotGettingMoney(state, PassingStartPaymentErrors.NotGoodMoment)
         return state;
     }
     const isJustStartPassed = isJustStartPassedCase(options!);
     if (isJustStartPassed) {
-        createPath(state, [GET_MONEY, PASSING_START,]);
+        createPath(state, [GET_MONEY, PASSING_START]);
         (state[GET_MONEY]![PASSING_START] as tOption) = PAYMENT
         return state;
     }
     const isForbidden = getCurrentPlayer(options).shouldPayForPassingStart === PassStartPayments.DoNot;
     if (isForbidden) {
-        createPath(state, [GET_MONEY, PASSING_START, REASON]);
-        (state[GET_MONEY]![PASSING_START] as tRejection)!.reason = PassingStartPaymentErrors.Forbidden;
+        setReasonForNotGettingMoney(state, PassingStartPaymentErrors.Forbidden)
         return state;
     }
     const isInBackwordDirection = didPassInBackwordDirection(options!);
     if (isInBackwordDirection) {
-        createPath(state, [GET_MONEY, PASSING_START, REASON]);
+        createPath(state, [GET_MONEY, PASSING_START]);
         (state[GET_MONEY]![PASSING_START] as tOption) = PAYMENT
         return state;
     }

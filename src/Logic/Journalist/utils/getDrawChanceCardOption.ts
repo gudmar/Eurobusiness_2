@@ -1,7 +1,7 @@
 import { descriptors } from "../../../Data/boardFields";
 import { CHANCE_BLUE, CHANCE_RED } from "../../../Data/const";
 import { DoneThisTurn, TurnPhases } from "../../types";
-import { IS_MANDATORY, PAYLOAD, TYPE } from "../const";
+import { ACTIONS, IS_MANDATORY, PAYLOAD, TYPE } from "../const";
 import { OptionTypes, tJournalistOptionsUnderDevelopement } from "../types";
 import { getCurrentPlayer, getFieldIndexesOfType } from "./commonFunctions";
 import { tStateModifierArgs } from "./types";
@@ -25,16 +25,24 @@ export const getDrawChanceCardOption = (args: tStateModifierArgs): tJournalistOp
      if (isOnBlueChanceField) {
         state.drawChanceCard = {
             [IS_MANDATORY]: true,
-            [TYPE]: OptionTypes.DrawChanceCard,
-            [PAYLOAD]: CHANCE_BLUE
+            [ACTIONS]: [
+                {
+                    [TYPE]: OptionTypes.DrawChanceCard,
+                    [PAYLOAD]: CHANCE_BLUE        
+                }
+            ]
         }
     return state
      }
      if (isOnRedChanceField) {
         state.drawChanceCard = {
             [IS_MANDATORY]: true,
-            [TYPE]: OptionTypes.DrawChanceCard,
-            [PAYLOAD]: CHANCE_RED
+            [ACTIONS]: [
+                {
+                    [TYPE]: OptionTypes.DrawChanceCard,
+                    [PAYLOAD]: CHANCE_RED        
+                }
+            ]
         }
         return state
      }
