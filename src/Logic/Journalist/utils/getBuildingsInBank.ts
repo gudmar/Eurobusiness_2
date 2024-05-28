@@ -1,6 +1,5 @@
 import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
 import { Bank } from "../../Bank/Bank";
-import { tGetBuildingPermitsArgs } from "./getBuildingPermits";
 
 type tWrappedGameState = { gameState: tGameState }
 

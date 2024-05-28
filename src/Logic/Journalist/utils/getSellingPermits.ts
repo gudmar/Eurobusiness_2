@@ -1,4 +1,3 @@
-import { NrOfHotels, tGetBuildingPermitsArgs } from "./getBuildingPermits";
 import { tCountries } from "../../../Data/types";
 import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
 import { tBuildingLocations, tCityFieldsByCountry, tKeyCreator, tNrOfBuildings, tSellingPermit, tSellingPermits } from "./types";
