@@ -1,3 +1,4 @@
+import { getOptions } from "../../Logic/Journalist/getOptions";
 import HelpTip from "../HelpTip/HelpTip";
 import { StateEditorForm } from "../StateEditorForm/StateEditorForm";
 import { StateEditorEntry } from "../StateEditorForm/StateEditorFormEntry";
@@ -22,6 +23,11 @@ const Information = () => {
         currentPlayerField,
     } = useGameControlInfo();
     return (
+        <>
+            <button
+                onClick={() => console.log('Options', getOptions())}
+            >Log options</button>
+
         <StateEditorForm
             headline='Summary'
             formName='summary'
@@ -64,6 +70,7 @@ const Information = () => {
             </StateEditorEntry>
 
         </StateEditorForm>
+        </>
     )
 
 }

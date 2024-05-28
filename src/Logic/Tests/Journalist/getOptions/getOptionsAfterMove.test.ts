@@ -1,12 +1,11 @@
 import { descriptors } from "../../../../Data/boardFields"
-import { RED_CARDS_SET_NAME, SPECIAL_CARD_BLUE } from "../../../../Data/chanceCards"
-import { ATENY, AUSTRIA, BANK, BARCELONA, CHANCE_BLUE, CHANCE_RED, EAST_RAILWAYS, GREEN, INSBRUK, ITALY, MEDIOLAN, NEAPOL, POWER_STATION, ROME, SALONIKI, SOUTH_RAILWAY, WATER_PLANT, WEST_RAILWAYS, WIEDEN, YELLOW } from "../../../../Data/const"
+import { SPECIAL_CARD_BLUE } from "../../../../Data/chanceCards"
+import { ATENY, BANK, BARCELONA, CHANCE_BLUE, CHANCE_RED, EAST_RAILWAYS, GREEN, INSBRUK, ITALY, MEDIOLAN, NEAPOL, POWER_STATION, ROME, SALONIKI, SOUTH_RAILWAY, WATER_PLANT, WEST_RAILWAYS, WIEDEN, YELLOW } from "../../../../Data/const"
 import { GUARDED_PARKING_FEE, START_FIELD_MONEY, TAX_FEE } from "../../../../Data/fees"
 import { ACTIONS } from "../../../Chance/ChanceCardHolder"
-import { GO_TO_JAIL_FIELD } from "../../../Dice/const"
-import { GET_MONEY, IS_MANDATORY, PASSING_START, PAY, PAYLOAD, REASON, TYPE } from "../../../Journalist/const"
+import { GET_MONEY, IS_MANDATORY, PASSING_START, PAYLOAD, REASON, TYPE } from "../../../Journalist/const"
 import { getTestableOptions } from "../../../Journalist/getOptions"
-import { OptionTypes, tJournalistOutputArrayOrRejection } from "../../../Journalist/types"
+import { OptionTypes } from "../../../Journalist/types"
 import { SellBuildingsRejected } from "../../../Journalist/utils/constants"
 import { NoBuildingPermitResults } from "../../../Journalist/utils/getBuyBuildingsOptions"
 import { GO_TO_JAIL_INDEX } from "../../../Journalist/utils/getGoToJailOptions"
@@ -21,24 +20,11 @@ import { DoneThisTurn, TurnPhases } from "../../../types"
 import { getMockedGameState } from "../getGameStateMock/getGameStateMock"
 import { getMockResponseGetter } from "../getGameStateMock/getResponse"
 import { BALIN, DORIN } from "../getGameStateMock/getStateTemplate"
+import { AFTER_NEAPOL_FIELD_INDEX, AFTER_START_FIELD_INDEX, BEFORE_START_FIELD_INDEX, BLUE_CHANCE_FIELD_INDEX, MADRIT_INDEX, NEAPOL_FEE, NEAPOL_INDEX, NEAPOL_WITH_4_HOUSES_FEE, NEAPOL_WITH_HOTEL_FEE, RED_CHANCE_FIELD_INDEX, SOUTH_RAILWAY_FIELD_INDEX, START_FIELD_INDEX, WATER_PLANT_FIELD_INDEX } from "./const"
 
 
 const getSellBuildingsExpectedResponse = getMockResponseGetter(SellBuildingsRejected.NoBuildings);
 
-
-const START_FIELD_INDEX = 0;
-const AFTER_START_FIELD_INDEX = 1;
-const BEFORE_START_FIELD_INDEX = 39;
-const MADRIT_INDEX = 14;
-const NEAPOL_INDEX = 6;
-const AFTER_NEAPOL_FIELD_INDEX = 20
-const NEAPOL_FEE = 15
-const NEAPOL_WITH_4_HOUSES_FEE = 800
-const NEAPOL_WITH_HOTEL_FEE = 1100
-const SOUTH_RAILWAY_FIELD_INDEX = 5
-const WATER_PLANT_FIELD_INDEX = 28
-const BLUE_CHANCE_FIELD_INDEX = 2;
-const RED_CHANCE_FIELD_INDEX = 7;
 
 describe('Options after player move', () => {
     // * End turn actions on start, not guarded parking, visit jail are added authomaticaly
@@ -70,7 +56,6 @@ describe('Options after player move', () => {
             const state = getMockedGameState({
                 currentPlayer: [DORIN],
                 setGamePhase: TurnPhases.BeforeMove, // this is second reason for not getting payment, but player is stronger reason
-                // movePlayers: [[GUARDED_PARKING_FIELD_INDEX, DORIN]],
             });
             const options = getTestableOptions(state, BALIN);
             const result = options[GET_MONEY]?.[PASSING_START];
@@ -80,7 +65,6 @@ describe('Options after player move', () => {
             const state = getMockedGameState({
                 currentPlayer: [DORIN],
                 setGamePhase: TurnPhases.BeforeMove,
-                // movePlayers: [[GUARDED_PARKING_FIELD_INDEX, DORIN]],
             });
             const options = getTestableOptions(state, DORIN);
             const result = options[GET_MONEY]?.[PASSING_START];
@@ -260,21 +244,6 @@ describe('Options after player move', () => {
             expect(result).toEqual({ reason: NoBuildingPermitResults.NotGoodMoment })
 
         })
-        it('Should not allow to end turn when there is a pending mandatory action', () => {
-            // Mandatory actions occure in after move phase, and buildings may be purchased in before move phases
-                //  throw new Error('Implement this when more mandatory actions are implemented')       
-
-// IMPLEMENT
-// IMPLEMENT
-// IMPLEMENT
-
-// IMPLEMENT
-// IMPLEMENT
-// IMPLEMENT
-// IMPLEMENT
-
-
-        })
         it('Should not give an option to pay for a guqrded car park when in beforeMove phase', () => {
             const state = getMockedGameState({
                 currentPlayer: [DORIN],
@@ -321,16 +290,16 @@ describe('Options after player move', () => {
             const  drawChanceCardStatus = options.drawChanceCard;
             expect(drawChanceCardStatus).toBeUndefined();
         })
-        it('Should not add anything to draw chance card option when player on chance field but it is before move phase0', () => {
-            const state = getMockedGameState({
-                currentPlayer: [DORIN],
-                setGamePhase: TurnPhases.BeforeMove,
-                movePlayers: [[BLUE_CHANCE_FIELD_INDEX, DORIN] ],
-            })
-            const options = getTestableOptions(state, DORIN);
-            const  drawChanceCardStatus = options.drawChanceCard;
-            expect(drawChanceCardStatus).toBeUndefined();
-        })
+        // it('Should not add anything to draw chance card option when player on chance field but it is before move phase', () => {
+        //     const state = getMockedGameState({
+        //         currentPlayer: [DORIN],
+        //         setGamePhase: TurnPhases.BeforeMove,
+        //         movePlayers: [[BLUE_CHANCE_FIELD_INDEX, DORIN] ],
+        //     })
+        //     const options = getTestableOptions(state, DORIN);
+        //     const  drawChanceCardStatus = options.drawChanceCard;
+        //     expect(drawChanceCardStatus).toBeUndefined();
+        // }) TEST in getOptionsBeforeMove
 
     })
     describe('Should cases', () => {
@@ -716,7 +685,7 @@ describe('Options after player move', () => {
             const options = getTestableOptions(state, DORIN);
             expect(options.goToJail).toBeUndefined();
         });
-        it('Should allow to end turn when player is in jail', () => {
+        it('Should force to end turn when player is in jail', () => {
             const state = getMockedGameState({
                 currentPlayer: [DORIN],
                 setGamePhase: TurnPhases.AfterMove,
@@ -728,7 +697,7 @@ describe('Options after player move', () => {
             });
             const options = getTestableOptions(state, DORIN);
             const expected = {
-                [IS_MANDATORY]: false,
+                [IS_MANDATORY]: true,
                 [ACTIONS]: [
                     { [TYPE]: OptionTypes.EndTurn },
                 ]
@@ -940,7 +909,6 @@ describe('Options after player move', () => {
                         [PAYLOAD]: estate        
                     }
                 ]
-                // [PAYLOAD]: descriptors[WATER_PLANT]
             }
             expect(result).toEqual(expected);
         })

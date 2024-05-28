@@ -58,6 +58,11 @@ const isGoodMomentToBuyBuilding = (state: tGameState, playerName: string) => {
 export const getTestableOptionsWithBuyBuildings = (args: tStateModifierArgs): tJournalistOptionsUnderDevelopement => {
     const { options, state, playerName } = args;
     const isGameNotStartedYet = isBeforeFirstMove(options!);
+    const isInJail = isPlayerInJail(options!, playerName)
+    if (isInJail) {
+        addNoBuildingPermitsResult(state!, NoBuildingPermitResults.InJail);
+        return state;
+    }
     if (isGameNotStartedYet) {
         addNoBuildingPermitsResult(state!, NoBuildingPermitResults.GameNotStartedYet)
         return state;
@@ -82,11 +87,11 @@ export const getTestableOptionsWithBuyBuildings = (args: tStateModifierArgs): tJ
         addNoBuildingPermitsResult(state!, NoBuildingPermitResults.HotelPurcahseLimitReached);
         return state;
     }
-    const isInJail = isPlayerInJail(options!, playerName)
-    if (isInJail) {
-        addNoBuildingPermitsResult(state!, NoBuildingPermitResults.InJail);
-        return state;
-    }
+    // const isInJail = isPlayerInJail(options!, playerName)
+    // if (isInJail) {
+    //     addNoBuildingPermitsResult(state!, NoBuildingPermitResults.InJail);
+    //     return state;
+    // }
     const hasPlayerEnoughMoney = hasPlayerMoneyToBuyBuildings(options!, playerName);
     if (!hasPlayerEnoughMoney) {
         addNoBuildingPermitsResult(state!, NoBuildingPermitResults.NoMoney);

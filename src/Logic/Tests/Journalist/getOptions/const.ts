@@ -1,0 +1,13 @@
+export const START_FIELD_INDEX = 0;
+export const AFTER_START_FIELD_INDEX = 1;
+export const BEFORE_START_FIELD_INDEX = 39;
+export const MADRIT_INDEX = 14;
+export const NEAPOL_INDEX = 6;
+export const AFTER_NEAPOL_FIELD_INDEX = 20
+export const NEAPOL_FEE = 15
+export const NEAPOL_WITH_4_HOUSES_FEE = 800
+export const NEAPOL_WITH_HOTEL_FEE = 1100
+export const SOUTH_RAILWAY_FIELD_INDEX = 5
+export const WATER_PLANT_FIELD_INDEX = 28
+export const BLUE_CHANCE_FIELD_INDEX = 2;
+export const RED_CHANCE_FIELD_INDEX = 7;

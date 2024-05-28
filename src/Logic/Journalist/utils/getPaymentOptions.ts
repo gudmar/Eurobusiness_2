@@ -7,7 +7,7 @@ import { iChanceFieldState, iCityFieldState, iFieldState, iNonCityEstatesFieldSt
 import { DoneThisTurn, TurnPhases } from "../../types";
 import { ACTIONS, IS_MANDATORY, PAY, PAYLOAD, TYPE } from "../const";
 import { OptionTypes, tJournalistOptionsUnderDevelopement } from "../types";
-import { getCurrentPlayer, getFieldData, getFieldIfOwned, getNrPlantsPlayerOwns, getNrRailwaysPlayerOwns, getPlayer, getPlayerByColor, isCurrentPlayerQueried } from "./commonFunctions";
+import { getCurrentPlayer, getFieldData, getFieldIfOwned, getNrPlantsPlayerOwns, getNrRailwaysPlayerOwns, getPlayer, getPlayerByColor, isCurrentPlayerQueried, isPlayerInJail } from "./commonFunctions";
 import {tStateModifierArgs } from "./types";
 
 export const TAX_FIELD_INDEX = 38;
@@ -197,6 +197,10 @@ const addPayForEstateVisitOptions = (args: tStateModifierArgs) => {
 
 export const getPaymentOptions = (args: tStateModifierArgs): tJournalistOptionsUnderDevelopement => {
     const { options, state, playerName } = args;
+    const isInJail = isPlayerInJail(options!, playerName);
+    if (isInJail) {
+        return state;
+    }
     const isCurrentPlayer = isCurrentPlayerQueried(options!, playerName);
     if (!isCurrentPlayer) {
         return state;
