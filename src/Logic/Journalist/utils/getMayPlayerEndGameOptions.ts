@@ -1,7 +1,43 @@
+import { getAllEntreisWithKey } from "../../../Functions/getAllEntriesWithKey";
+import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
+import { TurnPhases } from "../../types";
+import { ACTIONS, IS_MANDATORY, REASON, TYPE } from "../const";
+import { OptionTypes, tJournalistOptionsUnderDevelopement } from "../types";
 import { tStateModifierArgs } from "./types";
 
-export const getMayPlayerEndGameOptions = (args: tStateModifierArgs) => {
+export enum NoTurnEndReasons {
+    MandatoryAction = 'Player has a mandatory action to perform',
+    MoveFirst = 'Player should move first'
+}
+
+const getNrOfMandatoryActions = (options: tJournalistOptionsUnderDevelopement) => {
+    const mandatoryEntries = getAllEntreisWithKey( options, IS_MANDATORY);
+    const mandatoryActions = mandatoryEntries.filter(({value}) => !!value)
+    const nrOfActions = mandatoryActions.length;
+    return nrOfActions;
+}
+
+export const getMayPlayerEndGameOptions = (args: tStateModifierArgs): tJournalistOptionsUnderDevelopement => {
     // This should be the last function
     const { options, state, playerName } = args;
+    const nrOfMandatoryActions = getNrOfMandatoryActions(state);
+    const isAfterMove = options?.game?.turnPhase === TurnPhases.AfterMove;
+    if (!isAfterMove) {
+        state.endTurn = {[REASON]: NoTurnEndReasons.MoveFirst}
+        return state;
+    }
+    if (nrOfMandatoryActions > 0) {
+        state.endTurn = {[REASON]: NoTurnEndReasons.MandatoryAction}
+        return state;
+    }
+    const endTurn = {
+        [IS_MANDATORY]: false,
+        [ACTIONS]: [
+            {
+                [TYPE]: OptionTypes.EndTurn,
+            }
+        ]
+    }
+    state.endTurn = endTurn;
     return state;
 }

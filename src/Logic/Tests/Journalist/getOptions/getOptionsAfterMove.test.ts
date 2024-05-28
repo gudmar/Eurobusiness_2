@@ -3,13 +3,14 @@ import { RED_CARDS_SET_NAME, SPECIAL_CARD_BLUE } from "../../../../Data/chanceCa
 import { ATENY, AUSTRIA, BANK, BARCELONA, CHANCE_BLUE, CHANCE_RED, EAST_RAILWAYS, GREEN, INSBRUK, ITALY, MEDIOLAN, NEAPOL, POWER_STATION, ROME, SALONIKI, SOUTH_RAILWAY, WATER_PLANT, WEST_RAILWAYS, WIEDEN, YELLOW } from "../../../../Data/const"
 import { GUARDED_PARKING_FEE, START_FIELD_MONEY, TAX_FEE } from "../../../../Data/fees"
 import { ACTIONS } from "../../../Chance/ChanceCardHolder"
+import { GO_TO_JAIL_FIELD } from "../../../Dice/const"
 import { GET_MONEY, IS_MANDATORY, PASSING_START, PAY, PAYLOAD, REASON, TYPE } from "../../../Journalist/const"
 import { getTestableOptions } from "../../../Journalist/getOptions"
 import { OptionTypes, tJournalistOutputArrayOrRejection } from "../../../Journalist/types"
 import { SellBuildingsRejected } from "../../../Journalist/utils/constants"
-import { BuildingPermitRejected, NrOfHouses } from "../../../Journalist/utils/getBuildingPermits"
 import { NoBuildingPermitResults } from "../../../Journalist/utils/getBuyBuildingsOptions"
 import { GO_TO_JAIL_INDEX } from "../../../Journalist/utils/getGoToJailOptions"
+import { NoTurnEndReasons } from "../../../Journalist/utils/getMayPlayerEndGameOptions"
 import { DontPayForVisitReasons, GUARDED_PARKING_FIELD_INDEX, TAX_FIELD_INDEX } from "../../../Journalist/utils/getPaymentOptions"
 import { PlegdeEstatesReasons } from "../../../Journalist/utils/getPlegdeOptions"
 import { getSellingPermitsCategory } from "../../../Journalist/utils/getSellingPermits"
@@ -704,27 +705,114 @@ describe('Options after player move', () => {
             expect(options.goToJail).toEqual(expectedResult)
         })
         it('Should not add a mandatory option to go to jail when player already went there this turn', () => {
-
+            const state = getMockedGameState({
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[GO_TO_JAIL_INDEX, DORIN]],
+                setCards: [[[SPECIAL_CARD_BLUE], DORIN]],
+                // toJail: [DORIN],
+                addDoneThisTurn: [DoneThisTurn.GoneToJail]
+            });
+            const options = getTestableOptions(state, DORIN);
+            expect(options.goToJail).toBeUndefined();
         });
         it('Should allow to end turn when player is in jail', () => {
-
-        })
-        it('Should allow to end turn when there are no pending mandatory actions,', () => {
-
+            const state = getMockedGameState({
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[GO_TO_JAIL_INDEX, DORIN]],
+                lastPlayersField: [[3, DORIN]],
+                setCards: [[[SPECIAL_CARD_BLUE], DORIN]],
+                toJail: [DORIN],
+                addDoneThisTurn: [DoneThisTurn.GoneToJail]
+            });
+            const options = getTestableOptions(state, DORIN);
+            const expected = {
+                [IS_MANDATORY]: false,
+                [ACTIONS]: [
+                    { [TYPE]: OptionTypes.EndTurn },
+                ]
+            }
+            expect(options.endTurn).toEqual(expected);
         })
         it('Should not allow to end turn when there are pending chance cards', () => {
-
+            const state = getMockedGameState({
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                lastPlayersField: [[2, DORIN]],
+                movePlayers: [[RED_CHANCE_FIELD_INDEX, DORIN]],
+                setCards: [[[SPECIAL_CARD_BLUE], DORIN]],
+            });
+            const options = getTestableOptions(state, DORIN);
+            const expected = { [REASON]: NoTurnEndReasons.MandatoryAction }
+            expect(options.endTurn).toEqual(expected);
         })
+        it('Should not allow to end turn when player is in beforeMove phase', () => {
+            const state = getMockedGameState({
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.BeforeMove,
+                movePlayers: [[RED_CHANCE_FIELD_INDEX, DORIN]],
+                setCards: [[[SPECIAL_CARD_BLUE], DORIN]],
+            });
+            const options = getTestableOptions(state, DORIN);
+            const expected = { [REASON]: NoTurnEndReasons.MoveFirst }
+            expect(options.endTurn).toEqual(expected);
+        });
         it('Should not allow to end turn when there is a payment for staying at other players field', () => {
+            const balinEstates = [ ROME, MEDIOLAN, NEAPOL, SOUTH_RAILWAY, WEST_RAILWAYS, EAST_RAILWAYS];
+            const state = getMockedGameState({
+                estatesOwner: [BALIN, balinEstates],
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[SOUTH_RAILWAY_FIELD_INDEX, DORIN]],
+                estatesDelta: [
+                    { estateName: NEAPOL, props: { owner: YELLOW, isPlegded: true } },
+                ],
+            });
+            const options = getTestableOptions(state, DORIN);
+            const result = options.endTurn
+            const expectedResult = { reason: NoTurnEndReasons.MandatoryAction}
+            expect(result).toEqual(expectedResult)
 
         })
         it('Should not allow to end turn when there is a necessity to buy or auction an estate', () => {
-
+            const balinEstates = [ ROME, MEDIOLAN, NEAPOL, POWER_STATION];
+            const state = getMockedGameState({
+                estatesOwner: [BALIN, balinEstates],
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                setMoney: [[5, DORIN]],
+                movePlayers: [[WATER_PLANT_FIELD_INDEX, DORIN]],
+            });
+            const options = getTestableOptions(state, DORIN);
+            const expected = { reason: NoTurnEndReasons.MandatoryAction}
+            expect(options.endTurn).toEqual(expected)
         })
         it('Should not allow to end turn when there is money for the start pass to be payed', () => {
+            const state = getMockedGameState({
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[AFTER_START_FIELD_INDEX, DORIN]],
+                lastPlayersField: [[START_FIELD_INDEX, DORIN]],
+                shouldPayForStart: [[PassStartPayments.NotSet, DORIN]],
+            });
+            const options = getTestableOptions(state, DORIN);
+            expect(options.endTurn).toEqual({ reason: NoTurnEndReasons.MandatoryAction });
 
         })
         it('Should not allow to end turn when player has to go to jail', () => {
+            const state = getMockedGameState({
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[GO_TO_JAIL_INDEX, DORIN]],
+                lastPlayersField: [[AFTER_START_FIELD_INDEX, DORIN]],
+                shouldPayForStart: [[PassStartPayments.NotSet, DORIN]],
+            });
+            const options = getTestableOptions(state, DORIN);
+            const result = options.endTurn;
+            expect(result).toEqual({
+                reason: NoTurnEndReasons.MandatoryAction,
+            });
 
         })
         it('Should add a mandatory action to pay the tax, when player stepps on the tax field', () => {

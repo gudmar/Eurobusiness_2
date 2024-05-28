@@ -15,23 +15,6 @@ import { getStoppedOnBankOwnedEstateOptions } from "./utils/getStoppedOnBankOwne
 import { getUnplegdeOptions } from "./utils/getUnplegdeOptions"
 
 
-const BLANK_REJECTION = { reason: 'Dummy rejection' }
-
-const BLANK_TESTABLE_OPTIONS_OUTPUT: tJournalistState = {
-    buyBuildings:  BLANK_REJECTION,
-    sellBuildings: BLANK_REJECTION,
-    // buyEstate
-    sellEstates: BLANK_REJECTION,
-    plegdeEstates: BLANK_REJECTION,
-    unplegdeEstates: BLANK_REJECTION,
-    move: false,
-    endPhase: false,
-    // handleStayOnBankOwnedEstate: 
-    // pay
-    // getMoney
-    // goToJail
-};
-
 type tJournalistOptionsModifier = tStateModifier<tJournalistOptionsUnderDevelopement, tGameState>
 
 type tApplyStateToJournalistOptions = {
