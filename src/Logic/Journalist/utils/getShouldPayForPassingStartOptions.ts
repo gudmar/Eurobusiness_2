@@ -5,7 +5,7 @@ import { PassStartPayments } from "../../Player/types";
 import { DoneThisTurn, TurnPhases } from "../../types";
 import { ACTIONS, GET_MONEY, IS_MANDATORY, PASSING_START, PAY, PAYLOAD, REASON, TYPE } from "../const";
 import { OptionTypes, tJournalistOptionsUnderDevelopement, tOption, tRejection } from "../types";
-import { getCurrentPlayer } from "./commonFunctions";
+import { getCurrentPlayer, isPlayerInJail } from "./commonFunctions";
 import { tStateModifierArgs } from "./types";
 
 export enum PassingStartPaymentErrors {
@@ -15,6 +15,7 @@ export enum PassingStartPaymentErrors {
     NotGoodMoment = "Cannot receive pass start payment when not in after-move game phase",
     Forbidden = "Forbidden",
     AlreadyGotMoney = "Money was already payed",
+    inJail = "Prisoners don't receive money for passing start",
 }
 
 const checkIfCurrentPlayer = (state: tGameState, playerName: string) => {
@@ -57,6 +58,11 @@ const setReasonForNotGettingMoney = (options: tJournalistOptionsUnderDevelopemen
 
 export const getShouldPayForPassingStartOptions = (args: tStateModifierArgs) => {
     const { options, state, playerName } = args;
+    const isInJail = isPlayerInJail(options!, playerName);
+    if (isInJail) {
+        // setReasonForNotGettingMoney(state, PassingStartPaymentErrors.inJail);
+        return state;
+    }
     const isCurrentPlayer = checkIfCurrentPlayer(options!, playerName);
     if (!isCurrentPlayer) {
         setReasonForNotGettingMoney(state, PassingStartPaymentErrors.NotCurrentPlayer)

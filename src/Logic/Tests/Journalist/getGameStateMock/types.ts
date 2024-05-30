@@ -52,6 +52,10 @@ export type tChangeCurrentPlayer = [name: string];
 
 export type tChangeShouldPayForStart = [newValue: PassStartPayments, playerName: string];
 
+type tChangeTurnsToWaitForPlayer = [newValue: number, playerName: string];
+
+type tChangeTurnsToWaitForPlayers = tChangeTurnsToWaitForPlayer[];
+
 type tChangeShouldStartPayments = tChangeShouldPayForStart[]
 
 type tAddDoneThisTurn = DoneThisTurn[]
@@ -68,6 +72,7 @@ export type tGetGameStateMockOptions = {
     playersWait?: tSetTurnsToWaitOnPlayers,
     currentPlayer?: tChangeCurrentPlayer,
     setGamePhase?: TurnPhases,
+    setTurnsToWait?: tChangeTurnsToWaitForPlayers,
     lastPlayersField?: tMovePlayers,
     shouldPayForStart?: tChangeShouldStartPayments,
     addDoneThisTurn?: tAddDoneThisTurn,

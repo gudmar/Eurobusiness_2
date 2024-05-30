@@ -1,11 +1,12 @@
 import { applyStateModifiers, tStateModifier } from "../../Functions/applyStateModifiers"
 import { tGameState } from "../../Functions/PersistRetrieveGameState/types"
+import { getGameState } from "../../Functions/PersistRetrieveGameState/utils"
 import { tJournalistOptionsUnderDevelopement, tJournalistState } from "./types"
 import { getTestableOptionsWithBuyBuildings } from "./utils/getBuyBuildingsOptions"
 import { getDrawChanceCardOption } from "./utils/getDrawChanceCardOption"
 import { getSpecialCardsOptions } from "./utils/getGetOutFromPrisonCardOptions"
 import { getGoToJailOptions } from "./utils/getGoToJailOptions"
-import { getMayPlayerEndGameOptions } from "./utils/getMayPlayerEndGameOptions"
+import { getMayPlayerEndTurnOptions } from "./utils/getMayPlayerEndGameOptions"
 import { getPaymentOptions } from "./utils/getPaymentOptions"
 import { getPlegdeOptions } from "./utils/getPlegdeOptions"
 import { getTestableOptionsWithSellBuildings } from "./utils/getSellBuildingOptions"
@@ -43,10 +44,10 @@ export const getTestableOptions = (state: tGameState, playerName: string): tJour
         getStoppedOnBankOwnedEstateOptions,
         getGoToJailOptions,
 
-        getMayPlayerEndGameOptions,
+        getMayPlayerEndTurnOptions,
     ];
-    if (builderSequence[builderSequence.length - 1] !== getMayPlayerEndGameOptions) {
-        throw new Error('getMayPlayerEndGameOptions should be the last function in optionsBuilder')
+    if (builderSequence[builderSequence.length - 1] !== getMayPlayerEndTurnOptions) {
+        throw new Error('getMayPlayerEndTurnOptions should be the last function in optionsBuilder')
     }
     const result = applyStateToJournalistOptions(
         {
@@ -57,4 +58,13 @@ export const getTestableOptions = (state: tGameState, playerName: string): tJour
         builderSequence,
     )
     return result as tJournalistState;
+}
+
+export const getOptions = () => {
+    const gameState = getGameState();
+    const currentPlayerName = gameState.game.currentPlayer;
+    console.log(gameState)
+    // debugger;
+    const options = getTestableOptions(gameState, currentPlayerName);
+    return options;
 }

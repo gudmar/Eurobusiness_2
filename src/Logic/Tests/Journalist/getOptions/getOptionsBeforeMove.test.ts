@@ -1,23 +1,30 @@
 import { descriptors } from "../../../../Data/boardFields"
-import { CHANCE_CARDS_BLUE, CHANCE_CARDS_RED } from "../../../../Data/chanceCards"
-import { ATENY, AUSTRIA, BARCELONA, CHANCE_RED, EAST_RAILWAYS, GLASGOW, GREECE, GREEN, INSBRUK, ITALY, LIVERPOOL, LONDON, MADRIT, MEDIOLAN, NEAPOL, PLANT, POWER_STATION, RAILWAYS, RED, ROME, SALONIKI, SEWILLA, UK, WEST_RAILWAYS, WIEDEN, YELLOW } from "../../../../Data/const"
+import { CHANCE_CARDS_BLUE, CHANCE_CARDS_RED, SPECIAL_CARD_BLUE } from "../../../../Data/chanceCards"
+import { ATENY, AUSTRIA, BARCELONA, CHANCE_RED, EAST_RAILWAYS, GLASGOW, GREECE, GREEN, INSBRUK, ITALY, LIVERPOOL, LONDON, MADRIT, MEDIOLAN, NEAPOL, PLANT, POWER_STATION, RAILWAYS, RED, ROME, SALONIKI, SEWILLA, UK, WATER_PLANT, WEST_RAILWAYS, WIEDEN, YELLOW } from "../../../../Data/const"
 import { ACTIONS } from "../../../Chance/ChanceCardHolder"
+import { GET_MONEY, IS_MANDATORY, PASSING_START, REASON, TYPE } from "../../../Journalist/const"
 import { getTestableOptions } from "../../../Journalist/getOptions"
 import { OptionTypes, tJournalistOutputArrayOrRejection, tJournalistState } from "../../../Journalist/types"
 import { SellBuildingsRejected } from "../../../Journalist/utils/constants"
 import { BuildingPermitRejected, NrOfHouses } from "../../../Journalist/utils/getBuildingPermits"
 import { NoBuildingPermitResults } from "../../../Journalist/utils/getBuyBuildingsOptions"
 import { SpecialCardsReasons } from "../../../Journalist/utils/getGetOutFromPrisonCardOptions"
+import { GO_TO_JAIL_INDEX } from "../../../Journalist/utils/getGoToJailOptions"
 import { PlegdeEstatesReasons } from "../../../Journalist/utils/getPlegdeOptions"
 import { SellEstatesReasons } from "../../../Journalist/utils/getSellEstatesOptions"
 import { getSellingPermitsCategory } from "../../../Journalist/utils/getSellingPermits"
+import { PassingStartPaymentErrors } from "../../../Journalist/utils/getShouldPayForPassingStartOptions"
 import { UnplegdeEstatesReasons } from "../../../Journalist/utils/getUnplegdeOptions"
 import { expandTestData } from "../../../Journalist/utils/sellingPermitsMock"
-import { TurnPhases } from "../../../types"
+import { PassStartPayments } from "../../../Player/types"
+import { DoneThisTurn, TurnPhases } from "../../../types"
 import { getMockedGameState, getPlayerColor } from "../getGameStateMock/getGameStateMock"
 import { getMockResponseGetter } from "../getGameStateMock/getResponse"
 import { BALIN, DORIN } from "../getGameStateMock/getStateTemplate"
 import { tSetSpecialCardsToPlayers } from "../getGameStateMock/types"
+import { AFTER_NEAPOL_FIELD_INDEX, BLUE_CHANCE_FIELD_INDEX } from "./const"
+
+const NEAPOL_INDEX = 6;
 
 const throwIfNoPermits = (options: tJournalistState) => {
     if (!('payload' in options.buyBuildings)) throw new Error('No payload in options.buyBuildings')
@@ -398,7 +405,6 @@ describe('Testing getOptions', () => {
                     expect(outputForPowerPlant).toEqual({reason: PlegdeEstatesReasons.NotOwner})
                     expect(outputForLondon).toEqual({reason: PlegdeEstatesReasons.NotOwner})
                 })
-
                 it('Should not allow to plegde estates when player has buildings on it', () => {
                     const dorinEstates = [ ROME, MEDIOLAN, SALONIKI, BARCELONA, ATENY ];
                     const state = getMockedGameState({
@@ -670,16 +676,75 @@ describe('Testing getOptions', () => {
                 expect(result).toBeUndefined();
             })
             it('Should not give money for start when there is beforeMove phase', () => {
-
+                const state = getMockedGameState({
+                    currentPlayer: [DORIN],
+                    setGamePhase: TurnPhases.BeforeMove,
+                    movePlayers: [[NEAPOL_INDEX, DORIN]],
+                    lastPlayersField: [[AFTER_NEAPOL_FIELD_INDEX, DORIN]],
+                    shouldPayForStart: [[PassStartPayments.NotSet, DORIN]],
+                });
+                const options = getTestableOptions(state, DORIN);
+                const result = options[GET_MONEY]?.[PASSING_START];
+                expect(result).toEqual({ [REASON]: PassingStartPaymentErrors.NotGoodMoment });
+    
             })
             it('Should not allow to draw a chance card when it is before move phase', () => {
-
+                const state = getMockedGameState({
+                    currentPlayer: [DORIN],
+                    setGamePhase: TurnPhases.BeforeMove,
+                    movePlayers: [[BLUE_CHANCE_FIELD_INDEX, DORIN] ],
+                })
+                const options = getTestableOptions(state, DORIN);
+                const  drawChanceCardStatus = options.drawChanceCard;
+                expect(drawChanceCardStatus).toBeUndefined();    
             })
             it('Should not put player to jail when it is before move phase', () => {
-
+                const state = getMockedGameState({
+                    currentPlayer: [DORIN],
+                    setGamePhase: TurnPhases.BeforeMove,
+                    movePlayers: [[GO_TO_JAIL_INDEX, DORIN]],
+                    setCards: [[[SPECIAL_CARD_BLUE], DORIN]],
+                    // toJail: [DORIN],
+                    addDoneThisTurn: [DoneThisTurn.GoneToJail]
+                });
+                const options = getTestableOptions(state, DORIN);
+                expect(options.goToJail).toBeUndefined();
+    
             })
-            it('Should force player to wait a turn when he is still in prison', () => {
+            it('Should force player to wait a turn when he is still in prison, player should be only allowed to end turn', () => {
                 // Includes not ability to move
+                const dorinEstates = [ ROME, MEDIOLAN, NEAPOL, WATER_PLANT, POWER_STATION];
+                const state = getMockedGameState({
+                    estatesOwner: [DORIN, dorinEstates],
+                    currentPlayer: [DORIN],
+                    setGamePhase: TurnPhases.AfterMove,
+                    movePlayers: [[GO_TO_JAIL_INDEX, DORIN]],
+                    setCards: [[[SPECIAL_CARD_BLUE], DORIN]],
+                    setTurnsToWait: [[2, DORIN]],
+                    toJail: [DORIN],
+                    addDoneThisTurn: [DoneThisTurn.GoneToJail],
+                    estatesDelta: [
+                        { estateName: WATER_PLANT, props: { isPlegded: true } },
+                        { estateName: MEDIOLAN, props: { nrOfHouses: 2 } },
+                        { estateName: ROME, props: { nrOfHouses: 2 } },
+                        { estateName: NEAPOL, props: { nrOfHouses: 1 } },
+                    ],    
+                });
+                const options = getTestableOptions(state, DORIN);
+                expect(options.goToJail).toBeUndefined();
+                expect(options.buyBuildings).toEqual({reason: NoBuildingPermitResults.InJail});
+                expect(options.endTurn).toEqual({
+                    [IS_MANDATORY]: true,
+                    [ACTIONS]: [{
+                        [TYPE]: OptionTypes.EndTurn,
+                    }]
+                })
+                expect(options.getMoney).toBeUndefined();
+                expect(options.pay).toBeUndefined();
+                expect(options.plegdeEstates).toEqual({reason: PlegdeEstatesReasons.InJail});
+                expect(options.sellBuildings).toEqual({reason: SellBuildingsRejected.InJail});
+                expect(options.sellEstates).toEqual({reason: SellEstatesReasons.InJail});
+                expect(options.unplegdeEstates).toEqual({reason: UnplegdeEstatesReasons.InJail})    
             })
         })
     })
