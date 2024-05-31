@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react"
+import { FC, useEffect, useState } from "react"
 import { getTestableOptions } from "../../Logic/Journalist/getOptions";
 import { tObject } from "../../Logic/types"
 import { getGameState } from "../../Functions/PersistRetrieveGameState/utils";
 import { Button } from "../Button/Button";
 import { OptionTypes } from "../../Logic/Journalist/types";
+import { isDefinedNotEmptyString } from "../../Functions/isDefined";
 
 const useGameOptions = (playerName: string) => {
     const [options, setOptions] = useState<tObject<any>>({});
@@ -76,6 +77,22 @@ const SingleCountry = ({country, countryName}: iSingleCountryProps) => {
     )
 }
 
+
+const withRejections = (ActionComponent: FC<tObject<any>>) => ({ country }: tObject<any>) => {
+
+}
+
+const withDisplayOptionsAsCountries = (EstateOptions: FC<tObject<any>>) => (props: tObject<any>) => {
+    const countries = Object.keys(props.options);
+    return (
+        <>
+            {
+                countries.map((key: string) => (<SingleCountry country={props.options[key]} countryName = {key}/>))
+            }
+        </>
+    )
+}
+
 const DisplayOptionsAsCountries = (props: tObject<any>) => {
     const countries = Object.keys(props.options);
     return (
@@ -87,18 +104,35 @@ const DisplayOptionsAsCountries = (props: tObject<any>) => {
     )
 }
 
-const EndTurnOptions = ({reason, actions}: tObject<any>) => {
-    if (reason) return <>{reason}</>
-    if (actions) {
-        return (
-            <div>
-                <h3>Sure you want to end turn?</h3>
-                <Button disabled={false} action={()=>{}} label={'Yes'}/>
-                <Button disabled={false} action={()=>{}} label={'No'}/>
-            </div>
-        )
-    }
+const withPresentReason = (Actions: FC<tObject<any>>) => ({reason, actions}: tObject<any>) => {
+    if (reason) return (<>{reason}</>)
+    return (
+        <Actions actions={actions} />
+    )
 }
+
+const EndTurnActions = ({actions}: tObject<any>) => {
+    return (
+        <div>
+            <h3>Sure you want to end turn?</h3>
+            <Button disabled={false} action={()=>{}} label={'Yes'} />
+            <Button disabled={false} action={()=>{}} label={'No'} />
+        </div>
+    )
+}
+
+const EndTurnOptions = withPresentReason(EndTurnActions);
+
+const AcceptModneyActions = ({actions}: tObject<any>) => {
+    return (
+        <div>
+            <h3>You have to accept payment</h3>
+            <Button disabled={false} action={() => {}} label={'Accept'}/>
+        </div>
+    )
+}
+
+const AcceptMoney = withPresentReason(AcceptModneyActions);
 
 const optionKeyToButtonPropsMap = {
     buyBuildings: {
@@ -108,6 +142,14 @@ const optionKeyToButtonPropsMap = {
     endTurn: {
         buttonName: 'End turn',
         component: EndTurnOptions,
+    },
+    getMoney: {
+        buttonName: 'Get money',
+        component: AcceptMoney,
+    },
+    plegdeEstates: {
+        buttonName: 'Plegde estates',
+        component: 
     }
 }
 
