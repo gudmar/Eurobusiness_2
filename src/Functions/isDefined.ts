@@ -11,3 +11,9 @@ export const areDefined = (arr: any[]) => {
     }, true)
     return result;
 }
+
+export const isDefinedNotEmptyString = (val: unknown) => {
+    if (!isDefined(val)) return false;
+    const result = val !== '';
+    return result;
+}
