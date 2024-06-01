@@ -6,6 +6,8 @@ import { Button } from "../Button/Button";
 import { OptionTypes } from "../../Logic/Journalist/types";
 import { isDefinedNotEmptyString } from "../../Functions/isDefined";
 import { iSingleCountryProps, tEstate, tEstateProps, tEstatesProps } from "./types";
+import { withDisplayOptionsAsCountries } from "./withDisplayOptionsFromCountry";
+import { UnplegdeEstatesReasons } from "../../Logic/Journalist/utils/getUnplegdeOptions";
 
 const useGameOptions = (playerName: string) => {
     const [options, setOptions] = useState<tObject<any>>({});
@@ -55,16 +57,40 @@ const SingleCountry = ({country, countryName}: iSingleCountryProps) => {
     )
 }
 
-const DisplayOptionsAsCountries = (props: tObject<any>) => {
-    const countries = Object.keys(props.options);
-    return (
-        <>
-            {
-                countries.map((key: string) => (<SingleCountry country={props.options[key]} countryName = {key}/>))
-            }
-        </>
-    )
+// const DisplayOptionsAsCountries = (props: tObject<any>) => {
+//     const countries = Object.keys(props.options);
+//     return (
+//         <>
+//             {
+//                 countries.map((key: string) => (<SingleCountry country={props.options[key]} countryName = {key}/>))
+//             }
+//         </>
+//     )
+// }
+const BuyBuildingsForm = (estate: tObject<any>) => {
+    return <>Buy buildings in ${estate.name}</>
 }
+
+const BuyBuildings = (countries: tObject<any>) => withDisplayOptionsAsCountries(BuyBuildingsForm, countries);
+
+const SellBuildingsForm = (estate: tObject<any>) => {
+    return <>Sell buildings in ${estate.name}</>
+}
+
+const SellBuildings = (countries: tObject<any>) => withDisplayOptionsAsCountries(SellBuildingsForm, countries);
+
+const PlegdeEstatesForm = (estate: tObject<any>) => {
+    return <>Plegde estates in ${estate.name}</>
+}
+
+const PlegdeEstates = (countries: tObject<any>) => withDisplayOptionsAsCountries(PlegdeEstatesForm, countries);
+
+const UnplegdeEstatesFrom = (estate: tObject<any>) => {
+    return <>Unplegde estates in ${estate.name}</>
+}
+
+const UnplegdeEstates = (countreis: tObject<any>) => withDisplayOptionsAsCountries(UnplegdeEstatesFrom, countreis);
+
 
 const withPresentReason = (Actions: FC<tObject<any>>) => ({reason, actions}: tObject<any>) => {
     if (reason) return (<>{reason}</>)
@@ -99,7 +125,7 @@ const AcceptMoney = withPresentReason(AcceptModneyActions);
 const optionKeyToButtonPropsMap = {
     buyBuildings: {
         buttonName: 'Buy buildings',
-        component: DisplayOptionsAsCountries,
+        component: BuyBuildings,
     },
     endTurn: {
         buttonName: 'End turn',
@@ -109,9 +135,17 @@ const optionKeyToButtonPropsMap = {
         buttonName: 'Get money',
         component: AcceptMoney,
     },
+    sellBuildings: {
+        buttonName: 'Sell buildings',
+        component: SellBuildings,
+    },
     plegdeEstates: {
         buttonName: 'Plegde estates',
-        component: 
+        component: PlegdeEstates
+    },
+    unplegdeEstates: {
+        buttonName: 'Unplegde estates',
+        component: UnplegdeEstates
     }
 }
 
@@ -122,6 +156,8 @@ export const GameOptions = ({playerName}: any) => {
         <Button></Button>
     }
     return (
-        optionsEntries.map(getOptionButton)
+        <>
+            optionsEntries.map(getOptionButton)
+        </>
     )
 }

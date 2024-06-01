@@ -48,29 +48,29 @@ const Estates = ({ estates }: tEstatesProps) => {
     )
 }
 
-const withSingleCountry = (EstateOptions: FC<tObject<any>>) => ({country, isOpen, countryName}: iSingleCountryProps) => {
-    const classes: any = null
-    const collapsedRejectionsMessage = getMessageWhenAllEstatesRejected(country);
-    const estatesProps = getEstatesPropsFromEntries(country)
-    return (
-        <div className={classes.country}>
-            <div className={classes.countryName}>{countryName}</div>
-            <div className={`${isOpen ? classes.oppened : classes.folded}`}>
-                {
-                    collapsedRejectionsMessage === '' ? <Estates /> : <CollapsedRejection>{collapsedRejectionsMessage}</CollapsedRejection>
-                }
-            </div>
-            <Estates estates={estatesProps}/>
-        </div>
-    )
-}
+// const withSingleCountry = (EstateOptions: FC<tObject<any>>) => ({country, isOpen, countryName}: iSingleCountryProps) => {
+//     const classes: any = null
+//     const collapsedRejectionsMessage = getMessageWhenAllEstatesRejected(country);
+//     const estatesProps = getEstatesPropsFromEntries(country)
+//     return (
+//         <div className={classes.country}>
+//             <div className={classes.countryName}>{countryName}</div>
+//             <div className={`${isOpen ? classes.oppened : classes.folded}`}>
+//                 {
+//                     collapsedRejectionsMessage === '' ? <Estates /> : <CollapsedRejection>{collapsedRejectionsMessage}</CollapsedRejection>
+//                 }
+//             </div>
+//             <Estates estates={estatesProps}/>
+//         </div>
+//     )
+// }
 
 const withRejections = (ActionComponent: FC<tObject<any>>) => ({ country }: tObject<any>) => {
     const collapsedRejectionsMessage = getMessageWhenAllEstatesRejected(country);
 
 }
 
-const getUseEstatesContent = (ComponentToDislpayIn: FC<tObject<any>>, countries: tObject<any>) => {
+const getUseEstatesContent = (ComponentToDislpayIn: FC<tEstateOptionsProps>, countries: tObject<any>) => {
     const useEstatesContent = () => {
         const [presentedCountryName, setPresentedContryName] = useState<string>('');
         const [presentedEstateName, setPresentedEstatesName] = useState<string>('');
@@ -79,17 +79,19 @@ const getUseEstatesContent = (ComponentToDislpayIn: FC<tObject<any>>, countries:
         const EstateContent = () => (
             <ComponentToDislpayIn estate={estate} />
         )
-        return { EstateContent, setPresentedContryName, setPresentedEstatesName, presentedCountryName };
+        return { EstateContent, setPresentedContryName, setPresentedEstatesName, presentedCountryName, presentedEstateName };
     }
     return useEstatesContent;
 }
 
-export const withDisplayOptionsAsCountries = (EstateOptions: FC<tObject<any>>, countries: tObject<any>) => {
+type tEstateOptionsProps = {estate: tObject<any>}
+
+export const withDisplayOptionsAsCountries = (EstateOptions: FC<tEstateOptionsProps>, countries: tObject<any>) => {
     const useEstateContent = getUseEstatesContent(EstateOptions, countries);
     return (props: tObject<any>) => {
             const classes: any = null;
             const countryNames = Object.keys(props.options);
-            const {EstateContent, setPresentedContryName, setPresentedEstatesName, presentedCountryName} = useEstateContent();
+            const {EstateContent, setPresentedContryName, setPresentedEstatesName, presentedCountryName, presentedEstateName} = useEstateContent();
             const buttons = countryNames.map(
                 (countryName: string) => {
                     const estateNames = Object.keys(countries[countryName]);
@@ -99,9 +101,12 @@ export const withDisplayOptionsAsCountries = (EstateOptions: FC<tObject<any>>, c
                             <Button label={countryName} action={()=> setPresentedContryName(countryName)}/>
                             <div className={`${classes.estatesModule} ${ isUnfolded ? classes.estatesOpened : classes.estatesClosed }`}>
                                 {
-                                    !!! DEVELOPING HERE
                                     estateNames.map(
-                                        (estateName) => <Button label={estateName} action={() => setPresentedEstatesName(estateName)} />
+                                        (estateName) => {
+                                            return (
+                                                <Button label={estateName} action={() => setPresentedEstatesName(estateName)} />
+                                            )
+                                        }
                                     )
                                 }
                             </div>
@@ -110,11 +115,12 @@ export const withDisplayOptionsAsCountries = (EstateOptions: FC<tObject<any>>, c
                     )
                 }
             )
+            const estateContentProps = countries[presentedCountryName][presentedEstateName]
             return (
                 <div className={classes.container}>
                     <div className={classes.countriesList}>{buttons}</div>
                     <div className={classes.actions}>
-                        <EstateContent />
+                        <EstateContent/>
                     </div>
                 </div>
             )        
