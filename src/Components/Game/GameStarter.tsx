@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react"
 import { BLUE, GREEN, RED, YELLOW } from "../../Data/const"
-import { useStartChanceCardsHolders } from "../../hooks/starters/useStartChanceCardsHoleders"
-import { Bank } from "../../Logic/Bank/Bank"
 import { Game } from "../../Logic/Game/Game"
 import { Messages } from "../../Logic/Messages/constants"
 import { Players } from "../../Logic/Players/Players"
@@ -9,7 +7,6 @@ import { iPlayerDescriptor } from "../../Logic/Players/types"
 import { StrategyNames } from "../../Logic/Strategies/types"
 import { Board } from "../Board/Board"
 import CommandArea from "../CommandArea/CommandArea"
-import GameControl from "../GameControl/GameControl"
 import { Pawns } from "../Pawns/Pawns"
 
 const TEST_PLAYERS: iPlayerDescriptor[] = [
