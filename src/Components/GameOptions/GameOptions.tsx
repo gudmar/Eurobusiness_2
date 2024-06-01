@@ -5,6 +5,7 @@ import { getGameState } from "../../Functions/PersistRetrieveGameState/utils";
 import { Button } from "../Button/Button";
 import { OptionTypes } from "../../Logic/Journalist/types";
 import { isDefinedNotEmptyString } from "../../Functions/isDefined";
+import { iSingleCountryProps, tEstate, tEstateProps, tEstatesProps } from "./types";
 
 const useGameOptions = (playerName: string) => {
     const [options, setOptions] = useState<tObject<any>>({});
@@ -19,27 +20,9 @@ const useGameOptions = (playerName: string) => {
     }
 }
 
-type tActionType = {
-    payload?: any,
-    type: OptionTypes,
-}
-
-type tEstate = {
-    name: string,
-    reason?: string,
-    actions?: tActionType[]
-};
-
-type tEstateProps = {
-    estate: tEstate,
-    isOpen: boolean,
-}
-
 const Estate = ({estate, isOpen}: tEstateProps) => {
     return (<div>{estate.name}</div>)
 }
-
-type tEstatesProps = {estates: tEstate[]}
 
 const Estates = ({estates}: tEstatesProps) => {
     return (
@@ -49,11 +32,6 @@ const Estates = ({estates}: tEstatesProps) => {
             }
         </>
     )
-}
-
-type iSingleCountryProps = {
-    country: tObject<any>,
-    countryName: string,
 }
 
 const getEstatesPropsFromEntries = (country: tObject<any>) => {
@@ -74,22 +52,6 @@ const SingleCountry = ({country, countryName}: iSingleCountryProps) => {
             <div className={classes.countryName}>{countryName}</div>
             <Estates estates={estatesProps}/>
         </div>
-    )
-}
-
-
-const withRejections = (ActionComponent: FC<tObject<any>>) => ({ country }: tObject<any>) => {
-
-}
-
-const withDisplayOptionsAsCountries = (EstateOptions: FC<tObject<any>>) => (props: tObject<any>) => {
-    const countries = Object.keys(props.options);
-    return (
-        <>
-            {
-                countries.map((key: string) => (<SingleCountry country={props.options[key]} countryName = {key}/>))
-            }
-        </>
     )
 }
 
