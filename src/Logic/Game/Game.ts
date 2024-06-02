@@ -73,8 +73,6 @@ export class Game extends SubscribtionsHandler<Messages, tGameLogicState | strin
             objectToValidate: val,
             source: this.constructor.name,
         })
-        console.log('%cSetting Game state', "background-color: orange")
-        console.log(val)
         this._currentPlayer = val.currentPlayer;
         this._playersOrder = val.playersOrder;
         this._turnPhase = val.turnPhase;
