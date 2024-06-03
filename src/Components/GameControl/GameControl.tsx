@@ -91,30 +91,43 @@ const useCurrentPlayerName = (id: string) => {
             id,
             messageType: Messages.currentPlayerChanged
         }
-        Game.instance.subscribe(subscribtion);
-        return Game.instance.unsubscribe(Messages.currentPlayerChanged, id)
-    }, [])
+        if (Game.instance) {
+            Game.instance.subscribe(subscribtion);
+            setCurrentPlayerName(Game.instance.state.currentPlayer)
+        }
+        return () => {
+            if (Game.instance) {
+                Game.instance.unsubscribe(Messages.currentPlayerChanged, id)
+            }
+        }
+    }, [Game.instance])
     return currentPlayerName;
 }
 
 const useSelectPlayerName = (id: string) => {
     const classes: any = null;
-    const playerNames = Players.players.map((player) => player.name);
+    const [playerNames, setPlayerNames] = useState<string[]>([]);
     const currentPlayerName = useCurrentPlayerName(id);
     const [selectedPlayerName, setSelectedPlayerName] = useState<string>(currentPlayerName);
+    useEffect(() => {
+            const names = Players.players.map((player) => player.name)
+            setPlayerNames(names);
+            if (selectedPlayerName === '') setSelectedPlayerName(currentPlayerName)
+        },[Players.players, currentPlayerName]
+    )    
     const PlayerSelection = useCallback(() => {
         return (
-            <div className={classes.verticalSelection}>
+            <div className={classes?.verticalSelection}>
                 <SingleSelectFromList
                     id={`${id}_single_select`}
                     label={'Select player'}
                     items={playerNames}
                     onSelect={setSelectedPlayerName}
-                    defaultValue={currentPlayerName}
+                    defaultValue={selectedPlayerName}
                 />
             </div>
         )
-    }, [])
+    }, [playerNames, selectedPlayerName])
     return {selectedPlayerName, PlayerSelection}
 }
 
@@ -125,30 +138,34 @@ const useSwitch = (label: string, isInitiallyChecked: boolean) => {
             <Checkbox
                 label={label}
                 onChange={() => setIsChecked(!isChecked)}
-                checked={isInitiallyChecked}
+                checked={isChecked}
             />
         )
-    }, [label])
+    }, [isChecked])
     return {isChecked, Switch}
 }
 
 const GameControl = () => {
     const classes = useStyles();
     const {selectedPlayerName, PlayerSelection} = useSelectPlayerName('Select player name')
-    
-    const {isChecked: shouldDisplayOptions, Switch} = useSwitch('Toggle select user', false);
+    const {isChecked: shouldDisplayOptions, Switch} = useSwitch('Toggle select player', false);
     return (
         <>
-            <Switch /> {
-                    shouldDisplayOptions ?
-                    <GameOptions playerName={selectedPlayerName}/>
-                :
                     <div className={classes.housing}>
-                    <HelpTip message='Here usefull messages will appear'/>
-                    <Information />
-            </div>
-
-            }
+                        <div className={classes.horizontal}>
+                            {!shouldDisplayOptions && <HelpTip message='Here usefull messages will appear'/>}
+                            <Switch />
+                        </div>
+                        {
+                            shouldDisplayOptions ? 
+                                <>
+                                    <PlayerSelection/>
+                                    <GameOptions playerName={selectedPlayerName}/>
+                                </>
+                            :
+                                <Information />
+                        }
+                    </div>
         </>
         
     )

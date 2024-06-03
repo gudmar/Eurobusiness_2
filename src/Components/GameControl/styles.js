@@ -13,5 +13,8 @@ export const useStyles = makeStyles((theme) => {
             opacity: '0.7',
             padding: '0.5rem'
         },
+        horizontal: {
+            display: 'flex'
+        }
     })
 })

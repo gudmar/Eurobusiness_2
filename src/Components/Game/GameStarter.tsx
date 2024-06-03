@@ -44,16 +44,20 @@ const usePlayersDescriptors = () => {
             const playersDescriptors = getPlayersDescriptors();
             setDescriptorsFromLogic(playersDescriptors);
         };
-        Players?.instance?.subscribe({
-            callback: subscribtionCallback,
-            id: GAME_STARTER_ID,
-            messageType: Messages.loadPlayers,
-        })
+        if (Players?.instance) {
+            Players?.instance?.subscribe({
+                callback: subscribtionCallback,
+                id: GAME_STARTER_ID,
+                messageType: Messages.loadPlayers,
+            })    
+        }
         return (
             () => {
-                Players?.instance?.unsubscribe(Messages.loadPlayers, GAME_STARTER_ID);
+                if (Players?.instance) {
+                    Players?.instance?.unsubscribe(Messages.loadPlayers, GAME_STARTER_ID);
+                }
             })
-    }, [])
+    }, [Players.instance])
     return descriptorsFromLogic ?? TEST_PLAYERS
 }
 

@@ -3,11 +3,8 @@ import { getTestableOptions } from "../../Logic/Journalist/getOptions";
 import { tObject } from "../../Logic/types"
 import { getGameState } from "../../Functions/PersistRetrieveGameState/utils";
 import { Button } from "../Button/Button";
-import { OptionTypes } from "../../Logic/Journalist/types";
-import { isDefinedNotEmptyString } from "../../Functions/isDefined";
 import { iSingleCountryProps, tEstate, tEstateProps, tEstatesProps } from "./types";
 import { withDisplayOptionsAsCountries } from "./withDisplayOptionsFromCountry";
-import { UnplegdeEstatesReasons } from "../../Logic/Journalist/utils/getUnplegdeOptions";
 
 const useGameOptions = (playerName: string) => {
     const [options, setOptions] = useState<tObject<any>>({});
@@ -146,6 +143,14 @@ const optionKeyToButtonPropsMap = {
     unplegdeEstates: {
         buttonName: 'Unplegde estates',
         component: UnplegdeEstates
+    },
+    sellEstates: {
+        buttonName: 'Sell estates',
+        component: () => null
+    },
+    specialCards: {
+        buttonName: 'Special cards',
+        component: () => null
     }
 }
 
@@ -153,11 +158,16 @@ export const GameOptions = ({playerName}: any) => {
     const {options, refreshGameState} = useGameOptions(playerName);
     const optionsEntries = Object.entries(options);
     const getOptionButton = ([key, value]: [string, any]) => {
-        <Button></Button>
+        const label = (optionKeyToButtonPropsMap as any)?.[key]?.buttonName;
+        return (
+            <Button
+                label={label}
+            />
+        )
     }
     return (
         <>
-            optionsEntries.map(getOptionButton)
+            { optionsEntries.map(getOptionButton) }
         </>
     )
 }
