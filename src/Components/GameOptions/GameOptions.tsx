@@ -1,10 +1,12 @@
-import { FC, useEffect, useState } from "react"
+import { FC, useEffect, useRef, useState } from "react"
 import { getTestableOptions } from "../../Logic/Journalist/getOptions";
 import { tObject } from "../../Logic/types"
 import { getGameState } from "../../Functions/PersistRetrieveGameState/utils";
 import { Button } from "../Button/Button";
 import { iSingleCountryProps, tEstate, tEstateProps, tEstatesProps } from "./types";
 import { withDisplayOptionsAsCountries } from "./withDisplayOptionsFromCountry";
+import { tGameState } from "../../Functions/PersistRetrieveGameState/types";
+import { tJournalistOutputArrayOrRejection, tJournalistState } from "../../Logic/Journalist/types";
 
 const useGameOptions = (playerName: string) => {
     const [options, setOptions] = useState<tObject<any>>({});
@@ -68,25 +70,25 @@ const BuyBuildingsForm = (estate: tObject<any>) => {
     return <>Buy buildings in ${estate.name}</>
 }
 
-const BuyBuildings = (countries: tObject<any>) => withDisplayOptionsAsCountries(BuyBuildingsForm, countries);
+const BuyBuildings = withDisplayOptionsAsCountries(BuyBuildingsForm, 'buyBuildings');
 
 const SellBuildingsForm = (estate: tObject<any>) => {
     return <>Sell buildings in ${estate.name}</>
 }
 
-const SellBuildings = (countries: tObject<any>) => withDisplayOptionsAsCountries(SellBuildingsForm, countries);
+const SellBuildings = withDisplayOptionsAsCountries(SellBuildingsForm, 'sellBuildings');
 
 const PlegdeEstatesForm = (estate: tObject<any>) => {
     return <>Plegde estates in ${estate.name}</>
 }
 
-const PlegdeEstates = (countries: tObject<any>) => withDisplayOptionsAsCountries(PlegdeEstatesForm, countries);
+const PlegdeEstates = withDisplayOptionsAsCountries(PlegdeEstatesForm, 'plegdeEstates');
 
 const UnplegdeEstatesFrom = (estate: tObject<any>) => {
     return <>Unplegde estates in ${estate.name}</>
 }
 
-const UnplegdeEstates = (countreis: tObject<any>) => withDisplayOptionsAsCountries(UnplegdeEstatesFrom, countreis);
+const UnplegdeEstates = withDisplayOptionsAsCountries(UnplegdeEstatesFrom, 'unplegdeEstates');
 
 
 const withPresentReason = (Actions: FC<tObject<any>>) => ({reason, actions}: tObject<any>) => {
@@ -154,20 +156,47 @@ const optionKeyToButtonPropsMap = {
     }
 }
 
+const useSelectOptions = () => {
+    const [OptionsComponent, setOptionsComponent] = useState<FC<any>>(() => (props: any) => <></>);
+    const [currentLabel, setCurrentLabel] = useState<string>('');
+    const [selectedPropMapKey, setSelectedPropMapKey] = useState<string | null>(null);
+    useEffect(() => {
+        if (!!selectedPropMapKey) {
+            const label = (optionKeyToButtonPropsMap as any)?.[selectedPropMapKey]?.buttonName;
+            const selectdComponent = (optionKeyToButtonPropsMap as any)?.[selectedPropMapKey]?.component;
+            setCurrentLabel(label);
+            setSelectedPropMapKey(selectedPropMapKey)
+            setOptionsComponent(selectdComponent);
+        }
+    }, [selectedPropMapKey, currentLabel, OptionsComponent])
+    const setPropMapKey = setSelectedPropMapKey
+    return {
+        OptionsComponent, currentLabel, setPropMapKey
+    }
+}
+
 export const GameOptions = ({playerName}: any) => {
     const {options, refreshGameState} = useGameOptions(playerName);
+    const { OptionsComponent, currentLabel, setPropMapKey } = useSelectOptions()
     const optionsEntries = Object.entries(options);
+    // const [OptionsComponent, setOptionsComponent] = useState(() => () => <></>);
+    // useEffect(() => console.log('Component', OptionsComponent), [OptionsComponent])
     const getOptionButton = ([key, value]: [string, any]) => {
         const label = (optionKeyToButtonPropsMap as any)?.[key]?.buttonName;
+        const action = (optionKeyToButtonPropsMap as any)?.[key]?.component;
         return (
             <Button
+                key={label}
                 label={label}
+                disabled={currentLabel === label}
+                action={() => setPropMapKey(key)}
             />
         )
     }
     return (
         <>
             { optionsEntries.map(getOptionButton) }
+            <OptionsComponent gameOptions={options} />
         </>
     )
 }
