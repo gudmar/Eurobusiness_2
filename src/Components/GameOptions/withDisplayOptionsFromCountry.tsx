@@ -1,5 +1,6 @@
-import { FC, ReactNode, useState } from "react";
+import { FC, ReactNode, useCallback, useEffect, useState } from "react";
 import { isDefined } from "../../Functions/isDefined";
+import { tJournalistState } from "../../Logic/Journalist/types";
 import { tObject } from "../../Logic/types";
 import { Button } from "../Button/Button";
 import { getMessageWhenAllEstatesRejected } from "./getMessageWhenAllEstatesRejected";
@@ -86,11 +87,57 @@ const getUseEstatesContent = (ComponentToDislpayIn: FC<tEstateOptionsProps>, cou
 
 type tEstateOptionsProps = {estate: tObject<any>}
 
-export const withDisplayOptionsAsCountries = (EstateOptions: FC<tEstateOptionsProps>, countries: tObject<any>) => {
-    const useEstateContent = getUseEstatesContent(EstateOptions, countries);
-    return (props: tObject<any>) => {
+// export const withDisplayOptionsAsCountries = (EstateOptions: FC<tEstateOptionsProps>, countries: tObject<any>) => {
+//     const useEstateContent = getUseEstatesContent(EstateOptions, countries);
+//     return (props: tObject<any>) => {
+//             const classes: any = null;
+//             const countryNames = Object.keys(props.options);
+//             useEffect(() => console.log('Countries', countries), [countries])
+//             const {EstateContent, setPresentedContryName, setPresentedEstatesName, presentedCountryName, presentedEstateName} = useEstateContent();
+//             const buttons = countryNames.map(
+//                 (countryName: string) => {
+//                     const estateNames = Object.keys(countries[countryName]);
+//                     const isUnfolded = countryName === presentedCountryName;
+//                     return (
+//                         <div className={classes.countryModule}>
+//                             <Button label={countryName} action={()=> setPresentedContryName(countryName)}/>
+//                             <div className={`${classes.estatesModule} ${ isUnfolded ? classes.estatesOpened : classes.estatesClosed }`}>
+//                                 {
+//                                     estateNames.map(
+//                                         (estateName) => {
+//                                             return (
+//                                                 <Button label={estateName} action={() => setPresentedEstatesName(estateName)} />
+//                                             )
+//                                         }
+//                                     )
+//                                 }
+//                             </div>
+//                         </div>
+
+//                     )
+//                 }
+//             )
+//             const estateContentProps = countries[presentedCountryName][presentedEstateName]
+//             return (
+//                 <div className={classes.container}>
+//                     <div className={classes.countriesList}>{buttons}</div>
+//                     <div className={classes.actions}>
+//                         <EstateContent/>
+//                     </div>
+//                 </div>
+//             )        
+//     }
+// }
+
+
+export const withDisplayOptionsAsCountries = (EstateOptions: FC<tEstateOptionsProps>, countriesKey: string) => {
+    // const useEstateContent = getUseEstatesContent(EstateOptions, countries);
+    return (gameOptions: tJournalistState) => {
+            const countries = (gameOptions as any)[countriesKey];
+            const useEstateContent =  useCallback(getUseEstatesContent(EstateOptions, countries), []);
             const classes: any = null;
-            const countryNames = Object.keys(props.options);
+            const countryNames = Object.keys(countries);
+            useEffect(() => console.log('Countries', countries), [countries])
             const {EstateContent, setPresentedContryName, setPresentedEstatesName, presentedCountryName, presentedEstateName} = useEstateContent();
             const buttons = countryNames.map(
                 (countryName: string) => {
@@ -126,3 +173,5 @@ export const withDisplayOptionsAsCountries = (EstateOptions: FC<tEstateOptionsPr
             )        
     }
 }
+
+
