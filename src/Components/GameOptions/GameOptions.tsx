@@ -67,6 +67,7 @@ const SingleCountry = ({country, countryName}: iSingleCountryProps) => {
 //     )
 // }
 const BuyBuildingsForm = (estate: tObject<any>) => {
+    console.log('Estate', estate)
     return <>Buy buildings in ${estate.name}</>
 }
 
@@ -157,27 +158,36 @@ const optionKeyToButtonPropsMap = {
 }
 
 const useSelectOptions = () => {
-    const [OptionsComponent, setOptionsComponent] = useState<FC<any>>(() => (props: any) => <></>);
+    // const [OptionsComponent, setOptionsComponent] = useState<FC<any>>(() => (props: any) => <></>);
     const [currentLabel, setCurrentLabel] = useState<string>('');
     const [selectedPropMapKey, setSelectedPropMapKey] = useState<string | null>(null);
     useEffect(() => {
         if (!!selectedPropMapKey) {
             const label = (optionKeyToButtonPropsMap as any)?.[selectedPropMapKey]?.buttonName;
-            const selectdComponent = (optionKeyToButtonPropsMap as any)?.[selectedPropMapKey]?.component;
+            // const selectdComponent = (optionKeyToButtonPropsMap as any)?.[selectedPropMapKey]?.component;
             setCurrentLabel(label);
             setSelectedPropMapKey(selectedPropMapKey)
-            setOptionsComponent(selectdComponent);
+            // setOptionsComponent(selectdComponent);
         }
-    }, [selectedPropMapKey, currentLabel, OptionsComponent])
+    // }, [selectedPropMapKey, currentLabel, OptionsComponent])
+}, [selectedPropMapKey ])
     const setPropMapKey = setSelectedPropMapKey
+    const getOptionsComponent = () => {
+        if (!selectedPropMapKey) return () => <></>;
+        return (optionKeyToButtonPropsMap as any)?.[selectedPropMapKey]?.component;
+    }
     return {
-        OptionsComponent, currentLabel, setPropMapKey
+        OptionsComponent: getOptionsComponent(),
+        currentLabel,
+        setPropMapKey
     }
 }
 
 export const GameOptions = ({playerName}: any) => {
     const {options, refreshGameState} = useGameOptions(playerName);
+    console.log('OPTIONS', options)
     const { OptionsComponent, currentLabel, setPropMapKey } = useSelectOptions()
+    useEffect(() => console.log('Options component', OptionsComponent), [OptionsComponent])
     const optionsEntries = Object.entries(options);
     // const [OptionsComponent, setOptionsComponent] = useState(() => () => <></>);
     // useEffect(() => console.log('Component', OptionsComponent), [OptionsComponent])
