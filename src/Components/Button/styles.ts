@@ -80,9 +80,42 @@ export const useStyles = createUseStyles((theme: CustomTheme) => ({
         }
     },
 
+    primary: {
+        cursor: 'pointer',
+        backgroundColor: '#2222ff',
+        color: 'white',
+        transition: '0.3s',
+        '&:hover':{
+            backgroundColor: '#0000bb',
+            transition: '0.3s',
+        },
+        '&:active':{
+            backgroundColor: '#9999ff',
+            color: 'black',
+            transition: '0.3s',
+        }
+    },
+
+    secondary: {
+        cursor: 'pointer',
+        backgroundColor: '#7777ff',
+        color: 'white',
+        transition: '0.3s',
+        '&:hover':{
+            backgroundColor: '#4444bb',
+            transition: '0.3s',
+        },
+        '&:active':{
+            backgroundColor: '#aaaaff',
+            color: 'black',
+            transition: '0.3s',
+        }
+    },
+
     disabled: {
         backgroundColor: '#555555',
-        color: '#777777'
+        color: '#777777',
+        cursor: 'default'
     },
     tooltip: {
         position: 'absolute',

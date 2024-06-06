@@ -7,6 +7,7 @@ import { iSingleCountryProps, tEstate, tEstateProps, tEstatesProps } from "./typ
 import { withDisplayOptionsAsCountries } from "./withDisplayOptionsFromCountry";
 import { tGameState } from "../../Functions/PersistRetrieveGameState/types";
 import { tJournalistOutputArrayOrRejection, tJournalistState } from "../../Logic/Journalist/types";
+import { useStyles } from "./styles";
 
 const useGameOptions = (playerName: string) => {
     const [options, setOptions] = useState<tObject<any>>({});
@@ -67,7 +68,7 @@ const SingleCountry = ({country, countryName}: iSingleCountryProps) => {
 //     )
 // }
 const BuyBuildingsForm = (estate: tObject<any>) => {
-    console.log('Estate', estate)
+    console.log('Estate', estate, estate?.reason, estate?.estate)
     return <>Buy buildings in ${estate.name}</>
 }
 
@@ -79,8 +80,14 @@ const SellBuildingsForm = (estate: tObject<any>) => {
 
 const SellBuildings = withDisplayOptionsAsCountries(SellBuildingsForm, 'sellBuildings');
 
-const PlegdeEstatesForm = (estate: tObject<any>) => {
-    return <>Plegde estates in ${estate.name}</>
+const PlegdeEstatesForm = ({ estate }: tObject<any>) => {
+    const classes = useStyles()
+    
+    if (estate?.reason) {
+        return <div className={classes.reason}>{estate?.reason}</div>
+    }
+    return <></>
+    // return <>Plegde estates in ${estate.name}</>
 }
 
 const PlegdeEstates = withDisplayOptionsAsCountries(PlegdeEstatesForm, 'plegdeEstates');
@@ -157,10 +164,16 @@ const optionKeyToButtonPropsMap = {
     }
 }
 
-const useSelectOptions = () => {
+const useSelectOptions = (depsArray: any[]) => {
     // const [OptionsComponent, setOptionsComponent] = useState<FC<any>>(() => (props: any) => <></>);
     const [currentLabel, setCurrentLabel] = useState<string>('');
     const [selectedPropMapKey, setSelectedPropMapKey] = useState<string | null>(null);
+    useEffect(() => {
+        if (depsArray) {
+            setSelectedPropMapKey(null);
+            setCurrentLabel('')
+        }
+    }, depsArray ?? [])
     useEffect(() => {
         if (!!selectedPropMapKey) {
             const label = (optionKeyToButtonPropsMap as any)?.[selectedPropMapKey]?.buttonName;
@@ -185,12 +198,8 @@ const useSelectOptions = () => {
 
 export const GameOptions = ({playerName}: any) => {
     const {options, refreshGameState} = useGameOptions(playerName);
-    console.log('OPTIONS', options)
-    const { OptionsComponent, currentLabel, setPropMapKey } = useSelectOptions()
-    useEffect(() => console.log('Options component', OptionsComponent), [OptionsComponent])
+    const { OptionsComponent, currentLabel, setPropMapKey } = useSelectOptions([playerName])
     const optionsEntries = Object.entries(options);
-    // const [OptionsComponent, setOptionsComponent] = useState(() => () => <></>);
-    // useEffect(() => console.log('Component', OptionsComponent), [OptionsComponent])
     const getOptionButton = ([key, value]: [string, any]) => {
         const label = (optionKeyToButtonPropsMap as any)?.[key]?.buttonName;
         const action = (optionKeyToButtonPropsMap as any)?.[key]?.component;
@@ -198,7 +207,7 @@ export const GameOptions = ({playerName}: any) => {
             <Button
                 key={label}
                 label={label}
-                disabled={currentLabel === label}
+                selected={currentLabel === label}
                 action={() => setPropMapKey(key)}
             />
         )
