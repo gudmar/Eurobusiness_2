@@ -99,12 +99,12 @@ const isOperationNotAllowedInAnyCountry = (countries: tCountries) => {
 
 export const withDisplayOptionsAsCountries = (EstateOptions: FC<tEstateOptionsProps>, countriesKey: string) => {
     // const useEstateContent = getUseEstatesContent(EstateOptions, countries);
+
     return ({gameOptions}: {gameOptions: tJournalistState}) => {
+        console.log('withDisplayOptions...', gameOptions)
             const countries = (gameOptions as any)[countriesKey];
             const useEstateContent =  useCallback(getUseEstatesContent(EstateOptions, countries), []);
             const classes = useStyles();
-            
-            
             const {
                 EstateContent,
                 setPresentedContryName,

@@ -5,9 +5,8 @@ import { getGameState } from "../../Functions/PersistRetrieveGameState/utils";
 import { Button } from "../Button/Button";
 import { iSingleCountryProps, tEstate, tEstateProps, tEstatesProps } from "./types";
 import { withDisplayOptionsAsCountries } from "./withDisplayOptionsFromCountry";
-import { tGameState } from "../../Functions/PersistRetrieveGameState/types";
-import { tJournalistOutputArrayOrRejection, tJournalistState } from "../../Logic/Journalist/types";
 import { useStyles } from "./styles";
+import { getBuySellBuildings } from "./BuySellBuildings";
 
 const useGameOptions = (playerName: string) => {
     const [options, setOptions] = useState<tObject<any>>({});
@@ -67,12 +66,12 @@ const SingleCountry = ({country, countryName}: iSingleCountryProps) => {
 //         </>
 //     )
 // }
-const BuyBuildingsForm = (estate: tObject<any>) => {
+const BuyBuildingsForm = ( estate : tObject<any>) => {
     console.log('Estate', estate, estate?.reason, estate?.estate)
     return <>Buy buildings in ${estate.name}</>
 }
 
-const BuyBuildings = withDisplayOptionsAsCountries(BuyBuildingsForm, 'buyBuildings');
+// const BuyBuildings = withDisplayOptionsAsCountries(BuyBuildingsForm, 'buyBuildings');
 
 const SellBuildingsForm = (estate: tObject<any>) => {
     return <>Sell buildings in ${estate.name}</>
@@ -128,6 +127,9 @@ const AcceptModneyActions = ({actions}: tObject<any>) => {
 }
 
 const AcceptMoney = withPresentReason(AcceptModneyActions);
+
+const BuyBuildings = getBuySellBuildings('buyBuildings');
+// const SellBuildings = getBuySellBuildings('sellBuildings');
 
 const optionKeyToButtonPropsMap = {
     buyBuildings: {
