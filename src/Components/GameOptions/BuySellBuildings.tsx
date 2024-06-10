@@ -1,13 +1,16 @@
 
 
+import { type } from "@testing-library/user-event/dist/type";
+import { traceDeprecation } from "process";
 import { FC, ReactNode, useCallback, useEffect, useState } from "react";
 import { tGameLogicState } from "../../Logic/Game/types";
 import { OptionTypes, tJournalistOutputArrayOrRejection, tJournalistState, tOption, tRejection } from "../../Logic/Journalist/types";
+import { NrOfHotels, NrOfHouses } from "../../Logic/Journalist/utils/getBuildingPermits";
 import { tObject } from "../../Logic/types";
 import { Button, ButtonColorScheme } from "../Button/Button";
 import { getMessageWhenAllEstatesRejected } from "./getMessageWhenAllEstatesRejected";
 import { useStyles } from "./styles";
-import { tEstate, tEstateProps, tEstatesProps } from "./types";
+import { tEstate, tEstateProps, tEstatesProps, tTransactionForEachCountry } from "./types";
 
 
 const getCountriesFromValidActions = (options: tObject<any>) => {
@@ -54,10 +57,13 @@ const isOperationNotAllowedInAnyCountry = (countries: tCountries) => {
 
 const getPermits = (gameOptions: tJournalistState, dataKey: tDataKey) => {
     console.log('Game optons', gameOptions)
-    return (gameOptions?.[dataKey] as tOption)?.actions?.[0]?.payload?.permits;
+    Is this permits here extracted propelry? Selection of country does not crash app. but no result visible
+    return (gameOptions?.[dataKey] as tOption)?.actions?.[0]?.payload
 }
 const getRejectionReason = (gameOptions: tJournalistState,dataKey: tDataKey) => {
-return (gameOptions?.[dataKey] as tRejection)?.reason;
+    const nestedReason = (gameOptions?.[dataKey] as tOption)?.actions?.[0]?.payload.reason;
+    const flatReason = (gameOptions?.[dataKey] as tRejection)?.reason;
+return nestedReason || flatReason;
 }
 
 const usePossibleTransactions = (gameOptions: tJournalistState, dataKey: tDataKey) => {
@@ -86,7 +92,8 @@ export const getBuySellBuildings = (dataKey: tDataKey) => ({gameOptions }: {game
                 selectedCountryName,
                 rejectionReason,
             } = usePossibleTransactions(gameOptions, dataKey);
-            useEffect(() => {console.log('Permits', permits)}, [permits])
+            useEffect(() => {console.log('Permits', permits, !!permits)}, [permits])
+            useEffect(() => {console.log('RejectionReason', rejectionReason)}, [rejectionReason])
             if (isOperationNotAllowedInAnyCountry(countries)) {
                 return  <>{countries.reason}</>
             }
@@ -98,7 +105,7 @@ export const getBuySellBuildings = (dataKey: tDataKey) => ({gameOptions }: {game
                         <div className={classes?.countryModule}>
                             <Button
                                 label={countryName}
-                                action={()=> setSelectedCountryName(countryName)}
+                                action={()=> { setSelectedCountryName(countryName); console.log('Permits in button', permits, gameOptions, dataKey)}}
                                 selected={countryName === selectedCountryName}
                             />
                         </div>
@@ -109,8 +116,8 @@ export const getBuySellBuildings = (dataKey: tDataKey) => ({gameOptions }: {game
                 <div className={classes?.container}>
                     <div className={classes?.countriesList}>{buttons}</div>
                     <div className={classes?.actions}>
-                        { !!permits ?? <PossibleTransactions permits={permits}/>}
-                        { !!rejectionReason ?? <div>{rejectionReason}</div>}
+                        { !!permits && <PossibleTransactions permits={permits[selectedCountryName]}/>}
+                        { !!rejectionReason && <div>{rejectionReason}</div>}
                     </div>
                 </div>
             )        
@@ -124,41 +131,62 @@ export const getBuySellBuildings = (dataKey: tDataKey) => ({gameOptions }: {game
         return result
     }
 
-    const Transaction = ({permit} : tObject<any>) => {
+
+    const TransactionEntry = (props: {transactionOptions: tTransactionForEachCountry, key: string}) => {
+        if (!props.transactionOptions[props.key]) return null
+        const value = props.transactionOptions[props.key];
+        return (
+            <div>
+                <div>{props.key}</div><div>{JSON.stringify(value)}</div>
+            </div>
+        )
+    }
+
+    const TransactionContentBuilder = (transactionOptions: tTransactionForEachCountry) => {
+        const keys = Object.keys(transactionOptions);
+        const result = keys.map((key) => {
+            return <TransactionEntry transactionOptions={transactionOptions} key={key}/>
+        })
+        return result;
+
+    }
+    
+    const Transaction = (transactionOptions : tTransactionForEachCountry) => {
         const classes = useStyles();
-        const [nrOfPurcahsedBuildingsKey, options] = permit;
-        if (nrOfPurcahsedBuildingsKey === 'hotelReason') {
-            return <div className={classes.hotelReason}>{options}</div>
-        }
+
+        const content = TransactionContentBuilder(transactionOptions)
+
         return (
             <div className={classes.possibleTransactions}>
-                {
-                    options.map((option: any) => {
-                        const {locationOne, locationTwo, cost} = option;
-                        const key = `${locationOne}_${locationTwo}_${cost}`;
-                        const message = getValidHousesTransactionText(option);
-                        return (
-                            <div className={classes.transaction} key={key}>{message}</div>
-                        )
-                    })
-                }
+                { content }
             </div>
         )
     }
 
-    const PossibleTransactions = ({permits}: { permits: any[]}) => {
+
+    // const PossibleTransactions = ({permits}: { permits: any[]}) => {
+    const PossibleTransactions = (props:  any) => {
+        const collapsedReason = props?.reason;
+        const permitsForCountries = props?.actions?.[0]?.payload;
         const classes = useStyles();
+        
         return (
-            <div className={classes.permits}>
-                {
-                    permits.map((permit: any) => (
-                        <div key={JSON.stringify(permit)} className={classes.permit}>
-                            <Transaction permit={permit}/>
-                        </div>
-                    ))
-                }
-            </div>
+            <>
+                {collapsedReason && <div>{collapsedReason}</div> }
+                {permitsForCountries && <div className={classes.permits}>
+                    {
+                        Object.values(permitsForCountries).map((permit: any) => {
+                            const rejection = permit.reason;
+                            if (rejection) return (<div>rejection</div>)
+                            return (
+                                <div key={JSON.stringify(permit)} className={classes.permit}>
+                                    <Transaction permit={permit}/>
+                                </div>
+                            )
+                        }
+                        )
+                    }
+                </div>}
+            </>
         )
     }
-
-    // type tGetTrasaceion
