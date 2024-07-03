@@ -7,6 +7,7 @@ export interface iEditGeneralSettingsState {
     setTestMode: (val: TestModes) => void,
     possibleTestModes: typeof TestModes,
     selectedFields: string[],
+    nrOfHousesInBank: number,
 }
 
 export type tEditGeneralSettingPayload = number | string | boolean | TestModes;
@@ -28,5 +29,7 @@ export enum EditGeneralSettingsForTestsTypes {
     setOneOfNumbers = 'set new number to numbers to visit',
     setFieldsToVisit = 'set fields to visit',
     setTestMode = 'set test mode',
-    removeOneOfNumbers = 'remove one of numbers from numbers to visit'
+    removeOneOfNumbers = 'remove one of numbers from numbers to visit',
+    setHousesInBank = 'set houses in the bank',
+    setHotelsInBank = 'set hotels in the bank',
 }

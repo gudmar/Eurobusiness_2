@@ -90,8 +90,6 @@ export const MultiSelectFromList = ({
         visibleItems,
         clearSearchResult,
     } = useMultiSelectFromLogic({ isEnabled, keepFocusRef, dontLoseFocusRefs: [toggleExpandRef],  items, defaultSelection: defaultValues, onSelected, onUnselected})
-    useEffect(() => console.log(items), [items])
-    useEffect(() => console.log(visibleItems), [visibleItems])
     const toggleExpand = () => {
         if (isSearchListExpanded) {close()} else {open()}
     }

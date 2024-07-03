@@ -1,10 +1,11 @@
 import { useEffect, useReducer } from "react"
+import { NR_OF_HOTELS, NR_OF_HOUSES } from "../../Constants/constants"
 import { getReducer } from "../../Functions/reducer"
-import { shiftBoardIndexByNeg1 } from "../../Functions/shiftIndex"
+import { Bank } from "../../Logic/Bank/Bank"
 import { Commander } from "../../Logic/Commander/Commander"
 import { DiceTestModeDecorator } from "../../Logic/Dice/Dice"
 import { TestModes } from "../../Logic/Dice/types"
-import { CHANGE_FIELDS_TO_VISIT, CHANGE_NR_THAT_DICE_WILL_THROW, CHANGE_TEST_MODE } from "../../Logic/Messages/constants"
+import { CHANGE_FIELDS_TO_VISIT, CHANGE_NR_HOTELS, CHANGE_NR_HOUSES, CHANGE_NR_THAT_DICE_WILL_THROW, CHANGE_TEST_MODE } from "../../Logic/Messages/constants"
 import { tSubscription } from "../../Types/types"
 import { EditGeneralSettingsForTestsTypes, iEditGeneralSettingsState, tEditGeneralSettingPayload, tUseGeneralSettingsForTests } from "./types"
 
@@ -16,6 +17,7 @@ const initState: iEditGeneralSettingsState = {
     setTestMode: (val: TestModes) => {},
     possibleTestModes: TestModes,
     selectedFields: [],
+    nrOfHousesInBank: 0,
 }
 
 const setNrToBeSelectedForDicesThrow = (state: iEditGeneralSettingsState, payload: tEditGeneralSettingPayload)  => {
@@ -44,6 +46,17 @@ const setFieldsToVisit = (state: iEditGeneralSettingsState, payload: string[]) =
     return newState;
 }
 
+const setNrOfHousesInBank = (state: iEditGeneralSettingsState, payload: number) => {
+    console.log('Payload', payload)
+    const newState = {...state, nrOfHousesInBank: payload};
+    return newState;
+}
+
+const setNrOfHotelsInBank = (state: iEditGeneralSettingsState, payload: number) => {
+    const newState = {...state, nrOfHotelsInBank: payload};
+    return newState;
+}
+
 export type tActions = {
     type: EditGeneralSettingsForTestsTypes.setDiceNumber
     payload: number
@@ -59,6 +72,12 @@ export type tActions = {
 } | {
     type: EditGeneralSettingsForTestsTypes.setFieldsToVisit,
     payload: string[] | number[]
+} | {
+    type: EditGeneralSettingsForTestsTypes.setHousesInBank,
+    payload: number,
+} | {
+    type: EditGeneralSettingsForTestsTypes.setHotelsInBank,
+    payload: number,
 }
 
 const setNrOnDiceAction = (payload: number):tActions => ({ type: EditGeneralSettingsForTestsTypes.setDiceNumber, payload });
@@ -66,6 +85,8 @@ const setTestModeAction = (payload: TestModes):tActions => ({type: EditGeneralSe
 const addFieldToVisitAction = (payload: string):tActions => ({type:EditGeneralSettingsForTestsTypes.setOneOfNumbers, payload})
 const removeFieldToVisitAction = (payload: string):tActions => ({type:EditGeneralSettingsForTestsTypes.removeOneOfNumbers, payload})
 const changeFieldsToVisitAction = (payload: string[]): tActions => ({type: EditGeneralSettingsForTestsTypes.setFieldsToVisit, payload });
+const changeHousesInBankAction = (payload: number): tActions => ({type: EditGeneralSettingsForTestsTypes.setHousesInBank, payload})
+const changeHotelsInBankAction = (payload: number): tActions => ({type: EditGeneralSettingsForTestsTypes.setHotelsInBank, payload});
 
 type tDispach = (arg: tActions) => void;
 
@@ -77,6 +98,8 @@ export const getSelectFromLogicActions = (dispatch: tDispach) => ({
     addFieldToVisit: (palylad: string) => dispatch(addFieldToVisitAction(palylad)),
     removeFieldToVisit: (palyoad: string) => dispatch(removeFieldToVisitAction(palyoad)),
     changeFieldsToVisit: (payload: string[]) => dispatch(changeFieldsToVisitAction(payload)),
+    changeHousesInBank: (payload: number) => dispatch(changeHousesInBankAction(payload)),
+    changeHotelsInBank: (payload: number) => dispatch(changeHotelsInBankAction(payload)),
 })
 
 const REDUCER = {
@@ -85,27 +108,42 @@ const REDUCER = {
     [EditGeneralSettingsForTestsTypes.removeOneOfNumbers]: removeField,
     [EditGeneralSettingsForTestsTypes.setOneOfNumbers]: addField,
     [EditGeneralSettingsForTestsTypes.setFieldsToVisit]: setFieldsToVisit,
+    [EditGeneralSettingsForTestsTypes.setHousesInBank]: setNrOfHousesInBank,
+    [EditGeneralSettingsForTestsTypes.setHotelsInBank]: setNrOfHotelsInBank
 }
 
 const reducer = getReducer(REDUCER);
 
-interface iSubscribeArgs {
+type tSubscribeDiceArgs = {
     callback: tSubscription,
     instance: DiceTestModeDecorator, 
     messageType: typeof CHANGE_FIELDS_TO_VISIT | typeof CHANGE_NR_THAT_DICE_WILL_THROW | typeof CHANGE_TEST_MODE
     id: string,
 }
 
-const getSubscribtion = ({id, callback, instance, messageType } : iSubscribeArgs) => {
-    const subscribtion = { callback, id, messageType }
-    const subscribe = () => {
-        instance.subscribe(subscribtion)
-    }
-    const unsubscribe = () => {instance.unsubscribe(messageType, id)};
-    return {subscribe, unsubscribe}
+type tSubscribeBankArgs = {
+    callback: tSubscription,
+    instance: Bank,
+    messageType: typeof CHANGE_NR_HOUSES | typeof CHANGE_NR_HOTELS
+    id: string,
 }
 
-const useSubscribtion = (subscribtionProps : iSubscribeArgs) => {
+type tInstance = Bank | DiceTestModeDecorator;
+
+type tSubscribeArgs = tSubscribeBankArgs | tSubscribeDiceArgs;
+
+
+const getSubscribtion = ({id, callback, instance, messageType } : tSubscribeArgs) => {
+    const subscribtion = { callback, id, messageType }
+    const subscribe = () => {
+        instance.subscribe(subscribtion as any)
+    }
+    const cassedMessageType = messageType as any;
+    const unsubscribe = () => {(instance as any).unsubscribe(cassedMessageType, id)};
+    return {subscribe, unsubscribe}    
+}
+
+const useSubscribtion = (subscribtionProps : tSubscribeArgs) => {
     useEffect(() => {
         const {subscribe, unsubscribe} = getSubscribtion(subscribtionProps);
         subscribe();
@@ -113,27 +151,46 @@ const useSubscribtion = (subscribtionProps : iSubscribeArgs) => {
     }, [])
 }
 
-const useSubscribtions = (diceInstane: DiceTestModeDecorator, dispatch: tDispach) => {
+const useDiceSubscribtions = (instance: DiceTestModeDecorator, dispatch: tDispach) => {
     const id = 'dice-test-link';
+    const bankId = 'bank-test';
+    console.dir(instance)
     useSubscribtion({
         id,
         messageType: CHANGE_FIELDS_TO_VISIT,
         callback: subscribtionsStructure.fieldsToVisit(dispatch),
-        instance: diceInstane,
+        instance: instance,
     });
     useSubscribtion({
         id,
         messageType: CHANGE_TEST_MODE,
         callback: subscribtionsStructure.testingMode(dispatch),
-        instance: diceInstane,
+        instance: instance,
     });
     useSubscribtion({
         id,
         messageType: CHANGE_NR_THAT_DICE_WILL_THROW,
         callback: subscribtionsStructure.nrThatDiceWillSelectInTestMode(dispatch),
-        instance: diceInstane,
+        instance: instance,
     });
 }
+
+const useBankSubscribtions = (instance: Bank, dispatch: tDispach) => {
+    const bankId = 'bank-test';
+    useSubscribtion({
+        id: bankId,
+        messageType: CHANGE_NR_HOUSES,
+        callback: subscribtionsStructure.changeNrOfHouses(dispatch),
+        instance,
+    });
+    useSubscribtion({
+        id: bankId,
+        messageType: CHANGE_NR_HOTELS,
+        callback: subscribtionsStructure.changeNrOfHotels(dispatch),
+        instance,
+    });
+}
+
 
 const subscribtionsStructure: {[key:string]: (dispatch: tDispach) => (payload: any) => void} = {
     fieldsToVisit: (dispatch: tDispach) => getSelectFromLogicActions(dispatch)['changeFieldsToVisit'],
@@ -143,6 +200,12 @@ const subscribtionsStructure: {[key:string]: (dispatch: tDispach) => (payload: a
     },
     nrThatDiceWillSelectInTestMode: (dispatch: tDispach) => {
         return getSelectFromLogicActions(dispatch)['setNrToBeSelectedForDicesThrow']
+    },
+    changeNrOfHouses: (dispatch: tDispach) => {
+        return getSelectFromLogicActions(dispatch)['changeHousesInBank']
+    },
+    changeNrOfHotels: (dispatch: tDispach) => {
+        return getSelectFromLogicActions(dispatch)['changeHotelsInBank']
     }
 }
 
@@ -153,9 +216,12 @@ export const useGeneralSettingsForTests = (): tUseGeneralSettingsForTests => {
         testMode: testDice.testingMode,
         nrToBeSelectedForDicesThrow: testDice.nrThatDiceWillSelectInTestMode,
         selectedFields: testDice.fieldsToVisit,
+        nrOfHousesInBank: NR_OF_HOUSES,
+        nrOfHotelsInBank: NR_OF_HOTELS,
     });
     const {nrToBeSelectedForDicesThrow, testMode, selectedFields} = state;
-    useSubscribtions(testDice, dispatch);
+    useDiceSubscribtions(testDice, dispatch);
+    useBankSubscribtions(Bank.instance, dispatch);
     return {
         nrToBeSelectedForDicesThrow,
         testMode,

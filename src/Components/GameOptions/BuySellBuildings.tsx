@@ -4,6 +4,7 @@ import { type } from "@testing-library/user-event/dist/type";
 import { traceDeprecation } from "process";
 import { FC, ReactNode, useCallback, useEffect, useState } from "react";
 import { tGameLogicState } from "../../Logic/Game/types";
+import { REASON } from "../../Logic/Journalist/const";
 import { OptionTypes, tJournalistOutputArrayOrRejection, tJournalistState, tOption, tRejection } from "../../Logic/Journalist/types";
 import { NrOfHotels, NrOfHouses } from "../../Logic/Journalist/utils/getBuildingPermits";
 import { tObject } from "../../Logic/types";
@@ -56,8 +57,8 @@ const isOperationNotAllowedInAnyCountry = (countries: tCountries) => {
 }
 
 const getPermits = (gameOptions: tJournalistState, dataKey: tDataKey) => {
-    console.log('Game optons', gameOptions)
-    Is this permits here extracted propelry? Selection of country does not crash app. but no result visible
+    console.log('Game optons', gameOptions, dataKey)
+    // Is this permits here extracted propelry? Selection of country does not crash app. but no result visible
     return (gameOptions?.[dataKey] as tOption)?.actions?.[0]?.payload
 }
 const getRejectionReason = (gameOptions: tJournalistState,dataKey: tDataKey) => {
@@ -94,6 +95,7 @@ export const getBuySellBuildings = (dataKey: tDataKey) => ({gameOptions }: {game
             } = usePossibleTransactions(gameOptions, dataKey);
             useEffect(() => {console.log('Permits', permits, !!permits)}, [permits])
             useEffect(() => {console.log('RejectionReason', rejectionReason)}, [rejectionReason])
+            useEffect(() => console.log('s4elected new coutry', selectedCountryName), [selectedCountryName])
             if (isOperationNotAllowedInAnyCountry(countries)) {
                 return  <>{countries.reason}</>
             }
@@ -105,8 +107,10 @@ export const getBuySellBuildings = (dataKey: tDataKey) => ({gameOptions }: {game
                         <div className={classes?.countryModule}>
                             <Button
                                 label={countryName}
-                                action={()=> { setSelectedCountryName(countryName); console.log('Permits in button', permits, gameOptions, dataKey)}}
-                                selected={countryName === selectedCountryName}
+                                action={()=> {
+                                    setSelectedCountryName(countryName);
+                                }}
+                                selected={isSelected}
                             />
                         </div>
                     )
@@ -166,13 +170,17 @@ export const getBuySellBuildings = (dataKey: tDataKey) => ({gameOptions }: {game
 
     // const PossibleTransactions = ({permits}: { permits: any[]}) => {
     const PossibleTransactions = (props:  any) => {
-        const collapsedReason = props?.reason;
+        const buildingsCollapsedReason = props?.permits?.reason;
+        const hotelsReason = props?.permits?.permits?.hotelReason;
+        const houseReason = props?.permits?.permits?.houseReason;
         const permitsForCountries = props?.actions?.[0]?.payload;
         const classes = useStyles();
-        
+        console.log('Possible Transactions', props)
         return (
             <>
-                {collapsedReason && <div>{collapsedReason}</div> }
+                {buildingsCollapsedReason && <div>{buildingsCollapsedReason}</div> }
+                {hotelsReason && <div>{hotelsReason}</div> }
+                {houseReason && <div>{houseReason}</div> }
                 {permitsForCountries && <div className={classes.permits}>
                     {
                         Object.values(permitsForCountries).map((permit: any) => {

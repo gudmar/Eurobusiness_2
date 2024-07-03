@@ -1,7 +1,8 @@
 import { useEffect } from "react"
-import { FIRST_FIELD_INDEX, LAST_FIELD_INDEX } from "../../../Constants/constants"
+import { FIRST_FIELD_INDEX, INITIAL_NR_HOTELS, INITIAL_NR_HOUSES, LAST_FIELD_INDEX } from "../../../Constants/constants"
 import { range } from "../../../Functions/createRange"
 import { useGeneralSettingsForTests } from "../../../hooks/useEditGeneralSettingsForTests/useEditGeneralSettingsForTests"
+import { Bank } from "../../../Logic/Bank/Bank"
 import { DiceTestModeDecorator } from "../../../Logic/Dice/Dice"
 import { TestModes } from "../../../Logic/Dice/types"
 import { Checkbox } from "../../Interactors/Checkbox/Checkbox"
@@ -63,6 +64,30 @@ export const GeneralStateEditor = () => {
                 />
 
             </StateEditorEntry>
+
+            <StateEditorEntry title='Number of houses in the bank' currentValue={Bank.nrOfHouses}>
+                <NumberInput
+                    label={''}
+                    value={Bank.nrOfHouses}
+                    onChange={(val: number) => {Bank.nrOfHouses = val}}
+                    min={0}
+                    max={INITIAL_NR_HOUSES}
+                    step={1}
+                />
+
+            </StateEditorEntry>
+            <StateEditorEntry title='Number of hotels in the bank' currentValue={Bank.nrOfHotels}>
+                <NumberInput
+                    label={''}
+                    value={Bank.nrOfHotels}
+                    onChange={(val: number) => {Bank.nrOfHotels = val}}
+                    min={0}
+                    max={INITIAL_NR_HOTELS}
+                    step={1}
+                />
+
+            </StateEditorEntry>
+
         </StateEditorForm>
    )
     

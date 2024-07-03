@@ -329,6 +329,7 @@ type tHotelBalance = {
 const calculatePermitsForHouses = (args: tGetBuildingPermitsForNrOfBuildings): tHouseLocations[] => {
     const { gameState, citiesFromSameCountry, playerName, cityName, nrOfBuildings, response} = args;
     const nrOfHouses = getHousesInBank(args);
+    console.log('CalculatePermitsForHouses', args)
     if (!nrOfHouses) return []  // !!!!!!!!!!!!!!!11
     const existingHotels = citiesFromSameCountry.map((city) => (city as iCityFieldState).nrOfHotels)
     const { existingHouses } = getHouseBalance(citiesFromSameCountry);
@@ -359,6 +360,7 @@ const calculatePermitsForHousesWithRejectionApply = (args: tGetBuildingPermitsFo
     });
     if (citiesTooBig) response.houseReason = BuildingPermitRejected.housesAlreadyBuild
     const nrOfHousesThatStillMayBeBuild = calculateNrOfHousesThatMayStillBeBuild(citiesFromSameCountry as iCityFieldState[]);
+    console.log('calculatePermitsForHouses', result)
     if (result.length > 0 && nrOfHousesInBank >= nrOfBuildings) {
         if (nrOfBuildings === 1 && nrOfHousesThatStillMayBeBuild > 0) {
             const nextResponse = {...response, [NrOfHouses.one]: result};
@@ -399,18 +401,26 @@ const calculatePermitsForHotelsWithRejectionApply = (args: tGetBuildingPermitsFo
         return nrOfBuildings === 2 ? NrOfHotels.two : NrOfHotels.three
     }
         if (!citiesBigEnough) {
-            response.hotelReason = BuildingPermitRejected.citiesNotBigEnough;
-            return response
+            const nextResponse = {...response, hotelReason: BuildingPermitRejected.citiesNotBigEnough}
+            // response.hotelReason = BuildingPermitRejected.citiesNotBigEnough;
+            // return response
+            return nextResponse;
         }
         if (citiesTooBig) {
-            response.hotelReason = BuildingPermitRejected.alreadyBuild;
+            const nextResponse = {...response, hotelReason: BuildingPermitRejected.alreadyBuild}
+            // response.hotelReason = BuildingPermitRejected.alreadyBuild;
             return response
+            return nextResponse;
         }
         if (isTooLittleHotelsInBank) {
-            response.hotelReason = BuildingPermitRejected.noHotelsLeftInBank;
+            const nextResponse = {...response, hotelReason: BuildingPermitRejected.noHotelsLeftInBank}
+            // response.hotelReason = BuildingPermitRejected.noHotelsLeftInBank;
+            return nextResponse
         }
         if (isTooMuchBoughtInRow) {
-            response.hotelReason = BuildingPermitRejected.tooManyHotelsBuildInRound;
+            const nextResponse = {...response, hotelReason: BuildingPermitRejected.tooManyHotelsBuildInRound}
+            // response.hotelReason = BuildingPermitRejected.tooManyHotelsBuildInRound;
+            return nextResponse;
         }
         if (nrOfHotelsInBank >= nrOfBuildings && !isTooMuchBoughtInRow && result.length > 0) {
             const key = nrOfBuildingsToKey(nrOfBuildings);
