@@ -19,6 +19,7 @@ import { useStyles } from './styles';
 import { Game as GameLogic } from '../../Logic/Game/Game';
 import { useEffect, useState } from 'react';
 import Shutter from '../Shutter/Shutter';
+import { getGameState } from '../../Functions/PersistRetrieveGameState/utils';
 
 const displayTestInfo = () => {
     displayInfo({
@@ -50,6 +51,11 @@ const nextMove = async (lock: (isLocked: boolean) => void) => {
     lock(true)
     const isDone = await Commander.tick();
     lock(!isDone);
+}
+
+const logGameSaveState = () => {
+    const state = getGameState();
+    console.log('Game save state is: ', state)
 }
 
 const GameGuts = () => {
@@ -107,7 +113,10 @@ const GameGuts = () => {
                 <Button
                     action = {GameLogic.log}
                     label = {'Log Game logic'}
-
+                />
+                <Button
+                    action = {logGameSaveState}
+                    label = {'Log game save state'}
                 />
                 <Report/>
             </nav>

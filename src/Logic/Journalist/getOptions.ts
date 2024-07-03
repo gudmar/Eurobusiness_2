@@ -57,14 +57,16 @@ export const getTestableOptions = (state: tGameState, playerName: string): tJour
         },
         builderSequence,
     )
+    console.log('Options of the game', result)
     return result as tJournalistState;
 }
 
 export const getOptions = () => {
     const gameState = getGameState();
     const currentPlayerName = gameState.game.currentPlayer;
-    console.log(gameState)
+    // console.log(gameState)
     // debugger;
     const options = getTestableOptions(gameState, currentPlayerName);
+    console.log('Game options:', options)
     return options;
 }

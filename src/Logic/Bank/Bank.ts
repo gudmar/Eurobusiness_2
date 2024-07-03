@@ -1,15 +1,29 @@
 import { INITIAL_NR_HOTELS, INITIAL_NR_HOUSES, MAX_NR_OF_HOUSES_TO_PURCHASE_IN_ONE_ROW } from "../../Constants/constants";
+import { CHANGE_NR_HOTELS, CHANGE_NR_HOUSES } from "../Messages/constants";
+import { SubscribtionsHandler } from "../SubscrbtionsHandler";
 import { iBank, tBankState } from "./types";
 
-export class Bank implements iBank {
+export type tBankSubscribtionMessages = typeof CHANGE_NR_HOUSES | typeof CHANGE_NR_HOTELS;
 
-    // private _nrOfHotels: number = INITIAL_NR_HOTELS;
-    // private _nrOfHouses: number = INITIAL_NR_HOUSES;
+export class Bank extends SubscribtionsHandler<tBankSubscribtionMessages, number> implements iBank {
+
     private static _instance?: Bank;
-    static nrOfHotels: number;
-    static nrOfHouses: number
+    static _nrOfHotels: number = INITIAL_NR_HOTELS;
+    static _nrOfHouses: number = INITIAL_NR_HOUSES;
+    static set nrOfHouses(val: number) {
+        Bank._nrOfHouses = val;
+        this.instance.runAllSubscriptions(CHANGE_NR_HOUSES, Bank.nrOfHouses)
+    }
+    static get nrOfHouses() { return Bank._nrOfHouses }
+    static set nrOfHotels(val: number) {
+        Bank._nrOfHotels = val;
+        this.instance.runAllSubscriptions(CHANGE_NR_HOTELS, Bank.nrOfHotels)
+    }
+    static get nrOfHotels() { return Bank._nrOfHotels }
+
 
     constructor() {
+        super();
         if (Bank._instance) return Bank._instance;
         Bank._instance = this;
     }
@@ -50,5 +64,4 @@ export class Bank implements iBank {
         Bank.nrOfHouses += nrOfHousesToReturn;
         return true;
     }
-
 }
