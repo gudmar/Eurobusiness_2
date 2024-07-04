@@ -26,20 +26,21 @@ export type iSingleCountryProps = {
 }
 
 
-type tBuildingsPermitRecord = {
+export type tBuildingsPermitRecord = {
     locationOne?: string[],
     locationTwo?: string[],
     cost: number
 }
-type tBuildingsPermit = {
-    [NrOfHouses.one]?: tBuildingsPermitRecord,
-    [NrOfHouses.two]?: tBuildingsPermitRecord,
-    [NrOfHouses.three]?: tBuildingsPermitRecord,
+export type tBuildingsPermit = {
+    [NrOfHouses.one]?:   tBuildingsPermitRecord[],
+    [NrOfHouses.two]?:   tBuildingsPermitRecord[],
+    [NrOfHouses.three]?: tBuildingsPermitRecord[],
     hotelReason?: string,
     houseReason?: string,
-    [NrOfHotels.one]?: tBuildingsPermitRecord,
-    [NrOfHotels.two]?: tBuildingsPermitRecord,
-    [NrOfHotels.three]?: tBuildingsPermitRecord,
+    [NrOfHotels.one]?:   tBuildingsPermitRecord[],
+    [NrOfHotels.two]?:   tBuildingsPermitRecord[],
+    [NrOfHotels.three]?: tBuildingsPermitRecord[],
+    reason?: string,
 }
 
 type tTransactionForCountry = tBuildingsPermit
