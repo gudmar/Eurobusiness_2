@@ -17,6 +17,10 @@ export const useStyles = makeStyles(() => {
             flexDirection: 'column',
             width: '10rem',
         },
+        permits: {
+            display: 'flex',
+            flexDirection: 'column',
+        },
         estatesModule: {
             display: 'flex',
             flexDirection: 'column',
