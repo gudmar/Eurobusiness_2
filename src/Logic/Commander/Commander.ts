@@ -1,7 +1,7 @@
 import { title } from "process";
 import { PRISON_FIELD_NR_INDEXED_FROM_0, TURNS_TO_WAIT_TO_GET_OUT_OF_JAIL } from "../../Constants/constants";
 import { BOARD_SIZE } from "../../Data/const";
-import { tColors } from "../../Data/types";
+import { tCity, tColors } from "../../Data/types";
 import { addUniqueArrayItems } from "../../Functions/addArrayUniqueItems";
 import { displayError, displayInfo } from "../../Functions/displayMessage";
 import { getNextArrayItem } from "../../Functions/getNextArrayItem";
@@ -11,11 +11,12 @@ import { ChanceCardHolder } from "../Chance/ChanceCardHolder";
 import { DiceTestModeDecorator } from "../Dice/Dice";
 import { TestModes } from "../Dice/types";
 import { Game } from "../Game/Game";
+import { NrOfHotels } from "../Journalist/utils/getBuildingPermits";
 import { Player } from "../Player/Player";
-import { PassStartPayments } from "../Player/types";
+import { NR_OF_HOTELS_PURCHASED_IN_ROUND, NR_OF_HOUSES_PURCHASED_IN_TURN, PassStartPayments } from "../Player/types";
 import { Players } from "../Players/Players";
 import { iPlayer } from "../Players/types";
-import { tChanceCardPayload } from "./types";
+import { tBuyBuilding, tChanceCardPayload } from "./types";
 
 type asyncBool = Promise<boolean>
 
@@ -182,5 +183,40 @@ export class Commander {
         Commander.nextPlayer();
         const isPawnMoveDone = await Commander.moveCurrentPlayer();
         return isPawnMoveDone;
+    }
+
+    // ==================  Buy buildings ===============
+    private static getTotalNrOfHouses = (args: tBuyBuilding) => {
+        const {oneHouseCities, twoHouseCities} = args;
+        const nrOfNeededHouses = oneHouseCities.length + twoHouseCities.length;
+        return nrOfNeededHouses;
+    }
+    private static throwWhenNotEnoughHouses(args: tBuyBuilding) {
+        const nrOfNeededHouses = this.getTotalNrOfHouses(args);
+        if (Bank.nrOfHouses < nrOfNeededHouses) throw new Error('Commander: Bank has not enough houses');
+    }
+    private static throwWhenNotEnoughHotels(args: tBuyBuilding) {
+        const nrOfNeededHotels = args.oneHotel.length;
+        if (Bank.nrOfHotels < nrOfNeededHotels) throw new Error('Commander: Bank has not enough hotels');
+    }
+
+    private static throwWhenPlayerIsTooPoor(args: tBuyBuilding) {
+        const player = Commander._getPlayerByColor(args.playerColor);
+        if (player.money < args.cost) throw new Error('Commander: Player is too poor')
+    }
+
+    static buyBuildings(args: tBuyBuilding) {
+        Commander.throwWhenNotEnoughHouses(args);
+        Commander.throwWhenNotEnoughHotels(args);
+        Commander.throwWhenPlayerIsTooPoor(args);
+        const {
+            playerColor, oneHouseCities, twoHouseCities, oneHotel, cost
+        } = args;
+        const nrOfHouses = Commander.getTotalNrOfHouses(args);
+        Bank.nrOfHouses -= nrOfHouses;
+        const player = Commander._getPlayerByColor(args.playerColor);
+        player.nrOfHousesPurcahsedInTurn += nrOfHouses;
+        player.nrOfHotelsPurchasedInRound += NrOfHotels;
+        throw new Error('Add newly purchased buildings to estates')
     }
 }
