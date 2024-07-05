@@ -18,7 +18,7 @@ export const useStyles = makeStyles(() => {
             width: '10rem',
         },
         permits: {
-            display: 'flex',
+            // display: 'flex',
             flexDirection: 'column',
         },
         estatesModule: {
@@ -30,7 +30,7 @@ export const useStyles = makeStyles(() => {
         actions: {
             width: 'calc(100% - 10rem)',
             overflow: 'auto',
-            display: 'flex',
+            // display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
         },
@@ -45,6 +45,31 @@ export const useStyles = makeStyles(() => {
             // alignContent: 'center',
             // justifyItems: 'center',
             // justifyContent: 'center',
+        },
+        quotation: {
+            cursor: 'pointer',
+            padding: '0.3rem',
+            border: 'solid thin #00000000'
+        },
+        quotations: {
+            boxSizing: 'border-box'
+        },
+        odd: {
+            backgroundColor: '#88888850',
+            '&:hover': {
+                backgroundColor: '#aaaaaa50',
+                border: 'solid thin gray'
+            }
+        },
+        even: {
+            backgroundColor: '#cccccc30',
+            '&:hover': {
+                backgroundColor: '#eeeeee30',
+                border: 'solid thin gray'
+            }
+        },
+        spacing: {
+            margin: '0.25rem 0 0.25rem',
         }
     })
 })

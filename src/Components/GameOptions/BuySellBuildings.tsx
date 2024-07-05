@@ -3,6 +3,7 @@
 import { type } from "@testing-library/user-event/dist/type";
 import { traceDeprecation } from "process";
 import { FC, ReactNode, useCallback, useEffect, useState } from "react";
+import { Commander } from "../../Logic/Commander/Commander";
 import { tGameLogicState } from "../../Logic/Game/types";
 import { REASON } from "../../Logic/Journalist/const";
 import { OptionTypes, tJournalistOutputArrayOrRejection, tJournalistState, tOption, tRejection } from "../../Logic/Journalist/types";
@@ -155,12 +156,22 @@ export const getBuySellBuildings = (dataKey: tDataKey) => ({gameOptions }: {game
 
     }
 
-    const Quotation = ({quotation, isVisible}: {quotation: tBuildingsPermitRecord, isVisible: boolean}) => {
+    const Quotation = ({quotation, isVisible, isOdd}: {quotation: tBuildingsPermitRecord, isVisible: boolean, isOdd: boolean}) => {
         if (!isVisible || !quotation) return null;
-        console.log('Quotation', quotation)
-        const {locationOne, locationTwo, cost} = quotation;
+        // console.log('Quotation', quotation)
+        const classes = useStyles();
+        const {locationOne, locationTwo, locationThree, cost} = quotation;
         return (
-            <>
+            <div 
+                className={`${classes.quotation} ${isOdd ? classes.odd : classes.even}`}
+                onClick={() => Commander.buyBuildings({
+                    playerColor:,
+                    oneHouseCities: locationOne,
+                    twoHouseCities: locationTwo,
+                    oneHotel: // where is the hotel?
+                    cost,
+                })}
+            >
                 {locationOne && <div>
                         <b>One house in: </b>
                         {locationOne!.join(', ')},
@@ -171,24 +182,32 @@ export const getBuySellBuildings = (dataKey: tDataKey) => ({gameOptions }: {game
                         {locationTwo!.join(', ')}
                     </div>
                 }
-                <b>price: </b> cost
-            </>
+                {locationThree && <div>
+                        <b>Two houses in: </b>
+                        {locationTwo!.join(', ')}
+                    </div>
+                }
+
+                <b>price: </b> ${cost}
+            </div>
         )
     }
     
     const Transaction = ({name, quotations} : {name: string, quotations: tBuildingsPermitRecord[]}) => {
         const [showQuotation, setShowQuotation] = useState<boolean>(false);
         const toggleQuotationVisibility = () => setShowQuotation(!showQuotation);
+        const classes = useStyles();
         return (
-            <div>
+            <div className={classes.quotations}>
                 <Button
                     label={name}
                     action={toggleQuotationVisibility}
                 />
-                {
-                    quotations.map((quotation) => <Quotation quotation={quotation} isVisible={showQuotation}/>)
-                }
-                
+                <div className={classes.spacing}>
+                    {
+                        quotations.map((quotation, index) => <Quotation isOdd={index%2===0} quotation={quotation} isVisible={showQuotation}/>)
+                    }
+                </div>                
             </div>
         )
     }

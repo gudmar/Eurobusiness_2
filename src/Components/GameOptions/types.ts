@@ -29,6 +29,7 @@ export type iSingleCountryProps = {
 export type tBuildingsPermitRecord = {
     locationOne?: string[],
     locationTwo?: string[],
+    locationThree?: string[],
     cost: number
 }
 export type tBuildingsPermit = {
