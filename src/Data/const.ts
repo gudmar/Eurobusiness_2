@@ -80,3 +80,9 @@ export const BANK = 'Bank'
 export const THROW_10 = '10 x thrown dice result';
 export const THROW_20 = '20 x thrown dice result';
 export const BOARD_SIZE = 40;
+export const CITIES = [
+    SALONIKI, ATENY, NEAPOL, MEDIOLAN, ROME, BARCELONA, SEWILLA,
+    MADRIT, LIVERPOOL, GLASGOW, LONDON, ROTTERDAM, BRUKSELA, AMSTERDAM, 
+    MALMO, GOTEBORG, SZTOKHOLM, FRANKFURT, KOLONIA, BONN,
+    INSBRUK, WIEDEN,
+]

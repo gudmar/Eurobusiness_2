@@ -8,6 +8,7 @@ import { tGameLogicState } from "../../Logic/Game/types";
 import { REASON } from "../../Logic/Journalist/const";
 import { OptionTypes, tJournalistOutputArrayOrRejection, tJournalistState, tOption, tRejection } from "../../Logic/Journalist/types";
 import { NrOfHotels, NrOfHouses } from "../../Logic/Journalist/utils/getBuildingPermits";
+import { Players } from "../../Logic/Players/Players";
 import { tObject } from "../../Logic/types";
 import { Button, ButtonColorScheme } from "../Button/Button";
 import { getMessageWhenAllEstatesRejected } from "./getMessageWhenAllEstatesRejected";
@@ -160,15 +161,15 @@ export const getBuySellBuildings = (dataKey: tDataKey) => ({gameOptions }: {game
         if (!isVisible || !quotation) return null;
         // console.log('Quotation', quotation)
         const classes = useStyles();
-        const {locationOne, locationTwo, locationThree, cost} = quotation;
+        const {locationOne, locationTwo, locationThree, oneHotel, cost} = quotation;
         return (
             <div 
                 className={`${classes.quotation} ${isOdd ? classes.odd : classes.even}`}
                 onClick={() => Commander.buyBuildings({
-                    playerColor:,
+                    playerColor: Players.instance.currentPlayer.color,
                     oneHouseCities: locationOne,
                     twoHouseCities: locationTwo,
-                    oneHotel: // where is the hotel?
+                    oneHotel, // where is the hotel?
                     cost,
                 })}
             >

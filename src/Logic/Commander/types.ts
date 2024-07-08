@@ -7,8 +7,8 @@ export type tChanceCardPayload = {
 
 export type tBuyBuilding = {
     playerColor: tColors,
-    oneHouseCities: tCity[],
-    twoHouseCities: tCity[],
-    oneHotel: tCity,
+    oneHouseCities?: tCity[],
+    twoHouseCities?: tCity[],
+    oneHotel?: tCity[],
     cost: number,
 }

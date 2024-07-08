@@ -1,3 +1,4 @@
+import { tCity } from "../../Data/types";
 import { OptionTypes } from "../../Logic/Journalist/types";
 import { NrOfHotels, NrOfHouses } from "../../Logic/Journalist/utils/getBuildingPermits";
 import { tObject } from "../../Logic/types";
@@ -27,9 +28,10 @@ export type iSingleCountryProps = {
 
 
 export type tBuildingsPermitRecord = {
-    locationOne?: string[],
-    locationTwo?: string[],
-    locationThree?: string[],
+    locationOne?: tCity[],
+    locationTwo?: tCity[],
+    locationThree?: tCity[],
+    oneHotel?: tCity[],
     cost: number
 }
 export type tBuildingsPermit = {
