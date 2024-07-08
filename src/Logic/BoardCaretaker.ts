@@ -1,7 +1,7 @@
 import { NR_OF_HOTELS, NR_OF_HOUSES } from "../Constants/constants";
 import { boardInOrder, descriptors } from "../Data/boardFields";
-import { CHANCE_BLUE, CHANCE_RED, CITY, FREE_PARK, GO_TO_JAIL, GUARDED_PARKING, JAIL, PLANT, POWER_STATION, RAILWAY, START, TAX } from "../Data/const";
-import { iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, iNonCityEstates, iOtherFieldTypes, tBoard, tBoardField, tChanceTypes, tColors, tNamedBoardField, } from "../Data/types";
+import { CHANCE_BLUE, CHANCE_RED, CITIES, CITY, FREE_PARK, GO_TO_JAIL, GUARDED_PARKING, JAIL, PLANT, POWER_STATION, RAILWAY, START, TAX } from "../Data/const";
+import { iCityField, iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, iNonCityEstates, iOtherFieldTypes, tBoard, tBoardField, tChanceTypes, tColors, tEstate, tNamedBoardField, } from "../Data/types";
 import { iBoardCaretaker, tEstateField, tField } from "./boardTypes";
 import { ChanceField, CityField, NonCityEstatesField, NullishField, OtherFieldTypesField } from "./FieldCreators";
 import { createBoardDescriptor } from "./Utils/createBoardDescriptor";
@@ -184,6 +184,52 @@ export class BoardCreator {
     }
     get estates() {return this.caretaker.estates}
     get fields() {return this._fields}
+
+    private _getFieldByName(name: string) {
+        const cityFieldResult = this._fields.find((pr: tBoardField) => {
+            if ('name' in pr ) {
+                const name = (pr as tEstateField).name;
+            }
+        })
+        const result = cityFieldResult ?? null;
+        return result;
+    }
+
+    getCityByName(name: string) {
+        const city = this._getFieldByName(name) as tEstateField | null;
+        if (!city && !('name' in city! )) throw new Error(`${name} is not a city`)
+        if (CITIES.includes(city!.name)) {
+            return city
+        }
+        throw new Error(`${name} is not a city`)
+    }
+
+    getEstateByName(name: string) {
+        const notEstateTypes = [START, JAIL, FREE_PARK, GO_TO_JAIL, TAX, GUARDED_PARKING, '']
+        const estate = this._getFieldByName(name);
+        if (notEstateTypes.includes(estate?.type || '') ) {
+            throw new Error(`${name} is not an estate`)
+        }
+        return estate
+    }
+
+    changeEstateOwner(estateName: tEstate, newOwnerColor: tColors) {
+        const estate = this.getEstateByName(estateName) as tEstateField || null;
+        if (!estate) throw new Error(`${estateName} is not an estate`)
+        estate.owner = newOwnerColor;
+    }
+
+    increaseNrOfHouses(nrOfHousesToAdd: number, cityName: string) {
+        const city = this.getCityByName(cityName);
+        if (!city) return;
+        (city as iCityField).nrOfHouses += nrOfHousesToAdd;
+    }
+    increaseNrOfHotels(cityName: string) {
+        const city = this.getCityByName(cityName);
+        if (!city) return;
+        (city as iCityField).nrOfHotels += 1;
+    }
+
 
     provideCaretaker() { return this.caretaker}
 }

@@ -25,6 +25,9 @@ export type tChanceTypes = {
 }
 
 export type tRailway = typeof SOUTH_RAILWAY | typeof WEST_RAILWAYS | typeof EAST_RAILWAYS | typeof NORTH_RAILWAYS
+export type tPlants = typeof POWER_STATION | typeof WATER_PLANT;
+
+export type tEstate = tRailway | tPlants | tCity;
 
 export type tOtherTypes =
     typeof START |

@@ -1,22 +1,20 @@
-import { title } from "process";
 import { PRISON_FIELD_NR_INDEXED_FROM_0, TURNS_TO_WAIT_TO_GET_OUT_OF_JAIL } from "../../Constants/constants";
 import { BOARD_SIZE } from "../../Data/const";
-import { tCity, tColors } from "../../Data/types";
+import { tBoardField, tColors, tEstate } from "../../Data/types";
 import { addUniqueArrayItems } from "../../Functions/addArrayUniqueItems";
 import { displayError, displayInfo } from "../../Functions/displayMessage";
-import { getNextArrayItem } from "../../Functions/getNextArrayItem";
 import { shiftBoardIndexBy1 } from "../../Functions/shiftIndex";
-import { Bank } from "../Bank/Bank";
+import { BoardCaretaker, BoardCreator } from "../BoardCaretaker";
+import { tEstateField } from "../boardTypes";
 import { ChanceCardHolder } from "../Chance/ChanceCardHolder";
 import { DiceTestModeDecorator } from "../Dice/Dice";
 import { TestModes } from "../Dice/types";
 import { Game } from "../Game/Game";
-import { NrOfHotels } from "../Journalist/utils/getBuildingPermits";
-import { Player } from "../Player/Player";
-import { NR_OF_HOTELS_PURCHASED_IN_ROUND, NR_OF_HOUSES_PURCHASED_IN_TURN, PassStartPayments } from "../Player/types";
 import { Players } from "../Players/Players";
 import { iPlayer } from "../Players/types";
+import { addBuildingsToEstates, payForBuildings, takeBuildingsFromBank, throwWhenBuildingsCannotBePurchased, updateNrBuildingsPlayerBoughtThisTurn } from "./buyBuildingsCommands";
 import { tBuyBuilding, tChanceCardPayload } from "./types";
+import { getPlayerByColor } from "./utils";
 
 type asyncBool = Promise<boolean>
 
@@ -24,14 +22,6 @@ export class Commander {
 
     private static get _players() {return Players.instance};
     private static get _chanceCardHolders() {return ChanceCardHolder.instances}
-    private static _getPlayerByColor(playerColor: tColors) {
-        const player = Players.getPlayerByColor(playerColor);
-        if (!player) {
-            displayError({title: 'Not allowed', message: `Player with color ${playerColor} not found`});
-        }
-        return player;
-    }
-
 
     // ============= Chance cards ===========================
     static borrowACard({description, playerColor}: tChanceCardPayload) {
@@ -133,7 +123,7 @@ export class Commander {
     }
 
     static async movePlayer(playerColor: tColors): asyncBool {
-        const player = Commander._getPlayerByColor(playerColor);
+        const player = getPlayerByColor(playerColor);
         const testMode = Commander._testDice.testingMode;
         if ([TestModes.getGetAwayFromJailFail, TestModes.getGetAwayFromJailPass].includes(testMode)) {
             displayError({title: 'Unpossible operation', message: `Dices are in test mode [${testMode}]. This mode is not designed to allow player move`})
@@ -169,7 +159,7 @@ export class Commander {
     // ====================  Put player to jail ======================
 
     static putPlayerToJail(playerColor: tColors) {
-        const player = Commander._getPlayerByColor(playerColor);
+        const player = getPlayerByColor(playerColor);
         if (!player) return;
         displayInfo({title: 'You messed somthing up', message: 'You go to jail'});
         player.fieldNr = PRISON_FIELD_NR_INDEXED_FROM_0;
@@ -186,37 +176,25 @@ export class Commander {
     }
 
     // ==================  Buy buildings ===============
-    private static getTotalNrOfHouses = (args: tBuyBuilding) => {
-        const {oneHouseCities, twoHouseCities} = args;
-        const nrOfNeededHouses = oneHouseCities.length + twoHouseCities.length;
-        return nrOfNeededHouses;
-    }
-    private static throwWhenNotEnoughHouses(args: tBuyBuilding) {
-        const nrOfNeededHouses = this.getTotalNrOfHouses(args);
-        if (Bank.nrOfHouses < nrOfNeededHouses) throw new Error('Commander: Bank has not enough houses');
-    }
-    private static throwWhenNotEnoughHotels(args: tBuyBuilding) {
-        const nrOfNeededHotels = args.oneHotel.length;
-        if (Bank.nrOfHotels < nrOfNeededHotels) throw new Error('Commander: Bank has not enough hotels');
-    }
-
-    private static throwWhenPlayerIsTooPoor(args: tBuyBuilding) {
-        const player = Commander._getPlayerByColor(args.playerColor);
-        if (player.money < args.cost) throw new Error('Commander: Player is too poor')
-    }
-
     static buyBuildings(args: tBuyBuilding) {
-        Commander.throwWhenNotEnoughHouses(args);
-        Commander.throwWhenNotEnoughHotels(args);
-        Commander.throwWhenPlayerIsTooPoor(args);
-        const {
-            playerColor, oneHouseCities, twoHouseCities, oneHotel, cost
-        } = args;
-        const nrOfHouses = Commander.getTotalNrOfHouses(args);
-        Bank.nrOfHouses -= nrOfHouses;
-        const player = Commander._getPlayerByColor(args.playerColor);
-        player.nrOfHousesPurcahsedInTurn += nrOfHouses;
-        player.nrOfHotelsPurchasedInRound += NrOfHotels;
-        throw new Error('Add newly purchased buildings to estates')
+        // throwWhenBuildingsCannotBePurchased(args); // Not needed, data that is send to this function is already after validation
+        takeBuildingsFromBank(args);
+        updateNrBuildingsPlayerBoughtThisTurn(args);
+        payForBuildings(args);
+        addBuildingsToEstates(args);
     }
+
+    // =================  Buy estate ===============
+    static buyEstateForStandardPrice(args: tBuyEstate) {
+        const { name, playerColor } = args;
+        const standardEstatePrice = (BoardCreator.instance.getEstateByName(name) as tEstateField)?.price
+        BoardCreator.instance.changeEstateOwner(name, playerColor);
+        const player = getPlayerByColor(playerColor);
+        player.money -= standardEstatePrice;
+    }
+}
+
+type tBuyEstate = {
+    name: tEstate,
+    playerColor: tColors,
 }
