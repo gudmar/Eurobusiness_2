@@ -12,9 +12,9 @@ import { TestModes } from "../Dice/types";
 import { Game } from "../Game/Game";
 import { Players } from "../Players/Players";
 import { iPlayer } from "../Players/types";
-import { addBuildingsToEstates, payForBuildings, takeBuildingsFromBank, throwWhenBuildingsCannotBePurchased, updateNrBuildingsPlayerBoughtThisTurn } from "./buyBuildingsCommands";
+import { addBuildingsToEstates, payForBuildings, returnHousesBeforeBuildingHotelsToBank, takeBuildingsFromBank, throwWhenBuildingsCannotBePurchased, updateNrBuildingsPlayerBoughtThisTurn } from "./buyBuildingsCommands";
 import { tBuyBuilding, tChanceCardPayload } from "./types";
-import { getPlayerByColor } from "./utils";
+import { getPlayerByColor, removeHousesToBuildHotels } from "./utils";
 
 type asyncBool = Promise<boolean>
 
@@ -179,6 +179,8 @@ export class Commander {
     static buyBuildings(args: tBuyBuilding) {
         // throwWhenBuildingsCannotBePurchased(args); // Not needed, data that is send to this function is already after validation
         takeBuildingsFromBank(args);
+        returnHousesBeforeBuildingHotelsToBank(args);
+        removeHousesToBuildHotels(args);
         updateNrBuildingsPlayerBoughtThisTurn(args);
         payForBuildings(args);
         addBuildingsToEstates(args);

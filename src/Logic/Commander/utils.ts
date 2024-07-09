@@ -1,3 +1,4 @@
+import { MAX_NR_HOUSES_IN_CITY } from "../../Constants/constants";
 import { tCity, tColors } from "../../Data/types";
 import { displayError } from "../../Functions/displayMessage";
 import { Bank } from "../Bank/Bank";
@@ -53,5 +54,12 @@ export const addHousesToEstates = (listOfCities: tCity[], nrOfHousesToBuy: numbe
 export const addHotelsToEstate = (listOfCities: tCity[]) => {
     listOfCities.forEach((cityName) => {
         BoardCreator.instance.increaseNrOfHotels( cityName);
+    })
+}
+
+export const removeHousesToBuildHotels = (args: tBuyBuilding) => {
+    const {oneHotel} = args;
+    oneHotel?.forEach((cityName) => {
+        BoardCreator.instance.decreaseNrOfHouses(cityName, MAX_NR_HOUSES_IN_CITY)
     })
 }
