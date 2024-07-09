@@ -1,4 +1,5 @@
 import { tCity, tColors } from "../../Data/types";
+import { NrOfHotels, NrOfHouses } from "../Journalist/utils/getBuildingPermits";
 
 export type tChanceCardPayload = {
     description: string;
@@ -9,6 +10,6 @@ export type tBuyBuilding = {
     playerColor: tColors,
     oneHouseCities?: tCity[],
     twoHouseCities?: tCity[],
-    oneHotel?: tCity[],
+    oneHotelCity?: tCity[],
     cost: number,
 }

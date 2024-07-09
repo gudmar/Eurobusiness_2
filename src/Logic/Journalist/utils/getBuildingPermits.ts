@@ -37,6 +37,7 @@ export enum NrOfHouses {
 export enum NrOfHotels {
     one = '1 hotel', two = '2 hotels', three = '3 hotels'
 }
+export type tWhatBuildingQuotation = NrOfHotels | NrOfHouses;
 
 export enum BuildingPermitRejected {
     notACity = 'Buildings may be build only in a city',

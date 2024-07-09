@@ -17,7 +17,7 @@ export const takeBuildingsFromBank = (args: tBuyBuilding) => {
 }
 
 export const returnHousesBeforeBuildingHotelsToBank = (args: tBuyBuilding) => {
-    const nrOfCitiesToBuildHotels = args.oneHotel?.length || 0;
+    const nrOfCitiesToBuildHotels = args.oneHotelCity?.length || 0;
     const nrOfHousesToReturn = nrOfCitiesToBuildHotels * MAX_NR_HOUSES_IN_CITY;
     Bank.nrOfHouses += nrOfHousesToReturn;
     // It is not possible to get here if there are less then MAX_NR_HOUSES_IN_CITY
@@ -37,11 +37,11 @@ export const payForBuildings = (args: tBuyBuilding) => {
 }
 
 export const addBuildingsToEstates = (args: tBuyBuilding) => {
-    const {oneHotel, oneHouseCities, twoHouseCities} = args;
+    const {oneHotelCity, oneHouseCities, twoHouseCities} = args;
     console.log('addBuildingsToEstates', args)
     if (oneHouseCities) addHousesToEstates(oneHouseCities, 1);
     if (twoHouseCities) addHousesToEstates(twoHouseCities, 2);
-    if (oneHotel) {
-        addHotelsToEstate(oneHotel);
+    if (oneHotelCity) {
+        addHotelsToEstate(oneHotelCity);
     }
 }

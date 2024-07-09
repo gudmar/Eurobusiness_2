@@ -31,9 +31,11 @@ export type tBuildingsPermitRecord = {
     locationOne?: tCity[],
     locationTwo?: tCity[],
     locationThree?: tCity[],
-    oneHotel?: tCity[],
     cost: number
 }
+
+export type tQuotation = [ key: string, value: tBuildingsPermitRecord[] ]
+
 export type tBuildingsPermit = {
     [NrOfHouses.one]?:   tBuildingsPermitRecord[],
     [NrOfHouses.two]?:   tBuildingsPermitRecord[],
@@ -69,3 +71,4 @@ type tBuildingTransactionsCollapsedReason = {reason: string} | string
 
 export type tBuyBuildings = tBuildingTransactionsCollapsedReason | tBuildingTransactionActions;
 
+export type tDataKey = 'buyBuildings' | 'sellBuildings';
