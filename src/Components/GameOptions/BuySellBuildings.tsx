@@ -159,19 +159,22 @@ export const getBuySellBuildings = (dataKey: tDataKey) => ({gameOptions }: {game
 
     const Quotation = ({quotation, isVisible, isOdd}: {quotation: tBuildingsPermitRecord, isVisible: boolean, isOdd: boolean}) => {
         if (!isVisible || !quotation) return null;
-        // console.log('Quotation', quotation)
         const classes = useStyles();
         const {locationOne, locationTwo, locationThree, oneHotel, cost} = quotation;
         return (
             <div 
                 className={`${classes.quotation} ${isOdd ? classes.odd : classes.even}`}
-                onClick={() => Commander.buyBuildings({
-                    playerColor: Players.instance.currentPlayer.color,
-                    oneHouseCities: locationOne,
-                    twoHouseCities: locationTwo,
-                    oneHotel, // where is the hotel?
-                    cost,
-                })}
+                onClick={() => {
+                    console.log('Quotation', quotation)
+                    Commander.buyBuildings({
+                        playerColor: Players.instance.currentPlayer.color,
+                        oneHouseCities: locationOne,
+                        twoHouseCities: locationTwo,
+                        oneHotel, // where is the hotel?
+                        cost,
+                    });
+                    
+                }}
             >
                 {locationOne && <div>
                         <b>One house in: </b>
@@ -214,7 +217,6 @@ export const getBuySellBuildings = (dataKey: tDataKey) => ({gameOptions }: {game
     }
 
     const AllTransactions = ({permits} : tTransactionForEachCountry) => {
-        console.log('Transaction options', permits)
         const classes = useStyles();
 
         // const content = TransactionContentBuilder(transactionOptions)
@@ -266,3 +268,17 @@ export const getBuySellBuildings = (dataKey: tDataKey) => ({gameOptions }: {game
             </div>
         )
     }
+
+    permits ma kształt:
+    '1 hotel': {
+        locationOne: [...],
+        locationTwo: [...]
+    },
+    '2 hotel':...
+
+    a nie 
+    '1 hotel': {
+        oneHotel...
+    }
+
+    Więc trzeba zmienić logikę

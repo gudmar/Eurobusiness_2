@@ -20,6 +20,9 @@ export const NR_OF_HOUSES_MUCH_GREATER_THAN_BANK_MAY_HAVE = 77;
 export const INITIAL_NR_HOUSES = 32;
 export const INITIAL_NR_HOTELS = 12;
 
+export const MAX_NR_HOUSES_IN_CITY = 4;
+export const MAX_NR_HOTELS_IN_CITY = 1;
+
 export const NOTES = {
     '1000': 20,
     '500' : 30,

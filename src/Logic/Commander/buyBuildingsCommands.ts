@@ -1,6 +1,7 @@
+import { MAX_NR_HOUSES_IN_CITY } from "../../Constants/constants";
 import { Bank } from "../Bank/Bank";
 import { tBuyBuilding } from "./types";
-import { addHotelsToEstate, addHousesToEstates, getPlayerByColor, getTotalNrOfHotels, getTotalNrOfHouses, throwWhenNotEnoughHotels, throwWhenNotEnoughHouses, throwWhenPlayerIsTooPoor } from "./utils";
+import { addHotelsToEstate, addHousesToEstates, getPlayerByColor, getTotalNrOfHotels, getTotalNrOfHouses, removeHousesToBuildHotels, throwWhenNotEnoughHotels, throwWhenNotEnoughHouses, throwWhenPlayerIsTooPoor } from "./utils";
 
 export const throwWhenBuildingsCannotBePurchased = (args: tBuyBuilding) => {
     throwWhenNotEnoughHouses(args);
@@ -13,6 +14,13 @@ export const takeBuildingsFromBank = (args: tBuyBuilding) => {
     const nrOfHotels = getTotalNrOfHotels(args);
     Bank.nrOfHouses -= nrOfHouses;
     Bank.nrOfHotels -= nrOfHotels;
+}
+
+export const returnHousesBeforeBuildingHotelsToBank = (args: tBuyBuilding) => {
+    const nrOfCitiesToBuildHotels = args.oneHotel?.length || 0;
+    const nrOfHousesToReturn = nrOfCitiesToBuildHotels * MAX_NR_HOUSES_IN_CITY;
+    Bank.nrOfHouses += nrOfHousesToReturn;
+    // It is not possible to get here if there are less then MAX_NR_HOUSES_IN_CITY
 }
 
 export const updateNrBuildingsPlayerBoughtThisTurn = (args: tBuyBuilding) => {
@@ -30,7 +38,10 @@ export const payForBuildings = (args: tBuyBuilding) => {
 
 export const addBuildingsToEstates = (args: tBuyBuilding) => {
     const {oneHotel, oneHouseCities, twoHouseCities} = args;
+    console.log('addBuildingsToEstates', args)
     if (oneHouseCities) addHousesToEstates(oneHouseCities, 1);
     if (twoHouseCities) addHousesToEstates(twoHouseCities, 2);
-    if (oneHotel) addHotelsToEstate(oneHotel);
+    if (oneHotel) {
+        addHotelsToEstate(oneHotel);
+    }
 }
