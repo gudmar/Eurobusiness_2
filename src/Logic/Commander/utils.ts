@@ -14,7 +14,6 @@ export const getPlayerByColor = (playerColor: tColors) => {
     return player;
 }
 
-
 // ==================  Buy buildings ===============
 export const getTotalNrOfHouses = (args: tBuyBuilding) => {
     const {oneHouseCities, twoHouseCities} = args;
@@ -25,8 +24,8 @@ export const getTotalNrOfHouses = (args: tBuyBuilding) => {
 }
 
 export const getTotalNrOfHotels = (args: tBuyBuilding) => {
-    const {oneHotel} = args;
-    const nrOfNeededHotels = oneHotel?.length || 0;
+    const {oneHotelCity} = args;
+    const nrOfNeededHotels = oneHotelCity?.length || 0;
     return nrOfNeededHotels;
 }
 
@@ -36,7 +35,7 @@ export const throwWhenNotEnoughHouses = (args: tBuyBuilding) => {
 }
 
 export const throwWhenNotEnoughHotels = (args: tBuyBuilding) => {
-    const nrOfNeededHotels = args?.oneHotel?.length || 0;
+    const nrOfNeededHotels = args?.oneHotelCity?.length || 0;
     if (Bank.nrOfHotels < nrOfNeededHotels) throw new Error('Commander: Bank has not enough hotels');
 }
 
@@ -58,8 +57,8 @@ export const addHotelsToEstate = (listOfCities: tCity[]) => {
 }
 
 export const removeHousesToBuildHotels = (args: tBuyBuilding) => {
-    const {oneHotel} = args;
-    oneHotel?.forEach((cityName) => {
+    const {oneHotelCity} = args;
+    oneHotelCity?.forEach((cityName) => {
         BoardCreator.instance.decreaseNrOfHouses(cityName, MAX_NR_HOUSES_IN_CITY)
     })
 }
