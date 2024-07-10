@@ -11,7 +11,7 @@ const HotelInterior = ({color }: HotelInteriorProps) => {
     const colorInstance = new Color(color);
     const contrastingColor = colorInstance.contrastColor
     return (
-        <div className={classes.hotelLayout} aria-role={'none'} style={{backgroundColor:'transparent'}}>
+        <div className={classes.hotelLayout} style={{backgroundColor:'transparent'}}>
             <div className={classes.hotelCeiling} style={{backgroundColor:  color}} />
             <div className={classes.hotelLeftWall} style={{backgroundColor: color}} />
             <div className={classes.hotelRightWall} style={{backgroundColor: color}} />

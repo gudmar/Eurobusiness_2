@@ -64,7 +64,6 @@ const GameGuts = () => {
     const classes = useStyles(theme as any);
     const {Component: StateEditor, setOpen: openStateEditor, setIsOpen: setIsOpenStateEditor} = useModal(PlayerEditor)
     const {Component: SaveGameDialog, setOpen: openSaveGameWindow, setIsOpen: setIsOpenSaveGameDialog} = useModal(SaveLoadGameWindow)
-    useEffect(() => console.log('Is moving', isMoving), [isMoving])
     return (
         <div className = {classes.screen}>
             <InformationStack />

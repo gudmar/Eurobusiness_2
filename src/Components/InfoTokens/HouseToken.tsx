@@ -13,7 +13,7 @@ const HouseInterior = ({color,ammount}: HouseInteriorProps) => {
     const contrast = colorInstance.contrastColor;
 
     return (
-        <div className={classes.houseLayout} aria-role={'none'} style={{backgroundColor:'transparent'}}>
+        <div className={classes.houseLayout} style={{backgroundColor:'transparent'}}>
                 <div className={classes.roof} style={{borderBottomColor: color}}></div>
                 <div className={classes.houseNoRoof} style={{backgroundColor: color}}>
                     <span className={classes.moveUp} style={{color: contrast}}>{ammount}</span>
