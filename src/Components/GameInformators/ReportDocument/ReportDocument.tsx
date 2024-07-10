@@ -24,7 +24,7 @@ const ReportColor = ({color, contrastColor, text}: tReportDataInput_color) => {
 const ReportValueCell = ({value}: {value: tReportDataValue}) => {
     if (typeof value === 'object' && 'color' in value) {
         return (
-            <ReportColor color={value.color} contrastColor={value.contrastColor} text={value.text} aria-role="none"/>
+            <ReportColor color={value.color} contrastColor={value.contrastColor} text={value.text}/>
         )
     }
     if (typeof value === "object") {

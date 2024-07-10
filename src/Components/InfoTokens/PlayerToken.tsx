@@ -8,7 +8,7 @@ interface PlayerInteriorProps {
 const PlayerInterior = ({color}: PlayerInteriorProps) => {
     const classes = useClasses();
     return (
-        <div className={classes.playerLayout} aria-role={'none'} style={{backgroundColor:'transparent'}}>
+        <div className={classes.playerLayout} style={{backgroundColor:'transparent'}}>
                 <div className={classes.head} style={{backgroundColor: color}}></div>
                 <div className={classes.corps} style={{backgroundColor: color}}></div>
         </div>

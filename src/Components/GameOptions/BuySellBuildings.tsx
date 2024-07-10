@@ -13,152 +13,152 @@ import { isOperationNotAllowedInAnyCountry, setIfRegardsHotels, setIfRegardsHous
 export type tBuySellbuildingsProps = { gameOptions: tJournalistState, dataKey: tDataKey };
 
 export const getBuySellBuildings = (dataKey: tDataKey) => ({gameOptions }: {gameOptions: tJournalistState}) => {
-            const countries = (gameOptions as any)[dataKey];
-            const classes = useStyles();
-            const {
-                permits,
-                setSelectedCountryName,
-                selectedCountryName,
-                rejectionReason,
-            } = usePossibleTransactions(gameOptions, dataKey);
-            useEffect(() => {console.log('Permits', permits, !!permits)}, [permits])
-            useEffect(() => {console.log('RejectionReason', rejectionReason)}, [rejectionReason])
-            useEffect(() => console.log('s4elected new coutry', selectedCountryName), [selectedCountryName])
-            if (isOperationNotAllowedInAnyCountry(countries)) {
-                return  <>{countries.reason}</>
-            }
-            const countryNames = Object.keys(countries?.actions?.[0].payload);
-            const buttons = countryNames.map(
-                (countryName: string) => {
-                    const isSelected = countryName === selectedCountryName;
-                    return (
-                        <div className={classes?.countryModule}>
-                            <Button
-                                label={countryName}
-                                action={()=> {
-                                    setSelectedCountryName(countryName);
-                                }}
-                                selected={isSelected}
-                            />
-                        </div>
-                    )
-                }
-            )
-            return (
-                <div className={classes?.container}>
-                    <div className={classes?.countriesList}>{buttons}</div>
-                    <div className={classes?.actions}>
-                        { !!permits && <PossibleTransactions permits={permits[selectedCountryName]}/>}
-                        { !!rejectionReason && <div>{rejectionReason}</div>}
+        const countries = (gameOptions as any)[dataKey];
+        const classes = useStyles();
+        const {
+            permits,
+            setSelectedCountryName,
+            selectedCountryName,
+            rejectionReason,
+        } = usePossibleTransactions(gameOptions, dataKey);
+        useEffect(() => {console.log('Permits', permits, !!permits)}, [permits])
+        useEffect(() => {console.log('RejectionReason', rejectionReason)}, [rejectionReason])
+        useEffect(() => console.log('s4elected new coutry', selectedCountryName), [selectedCountryName])
+        if (isOperationNotAllowedInAnyCountry(countries)) {
+            return  <>{countries.reason}</>
+        }
+        const countryNames = Object.keys(countries?.actions?.[0].payload);
+        const buttons = countryNames.map(
+            (countryName: string) => {
+                const isSelected = countryName === selectedCountryName;
+                return (
+                    <div className={classes?.countryModule} key={countryName}>
+                        <Button
+                            label={countryName}
+                            action={()=> {
+                                setSelectedCountryName(countryName);
+                            }}
+                            selected={isSelected}
+                        />
                     </div>
+                )
+            }
+        )
+        return (
+            <div className={classes?.container}>
+                <div className={classes?.countriesList}>{buttons}</div>
+                <div className={classes?.actions}>
+                    { !!permits && <PossibleTransactions permits={permits[selectedCountryName]}/>}
+                    { !!rejectionReason && <div>{rejectionReason}</div>}
                 </div>
-            )        
-    }
-
-    const Quotation = ({quotation, isVisible, isOdd, whatIsQuoted}: {whatIsQuoted: NrOfHotels | NrOfHouses, quotation: tBuildingsPermitRecord, isVisible: boolean, isOdd: boolean}) => {
-        if (!isVisible || !quotation) return null;
-        const classes = useStyles();
-        const {locationOne, locationTwo, locationThree, cost} = quotation;
-        return (
-            <div 
-                className={`${classes.quotation} ${isOdd ? classes.odd : classes.even}`}
-                onClick={() => {
-                    console.log('Quotation', quotation)
-                    Commander.buyBuildings({
-                        playerColor: Players.instance.currentPlayer.color,
-                        oneHouseCities: setIfRegardsHouses(whatIsQuoted, locationOne),
-                        twoHouseCities: setIfRegardsHouses(whatIsQuoted, locationTwo),
-                        oneHotelCity: setIfRegardsHotels(whatIsQuoted, locationOne),
-                        cost,
-                    });
-                    
-                }}
-            >
-                {locationOne && <div>
-                        <b>One house in: </b>
-                        {locationOne!.join(', ')},
-                    </div>
-                }
-                {locationTwo && <div>
-                        <b>Two houses in: </b>
-                        {locationTwo!.join(', ')}
-                    </div>
-                }
-                {locationThree && <div>
-                        <b>Two houses in: </b>
-                        {locationTwo!.join(', ')}
-                    </div>
-                }
-
-                <b>price: </b> ${cost}
             </div>
-        )
-    }
-    
-    const Transaction = ({whatIsQuoted, quotations} : {whatIsQuoted: NrOfHotels | NrOfHouses, quotations: tBuildingsPermitRecord[]}) => {
-        const [showQuotation, setShowQuotation] = useState<boolean>(false);
-        const toggleQuotationVisibility = () => setShowQuotation(!showQuotation);
-        const classes = useStyles();
-        return (
-            <div className={classes.quotations}>
-                <Button
-                    label={whatIsQuoted}
-                    action={toggleQuotationVisibility}
-                />
-                <div className={classes.spacing}>
-                    {
-                        quotations.map((quotation, index) => <Quotation isOdd={index%2===0} whatIsQuoted={whatIsQuoted} quotation={quotation} isVisible={showQuotation}/>)
-                    }
-                </div>                
-            </div>
-        )
-    }
+        )        
+}
 
-    const AllTransactions = ({permits} : tTransactionForEachCountry) => {
-        const {reason} = permits;
-        if (reason) return (<div>rejection</div>)
-        const quotations = Object.entries(permits);
-        return (
-            <div>
-                {
-                    quotations.map(([whatIsQuoted, quotationParts]) => (<Transaction whatIsQuoted={whatIsQuoted as NrOfHotels | NrOfHouses} quotations={quotationParts as tBuildingsPermitRecord[]} />))
-                }
-            </div>
-        )
-    }
-
-
-    const getPermitsFromPossibleTransactionsProps = (possibleTransactionsProps: tObject<any>) => {
-        console.log(possibleTransactionsProps)
-        const entries = Object.entries(possibleTransactionsProps?.permits?.permits || {});
-        const possibiliteisAsObject = entries.reduce((acc: tObject<any>, [key, value]) => {
-            if (key !== 'houseReason' && key !== 'hotelReason') {
-                acc[key] = value;
+const Quotation = ({quotation, isVisible, isOdd, whatIsQuoted}: {whatIsQuoted: NrOfHotels | NrOfHouses, quotation: tBuildingsPermitRecord, isVisible: boolean, isOdd: boolean}) => {
+    if (!isVisible || !quotation) return null;
+    const classes = useStyles();
+    const {locationOne, locationTwo, locationThree, cost} = quotation;
+    return (
+        <div 
+            className={`${classes.quotation} ${isOdd ? classes.odd : classes.even}`}
+            onClick={() => {
+                console.log('Quotation', quotation)
+                Commander.buyBuildings({
+                    playerColor: Players.instance.currentPlayer.color,
+                    oneHouseCities: setIfRegardsHouses(whatIsQuoted, locationOne),
+                    twoHouseCities: setIfRegardsHouses(whatIsQuoted, locationTwo),
+                    oneHotelCity: setIfRegardsHotels(whatIsQuoted, locationOne),
+                    cost,
+                });
+                
+            }}
+        >
+            {locationOne && <div>
+                    <b>One house in: </b>
+                    {locationOne!.join(', ')},
+                </div>
             }
-            return acc;
-        }, {})
-        return possibiliteisAsObject;
-    }
+            {locationTwo && <div>
+                    <b>Two houses in: </b>
+                    {locationTwo!.join(', ')}
+                </div>
+            }
+            {locationThree && <div>
+                    <b>Two houses in: </b>
+                    {locationTwo!.join(', ')}
+                </div>
+            }
 
-    const PossibleTransactions = (props:  any) => {
-        console.log('Possible Transactions', props)
-        const buildingsCollapsedReason = props?.permits?.reason;
-        const hotelsReason = props?.permits?.permits?.hotelReason;
-        const houseReason = props?.permits?.permits?.houseReason;
-        const permitsForCountries = getPermitsFromPossibleTransactionsProps(props);
-        console.log(permitsForCountries)
-        const classes = useStyles();
-        
-        return (
-            <div className={classes.permits}>
-                {buildingsCollapsedReason && <div>{buildingsCollapsedReason}</div> }
-                {hotelsReason && <div>{hotelsReason}</div> }
-                {houseReason && <div>{houseReason}</div> }
-                {permitsForCountries && 
-                    <div>
-                        <AllTransactions permits={permitsForCountries} />
-                    </div>
+            <b>price: </b> ${cost}
+        </div>
+    )
+}
+
+const Transaction = ({whatIsQuoted, quotations} : {whatIsQuoted: NrOfHotels | NrOfHouses, quotations: tBuildingsPermitRecord[]}) => {
+    const [showQuotation, setShowQuotation] = useState<boolean>(false);
+    const toggleQuotationVisibility = () => setShowQuotation(!showQuotation);
+    const classes = useStyles();
+    return (
+        <div className={classes.quotations} key={whatIsQuoted}>
+            <Button
+                label={whatIsQuoted}
+                action={toggleQuotationVisibility}
+            />
+            <div className={classes.spacing}>
+                {
+                    quotations.map((quotation, index) => <Quotation key={JSON.stringify(quotation)} isOdd={index%2===0} whatIsQuoted={whatIsQuoted} quotation={quotation} isVisible={showQuotation}/>)
                 }
-            </div>
-        )
-    }
+            </div>                
+        </div>
+    )
+}
+
+const AllTransactions = ({permits} : tTransactionForEachCountry) => {
+    const {reason} = permits;
+    if (reason) return (<div>rejection</div>)
+    const quotations = Object.entries(permits);
+    return (
+        <div>
+            {
+                quotations.map(([whatIsQuoted, quotationParts]) => (<Transaction key={JSON.stringify(quotationParts)} whatIsQuoted={whatIsQuoted as NrOfHotels | NrOfHouses} quotations={quotationParts as tBuildingsPermitRecord[]} />))
+            }
+        </div>
+    )
+}
+
+
+const getPermitsFromPossibleTransactionsProps = (possibleTransactionsProps: tObject<any>) => {
+    console.log(possibleTransactionsProps)
+    const entries = Object.entries(possibleTransactionsProps?.permits?.permits || {});
+    const possibiliteisAsObject = entries.reduce((acc: tObject<any>, [key, value]) => {
+        if (key !== 'houseReason' && key !== 'hotelReason') {
+            acc[key] = value;
+        }
+        return acc;
+    }, {})
+    return possibiliteisAsObject;
+}
+
+const PossibleTransactions = (props:  any) => {
+    console.log('Possible Transactions', props)
+    const buildingsCollapsedReason = props?.permits?.reason;
+    const hotelsReason = props?.permits?.permits?.hotelReason;
+    const houseReason = props?.permits?.permits?.houseReason;
+    const permitsForCountries = getPermitsFromPossibleTransactionsProps(props);
+    console.log(permitsForCountries)
+    const classes = useStyles();
+    
+    return (
+        <div className={classes.permits}>
+            {buildingsCollapsedReason && <div>{buildingsCollapsedReason}</div> }
+            {hotelsReason && <div>{hotelsReason}</div> }
+            {houseReason && <div>{houseReason}</div> }
+            {permitsForCountries && 
+                <div>
+                    <AllTransactions permits={permitsForCountries} />
+                </div>
+            }
+        </div>
+    )
+}

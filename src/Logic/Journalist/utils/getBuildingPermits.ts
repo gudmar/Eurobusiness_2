@@ -328,10 +328,9 @@ type tHotelBalance = {
 }
 
 const calculatePermitsForHouses = (args: tGetBuildingPermitsForNrOfBuildings): tHouseLocations[] => {
-    const { gameState, citiesFromSameCountry, playerName, cityName, nrOfBuildings, response} = args;
+    const { citiesFromSameCountry, nrOfBuildings} = args;
     const nrOfHouses = getHousesInBank(args);
-    console.log('CalculatePermitsForHouses', args)
-    if (!nrOfHouses) return []  // !!!!!!!!!!!!!!!11
+    if (!nrOfHouses) return []
     const existingHotels = citiesFromSameCountry.map((city) => (city as iCityFieldState).nrOfHotels)
     const { existingHouses } = getHouseBalance(citiesFromSameCountry);
     if (existingHotels.some((nr) => nr > 0)) return []
@@ -361,7 +360,6 @@ const calculatePermitsForHousesWithRejectionApply = (args: tGetBuildingPermitsFo
     });
     if (citiesTooBig) response.houseReason = BuildingPermitRejected.housesAlreadyBuild
     const nrOfHousesThatStillMayBeBuild = calculateNrOfHousesThatMayStillBeBuild(citiesFromSameCountry as iCityFieldState[]);
-    console.log('calculatePermitsForHouses', result)
     if (result.length > 0 && nrOfHousesInBank >= nrOfBuildings) {
         if (nrOfBuildings === 1 && nrOfHousesThatStillMayBeBuild > 0) {
             const nextResponse = {...response, [NrOfHouses.one]: result};
