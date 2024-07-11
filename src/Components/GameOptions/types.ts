@@ -72,3 +72,7 @@ type tBuildingTransactionsCollapsedReason = {reason: string} | string
 export type tBuyBuildings = tBuildingTransactionsCollapsedReason | tBuildingTransactionActions;
 
 export type tDataKey = 'buyBuildings' | 'sellBuildings';
+
+export type tEstateOptionsProps = {estate: tObject<any>}
+
+export type tCountries = { reason: string} | {actions: tObject<any>[], type: OptionTypes}
