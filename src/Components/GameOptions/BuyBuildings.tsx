@@ -12,7 +12,9 @@ import { isOperationNotAllowedInAnyCountry, setIfRegardsHotels, setIfRegardsHous
 
 export type tBuySellbuildingsProps = { gameOptions: tJournalistState, dataKey: tDataKey };
 
-export const getBuySellBuildings = (dataKey: tDataKey) => ({gameOptions }: {gameOptions: tJournalistState}) => {
+const dataKey = 'buyBuildings';
+
+export const BuyBuildings = ({gameOptions }: {gameOptions: tJournalistState}) => {
         const countries = (gameOptions as any)[dataKey];
         const classes = useStyles();
         const {
@@ -21,9 +23,6 @@ export const getBuySellBuildings = (dataKey: tDataKey) => ({gameOptions }: {game
             selectedCountryName,
             rejectionReason,
         } = usePossibleTransactions(gameOptions, dataKey);
-        useEffect(() => {console.log('Permits', permits, !!permits)}, [permits])
-        useEffect(() => {console.log('RejectionReason', rejectionReason)}, [rejectionReason])
-        useEffect(() => console.log('s4elected new coutry', selectedCountryName), [selectedCountryName])
         if (isOperationNotAllowedInAnyCountry(countries)) {
             return  <>{countries.reason}</>
         }

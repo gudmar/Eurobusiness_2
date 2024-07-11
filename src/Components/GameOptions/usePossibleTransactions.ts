@@ -6,7 +6,7 @@ import { tDataKey } from "./types";
 const getPermits = (gameOptions: tJournalistState, dataKey: tDataKey) => {
     return (gameOptions?.[dataKey] as tOption)?.actions?.[0]?.payload
 }
-const getRejectionReason = (gameOptions: tJournalistState,dataKey: tDataKey) => {
+export const getRejectionReason = (gameOptions: tJournalistState,dataKey: tDataKey) => {
     const nestedReason = (gameOptions?.[dataKey] as tOption)?.actions?.[0]?.payload.reason;
     const flatReason = (gameOptions?.[dataKey] as tRejection)?.reason;
 return nestedReason || flatReason;

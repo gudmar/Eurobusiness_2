@@ -6,7 +6,8 @@ import { Button } from "../Button/Button";
 import { iSingleCountryProps, tEstate, tEstateProps, tEstatesProps } from "./types";
 import { withDisplayOptionsAsCountries } from "./withDisplayOptionsFromCountry";
 import { useStyles } from "./styles";
-import { getBuySellBuildings } from "./BuySellBuildings";
+import { BuyBuildings } from "./BuyBuildings";
+import { SellBuildings } from "./SellBuildings";
 
 const useGameOptions = (playerName: string) => {
     const [options, setOptions] = useState<tObject<any>>({});
@@ -56,28 +57,9 @@ const SingleCountry = ({country, countryName}: iSingleCountryProps) => {
     )
 }
 
-// const DisplayOptionsAsCountries = (props: tObject<any>) => {
-//     const countries = Object.keys(props.options);
-//     return (
-//         <>
-//             {
-//                 countries.map((key: string) => (<SingleCountry country={props.options[key]} countryName = {key}/>))
-//             }
-//         </>
-//     )
-// }
-const BuyBuildingsForm = ( estate : tObject<any>) => {
-    console.log('Estate', estate, estate?.reason, estate?.estate)
-    return <>Buy buildings in ${estate.name}</>
-}
-
-// const BuyBuildings = withDisplayOptionsAsCountries(BuyBuildingsForm, 'buyBuildings');
-
 const SellBuildingsForm = (estate: tObject<any>) => {
     return <>Sell buildings in ${estate.name}</>
 }
-
-const SellBuildings = withDisplayOptionsAsCountries(SellBuildingsForm, 'sellBuildings');
 
 const PlegdeEstatesForm = ({ estate }: tObject<any>) => {
     const classes = useStyles()
@@ -86,7 +68,6 @@ const PlegdeEstatesForm = ({ estate }: tObject<any>) => {
         return <div className={classes.reason}>{estate?.reason}</div>
     }
     return <></>
-    // return <>Plegde estates in ${estate.name}</>
 }
 
 const PlegdeEstates = withDisplayOptionsAsCountries(PlegdeEstatesForm, 'plegdeEstates');
@@ -128,8 +109,7 @@ const AcceptModneyActions = ({actions}: tObject<any>) => {
 
 const AcceptMoney = withPresentReason(AcceptModneyActions);
 
-const BuyBuildings = getBuySellBuildings('buyBuildings');
-// const SellBuildings = getBuySellBuildings('sellBuildings');
+// const SellBuildings = withDisplayOptionsAsCountries(SellBuildingsForm, 'sellBuildings');
 
 const optionKeyToButtonPropsMap = {
     buyBuildings: {
@@ -179,12 +159,9 @@ const useSelectOptions = (depsArray: any[]) => {
     useEffect(() => {
         if (!!selectedPropMapKey) {
             const label = (optionKeyToButtonPropsMap as any)?.[selectedPropMapKey]?.buttonName;
-            // const selectdComponent = (optionKeyToButtonPropsMap as any)?.[selectedPropMapKey]?.component;
             setCurrentLabel(label);
             setSelectedPropMapKey(selectedPropMapKey)
-            // setOptionsComponent(selectdComponent);
         }
-    // }, [selectedPropMapKey, currentLabel, OptionsComponent])
 }, [selectedPropMapKey ])
     const setPropMapKey = setSelectedPropMapKey
     const getOptionsComponent = () => {
