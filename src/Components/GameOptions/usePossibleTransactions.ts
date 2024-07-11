@@ -7,7 +7,7 @@ const getPermits = (gameOptions: tJournalistState, dataKey: tDataKey) => {
     return (gameOptions?.[dataKey] as tOption)?.actions?.[0]?.payload
 }
 export const getRejectionReason = (gameOptions: tJournalistState,dataKey: tDataKey) => {
-    const nestedReason = (gameOptions?.[dataKey] as tOption)?.actions?.[0]?.payload.reason;
+    const nestedReason = (gameOptions?.[dataKey] as tOption)?.actions?.[0]?.payload?.reason;
     const flatReason = (gameOptions?.[dataKey] as tRejection)?.reason;
 return nestedReason || flatReason;
 }
