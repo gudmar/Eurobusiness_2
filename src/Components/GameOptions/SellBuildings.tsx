@@ -16,7 +16,7 @@ type tLocationAfterTransaction = {
 }
 
 type tSellBuildingOption = {
-    locationAfterTransaction: tLocationAfterTransaction[],
+    locationsAfterTransaction: tLocationAfterTransaction[],
     nrOfSoldHotels: number,
     nrOfSoldHouses: number,
     price: number,
@@ -24,27 +24,31 @@ type tSellBuildingOption = {
 
 type tPresentSingleSellBuildingOption = {
     description: string,
-    option: tSellBuildingOption,
+    optionVariants: tSellBuildingOption[],
 }
 
-const AfterTransactionDetails = ({details}: {details: tLocationAfterTransaction[]}) => {
+const AfterTransactionDetails = (props: {details: tLocationAfterTransaction[]}) => {
+    console.log('AfterTransactionDetails', props)
     return (
         <table>
-            <tr><th>City</th><th>Houses left</th><th>Hotels left</th></tr>
-            {
-                details.map(({cityName, nrOfHouses, nrOfHotels}) => (
-                    <tr key={cityName}><td><b>{cityName}</b></td><td>{nrOfHouses}</td><td>{nrOfHotels}</td></tr>
-                ))
-            }
+            <thead>
+                <tr><th>City</th><th>Houses left</th><th>Hotels left</th></tr>
+            </thead>
+            <tbody>
+                {
+                    props.details.map(({cityName, nrOfHouses, nrOfHotels}) => (
+                        <tr key={cityName}><td><b>{cityName}</b></td><td>{nrOfHouses}</td><td>{nrOfHotels}</td></tr>
+                    ))
+                }
+            </tbody>
         </table>
     )
 }
 
-const PresentSingleSellBuildingOption = ({description, option}: tPresentSingleSellBuildingOption) => {
-    const { locationAfterTransaction, nrOfSoldHouses, nrOfSoldHotels, price } = option;
-    console.log('option', description, option)
-    const [afterTransactionVisible, setAfterTransactionVisible] = useState<boolean>(false);
+const Variants = ({variants}: { variants: tSellBuildingOption }) => {
+    const { locationsAfterTransaction, nrOfSoldHouses, nrOfSoldHotels, price } = variants;
     const classes = useStyles();
+    const [afterTransactionVisible, setAfterTransactionVisible] = useState<boolean>(false);
     return (
         <div className={classes.buildingSellOptionSummary}>
             <b>Nr of houses to sell: </b> <span>{nrOfSoldHouses}</span>
@@ -53,22 +57,42 @@ const PresentSingleSellBuildingOption = ({description, option}: tPresentSingleSe
             <div className={classes.leftAfterBuildingsSold}>
                 Peep what is left after operation
                 <div className={`${afterTransactionVisible ? classes.afterSellBuildingsVisible : classes.afterSellBuildingsHidden}`}>
-                    <AfterTransactionDetails details={locationAfterTransaction}/>
+                    <AfterTransactionDetails details={locationsAfterTransaction}/>
                 </div>
             </div>
         </div>
     )
 }
 
-type tSellSingleBuildingOptionEntry = [string, tSellBuildingOption]
+const PresentSingleSellBuildingOption = ({description, optionVariants}: tPresentSingleSellBuildingOption) => {
+    // const { locationsAfterTransaction, nrOfSoldHouses, nrOfSoldHotels, price } = option;
+    console.log('option', description, '(', optionVariants, ')') 
 
-const PresentSellBuildingsOptions = ({sellOptions}: tObject<any>) => {
-    const sellOptionsEntries = Object.entries(sellOptions) as never as tSellSingleBuildingOptionEntry[];
     const classes = useStyles();
     return (
-        <div className={classes.container}>
+        <div className={classes.variantsContainer}>
+            { optionVariants.map((variant) => <Variants key={JSON.stringify(variant)} variants={variant} />) }
+        </div>
+    )
+}
+
+type tSellSingleBuildingOptionEntry = [string, tSellBuildingOption[]]
+
+const PresentSellBuildingsOptions = ({sellOptions}: tObject<any> ) => {
+    const sellOptionsEntries = Object.entries(sellOptions) as never as tSellSingleBuildingOptionEntry[];
+    const classes = useStyles();
+    console.log('Sell options entries', sellOptionsEntries)
+    return (
+        <div className={classes.horizontalContainer}>
             {
-                sellOptionsEntries.map(([description, option]: tSellSingleBuildingOptionEntry) => (<PresentSingleSellBuildingOption key={description} description={description} option={option}/>))
+                sellOptionsEntries.filter(([, value]) => Array.isArray(value)).map(
+                    ([description, option]: tSellSingleBuildingOptionEntry) => (
+                        <PresentSingleSellBuildingOption
+                            key={description}
+                            description={description}
+                            optionVariants={option}
+                        />
+                ))
             }
         </div>
     )
@@ -92,41 +116,52 @@ export const SellBuildings = ({gameOptions}: {gameOptions: tJournalistState}) =>
     console.log('Game options', gameOptions)
     const sellOptionsFromProps = getSellBuildings(gameOptions);
     console.log('Sell(Options', sellOptionsFromProps)
-    const useEstateContent =  useCallback(getUseEstatesContent(PresentSellBuildingsOptions, sellOptionsFromProps), []);
+    // const useEstateContent =  useCallback(getUseEstatesContent(PresentSellBuildingsOptions, sellOptionsFromProps), []);
     const [selectedCountryName, setSelectedCountryName] = useState('');
     const classes = useStyles();
     const rejectionReason = getRejectionReason(gameOptions, 'sellBuildings');
-
+    const [option, setOption] = useState<any>(null);
+    if (rejectionReason) {
+        return (
+            <div>{rejectionReason}</div>
+        )
+    }
     // const {
     //     permits: sellOptions,
     //     setSelectedCountryName, 
     //     selectedCountryName, 
     //     rejectionReason
     // } = usePossibleTransactions(gameOptions, SELL_BUILDINGS);
-    const {
-        EstateContent,
-        setPresentedContryName,
-        setPresentedEstatesName,
-        presentedCountryName,
-        presentedEstateName
-    } = useEstateContent();
+    // const {
+    //     EstateContent,
+    //     setPresentedContryName,
+    //     setPresentedEstatesName,
+    //     presentedCountryName,
+    //     presentedEstateName
+    // // } = useEstateContent();
     const countries = Object.entries(sellOptionsFromProps);
     if (sellOptionsFromProps.reason) return <>{sellOptionsFromProps.reason}</>
     return (
         <div className={classes.container}>
+            <div className={`${classes.verticalContainer} ${classes.countryModule} `}>
             {
-                countries.map(([countryName, option]) => (
+                countries.map(([countryName, countryOption]) => (
                     <div key={countryName}>
                         <Button
                             label={countryName}
                             selected={selectedCountryName === countryName}
                             disabled={false}
-                            action={() => setSelectedCountryName(countryName)}
+                            action={() => {
+                                    setSelectedCountryName(countryName);
+                                    setOption(countryOption)
+                                }
+                            }
                         />
-                        <PresentSellBuildingsOptions sellOptions={option}/>
                     </div>
                 ))
             }
+            </div>
+            <div className={classes.actions}>{option && <PresentSellBuildingsOptions sellOptions={option}/>}</div>
         </div>
     )
 }

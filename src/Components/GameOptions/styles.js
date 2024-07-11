@@ -8,6 +8,13 @@ export const useStyles = makeStyles(() => {
             overflow: 'hidden',
             display: 'flex'
         },
+
+        verticalContainer: {
+            // height: '65%',
+            overflow: 'auto',
+            display: 'flex',
+            flexDirection: 'column'
+        },
         countriesList: {
             overflow: 'auto',
             boxSizing: 'border-box'
