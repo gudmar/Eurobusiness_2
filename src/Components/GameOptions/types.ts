@@ -93,5 +93,6 @@ export type tSellBuildingOption = {
 export type tPresentSingleSellBuildingOption = {
     description: string,
     optionVariants: tSellBuildingOption[],
+    playerName: string,
     index: number
 }

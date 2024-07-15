@@ -1,9 +1,10 @@
-import { MAX_NR_HOUSES_IN_CITY, NR_OF_HOTELS, NR_OF_HOUSES } from "../Constants/constants";
+import { MAX_NR_HOTELS_IN_CITY, MAX_NR_HOUSES_IN_CITY, NR_OF_HOTELS, NR_OF_HOUSES } from "../Constants/constants";
 import { boardInOrder, descriptors } from "../Data/boardFields";
 import { CHANCE_BLUE, CHANCE_RED, CITIES, CITY, FREE_PARK, GO_TO_JAIL, GUARDED_PARKING, JAIL, PLANT, POWER_STATION, RAILWAY, START, TAX } from "../Data/const";
 import { iCityField, iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, iNonCityEstates, iOtherFieldTypes, tBoard, tBoardField, tChanceTypes, tColors, tEstate, tNamedBoardField, } from "../Data/types";
 import { iBoardCaretaker, tEstateField, tField } from "./boardTypes";
 import { ChanceField, CityField, NonCityEstatesField, NullishField, OtherFieldTypesField } from "./FieldCreators";
+import { NrOfHotels } from "./Journalist/utils/getBuildingPermits";
 import { createBoardDescriptor } from "./Utils/createBoardDescriptor";
 
 type tNrOfBuildings =  typeof NR_OF_HOUSES  | typeof NR_OF_HOTELS;
@@ -239,6 +240,21 @@ export class BoardCreator {
         if (!city) return;
         if ((city as iCityField).nrOfHouses < nr) {
             throw new Error(`Cannot return ${nr} from ${cityName} as there are only ${(city as iCityField).nrOfHouses} houses there`);
+        }
+        (city as iCityField).nrOfHouses -= nr;
+    }
+    setNrOfHotels(cityName: string, nr: number) {
+        const city = this.getCityByName(cityName);
+        if (!city) return;
+        if ((city as iCityField).nrOfHotels < 0 || (city as iCityField).nrOfHotels > MAX_NR_HOTELS_IN_CITY) {
+            throw new Error(`Cannot set ${NrOfHotels} to ${cityName}. There may be only 0 or 1 hotels in the city`)
+        }
+    }
+    setNrOfHouses(cityName: string, nr: number) {
+        const city = this.getCityByName(cityName);
+        if (!city) return;
+        if ((city as iCityField).nrOfHouses < 0 || (city as iCityField).nrOfHouses > MAX_NR_HOUSES_IN_CITY) {
+            throw new Error(`Cannot set ${nr} houses to ${cityName}. Min nr of houses is 0, max is ${MAX_NR_HOUSES_IN_CITY}`);
         }
         (city as iCityField).nrOfHouses -= nr;
     }

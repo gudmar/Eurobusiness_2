@@ -1,5 +1,5 @@
+import { tLocationAfterTransaction } from "../../Components/GameOptions/types";
 import { tCity, tColors } from "../../Data/types";
-import { NrOfHotels, NrOfHouses } from "../Journalist/utils/getBuildingPermits";
 
 export type tChanceCardPayload = {
     description: string;
@@ -14,6 +14,11 @@ export type tBuyBuilding = {
     cost: number,
 }
 
-export type tSellBuildings = {
-    
+export type tSellBuildingsArgs = {
+    nrOfHouses: number,
+    nrOfHotels: number,
+    locationAfterTransaction: tLocationAfterTransaction[],
+    playerName: string,
+    price: number,
 }
+
