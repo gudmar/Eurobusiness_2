@@ -1,3 +1,4 @@
+import { tSellBuildingOption } from "../../Components/GameOptions/types";
 import { PRISON_FIELD_NR_INDEXED_FROM_0, TURNS_TO_WAIT_TO_GET_OUT_OF_JAIL } from "../../Constants/constants";
 import { BOARD_SIZE } from "../../Data/const";
 import { tBoardField, tColors, tEstate } from "../../Data/types";
@@ -13,8 +14,8 @@ import { Game } from "../Game/Game";
 import { Players } from "../Players/Players";
 import { iPlayer } from "../Players/types";
 import { addBuildingsToEstates, payForBuildings, returnHousesBeforeBuildingHotelsToBank, takeBuildingsFromBank, throwWhenBuildingsCannotBePurchased, updateNrBuildingsPlayerBoughtThisTurn } from "./buyBuildingsCommands";
-import { tBuyBuilding, tChanceCardPayload, tSellBuildings } from "./types";
-import { getPlayerByColor, removeHousesToBuildHotels } from "./utils";
+import { tBuyBuilding, tChanceCardPayload, tSellBuildingsArgs } from "./types";
+import { getPlayerByColor, removeHousesToBuildHotels, removeSoldHousessFromBuildings, returnBuildingsToBank, returnMoneyToPlayer } from "./utils";
 
 type asyncBool = Promise<boolean>
 
@@ -194,9 +195,14 @@ export class Commander {
         const player = getPlayerByColor(playerColor);
         player.money -= standardEstatePrice;
     }
+
     // =================== Sell estate =============
-    static sellBuildings(args: tSellBuildings) {
-        
+    static sellBuildings(args: tSellBuildingsArgs) {
+        const {nrOfHotels, nrOfHouses, price, locationAfterTransaction, playerName} = args;
+        console.log('args', args)
+        removeSoldHousessFromBuildings(args);
+        returnBuildingsToBank(args);
+        returnMoneyToPlayer(playerName, price)
     }
 }
 

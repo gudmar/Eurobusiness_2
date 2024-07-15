@@ -82,6 +82,7 @@ export type tJournalistState = {
     drawChanceCard?: tJournalistOutput;
     move: boolean;
     endTurn: tJournalistOutput;
+    playerName?: string;
 }
 
 export type tJournalistOptionsUnderDevelopement = {

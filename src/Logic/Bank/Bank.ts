@@ -60,6 +60,10 @@ export class Bank extends SubscribtionsHandler<tBankSubscribtionMessages, number
         Bank.nrOfHouses -= nrOfHousesToGet;
         return true;
     }
+    returnHotels(nrOfHotelsToReturn: number): boolean {
+        Bank.nrOfHotels += nrOfHotelsToReturn;
+        return true;
+    }
     returnHouses(nrOfHousesToReturn: number): boolean {
         Bank.nrOfHouses += nrOfHousesToReturn;
         return true;

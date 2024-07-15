@@ -42,8 +42,7 @@ const AfterTransactionDetails = (props: {details: tLocationAfterTransaction[], i
     )
 }
 
-
-const Variants = ({variants, isVisible, index}: { variants: tSellBuildingOption, isVisible: boolean, index: number }) => {
+const Variants = ({variants, isVisible, index, playerName}: { playerName: string, variants: tSellBuildingOption, isVisible: boolean, index: number }) => {
     const { locationsAfterTransaction } = variants;
     const selectionHandle = useRef<HTMLDivElement>(null);
     const classes = useStyles();
@@ -51,7 +50,15 @@ const Variants = ({variants, isVisible, index}: { variants: tSellBuildingOption,
     return (
         <div className={`${classes.buildingSellOptionSummary} ${isVisible ? classes.visible : classes.hidden}`}>
             <div className={classes.leftAfterBuildingsSold}>
-                <div className={`${classes.sellOption}`} ref={selectionHandle} onClick={Commander.sellBuildings}>Select option {index} </div>
+                <div className={`${classes.sellOption}`} ref={selectionHandle} onClick={
+                    () => Commander.sellBuildings({
+                        nrOfHotels: variants.nrOfSoldHotels,
+                        nrOfHouses: variants.nrOfSoldHouses,
+                        locationAfterTransaction: variants.locationsAfterTransaction,
+                        playerName: playerName,
+                        price: variants.price,
+                    })
+                }>Select option {index} </div>
                 <div className={`${highlightOnHover}`}>
                     <AfterTransactionDetails details={locationsAfterTransaction} index={index}/>
                 </div>
@@ -60,7 +67,7 @@ const Variants = ({variants, isVisible, index}: { variants: tSellBuildingOption,
     )
 }
 
-const PresentSingleSellBuildingOption = ({description, optionVariants, index}: tPresentSingleSellBuildingOption) => {
+const PresentSingleSellBuildingOption = ({description, optionVariants, index, playerName}: tPresentSingleSellBuildingOption) => {
     const [isVisible, setIsVisible] = useState<boolean>(false);
     const toggleVisibility = () => isVisible ? setIsVisible(false) : setIsVisible(true)
     const classes = useStyles();
@@ -75,6 +82,7 @@ const PresentSingleSellBuildingOption = ({description, optionVariants, index}: t
                     index={index}
                     isVisible={isVisible}
                     variants={variant}
+                    playerName={playerName}
                 />) }
         </div>
     )
@@ -82,7 +90,7 @@ const PresentSingleSellBuildingOption = ({description, optionVariants, index}: t
 
 type tSellSingleBuildingOptionEntry = [string, tSellBuildingOption[]]
 
-const PresentSellBuildingsOptions = ({sellOptions}: tObject<any> ) => {
+const PresentSellBuildingsOptions = ({sellOptions, playerName}: {sellOptions: tObject<any>, playerName: string } ) => {
     const sellOptionsEntries = Object.entries(sellOptions) as never as tSellSingleBuildingOptionEntry[];
     const classes = useStyles();
     return (
@@ -91,6 +99,7 @@ const PresentSellBuildingsOptions = ({sellOptions}: tObject<any> ) => {
                 sellOptionsEntries.filter(([, value]) => Array.isArray(value)).map(
                     ([description, option]: tSellSingleBuildingOptionEntry, index) => (
                         <PresentSingleSellBuildingOption
+                            playerName={playerName}
                             key={description}
                             index={index}
                             description={description}
@@ -115,6 +124,7 @@ const getSellBuildings = (gameOptions: tJournalistState) => {
 
 export const SellBuildings = ({gameOptions}: {gameOptions: tJournalistState}) => {
     const sellOptionsFromProps = getSellBuildings(gameOptions);
+    const playerName = gameOptions.playerName;
     const [selectedCountryName, setSelectedCountryName] = useState('');
     const classes = useStyles();
     const rejectionReason = getRejectionReason(gameOptions, 'sellBuildings');
@@ -126,6 +136,7 @@ export const SellBuildings = ({gameOptions}: {gameOptions: tJournalistState}) =>
     }
     const countries = Object.entries(sellOptionsFromProps);
     if (sellOptionsFromProps.reason) return <>{sellOptionsFromProps.reason}</>
+    if (!playerName) return (<div className={classes.error}>Cannot find player name</div>)
     return (
         <div className={classes.container}>
             <div className={`${classes.verticalContainer} ${classes.countryModule} `}>
@@ -146,7 +157,7 @@ export const SellBuildings = ({gameOptions}: {gameOptions: tJournalistState}) =>
                 ))
             }
             </div>
-            <div className={classes.actions}>{option && <PresentSellBuildingsOptions sellOptions={option}/>}</div>
+            <div className={classes.actions}>{option && <PresentSellBuildingsOptions sellOptions={option} playerName={playerName}/>}</div>
         </div>
     )
 }

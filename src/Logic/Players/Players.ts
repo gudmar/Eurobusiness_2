@@ -65,6 +65,8 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
         return player.color;
     }
 
+    static getPlayerByName(name: string) { return Players._getPlayerByName(name)}
+
     static getPlayerByColor(color: tColors) {return Players._getPlayerByColor(color)}
     
     borrowSpecialCard({playerColor, description}: tChanceCardPayload) {

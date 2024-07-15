@@ -13,7 +13,7 @@ const useGameOptions = (playerName: string) => {
     const [options, setOptions] = useState<tObject<any>>({});
     const refreshGameState = () => {
         const currentGameState = getGameState()
-        const options = getTestableOptions(currentGameState, playerName);
+        const options = { ...getTestableOptions(currentGameState, playerName), playerName};
         setOptions(options);
     }
     useEffect(refreshGameState, []);

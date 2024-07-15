@@ -213,6 +213,7 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
         this._nrOfHotelsPurchasedInRound = val.nrOfHotelsPurchasedInRound || 0;
         this._shouldPayForPassingStart = val.shouldPayForPassingStart || PassStartPayments.DoNot;
     }
+    giveThisPlayerMoney(ammount: number) { this._money += ammount; }
     getDoneFunction() {
         let outsideResolve;
         let outsideReject;
