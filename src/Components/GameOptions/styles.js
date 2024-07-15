@@ -95,7 +95,14 @@ export const useStyles = makeStyles(() => {
             fontWeight: 'bold',
             fontSize: '1.2rem',
             marginBottom: '0.5rem',
-            padding: '0.24rem'
+            padding: '0.24rem',
+            cursor: 'pointer'
+        },
+        highlightOnHover: {
+            border: 'solid thin gray'
+        },
+        noHighlightOnNotHover: {
+            border: 'solid thin transparent'
         },
         oddElement: {
             backgroundColor: '#eeeeee',

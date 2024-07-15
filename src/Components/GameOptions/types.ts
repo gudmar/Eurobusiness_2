@@ -76,3 +76,22 @@ export type tDataKey = 'buyBuildings' | 'sellBuildings';
 export type tEstateOptionsProps = {estate: tObject<any>}
 
 export type tCountries = { reason: string} | {actions: tObject<any>[], type: OptionTypes}
+
+export type tLocationAfterTransaction = {
+    cityName: tCity,
+    nrOfHouses: number,
+    nrOfHotels: number,
+}
+
+export type tSellBuildingOption = {
+    locationsAfterTransaction: tLocationAfterTransaction[],
+    nrOfSoldHotels: number,
+    nrOfSoldHouses: number,
+    price: number,
+}
+
+export type tPresentSingleSellBuildingOption = {
+    description: string,
+    optionVariants: tSellBuildingOption[],
+    index: number
+}
