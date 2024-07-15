@@ -1,30 +1,13 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { tCity } from "../../Data/types";
+import { useHighlightOnHover } from "../../hooks/useHighlightOnHover";
 import { Commander } from "../../Logic/Commander/Commander";
 import { OptionTypes, tJournalistState } from "../../Logic/Journalist/types";
 import { tObject } from "../../Logic/types";
 import { Button } from "../Button/Button";
 import { useStyles } from "./styles";
+import { tLocationAfterTransaction, tPresentSingleSellBuildingOption, tSellBuildingOption } from "./types";
 import { getRejectionReason } from "./usePossibleTransactions";
-
-type tLocationAfterTransaction = {
-    cityName: tCity,
-    nrOfHouses: number,
-    nrOfHotels: number,
-}
-
-type tSellBuildingOption = {
-    locationsAfterTransaction: tLocationAfterTransaction[],
-    nrOfSoldHotels: number,
-    nrOfSoldHouses: number,
-    price: number,
-}
-
-type tPresentSingleSellBuildingOption = {
-    description: string,
-    optionVariants: tSellBuildingOption[],
-    index: number
-}
 
 const getPresentEvenOrOdd = (classes: tObject<any>, index: number) => {
     const isEven = index % 2 === 0;
@@ -59,14 +42,17 @@ const AfterTransactionDetails = (props: {details: tLocationAfterTransaction[], i
     )
 }
 
+
 const Variants = ({variants, isVisible, index}: { variants: tSellBuildingOption, isVisible: boolean, index: number }) => {
     const { locationsAfterTransaction } = variants;
+    const selectionHandle = useRef<HTMLDivElement>(null);
     const classes = useStyles();
+    const highlightOnHover = useHighlightOnHover(selectionHandle, classes.highlightOnHover, classes.noHighlightOnNotHover);
     return (
         <div className={`${classes.buildingSellOptionSummary} ${isVisible ? classes.visible : classes.hidden}`}>
             <div className={classes.leftAfterBuildingsSold}>
-                <div className={classes.sellOption}  onClick={Commander.sellBuildings}>Select option {index} </div>
-                <div>
+                <div className={`${classes.sellOption}`} ref={selectionHandle} onClick={Commander.sellBuildings}>Select option {index} </div>
+                <div className={`${highlightOnHover}`}>
                     <AfterTransactionDetails details={locationsAfterTransaction} index={index}/>
                 </div>
             </div>
@@ -164,3 +150,5 @@ export const SellBuildings = ({gameOptions}: {gameOptions: tJournalistState}) =>
         </div>
     )
 }
+
+// Byłoby ładnie gdyby najazd na tytuł 'select 0' powodował podświetlenie całosic

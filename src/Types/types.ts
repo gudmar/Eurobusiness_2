@@ -23,7 +23,7 @@ export interface iDictionary {
 
 export type tCombineStringUnions<T> = T extends string ? T : never;
 
-// export type tClassFromInterface<Args extends [], Interface> = new (...args: Args) => Interface
+export type tRef<Type> = {current: Type | null}
 
 export type tClassFromInterface<Args, Interface> = Args extends [] ? new (...args: Args) => Interface : new () => Interface
 
