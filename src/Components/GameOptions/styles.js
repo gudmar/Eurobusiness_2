@@ -63,6 +63,7 @@ export const useStyles = makeStyles(() => {
         },
         odd: {
             backgroundColor: '#88888850',
+            border: 'solid thin transparent',
             '&:hover': {
                 backgroundColor: '#aaaaaa50',
                 border: 'solid thin gray'
@@ -70,6 +71,7 @@ export const useStyles = makeStyles(() => {
         },
         even: {
             backgroundColor: '#cccccc30',
+            border: 'solid thin transparent',
             '&:hover': {
                 backgroundColor: '#eeeeee30',
                 border: 'solid thin gray'
@@ -77,6 +79,62 @@ export const useStyles = makeStyles(() => {
         },
         spacing: {
             margin: '0.25rem 0 0.25rem',
+
+        },
+        variantsContainer: {
+            '&:nth-child(2n)': {
+                backgroundColor: '#cccccc30',
+                border: 'solid thin #eeeeee',
+            },
+            '&:nth-child(2n+1)': {
+                backgroundColor: '#88888850',
+            },
+        },
+        title: {
+            boxSizing: 'border-box',
+            fontWeight: 'bold',
+            fontSize: '1.2rem',
+            marginBottom: '0.5rem',
+            padding: '0.24rem'
+        },
+        oddElement: {
+            backgroundColor: '#eeeeee',
+            border: 'solid thin transparent',
+            // '&:hover': {
+            //     backgroundColor: '#aaaaaa',
+            //     border: 'solid thin gray',
+            //     cursor: 'pointer'
+            // }
+        },
+        evenElement: {
+            backgroundColor: '#aaaaaa',
+            border: 'solid thin transparent',
+            // '&:hover': {
+            //     backgroundColor: '#999999',
+            //     border: 'solid thin gray',
+            //     cursor: 'pointer'
+            // }
+        },
+        hidden: {
+            display: 'none'
+        },
+        buildingSellOptionSummary: {
+            paddingLeft: '0.5rem',
+            paddingRight: '0.5rem',
+        },
+        centerTable: {
+            textAlign: 'center',
+        },
+        fullWidthTable: {
+            width: '100%',
+        },
+        sellOption: {
+            fontStyle: 'italic',
+            cursor: 'pointer',
+            '&:hover': {
+                backgroundColor: 'black',
+                color: 'white'
+            }
         }
     })
 })
