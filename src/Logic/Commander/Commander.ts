@@ -13,7 +13,7 @@ import { Game } from "../Game/Game";
 import { Players } from "../Players/Players";
 import { iPlayer } from "../Players/types";
 import { addBuildingsToEstates, payForBuildings, returnHousesBeforeBuildingHotelsToBank, takeBuildingsFromBank, throwWhenBuildingsCannotBePurchased, updateNrBuildingsPlayerBoughtThisTurn } from "./buyBuildingsCommands";
-import { tBuyBuilding, tChanceCardPayload } from "./types";
+import { tBuyBuilding, tChanceCardPayload, tSellBuildings } from "./types";
 import { getPlayerByColor, removeHousesToBuildHotels } from "./utils";
 
 type asyncBool = Promise<boolean>
@@ -193,6 +193,10 @@ export class Commander {
         BoardCreator.instance.changeEstateOwner(name, playerColor);
         const player = getPlayerByColor(playerColor);
         player.money -= standardEstatePrice;
+    }
+    // =================== Sell estate =============
+    static sellBuildings(args: tSellBuildings) {
+        
     }
 }
 

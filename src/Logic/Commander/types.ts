@@ -13,3 +13,7 @@ export type tBuyBuilding = {
     oneHotelCity?: tCity[],
     cost: number,
 }
+
+export type tSellBuildings = {
+    
+}
