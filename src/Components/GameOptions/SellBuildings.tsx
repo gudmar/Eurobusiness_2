@@ -1,10 +1,10 @@
 import { useRef, useState } from "react";
-import { tCity } from "../../Data/types";
 import { useHighlightOnHover } from "../../hooks/useHighlightOnHover";
 import { Commander } from "../../Logic/Commander/Commander";
 import { OptionTypes, tJournalistState } from "../../Logic/Journalist/types";
 import { tObject } from "../../Logic/types";
 import { Button } from "../Button/Button";
+import { useRefreshOptions } from "./refreshOptionsContext";
 import { useStyles } from "./styles";
 import { tLocationAfterTransaction, tPresentSingleSellBuildingOption, tSellBuildingOption } from "./types";
 import { getRejectionReason } from "./usePossibleTransactions";
@@ -47,17 +47,21 @@ const Variants = ({variants, isVisible, index, playerName}: { playerName: string
     const selectionHandle = useRef<HTMLDivElement>(null);
     const classes = useStyles();
     const highlightOnHover = useHighlightOnHover(selectionHandle, classes.highlightOnHover, classes.noHighlightOnNotHover);
+    const refreshOptions = useRefreshOptions()
     return (
         <div className={`${classes.buildingSellOptionSummary} ${isVisible ? classes.visible : classes.hidden}`}>
             <div className={classes.leftAfterBuildingsSold}>
                 <div className={`${classes.sellOption}`} ref={selectionHandle} onClick={
-                    () => Commander.sellBuildings({
-                        nrOfHotels: variants.nrOfSoldHotels,
-                        nrOfHouses: variants.nrOfSoldHouses,
-                        locationAfterTransaction: variants.locationsAfterTransaction,
-                        playerName: playerName,
-                        price: variants.price,
-                    })
+                    () => {
+                            Commander.sellBuildings({
+                            nrOfHotels: variants.nrOfSoldHotels,
+                            nrOfHouses: variants.nrOfSoldHouses,
+                            locationAfterTransaction: variants.locationsAfterTransaction,
+                            playerName: playerName,
+                            price: variants.price,
+                        });
+                        refreshOptions();
+                    }
                 }>Select option {index} </div>
                 <div className={`${highlightOnHover}`}>
                     <AfterTransactionDetails details={locationsAfterTransaction} index={index}/>
@@ -112,6 +116,7 @@ const PresentSellBuildingsOptions = ({sellOptions, playerName}: {sellOptions: tO
 }
 
 const getSellBuildings = (gameOptions: tJournalistState) => {
+    console.log('Game options', gameOptions)
     const sellActions = (gameOptions as any).sellBuildings.actions;
     if (sellActions.reason) return sellActions.reason;
     const sellBuildings = sellActions.find((action: {type: string, payload: any}) => {
@@ -123,7 +128,6 @@ const getSellBuildings = (gameOptions: tJournalistState) => {
 }
 
 export const SellBuildings = ({gameOptions}: {gameOptions: tJournalistState}) => {
-    const sellOptionsFromProps = getSellBuildings(gameOptions);
     const playerName = gameOptions.playerName;
     const [selectedCountryName, setSelectedCountryName] = useState('');
     const classes = useStyles();
@@ -134,6 +138,7 @@ export const SellBuildings = ({gameOptions}: {gameOptions: tJournalistState}) =>
             <div>{rejectionReason}</div>
         )
     }
+    const sellOptionsFromProps = getSellBuildings(gameOptions);
     const countries = Object.entries(sellOptionsFromProps);
     if (sellOptionsFromProps.reason) return <>{sellOptionsFromProps.reason}</>
     if (!playerName) return (<div className={classes.error}>Cannot find player name</div>)

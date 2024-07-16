@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from "react"
+import { createContext, FC, useContext, useEffect, useRef, useState } from "react"
 import { getTestableOptions } from "../../Logic/Journalist/getOptions";
 import { tObject } from "../../Logic/types"
 import { getGameState } from "../../Functions/PersistRetrieveGameState/utils";
@@ -8,6 +8,7 @@ import { withDisplayOptionsAsCountries } from "./withDisplayOptionsFromCountry";
 import { useStyles } from "./styles";
 import { BuyBuildings } from "./BuyBuildings";
 import { SellBuildings } from "./SellBuildings";
+import { RefreshOptions } from "./refreshOptionsContext";
 
 const useGameOptions = (playerName: string) => {
     const [options, setOptions] = useState<tObject<any>>({});
@@ -192,9 +193,9 @@ export const GameOptions = ({playerName}: any) => {
         )
     }
     return (
-        <>
+        <RefreshOptions.Provider value = {refreshGameState}>
             { optionsEntries.map(getOptionButton) }
             <OptionsComponent gameOptions={options} />
-        </>
+        </RefreshOptions.Provider>
     )
 }

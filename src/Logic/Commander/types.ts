@@ -22,3 +22,9 @@ export type tSellBuildingsArgs = {
     price: number,
 }
 
+export type tCompareBuildingsLeftToCurrentBuildingsArgs = {
+    nrOfHotelsLeft: number,
+    nrOfHousesLeft: number,
+    nrOfHousesCurrent: number,
+    nrOfHotelsCurrent: number
+}

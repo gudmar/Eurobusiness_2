@@ -200,6 +200,7 @@ export class Commander {
     static sellBuildings(args: tSellBuildingsArgs) {
         const {nrOfHotels, nrOfHouses, price, locationAfterTransaction, playerName} = args;
         console.log('args', args)
+        if (price === 0) return;
         removeSoldHousessFromBuildings(args);
         returnBuildingsToBank(args);
         returnMoneyToPlayer(playerName, price)

@@ -6,7 +6,7 @@ import { Bank } from "../Bank/Bank";
 import { BoardCreator } from "../BoardCaretaker";
 import { NrOfHotels } from "../Journalist/utils/getBuildingPermits";
 import { Players } from "../Players/Players";
-import { tBuyBuilding, tSellBuildingsArgs } from "./types";
+import { tBuyBuilding, tCompareBuildingsLeftToCurrentBuildingsArgs, tSellBuildingsArgs } from "./types";
 
 export const getPlayerByColor = (playerColor: tColors) => {
     const player = Players.getPlayerByColor(playerColor);
@@ -80,18 +80,58 @@ type tRemoveSoldBuildingsInSingleEstateArgs = {
 
 const removeSoldBuildnigsInSingleEstate = (args: tRemoveSoldBuildingsInSingleEstateArgs) => {
     const {nrOfHotelsLeft, nrOfHousesLeft, cityName } = args;
+    console.log('args', args)
     BoardCreator.instance.setNrOfHotels(cityName, nrOfHotelsLeft);
     BoardCreator.instance.setNrOfHouses(cityName, nrOfHousesLeft);
+}
+
+export const compareIfThereAreBuildingsInCitiesSold = (args: tCompareBuildingsLeftToCurrentBuildingsArgs) => {
+    const { nrOfHotelsLeft, nrOfHousesLeft, nrOfHousesCurrent, nrOfHotelsCurrent } = args;
+    const nrOfHotelsSold = nrOfHotelsCurrent - nrOfHotelsLeft;
+    const result = (nrOfHotelsLeft <= nrOfHotelsCurrent && nrOfHousesLeft <= nrOfHousesCurrent + nrOfHotelsSold*(MAX_NR_HOUSES_IN_CITY))
+    return result;
+}
+
+const checkIfEnoughBuildingsInCity = (args: tRemoveSoldBuildingsInSingleEstateArgs) => {
+    const {nrOfHotelsLeft, nrOfHousesLeft, cityName} = args;
+    const {nrOfHouses, nrOfHotels} = BoardCreator.instance.getNrOfBuildingsOnCityByName(cityName);
+    const result = compareIfThereAreBuildingsInCitiesSold({
+        nrOfHousesCurrent: nrOfHouses, nrOfHotelsCurrent: nrOfHotels, nrOfHotelsLeft, nrOfHousesLeft
+    })
+    return result;
+}
+
+export const compareCurrentBuildingsToBuildingsToBeLeft = ({
+    nrOfHotelsLeft, nrOfHousesLeft, nrOfHousesCurrent, nrOfHotelsCurrent
+}: tCompareBuildingsLeftToCurrentBuildingsArgs) => {
+    const areNoHotelsToBeSold = (nrOfHotelsCurrent === nrOfHotelsLeft);
+    const areNoHousesToBeSold = (nrOfHousesLeft === nrOfHousesCurrent);
+    const areNoBuildingsToBeSold = areNoHotelsToBeSold && areNoHousesToBeSold;
+    return !areNoBuildingsToBeSold;
+}
+const checkIfThereAreBuildingsToBeSold =  (args: tRemoveSoldBuildingsInSingleEstateArgs) => {
+    const {nrOfHotelsLeft, nrOfHousesLeft, cityName} = args;
+    const {nrOfHouses, nrOfHotels} = BoardCreator.instance.getNrOfBuildingsOnCityByName(cityName);
+    const areAnyHousesToBeSold = compareCurrentBuildingsToBuildingsToBeLeft({
+        nrOfHousesLeft, nrOfHotelsLeft,
+        nrOfHotelsCurrent: nrOfHotels, nrOfHousesCurrent: nrOfHouses
+    })
+    return areAnyHousesToBeSold;
 }
 
 export const removeSoldHousessFromBuildings = (args: tSellBuildingsArgs) => {
     const { locationAfterTransaction } = args;        
     locationAfterTransaction.forEach(({nrOfHotels, nrOfHouses, cityName}) => {
-        removeSoldBuildnigsInSingleEstate({
+        const request = {
             nrOfHotelsLeft: nrOfHotels, 
             nrOfHousesLeft: nrOfHouses,
             cityName,
-        })
+        }
+        const isRequestValid = checkIfEnoughBuildingsInCity(request);
+        if (!isRequestValid) throw new Error(`Cannot sell ${nrOfHouses} houses and ${nrOfHotels} hotels from ${cityName}, as there are not enough buildings left`);
+        const areBuildingsToBeSold = checkIfThereAreBuildingsToBeSold(request);
+        if (!areBuildingsToBeSold && args.price > 0) throw new Error('Cannot sell 0 buildings')
+        removeSoldBuildnigsInSingleEstate(request)
     })
 }
 
