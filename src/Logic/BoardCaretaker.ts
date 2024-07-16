@@ -209,6 +209,13 @@ export class BoardCreator {
         throw new Error(`${name} is not a city`)
     }
 
+    getNrOfBuildingsOnCityByName(name: string) {
+        const city = this.getCityByName(name);
+        return {
+            nrOfHotels: (city as iCityField).nrOfHotels, nrOfHouses: (city as iCityField).nrOfHouses,
+        }
+    }
+
     getEstateByName(name: string) {
         const notEstateTypes = [START, JAIL, FREE_PARK, GO_TO_JAIL, TAX, GUARDED_PARKING, '']
         const estate = this._getFieldByName(name);
@@ -228,12 +235,12 @@ export class BoardCreator {
         console.log('In increaseNrOfHouses', nrOfHousesToAdd)
         const city = this.getCityByName(cityName);
         if (!city) return;
-        (city as iCityField).nrOfHouses += nrOfHousesToAdd;
+        (city as iCityField).nrOfHouses = nrOfHousesToAdd + (city as iCityField).nrOfHouses;
     }
     increaseNrOfHotels(cityName: string) {
         const city = this.getCityByName(cityName);
         if (!city) return;
-        (city as iCityField).nrOfHotels += 1;
+        (city as iCityField).nrOfHotels = (city as iCityField).nrOfHotels + 1;
     }
     decreaseNrOfHouses(cityName: string, nr: number) {
         const city = this.getCityByName(cityName);
@@ -241,7 +248,7 @@ export class BoardCreator {
         if ((city as iCityField).nrOfHouses < nr) {
             throw new Error(`Cannot return ${nr} from ${cityName} as there are only ${(city as iCityField).nrOfHouses} houses there`);
         }
-        (city as iCityField).nrOfHouses -= nr;
+        (city as iCityField).nrOfHouses = (city as iCityField).nrOfHouses - nr;
     }
     setNrOfHotels(cityName: string, nr: number) {
         const city = this.getCityByName(cityName);
@@ -249,6 +256,7 @@ export class BoardCreator {
         if ((city as iCityField).nrOfHotels < 0 || (city as iCityField).nrOfHotels > MAX_NR_HOTELS_IN_CITY) {
             throw new Error(`Cannot set ${NrOfHotels} to ${cityName}. There may be only 0 or 1 hotels in the city`)
         }
+        (city as iCityField).nrOfHotels = nr;
     }
     setNrOfHouses(cityName: string, nr: number) {
         const city = this.getCityByName(cityName);
@@ -256,7 +264,7 @@ export class BoardCreator {
         if ((city as iCityField).nrOfHouses < 0 || (city as iCityField).nrOfHouses > MAX_NR_HOUSES_IN_CITY) {
             throw new Error(`Cannot set ${nr} houses to ${cityName}. Min nr of houses is 0, max is ${MAX_NR_HOUSES_IN_CITY}`);
         }
-        (city as iCityField).nrOfHouses -= nr;
+        (city as iCityField).nrOfHouses =  nr;
     }
 
     addNrOfHouses(cityName: string, nr: number) {
@@ -266,7 +274,7 @@ export class BoardCreator {
         if (presentNrHouses + nr > MAX_NR_HOUSES_IN_CITY) {
             throw new Error(`Cannot build ${nr} houses in ${cityName} as there are already ${(city as iCityField).nrOfHouses} houses there, and city cannot be larger then ${MAX_NR_HOUSES_IN_CITY}. Considere building a hotel instead`);
         }
-        (city as iCityField).nrOfHouses += nr;
+        (city as iCityField).nrOfHouses = (city as iCityField).nrOfHouses + nr;
     }
 
 

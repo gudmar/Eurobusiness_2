@@ -88,6 +88,7 @@ export class CityField extends SubscribtionsHandler<tFlattenedFieldTypes, iCityF
     get index() { return this._index }
 
     set nrOfHouses(val: number) {
+        console.log('nrOfHouses', val)
         if (val > 4 || val < 0) throw new Error('Nr of houses has to be > 0 and < 5')
         this._nrOfHouses = val;
         this.runAllSubscriptions(this.name, this.state);
