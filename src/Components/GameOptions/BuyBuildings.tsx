@@ -5,6 +5,7 @@ import { NrOfHotels, NrOfHouses } from "../../Logic/Journalist/utils/getBuilding
 import { Players } from "../../Logic/Players/Players";
 import { tObject } from "../../Logic/types";
 import { Button } from "../Button/Button";
+import { useRefreshOptions } from "./refreshOptionsContext";
 import { useStyles } from "./styles";
 import { tBuildingsPermitRecord, tDataKey, tTransactionForEachCountry } from "./types";
 import { usePossibleTransactions } from "./usePossibleTransactions";
@@ -58,11 +59,11 @@ const Quotation = ({quotation, isVisible, isOdd, whatIsQuoted}: {whatIsQuoted: N
     if (!isVisible || !quotation) return null;
     const classes = useStyles();
     const {locationOne, locationTwo, locationThree, cost} = quotation;
+    const refreshGameState =  useRefreshOptions()
     return (
         <div 
             className={`${classes.quotation} ${isOdd ? classes.odd : classes.even}`}
             onClick={() => {
-                console.log('Quotation', quotation)
                 Commander.buyBuildings({
                     playerColor: Players.instance.currentPlayer.color,
                     oneHouseCities: setIfRegardsHouses(whatIsQuoted, locationOne),
@@ -70,7 +71,7 @@ const Quotation = ({quotation, isVisible, isOdd, whatIsQuoted}: {whatIsQuoted: N
                     oneHotelCity: setIfRegardsHotels(whatIsQuoted, locationOne),
                     cost,
                 });
-                
+                refreshGameState();
             }}
         >
             {locationOne && <div>

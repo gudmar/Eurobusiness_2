@@ -277,6 +277,14 @@ export class BoardCreator {
         (city as iCityField).nrOfHouses = (city as iCityField).nrOfHouses + nr;
     }
 
+    fieldIndexToName(index: number) {
+        if (index < 0 || index > this._fields.length - 1) throw new Error(`Not enough fields on the board`)
+        const field = this._fields[index];
+        if ('name' in field) {
+            return (field as iNamedCityField).name
+        }
+        return field.type
+    }
 
     provideCaretaker() { return this.caretaker}
 }
