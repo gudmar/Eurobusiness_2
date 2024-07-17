@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useHighlightOnHover } from "../../hooks/useHighlightOnHover";
 import { Commander } from "../../Logic/Commander/Commander";
 import { OptionTypes, tJournalistState } from "../../Logic/Journalist/types";
@@ -116,7 +116,6 @@ const PresentSellBuildingsOptions = ({sellOptions, playerName}: {sellOptions: tO
 }
 
 const getSellBuildings = (gameOptions: tJournalistState) => {
-    console.log('Game options', gameOptions)
     const sellActions = (gameOptions as any).sellBuildings.actions;
     if (sellActions.reason) return sellActions.reason;
     const sellBuildings = sellActions.find((action: {type: string, payload: any}) => {
@@ -128,11 +127,15 @@ const getSellBuildings = (gameOptions: tJournalistState) => {
 }
 
 export const SellBuildings = ({gameOptions}: {gameOptions: tJournalistState}) => {
+    const COUNTRY_OPTION_INDEX_IN_TUPLE = 1
     const playerName = gameOptions.playerName;
+    
     const [selectedCountryName, setSelectedCountryName] = useState('');
     const classes = useStyles();
     const rejectionReason = getRejectionReason(gameOptions, 'sellBuildings');
-    const [option, setOption] = useState<any>(null);
+    
+    const [optionIndex, setOptionIndex] = useState<number>(-1)
+    
     if (rejectionReason) {
         return (
             <div>{rejectionReason}</div>
@@ -140,13 +143,14 @@ export const SellBuildings = ({gameOptions}: {gameOptions: tJournalistState}) =>
     }
     const sellOptionsFromProps = getSellBuildings(gameOptions);
     const countries = Object.entries(sellOptionsFromProps);
+    const option = optionIndex !== -1 ? countries[optionIndex][COUNTRY_OPTION_INDEX_IN_TUPLE] as tObject<any>: {};
     if (sellOptionsFromProps.reason) return <>{sellOptionsFromProps.reason}</>
     if (!playerName) return (<div className={classes.error}>Cannot find player name</div>)
     return (
         <div className={classes.container}>
             <div className={`${classes.verticalContainer} ${classes.countryModule} `}>
             {
-                countries.map(([countryName, countryOption]) => (
+                countries.map(([countryName, countryOption], index) => (
                     <div key={countryName}>
                         <Button
                             label={countryName}
@@ -154,7 +158,7 @@ export const SellBuildings = ({gameOptions}: {gameOptions: tJournalistState}) =>
                             disabled={false}
                             action={() => {
                                     setSelectedCountryName(countryName);
-                                    setOption(countryOption)
+                                    setOptionIndex(index)
                                 }
                             }
                         />
@@ -162,7 +166,13 @@ export const SellBuildings = ({gameOptions}: {gameOptions: tJournalistState}) =>
                 ))
             }
             </div>
-            <div className={classes.actions}>{option && <PresentSellBuildingsOptions sellOptions={option} playerName={playerName}/>}</div>
+            {/* <div className={classes.actions}>{option && <PresentSellBuildingsOptions sellOptions={option} playerName={playerName}/>}</div> */}
+            {
+                optionIndex!==-1 && <div className={classes.actions}><PresentSellBuildingsOptions sellOptions={option} playerName={playerName}/></div>
+            }
+            {/* {
+                optionIndex!==-1 && <div>OPTION index is {optionIndex} {JSON.stringify(countries[optionIndex])}</div>
+            } */}
         </div>
     )
 }
