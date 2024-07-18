@@ -9,7 +9,7 @@ import { useRefreshOptions } from "./refreshOptionsContext";
 import { useStyles } from "./styles";
 import { tBuildingsPermitRecord, tDataKey, tTransactionForEachCountry } from "./types";
 import { usePossibleTransactions } from "./usePossibleTransactions";
-import { isOperationNotAllowedInAnyCountry, setIfRegardsHotels, setIfRegardsHouses } from "./utils";
+import { getBuildingType, isOperationNotAllowedInAnyCountry, setIfRegardsHotels, setIfRegardsHouses } from "./utils";
 
 export type tBuySellbuildingsProps = { gameOptions: tJournalistState, dataKey: tDataKey };
 
@@ -59,6 +59,7 @@ const Quotation = ({quotation, isVisible, isOdd, whatIsQuoted}: {whatIsQuoted: N
     if (!isVisible || !quotation) return null;
     const classes = useStyles();
     const {locationOne, locationTwo, locationThree, cost} = quotation;
+    const buildingType = getBuildingType(whatIsQuoted);
     const refreshGameState =  useRefreshOptions()
     return (
         <div 
@@ -75,20 +76,20 @@ const Quotation = ({quotation, isVisible, isOdd, whatIsQuoted}: {whatIsQuoted: N
             }}
         >
             {locationOne && <div>
-                    <b>One house in: </b>
+                    <b>{`One ${buildingType} in: `}</b>
                     {locationOne!.join(', ')},
                 </div>
             }
             {locationTwo && <div>
-                    <b>Two houses in: </b>
+                    <b>{`Two ${buildingType}s in: `}</b>
                     {locationTwo!.join(', ')}
                 </div>
             }
-            {locationThree && <div>
+            {/* {locationThree && <div>
                     <b>Two houses in: </b>
                     {locationTwo!.join(', ')}
                 </div>
-            }
+            } */}
 
             <b>price: </b> ${cost}
         </div>
@@ -127,6 +128,8 @@ const AllTransactions = ({permits} : tTransactionForEachCountry) => {
     )
 }
 
+// Problem z nazwaniem ofert: 1house zamiast 1hotel, poza tym pisze bzdury o tym ,ze nie moze postawic hotelu
+// a moze, no i 'Each city should have at least 4 houses or 1 hotel'. Co to ma znaczyc?
 
 const getPermitsFromPossibleTransactionsProps = (possibleTransactionsProps: tObject<any>) => {
     console.log(possibleTransactionsProps)

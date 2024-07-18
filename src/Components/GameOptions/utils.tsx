@@ -24,3 +24,4 @@ export const setIfRegardsHotels = (whatIsQuoted: tWhatBuildingQuotation, valueIf
     if (doesQuotationRegardHotel(whatIsQuoted)) return valueIfTrue;
 }
 
+export const getBuildingType = (whatIsQuoted: tWhatBuildingQuotation) => doesQuotationRegardHotel(whatIsQuoted) ? 'hotel': 'house';

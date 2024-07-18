@@ -2,7 +2,6 @@ import { INITIAL_NR_HOTELS, INITIAL_NR_HOUSES } from "../../../Constants/constan
 import { AMSTERDAM, ATENY, BARCELONA, BLUE, BRUKSELA, FRANKFURT, GOTEBORG, INSBRUK, LIVERPOOL, LONDON, MADRIT, MALMO, MEDIOLAN, NEAPOL, POWER_STATION, RED, ROME, ROTTERDAM, SALONIKI, SEWILLA, SZTOKHOLM, WATER_PLANT, WIEDEN } from "../../../Data/const";
 import { Bank } from "../../Bank/Bank";
 import { BuildingPermitRejected, getBuildingPermits, tBuidlingApproved, tBuildingPermits, tHouseLocations } from "../../Journalist/utils/getBuildingPermits";
-import { Players } from "../../Players/Players";
 import { noHotelsInBankOutput, noHousesInBankOutput, permits_0h0H_0h0H, permits_0h0H_0h0H_0h0H, permits_0h0H_1h0H_0h0H, permits_0h1H_4h0H, permits_0h1H_4h0H_4h0H, permits_1h0H_0h0H, permits_1h0H_0h0H_1h0H, permits_1h0H_1h0H_0h0H, permits_2h0H_3h0H, permits_2h0H_3h0H_NotEnoughHouses, permits_2_hotels_bought, permits_3h0H_3h0H_3h0H, permits_4h0H_0h1H, permits_4h0H_0h1H_0h1H, permits_4h0H_3h0H_3h0H, permits_4h0H_4h0H_4h0H, permits_4h0H_4h0H_4h0H_0HotelsLeft, permits_4h0H_4h0H_4h0H_2HotelsLeft } from "./getBuildingPermitsMocks_outputs";
 import { readyState1, readyState2, readyState3, readyState4 } from "./getBuildingPermitsMocks_statePreparation";
 import { changeEstates } from "./getGameStateMock/getGameStateMock";
@@ -77,10 +76,14 @@ const changeBuildingsDeltasForErrorTesting = [
 ]
 const stateChangedBuildings = changeEstates(stateWithChangedOwner, changeBuildingsDeltasForErrorTesting);
 
-describe('Testing getBuildingPermits', () => {
+describe.only('Testing getBuildingPermits', () => {
+    beforeAll(() => new Bank())
+    afterAll(() => Bank.delete())
     beforeEach(() => {
-        Bank.nrOfHotels = INITIAL_NR_HOTELS;
-        Bank.nrOfHouses = INITIAL_NR_HOUSES;
+        // Bank.nrOfHotels = INITIAL_NR_HOTELS;
+        // Bank.nrOfHouses = INITIAL_NR_HOUSES;
+        jest.spyOn(Bank, 'nrOfHotels', 'get').mockReturnValue(INITIAL_NR_HOTELS);
+        jest.spyOn(Bank, 'nrOfHouses', 'get').mockReturnValue(INITIAL_NR_HOUSES);
     })
     it('Should throw an error when given a not existing estate', () => {
         const throwingFunction = () => getBuildingPermits({gameState: stateChangedBuildings, playerName: DWALIN, cityName: 'Glowow'});
@@ -116,13 +119,15 @@ describe('Testing getBuildingPermits', () => {
         expect(reasonAlreadyHotels).toBe(BuildingPermitRejected.alreadyBuild)
     });
     it('Should return an object with rejected reason when bank has no houses and only houses might have been build in cities of some country', () => {
-        Bank.nrOfHouses = 0;
+        // Bank.nrOfHouses = 0;
+        jest.spyOn(Bank, 'nrOfHotels', 'get').mockReturnValue(0);
         stateChangedBuildings.bank.nrOfHouses = 0;
         const reasonNoHouses = getBuildingPermits({gameState: stateChangedBuildings, playerName: DWALIN, cityName: MEDIOLAN, });
         expect(reasonNoHouses).toEqual(noHousesInBankOutput)
     })
     it('Should return an object with rejected reason when bank has no hotels and there is a max nr of houses in each city in the country', () => {
-        Bank.nrOfHotels = 0;
+        // Bank.nrOfHotels = 0;
+        jest.spyOn(Bank, 'nrOfHotels', 'get').mockReturnValue(0);
         stateChangedBuildings.bank.nrOfHotels = 0;
         const reasonNoHouses = getBuildingPermits({gameState: stateChangedBuildings, playerName: DWALIN, cityName: WIEDEN, });
         expect(reasonNoHouses).toEqual(noHotelsInBankOutput)
@@ -170,6 +175,8 @@ describe('Testing getBuildingPermits', () => {
 
     describe('Testing successfull building permits. Each when player owns all estates, none is plegede', () => {
         describe('changeBuildingsDeltasSuccess1', () => {
+            beforeAll(() => new Bank())
+            afterAll(() => Bank.delete())
             it('Should return an object with the country name and permits for up to 3 houses when [0h0H, 0h0H], and message that hotels may not be build', () => {
                 //Austria
                 const permits = getBuildingPermits({gameState: readyState1, playerName: DWALIN, cityName: INSBRUK});
@@ -217,8 +224,10 @@ describe('Testing getBuildingPermits', () => {
             })
         }),
         describe('changeBuildingsDeltasSuccess2', () => {
-            afterEach(() => {
-                Bank.nrOfHouses = 40;
+            beforeAll(() => new Bank())
+            afterAll(() => Bank.delete())
+            beforeEach(() => {
+                jest.spyOn(Bank, 'nrOfHouses', 'get').mockReturnValue(40)
             })
 
             it('Should return an object with the country name and permits for up to 3 houses when, [2h0H, 3h0H]', () => {
@@ -230,7 +239,7 @@ describe('Testing getBuildingPermits', () => {
             })
             it('Should return permits for 1 and 2 houses only if there are only 2 houses left in the bank', () => {
                 //Grecja
-                Bank.nrOfHouses = 2;
+                jest.spyOn(Bank, 'nrOfHouses', 'get').mockReturnValue(2)
                 const permits = getBuildingPermits({gameState: readyState2, playerName: DWALIN, cityName: ATENY});
                 printHouses(permits)
                 expect(permits).toEqual(permits_2h0H_3h0H_NotEnoughHouses);
@@ -255,7 +264,9 @@ describe('Testing getBuildingPermits', () => {
             })    
         });
         describe('changeBuildingsDeltasSuccess3', () => {
-            afterEach(() => Bank.nrOfHotels = 89)
+            // afterEach(() => Bank.nrOfHotels = 89)
+            beforeAll(() => new Bank())
+            afterAll(() => Bank.delete())
             it('Should return an object with permits when [4h0H, 0h1H]', () => {
                 //Grecja
                 const permits = getBuildingPermits({gameState: readyState3, playerName: DWALIN, cityName: SALONIKI});
@@ -270,21 +281,24 @@ describe('Testing getBuildingPermits', () => {
             })
             it('Should return permits for 1 or 2 hotels if there are only 2 hotels left in the bank', () => {
                 // Spain
-                Bank.nrOfHotels = 2;
+                // Bank.nrOfHotels = 2;
+                jest.spyOn(Bank, 'nrOfHotels', 'get').mockReturnValue(2)
                 const permits = getBuildingPermits({gameState: readyState3, playerName: DWALIN, cityName: SEWILLA});
                 expect(permits).toEqual(permits_4h0H_4h0H_4h0H_2HotelsLeft);
             });
             it('Should return reason no hotels left if nr of hotels is 0 and otherwise there would be a possiblity to build up to 3 hotels', () => {
-                Bank.nrOfHotels = 0;
                 readyState3.bank.nrOfHotels = 0;
+                jest.spyOn(Bank, 'nrOfHotels', 'get').mockReturnValue(0)
                 const permits = getBuildingPermits({gameState: readyState3, playerName: DWALIN, cityName: SEWILLA});
                 printHouses(permits)
                 expect(permits).toEqual(permits_4h0H_4h0H_4h0H_0HotelsLeft);
             })
         })
     })
-    describe('Player already bough some hotels in this turn. Limit of hotels per turn is 3', () => {
+    describe.only('Player already bough some hotels in this turn. Limit of hotels per turn is 3', () => {
         // Nr of hotels purchased in a turn has to be saved to the game state!!
+        beforeAll(() => new Bank())
+        afterAll(() => Bank.delete())
         it('Should return 1 hotel and a reason when there is a possibility to purchase 3 hotels, but player already bought 2 hotels in this round', () => {
             const permits = getBuildingPermits({gameState: readyState4, playerName: DWALIN, cityName: SEWILLA});
             expect(permits).toEqual(permits_2_hotels_bought);

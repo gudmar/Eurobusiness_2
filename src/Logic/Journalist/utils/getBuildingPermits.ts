@@ -384,21 +384,27 @@ const calculatePermitsForHotelsWithRejectionApply = (args: tGetBuildingPermitsFo
     const { nrOfBuildings, response, citiesFromSameCountry} = args;
     const cities = citiesFromSameCountry as iCityFieldState[];
     const nrOfHotelsInBank = getHotelsInBank(args);
+    console.log('AAE nrOfHotels', nrOfHotelsInBank)
     
     const citiesBigEnough = cities.every(({nrOfHouses, nrOfHotels}) => {
         const result = (nrOfHouses === MAX_NR_OF_HOUSES_ON_FIELD) || (nrOfHotels === 1);
+        // const result = (nrOfHouses === MAX_NR_OF_HOUSES_ON_FIELD);
         return result
     });
     const citiesTooBig = cities.every(({nrOfHotels}) => nrOfHotels === 1);
     const result = calculatePermitsForHotels(args);
     const nrOfHotelsBoughtInRound = getNrHotelsBoughtInRound(args);
     const isTooMuchBoughtInRow = MAX_NR_OF_HOTELS_TO_BUY_IN_ROW - nrOfHotelsBoughtInRound < nrOfBuildings;
-    const isTooLittleHotelsInBank = (result.length) > nrOfHotelsInBank;
+    // NEW ==============
+    // NEW // const isTooLittleHotelsInBank = (result.length) > nrOfHotelsInBank;
+    const isTooLittleHotelsInBank = nrOfBuildings > nrOfHotelsInBank;
+    // ===============
     const nrOfBuildingsToKey = (nrOfBuildings: number) => {
         if (nrOfBuildings > 3 || nrOfBuildings< 0) throw new Error('Nr of buidings to construct has to be > 0 and < 4')
         if (nrOfBuildings === 1) return NrOfHotels.one;
         return nrOfBuildings === 2 ? NrOfHotels.two : NrOfHotels.three
     }
+    console.log('Nr of buildings | tooBig | tooLittleInBank | tooMuchInRow', nrOfBuildings, citiesTooBig, isTooLittleHotelsInBank, isTooMuchBoughtInRow)
         if (!citiesBigEnough) {
             const nextResponse = {...response, hotelReason: BuildingPermitRejected.citiesNotBigEnough}
             // response.hotelReason = BuildingPermitRejected.citiesNotBigEnough;
@@ -421,6 +427,8 @@ const calculatePermitsForHotelsWithRejectionApply = (args: tGetBuildingPermitsFo
             // response.hotelReason = BuildingPermitRejected.tooManyHotelsBuildInRound;
             return nextResponse;
         }
+        console.log('Too much bought in row', isTooMuchBoughtInRow, nrOfBuildings)
+        console.log('result length', result.length)
         if (nrOfHotelsInBank >= nrOfBuildings && !isTooMuchBoughtInRow && result.length > 0) {
             const key = nrOfBuildingsToKey(nrOfBuildings);
             const nextResponse = {...response, [key]: result};
