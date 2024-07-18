@@ -13,6 +13,10 @@ export const getHousesInBank = (args: tWrappedGameState) => {
 export const getHotelsInBank = (args: tWrappedGameState) => {
     const hotelsFromState = args?.gameState?.bank?.nrOfHotels;
     const hotelsFromBankClass = Bank.nrOfHotels;
-    const result = hotelsFromBankClass ?? hotelsFromState;
+
+    
+
+    // const result = hotelsFromBankClass ?? hotelsFromState;
+    const result = hotelsFromBankClass;
     return result;
 }

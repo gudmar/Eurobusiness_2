@@ -20,6 +20,7 @@ export class Bank extends SubscribtionsHandler<tBankSubscribtionMessages, number
         this.instance.runAllSubscriptions(CHANGE_NR_HOTELS, Bank.nrOfHotels)
     }
     static get nrOfHotels() { return Bank._nrOfHotels }
+    static delete() {Bank._instance = undefined}
 
 
     constructor() {
