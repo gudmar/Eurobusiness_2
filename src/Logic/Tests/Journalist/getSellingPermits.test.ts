@@ -83,6 +83,7 @@ describe('Selling buildings test (getSellingPermits)', () => {
         })
     })
     describe('Houses', () => {
+        beforeAll(() => new Bank())
         it('Should return a permit for one house when received a 2 estates country with only a single house build 0h_1h', () => {
             const gameState = getStateMock();
             Bank.nrOfHotels = 12;
@@ -108,8 +109,8 @@ describe('Selling buildings test (getSellingPermits)', () => {
 
         it('Should return a permit to sell up to 1, 2, 3, 4, 5 houses in a balanced way, when received a country with 2 cities and 5 houses in 2 estate country 2h_3h', () => {
             const gameState = getStateMock();
-            Bank.nrOfHotels = 12;
-            Bank.nrOfHouses = 12
+            jest.spyOn(Bank, 'nrOfHotels', 'get').mockReturnValue(12);
+            jest.spyOn(Bank, 'nrOfHouses', 'get').mockReturnValue(12);
             const delta = delta_2h_3h
             const modifiedState = changeEstates(gameState, delta);
             const sellingPermitsGetterArgs: tGetSellingPermitsArgs = { gameState: modifiedState, country: GREECE, playerName: "Dwalin" }
@@ -149,6 +150,7 @@ describe('Selling buildings test (getSellingPermits)', () => {
 
 
     describe('Hotels', () => {
+        beforeAll(() => new Bank());
         it('Should allow to downgrade when 4h_4h_1H__L5h', () => {
             const gameState = getStateMock();
             Bank.nrOfHotels = 12;
@@ -161,8 +163,8 @@ describe('Selling buildings test (getSellingPermits)', () => {
         })
         it('Should allow to downgrade when 4h_1H__L0h', () => {
             const gameState = getStateMock();
-            Bank.nrOfHotels = 12;
-            Bank.nrOfHouses = 0
+            jest.spyOn(Bank, 'nrOfHouses', 'get').mockReturnValue(0);
+            jest.spyOn(Bank, 'nrOfHotels', 'get').mockReturnValue(12);
             const delta = delta_4h_1H__L0h
             const modifiedState = changeEstates(gameState, delta);
             const sellingPermitsGetterArgs: tGetSellingPermitsArgs = { gameState: modifiedState, country: GREECE, playerName: "Dwalin" }
@@ -171,8 +173,8 @@ describe('Selling buildings test (getSellingPermits)', () => {
         })
         it('Should allow to downgrade when 1H_4h_1H__L1h', () => {
             const gameState = getStateMock();
-            Bank.nrOfHotels = 12;
-            Bank.nrOfHouses = 1
+            jest.spyOn(Bank, 'nrOfHouses', 'get').mockReturnValue(1);
+            jest.spyOn(Bank, 'nrOfHotels', 'get').mockReturnValue(12);
             const delta = delta_1H_4h_1H__L1h;
             const modifiedState = changeEstates(gameState, delta);
             const sellingPermitsGetterArgs: tGetSellingPermitsArgs = { gameState: modifiedState, country: SPAIN, playerName: "Dwalin" }
@@ -181,8 +183,8 @@ describe('Selling buildings test (getSellingPermits)', () => {
         })
         it('Should return a possibility to exchange 1 hotel to houses or everything when received a country with 3 cities, 2 having 4 houses and one having 1 hotel (4h_4h_1H_L0H) and enough houses in the bank', () => {
             const gameState = getStateMock();
-            Bank.nrOfHotels = 0;
-            Bank.nrOfHouses = 5
+            jest.spyOn(Bank, 'nrOfHouses', 'get').mockReturnValue(5)
+            jest.spyOn(Bank, 'nrOfHotels', 'get').mockReturnValue(5)
             const delta = delta_4h_4h_1H__L5h
             const modifiedState = changeEstates(gameState, delta);
             const sellingPermitsGetterArgs: tGetSellingPermitsArgs = { gameState: modifiedState, country: SPAIN, playerName: "Dwalin" }

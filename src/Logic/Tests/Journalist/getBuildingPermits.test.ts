@@ -120,7 +120,7 @@ describe.only('Testing getBuildingPermits', () => {
     });
     it('Should return an object with rejected reason when bank has no houses and only houses might have been build in cities of some country', () => {
         // Bank.nrOfHouses = 0;
-        jest.spyOn(Bank, 'nrOfHotels', 'get').mockReturnValue(0);
+        jest.spyOn(Bank, 'nrOfHouses', 'get').mockReturnValue(0);
         stateChangedBuildings.bank.nrOfHouses = 0;
         const reasonNoHouses = getBuildingPermits({gameState: stateChangedBuildings, playerName: DWALIN, cityName: MEDIOLAN, });
         expect(reasonNoHouses).toEqual(noHousesInBankOutput)
