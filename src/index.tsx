@@ -5,6 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import Game from './Components/Game/Game';
 import { ThemeContextProvider } from './Contexts/ThemeContext';
 import { FieldLocationContextProvider } from './Contexts/fieldLocation/useFieldLocation';
+import CleaningProvider from './Contexts/CleaningContext/CleaningContext';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -12,9 +13,11 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <ThemeContextProvider>
-      <FieldLocationContextProvider>
-        <Game />
-      </FieldLocationContextProvider>
+      <CleaningProvider>
+        <FieldLocationContextProvider>
+          <Game />
+        </FieldLocationContextProvider>
+      </CleaningProvider>
     </ThemeContextProvider>
   </React.StrictMode>
 );

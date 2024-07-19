@@ -20,6 +20,8 @@ import { Game as GameLogic } from '../../Logic/Game/Game';
 import { useEffect, useState } from 'react';
 import Shutter from '../Shutter/Shutter';
 import { getGameState } from '../../Functions/PersistRetrieveGameState/utils';
+import { useIncludeCleaer } from '../../Contexts/CleaningContext/CleaningContext';
+import { CLOSE_SAVE_LOAD_GAME_WINDOW } from '../../Constants/cleaners';
 
 const displayTestInfo = () => {
     displayInfo({
@@ -63,7 +65,8 @@ const GameGuts = () => {
     const [ isMoving, setIsMoving ] = useState<boolean>(false)
     const classes = useStyles(theme as any);
     const {Component: StateEditor, setOpen: openStateEditor, setIsOpen: setIsOpenStateEditor} = useModal(PlayerEditor)
-    const {Component: SaveGameDialog, setOpen: openSaveGameWindow, setIsOpen: setIsOpenSaveGameDialog} = useModal(SaveLoadGameWindow)
+    const {Component: SaveGameDialog, setOpen: openSaveGameWindow, setIsOpen: setIsOpenSaveGameDialog, setClose: closeSaveLoadWindow} = useModal(SaveLoadGameWindow)
+    useIncludeCleaer(CLOSE_SAVE_LOAD_GAME_WINDOW, closeSaveLoadWindow);
     return (
         <div className = {classes.screen}>
             <InformationStack />

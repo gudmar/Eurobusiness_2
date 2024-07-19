@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { REFRESH_GAME_OPTIONS } from "../../Constants/cleaners";
+import { useImportCleaner } from "../../Contexts/CleaningContext/CleaningContext";
 import { useHighlightOnHover } from "../../hooks/useHighlightOnHover";
 import { Commander } from "../../Logic/Commander/Commander";
 import { OptionTypes, tJournalistState } from "../../Logic/Journalist/types";
 import { tObject } from "../../Logic/types";
 import { Button } from "../Button/Button";
-import { useRefreshOptions } from "./refreshOptionsContext";
 import { useStyles } from "./styles";
 import { tLocationAfterTransaction, tPresentSingleSellBuildingOption, tSellBuildingOption } from "./types";
 import { getRejectionReason } from "./usePossibleTransactions";
@@ -47,7 +48,7 @@ const Variants = ({variants, isVisible, index, playerName}: { playerName: string
     const selectionHandle = useRef<HTMLDivElement>(null);
     const classes = useStyles();
     const highlightOnHover = useHighlightOnHover(selectionHandle, classes.highlightOnHover, classes.noHighlightOnNotHover);
-    const refreshOptions = useRefreshOptions()
+    const refreshOptions = useImportCleaner(REFRESH_GAME_OPTIONS);
     return (
         <div className={`${classes.buildingSellOptionSummary} ${isVisible ? classes.visible : classes.hidden}`}>
             <div className={classes.leftAfterBuildingsSold}>

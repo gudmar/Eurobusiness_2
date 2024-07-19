@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { REFRESH_GAME_OPTIONS } from "../../Constants/cleaners";
+import { useImportCleaner } from "../../Contexts/CleaningContext/CleaningContext";
 import { Commander } from "../../Logic/Commander/Commander";
 import { tJournalistState } from "../../Logic/Journalist/types";
 import { NrOfHotels, NrOfHouses } from "../../Logic/Journalist/utils/getBuildingPermits";
 import { Players } from "../../Logic/Players/Players";
 import { tObject } from "../../Logic/types";
 import { Button } from "../Button/Button";
-import { useRefreshOptions } from "./refreshOptionsContext";
 import { useStyles } from "./styles";
 import { tBuildingsPermitRecord, tDataKey, tTransactionForEachCountry } from "./types";
 import { usePossibleTransactions } from "./usePossibleTransactions";
@@ -60,7 +61,7 @@ const Quotation = ({quotation, isVisible, isOdd, whatIsQuoted}: {whatIsQuoted: N
     const classes = useStyles();
     const {locationOne, locationTwo, locationThree, cost} = quotation;
     const buildingType = getBuildingType(whatIsQuoted);
-    const refreshGameState =  useRefreshOptions()
+    const refreshGameState = useImportCleaner(REFRESH_GAME_OPTIONS);
     return (
         <div 
             className={`${classes.quotation} ${isOdd ? classes.odd : classes.even}`}
@@ -85,12 +86,6 @@ const Quotation = ({quotation, isVisible, isOdd, whatIsQuoted}: {whatIsQuoted: N
                     {locationTwo!.join(', ')}
                 </div>
             }
-            {/* {locationThree && <div>
-                    <b>Two houses in: </b>
-                    {locationTwo!.join(', ')}
-                </div>
-            } */}
-
             <b>price: </b> ${cost}
         </div>
     )

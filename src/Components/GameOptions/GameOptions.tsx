@@ -8,7 +8,8 @@ import { withDisplayOptionsAsCountries } from "./withDisplayOptionsFromCountry";
 import { useStyles } from "./styles";
 import { BuyBuildings } from "./BuyBuildings";
 import { SellBuildings } from "./SellBuildings";
-import { RefreshOptions } from "./refreshOptionsContext";
+import { useIncludeCleaer } from "../../Contexts/CleaningContext/CleaningContext";
+import { REFRESH_GAME_OPTIONS } from "../../Constants/cleaners";
 
 const useGameOptions = (playerName: string) => {
     const [options, setOptions] = useState<tObject<any>>({});
@@ -178,6 +179,7 @@ const useSelectOptions = (depsArray: any[]) => {
 
 export const GameOptions = ({playerName}: any) => {
     const {options, refreshGameState} = useGameOptions(playerName);
+    useIncludeCleaer(REFRESH_GAME_OPTIONS, refreshGameState);
     const { OptionsComponent, currentLabel, setPropMapKey } = useSelectOptions([playerName])
     const optionsEntries = Object.entries(options);
     const getOptionButton = ([key, value]: [string, any]) => {
@@ -193,9 +195,11 @@ export const GameOptions = ({playerName}: any) => {
         )
     }
     return (
-        <RefreshOptions.Provider value = {refreshGameState}>
+        // <RefreshOptions.Provider value = {refreshGameState}>
+        <>
             { optionsEntries.map(getOptionButton) }
             <OptionsComponent gameOptions={options} />
-        </RefreshOptions.Provider>
+        </>
+        // </RefreshOptions.Provider>
     )
 }

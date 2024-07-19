@@ -1,3 +1,5 @@
+import { CLOSE_GAME_OPTIONS, CLOSE_SAVE_LOAD_GAME_WINDOW, REFRESH_GAME_OPTIONS } from "../../Constants/cleaners";
+import { useImportCleaner } from "../../Contexts/CleaningContext/CleaningContext";
 import { useLanguage } from "../../Contexts/CurrentLanguage/CurrentLanguage";
 import { useThemesAPI } from "../../Contexts/ThemeContext";
 import { deleteGame, renameGame } from "../../Functions/PersistRetrieveGameState/localStorageOperations";
@@ -26,7 +28,9 @@ export const SaveLoadGameWindow = () => {
         savedGames, selectedGame, searchFilter,
         filteredGames, setSelectedGame, logState, reloadGames, search
     } = useSaveLoadGameLogic();
-    
+    const cleanGameOptions = useImportCleaner(REFRESH_GAME_OPTIONS);
+    const closeGameOptions = useImportCleaner(CLOSE_GAME_OPTIONS);
+    const closeThisWindow = useImportCleaner(CLOSE_SAVE_LOAD_GAME_WINDOW);
     return (
         <>
             <h1 className={classes.headline}>{TEXT.title[languageKey]}</h1>
@@ -98,7 +102,10 @@ export const SaveLoadGameWindow = () => {
                 <Button
                     label={TEXT.load[languageKey]}
                     action={() => {
-                        loadGameStateFromLocalStorage(name)
+                        loadGameStateFromLocalStorage(name);
+                        cleanGameOptions();
+                        closeGameOptions();
+                        closeThisWindow();
                     }}
                     disabled={name === ''}
                     disabledTooltip={TEXT.loadTooltip[languageKey]}

@@ -48,7 +48,7 @@ export enum BuildingPermitRejected {
     housesAlreadyBuild = 'No more houses may be created. Limit is 4 houses or 1 hotel per city',
     noHousesLeftInBank = 'No houses left in the bank',
     noHotelsLeftInBank = 'No hotels left in the bank',
-    citiesNotBigEnough = 'Each city should have at least 4 houses or 1 hotel',
+    citiesNotBigEnough = 'A hotel may not be build, as cities are too small. Each city in a country should have at least 4 houses in order to build a hotel',
     tooManyHotelsBuildInRound = 'Only 3 hotels may be bought in a round',
 
 }
