@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
+import { CLOSE_GAME_OPTIONS } from "../../Constants/cleaners";
+import { useIncludeCleaer } from "../../Contexts/CleaningContext/CleaningContext";
 import { Game } from "../../Logic/Game/Game";
 import { Messages } from "../../Logic/Game/types";
 import { getOptions } from "../../Logic/Journalist/getOptions";
@@ -133,6 +135,8 @@ const useSelectPlayerName = (id: string) => {
 
 const useSwitch = (label: string, isInitiallyChecked: boolean) => {
     const [isChecked, setIsChecked] = useState<boolean>(isInitiallyChecked);
+    const setSelection = () => setIsChecked(true);
+    const clearSelection = () => setIsChecked(false);
     const Switch = useCallback(() => {
         return (
             <Checkbox
@@ -142,13 +146,14 @@ const useSwitch = (label: string, isInitiallyChecked: boolean) => {
             />
         )
     }, [isChecked])
-    return {isChecked, Switch}
+    return {isChecked, Switch, setSelection, clearSelection}
 }
 
 const GameControl = () => {
     const classes = useStyles();
     const {selectedPlayerName, PlayerSelection} = useSelectPlayerName('Select player name')
-    const {isChecked: shouldDisplayOptions, Switch} = useSwitch('Toggle select player', false);
+    const {isChecked: shouldDisplayOptions, Switch, clearSelection} = useSwitch('Toggle select player', false);
+    useIncludeCleaer(CLOSE_GAME_OPTIONS, () => clearSelection() )
     return (
         <>
                     <div className={classes.housing}>
