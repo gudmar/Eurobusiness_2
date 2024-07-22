@@ -167,15 +167,9 @@ export const SellBuildings = ({gameOptions}: {gameOptions: tJournalistState}) =>
                 ))
             }
             </div>
-            {/* <div className={classes.actions}>{option && <PresentSellBuildingsOptions sellOptions={option} playerName={playerName}/>}</div> */}
             {
                 optionIndex!==-1 && <div className={classes.actions}><PresentSellBuildingsOptions sellOptions={option} playerName={playerName}/></div>
             }
-            {/* {
-                optionIndex!==-1 && <div>OPTION index is {optionIndex} {JSON.stringify(countries[optionIndex])}</div>
-            } */}
         </div>
     )
 }
-
-// Byłoby ładnie gdyby najazd na tytuł 'select 0' powodował podświetlenie całosic
