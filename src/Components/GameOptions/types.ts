@@ -96,3 +96,5 @@ export type tPresentSingleSellBuildingOption = {
     playerName: string,
     index: number
 }
+
+export type tGetCountries = (options: tObject<any>) => tObject<any>

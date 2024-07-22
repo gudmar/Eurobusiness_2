@@ -1,9 +1,10 @@
-import { FC, useCallback, useEffect } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { tJournalistState } from "../../Logic/Journalist/types";
+import { tObject } from "../../Logic/types";
 import { Button, ButtonColorScheme } from "../Button/Button";
 import { getUseEstatesContent } from "./getUseEstatesContent";
 import { useStyles } from "./styles";
-import { tCountries, tEstateOptionsProps } from "./types";
+import { tCountries, tEstateOptionsProps, tGetCountries } from "./types";
 import { usePossibleTransactions } from "./usePossibleTransactions";
 
 const dataKey = 'sellBuildings'
@@ -15,8 +16,55 @@ const isOperationNotAllowedInAnyCountry = (countries: tCountries) => {
     return keys.length === 1 && keys[0] === 'reason';
 }
 
-export const withDisplayOptionsAsCountries = (EstateOptions: FC<tEstateOptionsProps>, countriesKey: string) => {
-    // const useEstateContent = getUseEstatesContent(EstateOptions, countries);
+const ActionsSectionContent = (props: any) => {
+    const {
+        countries,
+        selectedCountryName,
+        PresentComponent,
+    } = props;
+    console.log('Selected contry,', selectedCountryName, countries)
+    const country = countries?.[selectedCountryName];
+    const classes = useStyles();
+    const [presentedEstateName, setPresentedEstateName] = useState<string>('')
+    useEffect(() => console.log('Selected country', country), [country])
+    if (!country) return <></>
+    return (
+        <div className={classes?.countryModule}>
+                {
+                    Object.entries(country).map(
+                        ([estateName, estateValue]) => {
+                            return (
+                                <>
+                                    <Button
+                                        colorVariant={ButtonColorScheme.secondary}
+                                        label={estateName}
+                                        action={() => {
+                                            setPresentedEstateName(estateName);
+                                        }}
+                                        selected={presentedEstateName === estateName}
+                                    />
+                                    {
+                                        presentedEstateName === estateName && 
+                                        <PresentComponent
+                                            estate={country?.[presentedEstateName]}
+                                        />
+                                    }
+                                </>
+                            )
+                        }
+                    )
+                }
+        </div>
+    )
+}
+
+export type tWithDisplayOptionsAsCountries = {
+    EstateOptions: FC<tEstateOptionsProps>,
+    countriesKey: string,
+    getCountries: tGetCountries,
+}
+
+export const withDisplayOptionsAsCountries = ({ EstateOptions, countriesKey, getCountries }: tWithDisplayOptionsAsCountries) => {
 
     return ({gameOptions}: {gameOptions: tJournalistState}) => {
         console.log('withDisplayOptions...', gameOptions)
@@ -38,6 +86,8 @@ export const withDisplayOptionsAsCountries = (EstateOptions: FC<tEstateOptionsPr
                 presentedCountryName,
                 presentedEstateName
             } = useEstateContent();
+            const [optionIndex, setOptionIndex] = useState<number>(-1)
+
             useEffect(() => console.log('Countries', presentedCountryName), [presentedCountryName])
             useEffect(() => console.log('sell Permits', permits), [permits])
             if (isOperationNotAllowedInAnyCountry(countries)) {
@@ -47,28 +97,15 @@ export const withDisplayOptionsAsCountries = (EstateOptions: FC<tEstateOptionsPr
             if (actions.length !== 1) throw new Error('Countries options may have only one action')
             const countryNames = Object.keys(countries?.actions?.[0].payload);
             const buttons = countryNames.map(
-                (countryName: string) => {
-                    const estateNames = Object.keys(countries?.actions?.[0].payload?.[countryName]);
-                    const isUnfolded = countryName === presentedCountryName;
+                (countryName: string, index) => {
                     return (
                         <div className={classes?.countryModule}>
-                            <Button label={countryName} action={()=> setPresentedContryName(countryName)}/>
-                            { isUnfolded && <div className={`${classes?.estatesModule} ${ isUnfolded ? classes?.estatesOpened : classes?.estatesClosed }`}>
-                                {
-                                    estateNames.map(
-                                        (estateName) => {
-                                            return (
-                                                <Button
-                                                    colorVariant={ButtonColorScheme.secondary}
-                                                    label={estateName}
-                                                    action={() => setPresentedEstatesName(estateName)}
-                                                    selected={presentedEstateName === estateName}
-                                                />
-                                            )
-                                        }
-                                    )
-                                }
-                            </div>}
+                            <Button label={countryName} 
+                                action={()=> {
+                                  setPresentedContryName(countryName)
+                                }}
+                                selected={presentedCountryName === countryName}
+                            />
                         </div>
                     )
                 }
@@ -77,21 +114,15 @@ export const withDisplayOptionsAsCountries = (EstateOptions: FC<tEstateOptionsPr
             return (
 
                 <div className={classes?.container}>
-                <div className={classes?.countriesList}>{buttons}</div>
-                <div className={classes?.actions}>
-                    { !!permits && JSON.stringify(permits[selectedCountryName]) }
-                    {/* { !!permits && <PossibleTransactions permits={permits[selectedCountryName]}/>} */}
-                    { !!rejectionReason && <div>{rejectionReason}</div>}
+                    <div className={classes?.countriesList}>{buttons}</div>
+                    <div className={classes?.actions}>
+                        <ActionsSectionContent
+                            countries={getCountries(countries)}
+                            selectedCountryName={presentedCountryName}
+                            PresentComponent={EstateOptions}
+                        />
+                    </div>
                 </div>
-            </div>
-
-
-                // <div className={classes?.container}>
-                //     <div className={classes?.countriesList}>{buttons}</div>
-                //     <div className={classes?.actions}>
-                //         <EstateContent/>
-                //     </div>
-                // </div>
             )        
     }
 }

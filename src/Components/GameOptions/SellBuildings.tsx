@@ -152,7 +152,7 @@ export const SellBuildings = ({gameOptions}: {gameOptions: tJournalistState}) =>
             <div className={`${classes.verticalContainer} ${classes.countryModule} `}>
             {
                 countries.map(([countryName, countryOption], index) => (
-                    <div key={countryName}>
+                    <div key={countryName} className={classes?.countryModule}>
                         <Button
                             label={countryName}
                             selected={selectedCountryName === countryName}

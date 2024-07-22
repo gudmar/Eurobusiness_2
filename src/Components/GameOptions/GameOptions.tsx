@@ -65,20 +65,29 @@ const SellBuildingsForm = (estate: tObject<any>) => {
 
 const PlegdeEstatesForm = ({ estate }: tObject<any>) => {
     const classes = useStyles()
-    
+    console.log('Estate', estate)
     if (estate?.reason) {
         return <div className={classes.reason}>{estate?.reason}</div>
     }
     return <></>
 }
 
-const PlegdeEstates = withDisplayOptionsAsCountries(PlegdeEstatesForm, 'plegdeEstates');
+const getPlegdeCountries = (options: tObject<any>) => {
+    const countries = options?.actions?.[0]?.payload;
+    return countries;
+}
+
+const PlegdeEstates = withDisplayOptionsAsCountries({
+    EstateOptions: PlegdeEstatesForm, countriesKey: 'plegdeEstates', getCountries: getPlegdeCountries
+});
 
 const UnplegdeEstatesFrom = (estate: tObject<any>) => {
     return <>Unplegde estates in ${estate.name}</>
 }
 
-const UnplegdeEstates = withDisplayOptionsAsCountries(UnplegdeEstatesFrom, 'unplegdeEstates');
+const UnplegdeEstates = withDisplayOptionsAsCountries({
+        EstateOptions: UnplegdeEstatesFrom, countriesKey: 'unplegdeEstates', getCountries: (a: tObject<any>) => a
+    });
 
 
 const withPresentReason = (Actions: FC<tObject<any>>) => ({reason, actions}: tObject<any>) => {
@@ -129,22 +138,30 @@ const optionKeyToButtonPropsMap = {
     sellBuildings: {
         buttonName: 'Sell buildings',
         component: SellBuildings,
+        // getCountries: (a: tObject<any>)=> a,
     },
     plegdeEstates: {
         buttonName: 'Plegde estates',
-        component: PlegdeEstates
+        component: PlegdeEstates,
+        getCountries: (options: tObject<any>) => {
+            const countries = options?.actions?.[0]?.payload;
+            return countries;
+        }        
     },
     unplegdeEstates: {
         buttonName: 'Unplegde estates',
-        component: UnplegdeEstates
+        component: UnplegdeEstates,
+        getCountries: (a: tObject<any>)=> a,
     },
     sellEstates: {
         buttonName: 'Sell estates',
-        component: () => null
+        component: () => null,
+        getCountries: (a: tObject<any>)=> a,
     },
     specialCards: {
         buttonName: 'Special cards',
-        component: () => null
+        component: () => null,
+        getCountries: (a: tObject<any>)=> a,
     }
 }
 
