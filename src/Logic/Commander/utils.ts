@@ -80,7 +80,6 @@ type tRemoveSoldBuildingsInSingleEstateArgs = {
 
 const removeSoldBuildnigsInSingleEstate = (args: tRemoveSoldBuildingsInSingleEstateArgs) => {
     const {nrOfHotelsLeft, nrOfHousesLeft, cityName } = args;
-    console.log('args', args)
     BoardCreator.instance.setNrOfHotels(cityName, nrOfHotelsLeft);
     BoardCreator.instance.setNrOfHouses(cityName, nrOfHousesLeft);
 }
@@ -104,7 +103,6 @@ const checkIfEnoughBuildingsInCity = (args: tRemoveSoldBuildingsInSingleEstateAr
 export const compareCurrentBuildingsToBuildingsToBeLeft = ({
     nrOfHotelsLeft, nrOfHousesLeft, nrOfHousesCurrent, nrOfHotelsCurrent
 }: tCompareBuildingsLeftToCurrentBuildingsArgs) => {
-    console.log('Comparing', nrOfHotelsLeft, nrOfHousesLeft, nrOfHousesCurrent, nrOfHotelsCurrent)
     const areNoHotelsToBeSold = (nrOfHotelsCurrent === nrOfHotelsLeft);
     const areNoHousesToBeSold = (nrOfHousesLeft === nrOfHousesCurrent);
     const areNoBuildingsToBeSold = areNoHotelsToBeSold && areNoHousesToBeSold;
@@ -138,14 +136,8 @@ const summCurrentNrOfBuildings = (args: tSellBuildingsArgs) => {
 }
 
 const checkIfThereAreBuildingsToBeSold =  (args: tSellBuildingsArgs) => {
-    // const {nrOfHotelsLeft, nrOfHousesLeft, cityName} = args;
     const {nrOfHotels: nrOfHotelsLeft, nrOfHouses: nrOfHousesLeft} = summCurrentNrOfBuildings(args);
     const {nrOfHotels: nrOfHotelsCurrent, nrOfHouses: nrOfHousesCurrent}  = summNrBuildingsAfterTransaction( args );
-    // const {nrOfHouses, nrOfHotels} = BoardCreator.instance.getNrOfBuildingsOnCityByName(args.cityName);
-    // const areAnyHousesToBeSold = compareCurrentBuildingsToBuildingsToBeLeft({
-    //     nrOfHousesLeft: nrBuildings.nrOfHouses, nrOfHotelsLeft: nrBuildings.nrOfHotels,
-    //     nrOfHotelsCurrent: nrOfHotels, nrOfHousesCurrent: nrOfHouses
-    // })
     const areAnyHousesToBeSold = compareCurrentBuildingsToBuildingsToBeLeft({
         nrOfHousesLeft, nrOfHotelsLeft, nrOfHotelsCurrent, nrOfHousesCurrent
     })
