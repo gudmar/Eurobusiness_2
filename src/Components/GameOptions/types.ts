@@ -1,3 +1,4 @@
+import { FC } from "react";
 import { tCity } from "../../Data/types";
 import { OptionTypes } from "../../Logic/Journalist/types";
 import { NrOfHotels, NrOfHouses } from "../../Logic/Journalist/utils/getBuildingPermits";
@@ -98,3 +99,15 @@ export type tPresentSingleSellBuildingOption = {
 }
 
 export type tGetCountries = (options: tObject<any>) => tObject<any>
+
+export type tEstateOptions<EstateType> = {
+    estate: EstateType,
+    estateName: string,
+}
+
+export type tWithDisplayOptionsAsCountries = {
+    // EstateOptions: FC<tEstateOptions<EstateOptionsType>>,
+    EstateOptions: () => JSX.Element,
+    countriesKey: string,
+    getCountries: tGetCountries,
+}

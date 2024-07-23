@@ -218,7 +218,7 @@ export class BoardCreator {
 
     getEstateByName(name: string) {
         const notEstateTypes = [START, JAIL, FREE_PARK, GO_TO_JAIL, TAX, GUARDED_PARKING, '']
-        const estate = this._getFieldByName(name);
+        const estate = this._getFieldByName(name) as tEstateField;
         if (notEstateTypes.includes(estate?.type || '') ) {
             throw new Error(`${name} is not an estate`)
         }

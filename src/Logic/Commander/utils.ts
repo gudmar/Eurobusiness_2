@@ -1,10 +1,8 @@
-import { tLocationAfterTransaction } from "../../Components/GameOptions/types";
 import { MAX_NR_HOUSES_IN_CITY } from "../../Constants/constants";
 import { tCity, tColors } from "../../Data/types";
 import { displayError } from "../../Functions/displayMessage";
 import { Bank } from "../Bank/Bank";
 import { BoardCreator } from "../BoardCaretaker";
-import { NrOfHotels, NrOfHouses } from "../Journalist/utils/getBuildingPermits";
 import { Players } from "../Players/Players";
 import { tBuyBuilding, tCompareBuildingsLeftToCurrentBuildingsArgs, tSellBuildingsArgs } from "./types";
 
