@@ -199,11 +199,22 @@ export class Commander {
     // =================== Sell estate =============
     static sellBuildings(args: tSellBuildingsArgs) {
         const {nrOfHotels, nrOfHouses, price, locationAfterTransaction, playerName} = args;
-        console.log('args', args)
         if (price === 0) return;
         removeSoldHousessFromBuildings(args);
         returnBuildingsToBank(args);
         returnMoneyToPlayer(playerName, price)
+    }
+
+    // ================== Plegde ==================
+    static plegde(estateName: string) {
+        const estate = BoardCreator.instance.getEstateByName(estateName);
+        const {owner, isPlegded, mortgage} = estate;
+        console.log('Plegding', estate)
+        if (isPlegded) throw new Error(`${estateName} is already plegded`)
+        const player = getPlayerByColor(owner as tColors);
+        if (!player) throw new Error(`Could not find player ${owner}`);
+        player.money = player.money + mortgage;
+        estate.isPlegded = true;
     }
 }
 

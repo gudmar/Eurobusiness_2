@@ -4,7 +4,7 @@ import { tObject } from "../../Logic/types";
 import { Button, ButtonColorScheme } from "../Button/Button";
 import { getUseEstatesContent } from "./getUseEstatesContent";
 import { useStyles } from "./styles";
-import { tCountries, tEstateOptionsProps, tGetCountries } from "./types";
+import { tCountries, tEstateOptionsProps, tGetCountries, tWithDisplayOptionsAsCountries } from "./types";
 import { usePossibleTransactions } from "./usePossibleTransactions";
 
 const dataKey = 'sellBuildings'
@@ -46,6 +46,7 @@ const ActionsSectionContent = (props: any) => {
                                     {
                                         presentedEstateName === estateName && 
                                         <PresentComponent
+                                            estateName={estateName}
                                             estate={country?.[presentedEstateName]}
                                         />
                                     }
@@ -58,11 +59,6 @@ const ActionsSectionContent = (props: any) => {
     )
 }
 
-export type tWithDisplayOptionsAsCountries = {
-    EstateOptions: FC<tEstateOptionsProps>,
-    countriesKey: string,
-    getCountries: tGetCountries,
-}
 
 export const withDisplayOptionsAsCountries = ({ EstateOptions, countriesKey, getCountries }: tWithDisplayOptionsAsCountries) => {
 
