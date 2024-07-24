@@ -100,9 +100,10 @@ export type tPresentSingleSellBuildingOption = {
 
 export type tGetCountries = (options: tObject<any>) => tObject<any>
 
-export type tEstateOptions<EstateType> = {
-    estate: EstateType,
+export type tEstateOptions = {
+    estate: tObject<any>,
     estateName: string,
+    playerName: string,
 }
 
 export type tWithDisplayOptionsAsCountries = {

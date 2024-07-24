@@ -11,6 +11,8 @@ import { SellBuildings } from "./SellBuildings";
 import { useImportCleaner, useIncludeCleaer } from "../../Contexts/CleaningContext/CleaningContext";
 import { REFRESH_GAME_OPTIONS } from "../../Constants/cleaners";
 import { Commander } from "../../Logic/Commander/Commander";
+import PlegdeEstatesForm from "./PlegdeEstatesForm";
+import UnplegdeEstatesForm from "./UnplegdeEstatesForm";
 
 const useGameOptions = (playerName: string) => {
     const [options, setOptions] = useState<tObject<any>>({});
@@ -60,55 +62,19 @@ const SingleCountry = ({country, countryName}: iSingleCountryProps) => {
     )
 }
 
-const SellBuildingsForm = (estate: tObject<any>) => {
-    return <>Sell buildings in ${estate.name}</>
-}
-
-const PlegdeEstatesForm = (({ estate, estateName }: tEstateOptions<tObject<any>>) => {
-    const classes = useStyles()
-    const refreshGameState = useImportCleaner(REFRESH_GAME_OPTIONS);
-    const isAllowed = estate?.reason === 'Allowed'
-    console.log('Estate', estate)
-    if (estate?.reason) {
-        return (
-            <div className={classes.reason}>
-                {
-                    isAllowed
-                        ? 
-                            <Button 
-                                label={`Plegde, gain $${estate.price}`} 
-                                disabled={!isAllowed} 
-                                action={
-                                    () => {
-                                        Commander.plegde(estateName);
-                                        refreshGameState();
-                                    }
-                                }
-                            />
-                        :
-                            <>{estate!.reason}</>
-                }
-            </div>
-        )
-    }
-    return <></>
-}) as () => JSX.Element
-
 const getPlegdeCountries = (options: tObject<any>) => {
     const countries = options?.actions?.[0]?.payload;
     return countries;
 }
 
+const getUnplegdeCountries = getPlegdeCountries;
+
 const PlegdeEstates = withDisplayOptionsAsCountries({
     EstateOptions: PlegdeEstatesForm, countriesKey: 'plegdeEstates', getCountries: getPlegdeCountries
 });
 
-const UnplegdeEstatesFrom = ((estate: tObject<any>) => {
-    return <>Unplegde estates in ${estate.name}</>
-}) as () => JSX.Element
-
 const UnplegdeEstates = withDisplayOptionsAsCountries({
-        EstateOptions: UnplegdeEstatesFrom, countriesKey: 'unplegdeEstates', getCountries: (a: tObject<any>) => a
+        EstateOptions: UnplegdeEstatesForm, countriesKey: 'unplegdeEstates', getCountries: getUnplegdeCountries
     });
 
 
@@ -173,7 +139,10 @@ const optionKeyToButtonPropsMap = {
     unplegdeEstates: {
         buttonName: 'Unplegde estates',
         component: UnplegdeEstates,
-        getCountries: (a: tObject<any>)=> a,
+        getCountries: (options: tObject<any>) => {
+            const countries = options?.actions?.[0]?.payload;
+            return countries;
+        }
     },
     sellEstates: {
         buttonName: 'Sell estates',

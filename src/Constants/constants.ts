@@ -49,3 +49,5 @@ export const INFORMATION_TIMEOUT = 5000;
 export const MAX_PLAYER_NAME_LENGTH = 20;
 
 export const PASS_START_AMMOUNT = 400;
+
+export const MORTGAGE_INTEREST_RENT_FACTOR = 0.1;

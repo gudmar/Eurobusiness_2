@@ -1,4 +1,6 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
+import { REFRESH_GAME_OPTIONS } from "../../../Constants/cleaners";
+import { useImportCleaner } from "../../../Contexts/CleaningContext/CleaningContext";
 import { useThemesAPI } from "../../../Contexts/ThemeContext";
 import { BLUE, GREEN, RED, YELLOW } from "../../../Data/const";
 import { usePlayersColors } from "../../../hooks/usePlayersColors"
@@ -46,6 +48,8 @@ export const PlayerEditor = () => {
     const sections = [GENERAL, ...playersColors, BOARD, RED_CARDS, BLUE_CARDS, TEST_VIEW]
     const [activeSection, setActiveSection] = useState(sections[0]);
     const Editor = EDITORS[activeSection];
+    const refreshGameState = useImportCleaner(REFRESH_GAME_OPTIONS);
+    useEffect(() => {return refreshGameState}, [])
     return (
         <div className={classes.container}>
             <div className={classes.nav}>

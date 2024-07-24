@@ -21,6 +21,7 @@ const ActionsSectionContent = (props: any) => {
         countries,
         selectedCountryName,
         PresentComponent,
+        playerName
     } = props;
     console.log('Selected contry,', selectedCountryName, countries)
     const country = countries?.[selectedCountryName];
@@ -48,6 +49,7 @@ const ActionsSectionContent = (props: any) => {
                                         <PresentComponent
                                             estateName={estateName}
                                             estate={country?.[presentedEstateName]}
+                                            playerName={playerName}
                                         />
                                     }
                                 </>
@@ -115,6 +117,7 @@ export const withDisplayOptionsAsCountries = ({ EstateOptions, countriesKey, get
                         <ActionsSectionContent
                             countries={getCountries(countries)}
                             selectedCountryName={presentedCountryName}
+                            playerName={gameOptions.playerName}
                             PresentComponent={EstateOptions}
                         />
                     </div>
