@@ -1,5 +1,5 @@
 import { tSellBuildingOption } from "../../Components/GameOptions/types";
-import { PRISON_FIELD_NR_INDEXED_FROM_0, TURNS_TO_WAIT_TO_GET_OUT_OF_JAIL } from "../../Constants/constants";
+import { MORTGAGE_INTEREST_RENT_FACTOR, PRISON_FIELD_NR_INDEXED_FROM_0, TURNS_TO_WAIT_TO_GET_OUT_OF_JAIL } from "../../Constants/constants";
 import { BOARD_SIZE } from "../../Data/const";
 import { tBoardField, tColors, tEstate } from "../../Data/types";
 import { addUniqueArrayItems } from "../../Functions/addArrayUniqueItems";
@@ -206,15 +206,27 @@ export class Commander {
     }
 
     // ================== Plegde ==================
-    static plegde(estateName: string) {
+    static plegde(estateName: string, interestedPlayerName: string) {
         const estate = BoardCreator.instance.getEstateByName(estateName);
         const {owner, isPlegded, mortgage} = estate;
-        console.log('Plegding', estate)
         if (isPlegded) throw new Error(`${estateName} is already plegded`)
         const player = getPlayerByColor(owner as tColors);
+        if (player.name !== interestedPlayerName) throw new Error(`Interested player is ${interestedPlayerName}, where estate owner is ${player.name}. You cannot plegde some one elses estate`)
         if (!player) throw new Error(`Could not find player ${owner}`);
         player.money = player.money + mortgage;
         estate.isPlegded = true;
+    }
+    // =============== Unplegde =============
+    static unplegde(estateName: string, price: number, interestedPlayerName: string) {
+        const estate = BoardCreator.instance.getEstateByName(estateName);
+        const {owner, isPlegded } = estate;
+        if (!isPlegded) throw new Error(`${estateName} is already not plegded`)
+        const player = getPlayerByColor(owner as tColors);
+        if (player.name !== interestedPlayerName) throw new Error(`Interested player is ${interestedPlayerName}, where estate owner is ${player.name}. You cannot unplegde some one elses estate`)
+        if (!player) throw new Error(`Could not find player ${owner}`);
+        if (player.money < price) throw new Error('Player is too poor to buy out this estate')
+        player.money = player.money - price;
+        estate.isPlegded = false;
     }
 }
 

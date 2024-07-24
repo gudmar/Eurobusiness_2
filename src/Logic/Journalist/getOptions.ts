@@ -43,7 +43,6 @@ export const getTestableOptions = (state: tGameState, playerName: string): tJour
         getDrawChanceCardOption,
         getStoppedOnBankOwnedEstateOptions,
         getGoToJailOptions,
-
         getMayPlayerEndTurnOptions,
     ];
     if (builderSequence[builderSequence.length - 1] !== getMayPlayerEndTurnOptions) {

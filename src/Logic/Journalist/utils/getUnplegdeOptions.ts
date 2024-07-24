@@ -29,7 +29,7 @@ const getQuotation = (boardField: tFieldState, playerMoney: number) => {
     const reason = isPlayerRitchEnough ? UnplegdeEstatesReasons.Allowed : UnplegdeEstatesReasons.NoMoney
     return {
         reason,
-        price: boardField.mortgage
+        price: buyoutPrice
     }
 }
 
