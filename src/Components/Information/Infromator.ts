@@ -4,6 +4,8 @@ import { iInformationData, INFORMATION_MESSAGE, Severity, tInformationMessage } 
 
 export class Informator extends SubscribtionsHandler<tInformationMessage, iInformationData> {
     private static _instance: Informator;
+    
+    static get instance() {return Informator._instance }
 
     constructor() {
         super();
@@ -25,4 +27,5 @@ export class Informator extends SubscribtionsHandler<tInformationMessage, iInfor
         this.runAllSubscriptions(INFORMATION_MESSAGE, {severity: Severity.information, title, message})
     }
     log() {this.logSubscribtions()}
+    
 }
