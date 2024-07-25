@@ -107,20 +107,10 @@ export const useStyles = makeStyles(() => {
         oddElement: {
             backgroundColor: '#eeeeee',
             border: 'solid thin transparent',
-            // '&:hover': {
-            //     backgroundColor: '#aaaaaa',
-            //     border: 'solid thin gray',
-            //     cursor: 'pointer'
-            // }
         },
         evenElement: {
             backgroundColor: '#aaaaaa',
             border: 'solid thin transparent',
-            // '&:hover': {
-            //     backgroundColor: '#999999',
-            //     border: 'solid thin gray',
-            //     cursor: 'pointer'
-            // }
         },
         hidden: {
             display: 'none'
@@ -142,6 +132,12 @@ export const useStyles = makeStyles(() => {
                 backgroundColor: 'black',
                 color: 'white'
             }
+        },
+        bigButtons: {
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '2rem'
+
         }
     })
 })

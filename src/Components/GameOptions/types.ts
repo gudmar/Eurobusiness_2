@@ -113,9 +113,10 @@ type tDisplayAlternativeProps = {
 type tDisplayAlternative = (props: tDisplayAlternativeProps) => JSX.Element | null
 
 export type tWithDisplayOptionsAsCountries = {
-    // EstateOptions: FC<tEstateOptions<EstateOptionsType>>,
     DisplayAlternative?: tDisplayAlternative,
     EstateOptions: () => JSX.Element,
     countriesKey: string,
     getCountries: tGetCountries,
 }
+
+export type tGameOptions = tObject<any>

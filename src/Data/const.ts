@@ -70,8 +70,6 @@ export const CHANCE_RED_RIGHT = 'Chance red_right';
 export const INSBRUK = 'Insbruck';
 export const TAX = 'Tax';
 export const WIEDEN = 'Wien'
-// export const CHANCE_BLUE_TOP = 'Chance blue top';
-// export const CHANCE_BLUE_RIGHT = 'Chance blue right'
 export const GO_TO_JAIL = 'Go to jail'
 export const LIVERPOOL = 'Liverpool'
 

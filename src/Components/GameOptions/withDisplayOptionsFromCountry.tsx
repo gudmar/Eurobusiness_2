@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { tJournalistState } from "../../Logic/Journalist/types";
 import { Button, ButtonColorScheme } from "../Button/Button";
 import { getUseEstatesContent } from "./getUseEstatesContent";
 import { useStyles } from "./styles";
 import { tCountries, tWithDisplayOptionsAsCountries } from "./types";
-import { usePossibleTransactions } from "./usePossibleTransactions";
+// import { usePossibleTransactions } from "./usePossibleTransactions";
 import { withAlternativeComponent } from "./withAlternativeComponent";
 
 const dataKey = 'sellBuildings'
@@ -61,29 +61,26 @@ const ActionsSectionContent = (props: any) => {
     )
 }
 
-// when loading game to test unplegding and seleting sell estates and italy there is a 'reason' button, that should not be there
-
 export const withDisplayOptionsAsCountries = ({ EstateOptions, countriesKey, getCountries, DisplayAlternative = () => null }: tWithDisplayOptionsAsCountries) => {
 
     return ({gameOptions}: {gameOptions: tJournalistState}) => {
-        console.log('withDisplayOptions...', gameOptions)
             const countries = (gameOptions as any)[countriesKey];
             const useEstateContent =  useCallback(getUseEstatesContent(EstateOptions, countries), []);
             const classes = useStyles();
 
-            const {
-                permits,
-                setSelectedCountryName, 
-                selectedCountryName, 
-                rejectionReason
-            } = usePossibleTransactions(gameOptions, dataKey);
+            // const {
+            //     permits,
+            //     setSelectedCountryName, 
+            //     selectedCountryName, 
+            //     rejectionReason
+            // } = usePossibleTransactions(gameOptions, dataKey);
 
             const {
-                EstateContent,
+                // EstateContent,
                 setPresentedContryName,
-                setPresentedEstatesName,
+                // setPresentedEstatesName,
                 presentedCountryName,
-                presentedEstateName
+                // presentedEstateName
             } = useEstateContent();
 
             if (isOperationNotAllowedInAnyCountry(countries)) {

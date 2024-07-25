@@ -18,7 +18,6 @@ const UnplegdeEstatesForm = (({ estate, estateName, playerName }: tEstateOptions
     const refreshGameState = useImportCleaner(REFRESH_GAME_OPTIONS);
     const hasMoney = isPlayerWealthyEnough(playerName, estate?.price);
     const isDisabled = estate?.reason === ALLOWED && hasMoney;
-    console.log('Estate', estate)
     if (estate?.reason) {
         return (
             <div className={classes.reason}>

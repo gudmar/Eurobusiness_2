@@ -1,7 +1,6 @@
 import { REFRESH_GAME_OPTIONS } from "../../Constants/cleaners";
 import { useImportCleaner } from "../../Contexts/CleaningContext/CleaningContext";
 import { Commander } from "../../Logic/Commander/Commander";
-import { tObject } from "../../Logic/types";
 import { Button } from "../Button/Button";
 import { useStyles } from "./styles";
 import { tEstateOptions } from "./types";
