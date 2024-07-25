@@ -9,7 +9,7 @@ export const SellEstatesAlternative = ({estateName, ...props}: {estateName: stri
 }
 
 const SellEstatesForm = ((props: any) => {
-    const {estate, estateName, playerName} = props;
+    const {estate } = props;
     const {reason, initialPrice} = estate;
     const isAllowed = reason === SellEstatesReasons.Allowed;
     const classes = useStyles();
