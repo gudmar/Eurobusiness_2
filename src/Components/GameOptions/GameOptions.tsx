@@ -13,6 +13,9 @@ import { REFRESH_GAME_OPTIONS } from "../../Constants/cleaners";
 import { Commander } from "../../Logic/Commander/Commander";
 import PlegdeEstatesForm from "./PlegdeEstatesForm";
 import UnplegdeEstatesForm from "./UnplegdeEstatesForm";
+import { SellEstatesReasons } from "../../Logic/Journalist/utils/getSellEstatesOptions";
+import SellEstatesForm, { SellEstatesAlternative } from "./SellEstatesFrom";
+import { withAlternativeComponent } from "./withAlternativeComponent";
 
 const useGameOptions = (playerName: string) => {
     const [options, setOptions] = useState<tObject<any>>({});
@@ -68,6 +71,16 @@ const getPlegdeCountries = (options: tObject<any>) => {
 }
 
 const getUnplegdeCountries = getPlegdeCountries;
+
+const getSellEstates = (options: tObject<any>) => {
+    console.log('getSellEstates', options)
+    const countries = options?.actions?.[0]?.payload;
+    return countries;
+}
+
+const SellEstates = withDisplayOptionsAsCountries({
+    EstateOptions: SellEstatesForm, countriesKey: 'sellEstates', getCountries: getSellEstates, DisplayAlternative: SellEstatesAlternative
+});
 
 const PlegdeEstates = withDisplayOptionsAsCountries({
     EstateOptions: PlegdeEstatesForm, countriesKey: 'plegdeEstates', getCountries: getPlegdeCountries
@@ -146,8 +159,11 @@ const optionKeyToButtonPropsMap = {
     },
     sellEstates: {
         buttonName: 'Sell estates',
-        component: () => null,
-        getCountries: (a: tObject<any>)=> a,
+        component: SellEstates,
+        getCountries: (options: tObject<any>) => {
+            const countries = options?.actions?.[0]?.payload;
+            return countries;
+        }
     },
     specialCards: {
         buttonName: 'Special cards',

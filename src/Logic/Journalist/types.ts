@@ -105,7 +105,7 @@ export type tJournalistOptionsUnderDevelopement = {
 
 export type tSellEstatePrivilage = {
     reason: string,
-    initilaPrice: number,
+    initialPrice: number,
 }
 
 export type tSellEstatesOptions = {

@@ -18,10 +18,10 @@ export enum SellEstatesReasons {
 
 const getQuotation = (boardField: tFieldState) => {
     if (!('price' in boardField) || !('isPlegded' in boardField)) throw new Error('Cannot get quotation for board field');
-    const initilaPrice = boardField.isPlegded ? boardField.price / 4 : boardField.price / 2;
+    const initialPrice = boardField.isPlegded ? boardField.price / 4 : boardField.price / 2;
     return {
         reason: SellEstatesReasons.Allowed,
-        initilaPrice
+        initialPrice
     }
 }
 
