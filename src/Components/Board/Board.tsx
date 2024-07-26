@@ -1,7 +1,12 @@
+import { useEffect, useState } from "react";
 import { useThemesAPI } from "../../Contexts/ThemeContext";
 import { getBoardCaretaker } from "../../Functions/getBoardCaretaker";
 import { BoardCaretaker } from "../../Logic/BoardCaretaker";
+import { Messages } from "../../Logic/Messages/constants";
+import { Player } from "../../Logic/Player/Player";
+import { Players } from "../../Logic/Players/Players";
 import GameControl from "../GameControl/GameControl";
+import { CurrentPlayerInfo } from "../GameInformators/CurrentPlayerInfo/CurrentPlayerInfo";
 import BoardField from "./BoardField/BoardFiled";
 import BoardSide from "./BoardSide/BoardSide";
 import { useStyles } from "./styles";
@@ -68,6 +73,7 @@ export const Board = () => {
             <BoardSide direction={BOTTOM} />
             <BoardSide direction={LEFT} />
             <div className={classes.middleBoard}>
+                <CurrentPlayerInfo />
                 <GameControl />
             </div>
         </div>

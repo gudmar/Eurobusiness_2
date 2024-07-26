@@ -1,5 +1,6 @@
 import { INITIAL_MONEY } from "../../Data/money";
 import { tColors } from "../../Data/types";
+import { iSubscription } from "../../Types/types";
 import { tChanceCardPayload } from "../Commander/types";
 import { iDiceTestModeDecorator } from "../Dice/types";
 import { Messages } from "../Messages/constants";
@@ -18,6 +19,35 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
         const player = new Player({ name, color, strategy, money: INITIAL_MONEY, DiceClassInstance: this._diceClassInstance })
         return player;
     }
+    private static get nextPlayerIndex() {
+        const nrOfPlayers = Players.players.length;
+        const maxPlayerIndex = nrOfPlayers - 1;
+        const currentPlayerIndex = Players._instance._currentPlayerIndex;
+        const result = currentPlayerIndex + 1 > maxPlayerIndex ? 0 : currentPlayerIndex + 1;
+        return result;
+    }
+    static nextTurn() {
+        const nextPlayerIndex = Players.nextPlayerIndex;
+        Players._instance._currentPlayerIndex = nextPlayerIndex;
+        Players._instance.runAllSubscriptions(Messages.switchPlayer, Players._instance.currentPlayer)
+    }
+    set currentPlayerColor(playerColor: string) {
+        const nextPlayersIndex = Players.players.findIndex((player) =>
+            player.color === playerColor
+        )
+        if (nextPlayersIndex !== -1) Players._instance._currentPlayerIndex = nextPlayersIndex;
+    }
+    set currentPlayerName(playerName: string) {
+        const nextPlayersIndex = Players.players.findIndex((player) =>
+            player.name === playerName
+        )
+        if (nextPlayersIndex !== -1) Players._instance._currentPlayerIndex = nextPlayersIndex;
+    }
+    get currentPlayerName() {
+        return Players.players[Players._instance._currentPlayerIndex].name
+    }
+
+
     static get instance() {return Players._instance}
     constructor({DiceClass, players}: iAllPlayersArgs){
         super();
@@ -27,7 +57,9 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
             }
             if (Players.players?.length === 0) {
                 players!.forEach((player) => { this._addNewPlayer(player); })
+                console.log('Subscribtions fr4om Players constructor')
                 Players._instance.runAllSubscriptions( Messages.loadPlayers, {});
+                Players._instance.runAllSubscriptions(Messages.switchPlayer, Players._instance.currentPlayer)
             }    
             return Players._instance
         } else {
@@ -35,15 +67,32 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
         }
         if (!this._diceClassInstance) this._diceClassInstance = new DiceClass!();
         if (Players.players?.length === 0) {
-            players!.forEach((player) => { this._addNewPlayer(player); })
+            players!.forEach((player) => {  this._addNewPlayer(player) })
+            // Players._instance.runAllSubscriptions(Messages.switchPlayer, Players._instance.currentPlayer)
         }
     }
     static deleteAllPlayers () { Players.players = [];}
+
+    subscribeWithInformation(subscription: iSubscription<Messages>): void {
+        const { id, messageType} = subscription;
+        this.subscribe(subscription);
+        const typeToInfoMap = {
+            [Messages.switchPlayer]: this.currentPlayer,
+            [Messages.playerAddedDeleted]: null,
+            [Messages.movePlayer]: null,
+            [Messages.loadPlayers]: null,
+        }
+        const message = typeToInfoMap?.[messageType];
+        if (!message) return;
+        this.runAllSubscriptions(messageType, message);
+    }
 
     private _addNewPlayer({color, name, strategy}: iPlayerDescriptor) {
         const nextPlayer = this._createPlayer({color, name, strategy});
         Players.players.push(nextPlayer);
         this.runAllSubscriptions( Messages.playerAddedDeleted, Players.players )
+        this.runAllSubscriptions(Messages.switchPlayer, Players._instance.currentPlayer)
+        console.log('Add new player subscribtions', Players._instance)
     }
 
     private static _getPlayerByColor(color: tColors) {

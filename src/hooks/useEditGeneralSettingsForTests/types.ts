@@ -21,6 +21,9 @@ export type tUseGeneralSettingsForTests = {
     removeFieldToVisit: (field: string) => void,
     possibleTestModes: TestModes[],
     selectedFields: string[],
+    currentPlayerName: string,
+    currentPlayerColor: string,
+    setCurrentPlayerName: (name: string) => void,
     log: ()=>void,
 }
 
