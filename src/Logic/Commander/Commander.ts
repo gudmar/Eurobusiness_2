@@ -228,6 +228,10 @@ export class Commander {
         player.money = player.money - price;
         estate.isPlegded = false;
     }
+    // =========== End turn ===============
+    static endTurn() {
+        Players.nextTurn();
+    }
 }
 
 type tBuyEstate = {

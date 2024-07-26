@@ -7,12 +7,13 @@ import { tEstateProps } from "./types";
 import { withDisplayOptionsAsCountries } from "./withDisplayOptionsFromCountry";
 import { BuyBuildings } from "./BuyBuildings";
 import { SellBuildings } from "./SellBuildings";
-import { useIncludeCleaer } from "../../Contexts/CleaningContext/CleaningContext";
-import { REFRESH_GAME_OPTIONS } from "../../Constants/cleaners";
+import { useImportCleaner, useIncludeCleaer } from "../../Contexts/CleaningContext/CleaningContext";
+import { CLOSE_ALL_GAME_OPTIONS, REFRESH_GAME_OPTIONS } from "../../Constants/cleaners";
 import PlegdeEstatesForm from "./PlegdeEstatesForm";
 import UnplegdeEstatesForm from "./UnplegdeEstatesForm";
 import SellEstatesForm, { SellEstatesAlternative } from "./SellEstatesFrom";
 import SellCards from "./SellCards";
+import { Commander } from "../../Logic/Commander/Commander";
 
 const useGameOptions = (playerName: string) => {
     const [options, setOptions] = useState<tObject<any>>({});
@@ -95,12 +96,13 @@ const withPresentReason = (Actions: FC<tObject<any>>) => ({reason, actions}: tOb
     )
 }
 
-const EndTurnActions = ({actions}: tObject<any>) => {
+const EndTurnActions = () => {
+    const restartOptionsComponent = useImportCleaner(CLOSE_ALL_GAME_OPTIONS)
     return (
         <div>
             <h3>Sure you want to end turn?</h3>
-            <Button disabled={false} action={()=>{}} label={'Yes'} />
-            <Button disabled={false} action={()=>{}} label={'No'} />
+            <Button disabled={false} action={()=>{Commander.endTurn()}} label={'Yes'} />
+            <Button disabled={false} action={restartOptionsComponent} label={'No'} />
         </div>
     )
 }
@@ -189,18 +191,21 @@ const useSelectOptions = (depsArray: any[]) => {
     return {
         OptionsComponent: getOptionsComponent(),
         currentLabel,
-        setPropMapKey
+        setPropMapKey,
+        clearSelectedOption: () => { setCurrentLabel(''); setPropMapKey('') }
     }
 }
 
 export const GameOptions = ({playerName}: any) => {
     const {options, refreshGameState} = useGameOptions(playerName);
     useIncludeCleaer(REFRESH_GAME_OPTIONS, refreshGameState);
-    const { OptionsComponent, currentLabel, setPropMapKey } = useSelectOptions([playerName])
+    
+    const { OptionsComponent, currentLabel, setPropMapKey, clearSelectedOption } = useSelectOptions([playerName])
+    useIncludeCleaer(CLOSE_ALL_GAME_OPTIONS, () => clearSelectedOption());
     const optionsEntries = Object.entries(options);
     const getOptionButton = ([key, value]: [string, any]) => {
         const label = (optionKeyToButtonPropsMap as any)?.[key]?.buttonName;
-        // const action = (optionKeyToButtonPropsMap as any)?.[key]?.component;
+        if (!label) return null;
         return (
             <Button
                 key={label}

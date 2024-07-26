@@ -6,6 +6,7 @@ import { Commander } from "../../Logic/Commander/Commander"
 import { DiceTestModeDecorator } from "../../Logic/Dice/Dice"
 import { TestModes } from "../../Logic/Dice/types"
 import { CHANGE_FIELDS_TO_VISIT, CHANGE_NR_HOTELS, CHANGE_NR_HOUSES, CHANGE_NR_THAT_DICE_WILL_THROW, CHANGE_TEST_MODE } from "../../Logic/Messages/constants"
+import { Players } from "../../Logic/Players/Players"
 import { tSubscription } from "../../Types/types"
 import { EditGeneralSettingsForTestsTypes, iEditGeneralSettingsState, tEditGeneralSettingPayload, tUseGeneralSettingsForTests } from "./types"
 
@@ -243,5 +244,8 @@ export const useGeneralSettingsForTests = (): tUseGeneralSettingsForTests => {
             console.error('useEtitGeneralSettingsForTests: reconsider state of the hook')
             Commander.logTestDiceState();
         },
+        currentPlayerColor: Players._instance.currentPlayerColor,
+        currentPlayerName: Players._instance.currentPlayerName,
+        setCurrentPlayerName: (name: string) => Players._instance.currentPlayerName = name,
     }
 }
