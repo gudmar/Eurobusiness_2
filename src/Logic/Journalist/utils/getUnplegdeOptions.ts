@@ -81,7 +81,7 @@ export const getUnplegdeOptions = (args: tStateModifierArgs): tJournalistOptions
         state.unplegdeEstates = { reason: UnplegdeEstatesReasons.NotGoodMoment }
         return state;
     }
-    const isThisPlayersTurn = options!.game.currentPlayer === playerName
+    const isThisPlayersTurn = options!.players.currentPlayersName === playerName
     if (!isThisPlayersTurn) {
         state.unplegdeEstates = { reason: UnplegdeEstatesReasons.WrongTurn }
         return state;

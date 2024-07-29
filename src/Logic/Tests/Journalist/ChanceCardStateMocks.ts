@@ -64,7 +64,7 @@ export type tSetNrOfHotelsBoughtInRowArgs = {
 }
 
 export const setNrOfHotelsBoughtInRow = ({state ,color, nrHotelsBoughtInRound}: tSetNrOfHotelsBoughtInRowArgs) => {
-  const player = state.players.find((player) => player.color === color);
+  const player = state.players.playersList.find((player) => player.color === color);
   if (!player) throw new Error(`Player ${color} no found`)
   player.nrOfHotelsPurchasedInRound = nrHotelsBoughtInRound;
 }

@@ -21,7 +21,7 @@ export const currentPlayerColorFromNameInState = (state: iGameState) => {
 
 export const playerColorFromNameInState = (playerName: string, state: tGameState) => {
     const { players } = state;
-    const color = players.find(({name}) => (name === playerName))?.color;
+    const color = players.playersList.find(({name}) => (name === playerName))?.color;
     return color;
 }
 

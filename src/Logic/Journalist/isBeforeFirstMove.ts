@@ -18,7 +18,7 @@ export const isBeforeFirstMove = (state: tGameState) => {
 }
 
 const checkIfPlayers = (state: tGameState, checkPlayerStateFunction: (player: iPlayerSnapshot) => boolean) => {
-    const isPlayer = state.players.every(checkPlayerStateFunction);
+    const isPlayer = state.players.playersList.every(checkPlayerStateFunction);
     return isPlayer;
 }
 

@@ -9,16 +9,16 @@ import { mapCitiesToCountries, mapEstatesToCountries } from "../../../Functions/
 import { PLANT, RAILWAY } from "../../../Data/const";
 import { isDefined } from "../../../Functions/isDefined";
 
-export const getCurrentPlayerName = (state: tGameState) => state.game.currentPlayer;
+export const getCurrentPlayerName = (state: tGameState) => state.players.currentPlayersName;
 
 export const getPlayer = (state: tGameState, playerName: string) => {
-    const player = state.players.find(({name}) => name === playerName);
+    const player = state.players.playersList.find(({name}) => name === playerName);
     if (!player) throw new Error(`Cannot find player named ${playerName}`)
     return player;
 }
 
 export const getPlayerByColor = (state: tGameState, playerColor: string) => {
-    const player = state.players.find(({color}) => color === playerColor);
+    const player = state.players.playersList.find(({color}) => color === playerColor);
     if (!player) throw new Error(`Cannot find player with color ${playerColor}`)
     return player;
 }
@@ -34,7 +34,7 @@ export const getCurrentPlayerColor = (state: tGameState) => {
 }
 export const getCurrentPlayer = (state: tGameState) => {
     const currentPlayerName = getCurrentPlayerName(state);
-    const currentPlayer = state.players.find((player) => player.name === currentPlayerName);
+    const currentPlayer = state.players.playersList.find((player) => player.name === currentPlayerName);
     if (!currentPlayer) throw new Error(`No player named ${currentPlayerName}`);
     return currentPlayer;
 }
@@ -282,7 +282,7 @@ export const getFieldData = (fieldName: string) => {
 }
 
 const getPlayerColorFromNameOrColor = (state: tGameState, playerNameOrColor: string ) => {
-    const player = state.players.find(({color, name}) => playerNameOrColor === color || playerNameOrColor === name);
+    const player = state.players.playersList.find(({color, name}) => playerNameOrColor === color || playerNameOrColor === name);
     if (!state) throw new Error(`player ${playerNameOrColor} not found`)
     return player?.color
 }
@@ -320,7 +320,7 @@ export const getFieldIndexesOfType = (state: tGameState, fieldType: string): num
 }
 
 export const getPlayerFromState = (state: tGameState) => {
-    const player = state.players.find(({name}) => name === state.game.currentPlayer);
+    const player = state.players.playersList.find(({name}) => name === state.players.currentPlayersName);
     if (!isDefined(player)) throw new Error(`Player ${name} not defined`)
     return player
 }

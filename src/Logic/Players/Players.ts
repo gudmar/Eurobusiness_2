@@ -31,6 +31,15 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
         Players._instance._currentPlayerIndex = nextPlayerIndex;
         Players._instance.runAllSubscriptions(Messages.switchPlayer, Players._instance.currentPlayer)
     }
+    get state() {
+        const state = {
+            currentPlayersName: Players.players[this._currentPlayerIndex].name,
+            playerNamesOrder: Players.players.map(({name}) => name),
+            currentPlayersColor: Players.players[this._currentPlayerIndex].color
+        };
+        return state;
+    }
+
     set currentPlayerColor(playerColor: string) {
         const nextPlayersIndex = Players.players.findIndex((player) =>
             player.color === playerColor
@@ -81,6 +90,7 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
             [Messages.playerAddedDeleted]: null,
             [Messages.movePlayer]: null,
             [Messages.loadPlayers]: null,
+            [Messages.stateChanged]: this.state,
         }
         const message = typeToInfoMap?.[messageType];
         if (!message) return;

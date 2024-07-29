@@ -7,8 +7,8 @@ export type tGameConstructionArgs = {
 }
 
 export type tGameLogicState = {
-    currentPlayer: tPlayerName,
-    playersOrder: tPlayerName[],
+    // currentPlayer: tPlayerName,
+    // playersOrder: tPlayerName[],
     turnPhase: TurnPhases,
     doneThisTurn: DoneThisTurn[],
 }

@@ -21,13 +21,13 @@ const setChanceCardsState = (state: tGameState) => {
 
 const setPlayersState = (state: tGameState) => {
     // const stateTemplates = Object.entries(state.players);
-    const stateTemplates = state.players;
+    const stateTemplates = state.players.playersList;
     Players.deleteAllPlayers();
     // const playersConstructorArgs = stateTemplates.map(([color, state]) => (state));
     const playersConstructorArgs = stateTemplates;
     new Players({DiceClass: DiceTestModeDecorator, players: playersConstructorArgs});
     Players.players.forEach((player) => {
-        const getPlayer = () => (state.players.find(({name}) => player.state.name === name))
+        const getPlayer = () => (state.players.playersList.find(({name}) => player.state.name === name))
         const color = player.color;
         console.log('Creating player', color, player.state, state.players)
         player.state = getPlayer()

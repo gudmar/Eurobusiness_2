@@ -18,14 +18,19 @@ const getChanceCardsState = () => {
 }
 
 const getPlayersState = () => {
-    const state = Players.players.map((player) => player.state);
+    const playersList = Players.players.map((player) => player.state);
+    const {
+        currentPlayersColor, currentPlayersName, playerNamesOrder
+    } = Players.instance.state;
     // const state = Players.players.reduce((acc, player) => {
     //     const id = player.color;
     //     const state = player.state;
     //     const newAcc = {...acc, [id]: state }
     //     return newAcc;
     // },{})
-    return state;
+    return {
+        playersList, ...Players.instance.state,
+    };
 }
 const getBoardFieldsStates = () => {
     const fields = BoardCaretaker.fieldInstances;

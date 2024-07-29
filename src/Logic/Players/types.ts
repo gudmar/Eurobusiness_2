@@ -48,8 +48,16 @@ export interface iPlayer {
     [key: string] : any  // To be implemented later
 }
 
-export type iPlayersSnapshot = {
+type tPlayersListOfSnapshots = {
     [color in tColors]?: iPlayerSnapshot;
+}
+
+export type iPlayersSnapshot = {
+    // playersList: tPlayersListOfSnapshots,
+    playersList: iPlayerSnapshot[],
+    currentPlayersName: string,
+    currentPlayersColor: tColors,
+    playerNamesOrder: string[]
 };
 
 export type iPlayersMemento = {
@@ -81,4 +89,9 @@ export interface iAnyChange {
     [key: string]: any;
 }
 
+export type tPlayersState = {
+    currentPlayersColor: tColors,
+    currentPlayersName: string,
+    playerNamesOrder: string[]
+}
 

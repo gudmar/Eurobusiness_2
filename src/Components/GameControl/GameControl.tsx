@@ -6,7 +6,6 @@ import { Messages } from "../../Logic/Game/types";
 import { getOptions } from "../../Logic/Journalist/getOptions";
 import { Players } from "../../Logic/Players/Players";
 import { GameOptions } from "../GameOptions/GameOptions";
-import { getMessageWhenAllEstatesRejected } from "../GameOptions/getMessageWhenAllEstatesRejected";
 import HelpTip from "../HelpTip/HelpTip";
 import { Checkbox } from "../Interactors/Checkbox/Checkbox";
 import { SingleSelectFromList } from "../Interactors/SingleSelectFromList/SingleSelectFromList";
@@ -25,10 +24,10 @@ const arrayToString = (arr: string[]) => {
 
 const Information = () => {
     const {
-        currentPlayerName,
-        currentPlayerColor,
+        currentPlayersName,
+        currentPlayersColor,
         turnPhase,
-        playersOrder,
+        playerNamesOrder,
         money,
         currentPlayerField,
     } = useGameControlInfo();
@@ -44,13 +43,13 @@ const Information = () => {
         >
             <StateEditorEntry
                 title='Player name'
-                currentValue={currentPlayerName}
+                currentValue={currentPlayersName}
             >
                 <></>
             </StateEditorEntry>
             <StateEditorEntry
                 title='Player color'
-                currentValue={currentPlayerColor}
+                currentValue={currentPlayersColor}
             >
                 <></>
             </StateEditorEntry>
@@ -62,7 +61,7 @@ const Information = () => {
             </StateEditorEntry>
             <StateEditorEntry
                 title='Order'
-                currentValue={arrayToString(playersOrder)}
+                currentValue={arrayToString(playerNamesOrder)}
             >
                 <></>
             </StateEditorEntry>
@@ -95,7 +94,7 @@ const useCurrentPlayerName = (id: string) => {
         }
         if (Game.instance) {
             Game.instance.subscribe(subscribtion);
-            setCurrentPlayerName(Game.instance.state.currentPlayer)
+            setCurrentPlayerName(Players.instance.state.currentPlayersName)
         }
         return () => {
             if (Game.instance) {
