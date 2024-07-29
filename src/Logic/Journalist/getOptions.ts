@@ -62,7 +62,8 @@ export const getTestableOptions = (state: tGameState, playerName: string): tJour
 
 export const getOptions = () => {
     const gameState = getGameState();
-    const currentPlayerName = gameState.game.currentPlayer;
+    // const currentPlayerName = gameState.game.currentPlayer;
+    const currentPlayerName = gameState.players.currentPlayersName;
     // console.log(gameState)
     // debugger;
     const options = getTestableOptions(gameState, currentPlayerName);

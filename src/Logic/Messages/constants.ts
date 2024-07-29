@@ -17,5 +17,6 @@ export enum Messages {
     playerAddedDeleted = 'player-added-or-deleted',
     switchPlayer = 'switch-player',
     movePlayer = 'move-player',
-    loadPlayers = 'load-players'
+    loadPlayers = 'load-players',
+    stateChanged = 'state-changed',
 }

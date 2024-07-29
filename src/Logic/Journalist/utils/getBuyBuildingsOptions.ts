@@ -21,7 +21,7 @@ export enum NoBuildingPermitResults {
 }
 
 const getIsBuildingPurchaseLimitReached = (propKey: tBuildingLimitKey) => (state: tGameState, playerName: string) => {
-    const currentPlayer = state.players.find(({name}) => name === playerName);
+    const currentPlayer = state.players.playersList.find(({name}) => name === playerName);
     if (currentPlayer === undefined) throw new Error(`No player named ${playerName}`);
     const limit = currentPlayer?.[propKey];
     return limit >= BUILDING_PURCHASE_LIMIT;

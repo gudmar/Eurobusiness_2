@@ -35,7 +35,7 @@ const changeEstate = (state: tGameState, {estateName, props}: tChangeInEstate) =
   }
 
 export const getPlayerColor = (state: tGameState, playerName: string) => {
-  const player = state.players.find(({ name }) => name === playerName);
+  const player = state.players.playersList.find(({ name }) => name === playerName);
   return player?.color;
 }
   
@@ -69,7 +69,7 @@ const changeHotelsInRound = (args: tStateModifierArgs) => {
   if (hotelsInRoundDeltas === undefined) return state;
   hotelsInRoundDeltas?.forEach((hotelsInRoundDelta) => {
     const [hotelsInRound, playerName] = hotelsInRoundDelta;
-    const player = state.players.find(({name}) => name === playerName);
+    const player = state.players.playersList.find(({name}) => name === playerName);
     if(player === undefined) throw new Error(`Player ${playerName} not found`)
     player.nrOfHotelsPurchasedInRound = hotelsInRound;
   })
@@ -82,14 +82,14 @@ const setCurrentPlayer = (args: tStateModifierArgs) => {
   if (currentPlayerName === undefined) return state;
   const color = getPlayerColor(state, currentPlayerName);
   if (color === undefined) throw new Error(`Players ${currentPlayerName} color not found`)
-  state.game.currentPlayer = currentPlayerName;
+  state.players.currentPlayersName = currentPlayerName;
   state.currentPlayerName = currentPlayerName;
   return state;
 }
 
 const getPlayer = (args: tStateModifierArgs, playerName: string) => {
   const players = args.state.players;
-  const player = players.find(({name}) => name === playerName);
+  const player = players.playersList.find(({name}) => name === playerName);
   return player;
 }
 
@@ -98,7 +98,7 @@ const sendToJail = (args: tStateModifierArgs) => {
   const playersInState = state.players;
   const playersNamesToPrison = options?.toJail || [];
   playersNamesToPrison.forEach((playerName) => {
-    const player = playersInState.find((playerInState) => playerInState.name === playerName);
+    const player = playersInState.playersList.find((playerInState) => playerInState.name === playerName);
     if (player) player.isInPrison = true;
   })
   return state;
@@ -113,10 +113,10 @@ const getPlayerPropChanger = (propName: tPlayerKeys, keyInOptions: tOptionsKeys)
   if (deltas === undefined || !(Array.isArray(deltas))) return state;
   deltas?.forEach((delta) => {
     const [value, playerName] = delta as [unknown, string];
-    const playerIndex = state.players.findIndex(({name}) => name === playerName);
+    const playerIndex = state.players.playersList.findIndex(({name}) => name === playerName);
     if(playerIndex === -1) { throw new Error(`Player ${playerName} not found`) };
-    const player = state.players[playerIndex]
-    state.players[playerIndex] = {...player, [propName]: value}
+    const player = state.players.playersList[playerIndex]
+    state.players.playersList[playerIndex] = {...player, [propName]: value}
   })
   return state;
 }

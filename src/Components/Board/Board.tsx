@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useThemesAPI } from "../../Contexts/ThemeContext";
 import { getBoardCaretaker } from "../../Functions/getBoardCaretaker";
 import { BoardCaretaker } from "../../Logic/BoardCaretaker";
+import { Game } from "../../Logic/Game/Game";
 import { Messages } from "../../Logic/Messages/constants";
 import { Player } from "../../Logic/Player/Player";
 import { Players } from "../../Logic/Players/Players";
@@ -74,6 +75,7 @@ export const Board = () => {
             <BoardSide direction={LEFT} />
             <div className={classes.middleBoard}>
                 <CurrentPlayerInfo />
+                <button onClick={() => console.log('Game', Game.instance.state)}>Log game state</button>
                 <GameControl />
             </div>
         </div>

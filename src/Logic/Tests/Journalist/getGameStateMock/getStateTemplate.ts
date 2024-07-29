@@ -24,7 +24,12 @@ export const getStateMock = (): tGameState => {
         bank: getBankStateTemplate(),
         dice: getDiceStateTemplate(),
         boardFields: getBoardFieldsStateTemplate(),
-        players: getPlayersStateTemplate(),
+        players: {
+          playersList: getPlayersStateTemplate(),
+          currentPlayersName: BALIN,
+          currentPlayersColor: YELLOW as tColors,
+          playerNamesOrder: [BALIN, DWALIN, DORIN, GLOIN],
+        },
         chanceCards: getChanceCardsStateTemplate().chanceCards,
         game: getGameLogicState()
     }
@@ -38,7 +43,7 @@ export type tSetNrOfHotelsBoughtInRowArgs = {
 }
 
 export const setNrOfHotelsBoughtInRow = ({state ,color, nrHotelsBoughtInRound}: tSetNrOfHotelsBoughtInRowArgs) => {
-  const player = state.players.find((player) => player.color === color);
+  const player = state.players.playersList.find((player) => player.color === color);
   if (!player) throw new Error(`Player ${color} no found`)
   player.nrOfHotelsPurchasedInRound = nrHotelsBoughtInRound;
   
@@ -51,8 +56,8 @@ export const GLOIN = 'Gloin';
 
 const getGameLogicState = () => {
   const gameLogicState = {
-    currentPlayer: BALIN,
-    playersOrder: [BALIN, DWALIN, DORIN, GLOIN],
+    // currentPlayer: BALIN,
+    // playersOrder: [BALIN, DWALIN, DORIN, GLOIN],
     turnPhase: TurnPhases.BeforeMove,
     doneThisTurn: []
   };

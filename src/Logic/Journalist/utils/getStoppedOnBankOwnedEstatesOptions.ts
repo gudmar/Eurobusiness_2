@@ -19,7 +19,7 @@ const whatToDoWithEstate = (state: tGameState, playerName: string) => {
     const player = getPlayerFromState(state);
     const field = state.boardFields[player!.fieldNr];
     if (!('owner' in field)) return { canBePurchased: false, canBeAuctioned: false };
-    const isCurrentPlayer = state.game.currentPlayer === playerName;
+    const isCurrentPlayer = state.players.currentPlayersName === playerName;
     const isGoodMoment = state.game.turnPhase === TurnPhases.AfterMove;
     const notDoneYet = !state.game.doneThisTurn.includes(DoneThisTurn.BoughtEstate)
     const isBankProperty = field.owner === BANK;

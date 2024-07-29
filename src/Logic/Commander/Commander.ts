@@ -117,7 +117,7 @@ export class Commander {
     }
 
     static async moveCurrentPlayer(): asyncBool {
-        const { currentPlayer: playerName } = Game.instance.state;
+        const { currentPlayersName: playerName } = Players.instance.state;
         const playerColor = Players.playerNameToPlayerColor(playerName);
         const isDone = await Commander.movePlayer(playerColor);
         return isDone;

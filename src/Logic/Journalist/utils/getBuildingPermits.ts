@@ -463,7 +463,7 @@ const calculatePermitsForHotels = (args: tGetBuildingPermitsForNrOfBuildings): t
 }
 
 const getPlayerColorFromGameState = (state: tGameState, playerName: string) => {
-    const color = state.players.find(({name}) => name === playerName)?.color;
+    const color = state.players.playersList.find(({name}) => name === playerName)?.color;
     if (!color) throw new Error(`Player ${playerName} color not found`)
     return color
 }
@@ -471,7 +471,7 @@ const getPlayerColorFromGameState = (state: tGameState, playerName: string) => {
 const getNrHotelsBoughtInRound = (args: tGetBuildingPermitsArgs) => {
     const {gameState, playerName} = args;
     const playerColor = getPlayerColorFromGameState(gameState, playerName);
-    const player = gameState.players.find((player) => player.color === playerColor);
+    const player = gameState.players.playersList.find((player) => player.color === playerColor);
     const  nrOfHotelsPurchasedInRound = player?.nrOfHotelsPurchasedInRound;
     return nrOfHotelsPurchasedInRound || 0;
 }

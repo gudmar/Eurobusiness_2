@@ -15,9 +15,7 @@ export class Game extends SubscribtionsHandler<Messages, tGameLogicState | strin
     static instance: Game;
     static get state(): tGameLogicState {
         return {
-            currentPlayer: Game?.instance?._currentPlayer || '',
             turnPhase: Game?.instance?._turnPhase || TurnPhases.BeforeMove,
-            playersOrder: Game?.instance?._playersOrder || [],
             doneThisTurn: Game?.instance?._doneThisTurn || [],
         }
     }
@@ -52,7 +50,7 @@ export class Game extends SubscribtionsHandler<Messages, tGameLogicState | strin
             players: playersData,
         })
         this._playersOrder = Players.players.map((player) => player.name);
-        this._currentPlayer = this._playersOrder[0];
+        this._currentPlayer = Players._instance.currentPlayerName;
         Game.instance = this;
         this._turnPhase =TurnPhases.BeforeMove
         this._doneThisTurn = []
@@ -60,8 +58,6 @@ export class Game extends SubscribtionsHandler<Messages, tGameLogicState | strin
 
     get state() {
         return {
-            currentPlayer: this._currentPlayer,
-            playersOrder: this._playersOrder,
             turnPhase: this._turnPhase,
             doneThisTurn: this._doneThisTurn,
         }
@@ -73,17 +69,17 @@ export class Game extends SubscribtionsHandler<Messages, tGameLogicState | strin
             objectToValidate: val,
             source: this.constructor.name,
         })
-        this._currentPlayer = val.currentPlayer;
-        this._playersOrder = val.playersOrder;
         this._turnPhase = val.turnPhase;
         this.runAllSubscriptions(Messages.stateChanged, this.state)
     }
 
     nextPlayer() {
-        const nextPlayer = getNextArrayItem(this._playersOrder, this._currentPlayer);
-        this._currentPlayer = nextPlayer as string;
-        this.runAllSubscriptions(Messages.currentPlayerChanged, this._currentPlayer)
-        this.runAllSubscriptions(Messages.stateChanged, this.state)
+        Players.nextTurn();
+        // DON'T DELETE:
+        // const nextPlayer = getNextArrayItem(this._playersOrder, this._currentPlayer);
+        // this._currentPlayer = nextPlayer as string;
+        // this.runAllSubscriptions(Messages.currentPlayerChanged, this._currentPlayer)
+        // this.runAllSubscriptions(Messages.stateChanged, this.state)
     }
 
     nextTurnPhase() {
@@ -92,4 +88,7 @@ export class Game extends SubscribtionsHandler<Messages, tGameLogicState | strin
         this.runAllSubscriptions(Messages.turnPhasesChanged, this._turnPhase);
         this.runAllSubscriptions(Messages.stateChanged, this.state)
     }
+
+
+    // Player does not load with the Game. There is some dupicated state here
 }

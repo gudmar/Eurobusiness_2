@@ -19,7 +19,7 @@ export enum PassingStartPaymentErrors {
 }
 
 const checkIfCurrentPlayer = (state: tGameState, playerName: string) => {
-    const currentPlayerName = state.game.currentPlayer;
+    const currentPlayerName = state.players.currentPlayersName;
     return currentPlayerName === playerName;
 }
 
