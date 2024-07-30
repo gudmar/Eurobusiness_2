@@ -26,7 +26,7 @@ export const BuyBuildings = ({gameOptions }: {gameOptions: tJournalistState}) =>
             rejectionReason,
         } = usePossibleTransactions(gameOptions, dataKey);
         if (isOperationNotAllowedInAnyCountry(countries)) {
-            return  <>{countries.reason}</>
+            return  <div  className={classes.smallReason}>{countries.reason}</div>
         }
         const countryNames = Object.keys(countries?.actions?.[0].payload);
         const buttons = countryNames.map(
@@ -50,7 +50,7 @@ export const BuyBuildings = ({gameOptions }: {gameOptions: tJournalistState}) =>
                 <div className={classes?.countriesList}>{buttons}</div>
                 <div className={classes?.actions}>
                     { !!permits && <PossibleTransactions permits={permits[selectedCountryName]}/>}
-                    { !!rejectionReason && <div>{rejectionReason}</div>}
+                    { !!rejectionReason && <div className={classes.smallReason}>{rejectionReason}</div>}
                 </div>
             </div>
         )        
@@ -111,8 +111,9 @@ const Transaction = ({whatIsQuoted, quotations} : {whatIsQuoted: NrOfHotels | Nr
 }
 
 const AllTransactions = ({permits} : tTransactionForEachCountry) => {
+    const classes = useStyles();
     const {reason} = permits;
-    if (reason) return (<div>rejection</div>)
+    if (reason) return (<div className={classes.smallReason}>rejection</div>)
     const quotations = Object.entries(permits);
     return (
         <div>
@@ -123,11 +124,7 @@ const AllTransactions = ({permits} : tTransactionForEachCountry) => {
     )
 }
 
-// Problem z nazwaniem ofert: 1house zamiast 1hotel, poza tym pisze bzdury o tym ,ze nie moze postawic hotelu
-// a moze, no i 'Each city should have at least 4 houses or 1 hotel'. Co to ma znaczyc?
-
 const getPermitsFromPossibleTransactionsProps = (possibleTransactionsProps: tObject<any>) => {
-    console.log(possibleTransactionsProps)
     const entries = Object.entries(possibleTransactionsProps?.permits?.permits || {});
     const possibiliteisAsObject = entries.reduce((acc: tObject<any>, [key, value]) => {
         if (key !== 'houseReason' && key !== 'hotelReason') {
@@ -139,19 +136,17 @@ const getPermitsFromPossibleTransactionsProps = (possibleTransactionsProps: tObj
 }
 
 const PossibleTransactions = (props:  any) => {
-    console.log('Possible Transactions', props)
     const buildingsCollapsedReason = props?.permits?.reason;
     const hotelsReason = props?.permits?.permits?.hotelReason;
     const houseReason = props?.permits?.permits?.houseReason;
     const permitsForCountries = getPermitsFromPossibleTransactionsProps(props);
-    console.log(permitsForCountries)
     const classes = useStyles();
     
     return (
         <div className={classes.permits}>
             {buildingsCollapsedReason && <div>{buildingsCollapsedReason}</div> }
-            {hotelsReason && <div>{hotelsReason}</div> }
-            {houseReason && <div>{houseReason}</div> }
+            {hotelsReason && <div className={classes.smallReason}>{hotelsReason}</div> }
+            {houseReason &&  <div className={classes.smallReason}>{houseReason}</div> }
             {permitsForCountries && 
                 <div>
                     <AllTransactions permits={permitsForCountries} />

@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { tCity } from "../../Data/types";
-import { OptionTypes } from "../../Logic/Journalist/types";
+import { OptionTypes, tJournalistOptionsUnderDevelopement } from "../../Logic/Journalist/types";
 import { NrOfHotels, NrOfHouses } from "../../Logic/Journalist/utils/getBuildingPermits";
 import { tObject } from "../../Logic/types";
 

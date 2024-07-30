@@ -7,12 +7,18 @@ import { useStyles } from "./styles";
 import { tGameOptions } from "./types";
 
 const extractSpecialCards = (gameOptions: tGameOptions) => {
-    const result = gameOptions?.specialCards?.actions?.[0]?.payload;
+    const result = gameOptions?.specialCards?.actions?.[0]?.payload || [];
     return result;
+}
+
+const extractReason = (GameOptions: tGameOptions) => {
+    const reason = GameOptions?.specialCards?.reason;
+    return reason;
 }
 
 const SellCards = (props: any) => {
     const specialCards: string[] = extractSpecialCards(props?.gameOptions);
+    const reason: string = extractReason(props?.gameOptions);
     const [selectedCard, setSelectedCard] = useState('');
     useIncludeCleaer(CLEAN_SELL_SPECIAL_CARDS, () => setSelectedCard(''));
     const classes = useStyles()
@@ -36,6 +42,7 @@ const SellCards = (props: any) => {
             ))}
         </div>
     )
+    if (reason) return <div className={classes.smallReason}>{reason}</div>
     return <>No cards to sell</>
 }
 

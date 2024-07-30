@@ -49,9 +49,14 @@ export const useStyles = makeStyles(() => {
             textAlign: 'center',
             padding: '1rem',
             fontWeight: 'bold'
-            // alignContent: 'center',
-            // justifyItems: 'center',
-            // justifyContent: 'center',
+        },
+        smallReason: {
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            textAlign: 'center',
+            padding: '1rem',
+            fontWeight: 'bold'
         },
         quotation: {
             cursor: 'pointer',

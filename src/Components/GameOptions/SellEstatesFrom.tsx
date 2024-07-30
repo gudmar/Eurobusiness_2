@@ -31,7 +31,7 @@ const SellEstatesForm = ((props: any) => {
                             }
                         />
                     :
-                        <>{estate!.reason}</>
+                        <div  className={classes.smallReason}>{estate!.reason}</div>
             }
         </div>
     )

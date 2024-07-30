@@ -3,7 +3,7 @@ import { getTestableOptions } from "../../Logic/Journalist/getOptions";
 import { tObject } from "../../Logic/types"
 import { getGameState } from "../../Functions/PersistRetrieveGameState/utils";
 import { Button } from "../Button/Button";
-import { tEstateProps } from "./types";
+import { tEstateProps, tGameOptions } from "./types";
 import { withDisplayOptionsAsCountries } from "./withDisplayOptionsFromCountry";
 import { BuyBuildings } from "./BuyBuildings";
 import { SellBuildings } from "./SellBuildings";
@@ -14,6 +14,7 @@ import UnplegdeEstatesForm from "./UnplegdeEstatesForm";
 import SellEstatesForm, { SellEstatesAlternative } from "./SellEstatesFrom";
 import SellCards from "./SellCards";
 import { Commander } from "../../Logic/Commander/Commander";
+import { useStyles } from "./styles";
 
 const useGameOptions = (playerName: string) => {
     const [options, setOptions] = useState<tObject<any>>({});
@@ -27,41 +28,6 @@ const useGameOptions = (playerName: string) => {
         options, refreshGameState,
     }
 }
-
-const Estate = ({estate, isOpen}: tEstateProps) => {
-    return (<div>{estate.name}</div>)
-}
-
-// const Estates = ({estates}: tEstatesProps) => {
-//     return (
-//         <>
-//             {
-//                 estates.map((estate) => <Estate estate = {estate} isOpen={true}/>)
-//             }
-//         </>
-//     )
-// }
-
-// const getEstatesPropsFromEntries = (country: tObject<any>) => {
-//     const entreis = Object.entries(country);
-//     const getSingleEstate = ([key, value]: [key: string, value: tEstate]) => {
-//         const {actions, reason} = value;
-//         return ({ name: key, actions, reason, })
-//     }
-//     const props = entreis.map(getSingleEstate);
-//     return props;
-// }
-
-// const SingleCountry = ({country, countryName}: iSingleCountryProps) => {
-//     const classes: any = null
-//     const estatesProps = getEstatesPropsFromEntries(country)
-//     return (
-//         <div className={classes.country}>
-//             <div className={classes.countryName}>{countryName}</div>
-//             <Estates estates={estatesProps}/>
-//         </div>
-//     )
-// }
 
 const getPlegdeCountries = (options: tObject<any>) => {
     const countries = options?.actions?.[0]?.payload;
@@ -90,7 +56,9 @@ const UnplegdeEstates = withDisplayOptionsAsCountries({
 
 
 const withPresentReason = (Actions: FC<tObject<any>>) => ({reason, actions}: tObject<any>) => {
-    if (reason) return (<>{reason}</>)
+    console.log('Reason', reason, 'actions:', actions)
+    const classes = useStyles();
+    if (reason) return (<div className={classes.smallReason}>{reason}</div>)
     return (
         <Actions actions={actions} />
     )
@@ -107,7 +75,10 @@ const EndTurnActions = () => {
     )
 }
 
-const EndTurnOptions = withPresentReason(EndTurnActions);
+const EndTurnOptions = ({ gameOptions }: tGameOptions) => {
+    console.log('args', gameOptions);
+    return withPresentReason(EndTurnActions)(gameOptions.endTurn);
+} 
 
 const AcceptModneyActions = ({actions}: tObject<any>) => {
     return (
