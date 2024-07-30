@@ -1,5 +1,6 @@
 import { tObject } from "../types";
 import { GET_MONEY, PAY } from "./const";
+import { tStateModifierArgs } from "./utils/types";
 
 export enum Messages {
     optionsChanged = 'Options changed',
@@ -113,3 +114,12 @@ export type tSellEstatesOptions = {
         [cityName: string]: tRejection
     } | tRejection
 } | tRejection;
+
+export type tBuilderFunction = (args: tStateModifierArgs) => tJournalistOptionsUnderDevelopement;
+
+export type tThrowIfNotInOrderArgs = {
+    expectedBeforeFunction: tBuilderFunction,
+    expectedAfterFunction: tBuilderFunction,
+    sequence: tBuilderFunction[],
+}
+

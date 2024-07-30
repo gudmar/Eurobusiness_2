@@ -51,3 +51,8 @@ export type tProcessEachCountryCalbackArgs = {
 }
 
 export type tProcessEachCountryCallback = (args: tProcessEachCountryCalbackArgs) => tObject<any>
+
+export type tCustomError = {
+    message: string,
+    stack: string,
+}

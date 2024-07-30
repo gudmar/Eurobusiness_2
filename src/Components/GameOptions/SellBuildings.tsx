@@ -139,13 +139,13 @@ export const SellBuildings = ({gameOptions}: {gameOptions: tJournalistState}) =>
     
     if (rejectionReason) {
         return (
-            <div>{rejectionReason}</div>
+            <div className={classes.smallReason}>{rejectionReason}</div>
         )
     }
     const sellOptionsFromProps = getSellBuildings(gameOptions);
     const countries = Object.entries(sellOptionsFromProps);
     const option = optionIndex !== -1 ? countries[optionIndex][COUNTRY_OPTION_INDEX_IN_TUPLE] as tObject<any>: {};
-    if (sellOptionsFromProps.reason) return <>{sellOptionsFromProps.reason}</>
+    if (sellOptionsFromProps.reason) return <div className={classes.smallReason}>{sellOptionsFromProps.reason}</div>
     if (!playerName) return (<div className={classes.error}>Cannot find player name</div>)
     return (
         <div className={classes.container}>

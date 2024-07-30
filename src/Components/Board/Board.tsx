@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useThemesAPI } from "../../Contexts/ThemeContext";
 import { getBoardCaretaker } from "../../Functions/getBoardCaretaker";
+import { getGameState } from "../../Functions/PersistRetrieveGameState/utils";
 import { BoardCaretaker } from "../../Logic/BoardCaretaker";
 import { Game } from "../../Logic/Game/Game";
+import { getOptions } from "../../Logic/Journalist/getOptions";
 import { Messages } from "../../Logic/Messages/constants";
 import { Player } from "../../Logic/Player/Player";
 import { Players } from "../../Logic/Players/Players";
@@ -75,7 +77,8 @@ export const Board = () => {
             <BoardSide direction={LEFT} />
             <div className={classes.middleBoard}>
                 <CurrentPlayerInfo />
-                <button onClick={() => console.log('Game', Game.instance.state)}>Log game state</button>
+                <button onClick={() => console.log('Game', getGameState())}>Log game state</button>
+                <button onClick={() => console.log('Game', getOptions())}>Log game options</button>
                 <GameControl />
             </div>
         </div>

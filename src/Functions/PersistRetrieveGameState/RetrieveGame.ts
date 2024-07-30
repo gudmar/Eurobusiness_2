@@ -20,10 +20,8 @@ const setChanceCardsState = (state: tGameState) => {
 }
 
 const setPlayersState = (state: tGameState) => {
-    // const stateTemplates = Object.entries(state.players);
     const stateTemplates = state.players.playersList;
     Players.deleteAllPlayers();
-    // const playersConstructorArgs = stateTemplates.map(([color, state]) => (state));
     const playersConstructorArgs = stateTemplates;
     new Players({DiceClass: DiceTestModeDecorator, players: playersConstructorArgs});
     Players.players.forEach((player) => {
@@ -38,7 +36,6 @@ const getFieldInstance = (boardField: tFieldState): CityField | NonCityEstatesFi
     const result = BoardCaretaker.fieldInstances.find(({name}) => boardField.name === name);
     if (!result) throw new Error(`Cannot find estate named ${boardField.name}`)
     if (result instanceof OtherFieldTypesField || result instanceof ChanceField) {
-        // throw new Error('Field of not proper type')
         return null;
     }
     return result;

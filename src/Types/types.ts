@@ -47,3 +47,9 @@ export type tGetSubscribtionType = {
     estateInstance: tSelectedEstate,
     subscribtionId: string
 }
+
+export type tPrimitive = number | string | bigint | symbol | null | undefined | boolean;
+
+export type tPrimitiveEntry = [string, tPrimitive]
+
+export type tEntry = [string, any]
