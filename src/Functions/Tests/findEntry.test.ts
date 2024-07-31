@@ -73,7 +73,7 @@ describe('Testing findEntry', () => {
         const result = findEntry(obj, expectedEntry)
         const expectedResult = {
             result: true,
-            path: './b/d/4/e'
+            path: './b/d/arr/4/f/'
         }
         expect(result).toEqual(expectedResult);
     })

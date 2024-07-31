@@ -3,7 +3,7 @@ import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
 import { DoneThisTurn, TurnPhases } from "../../types";
 import { ACTIONS, IS_MANDATORY, PAYLOAD, TYPE } from "../const";
 import { OptionTypes, tJournalistOptionsUnderDevelopement, tOptionAction } from "../types";
-import { getFieldCurrentPlayerStandsOn, getFieldData, getPlayerFromState } from "./commonFunctions";
+import { getFieldCurrentPlayerStandsOn, getPlayerFromState } from "./commonFunctions";
 import { tStateModifierArgs } from "./types";
 
 const hasCurrentPlayerMoneyForEstate = (state: tGameState) => {
