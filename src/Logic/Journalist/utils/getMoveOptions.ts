@@ -3,6 +3,7 @@ import { TurnPhases } from "../../types";
 import { ACTIONS, GET_MONEY, IS_MANDATORY } from "../const";
 import { OptionTypes, tJournalistOptionsUnderDevelopement, tOption } from "../types";
 import { tCustomError, tStateModifierArgs } from "./types";
+import { checkIsOnGoToJailField, isAlreadyMoved } from "./utils";
 
 export enum MovementReasons {
     NotTargetPlayer = 'You have to be the current player to move',
@@ -38,7 +39,8 @@ const throwIfPlayerNotTargetPlayer = (args: tStateModifierArgs):void => {
 
 const throwIfAlreadyMoved = (args: tStateModifierArgs): void => {
     const { options } = args;
-    const isMoved = options?.game.turnPhase === TurnPhases.AfterMove;
+    const isMoved = isAlreadyMoved(options!);
+    // const isMoved = options?.game.turnPhase === TurnPhases.AfterMove;
     if (isMoved) throw new Error(MovementReasons.AlreadyMoved);
 }
 
@@ -83,12 +85,19 @@ const throwIfGameLost = (args: tStateModifierArgs) => {
     if (isPlayersGameLost) throw new Error(MovementReasons.LostGame);
 }
 
+const throwIfShouldGoToPrison = (args: tStateModifierArgs) => {
+    const shouldGoToPrison = checkIsOnGoToJailField(args.options!);
+    const isMoved = isAlreadyMoved(args.options!);
+    if (shouldGoToPrison && isMoved) throw new Error(MovementReasons.MandatoryActionLeft);
+}
+
 export const getMoveOptions = (args: tStateModifierArgs): tJournalistOptionsUnderDevelopement => {
     const { options, state, playerName} = args;
     try {
         if (!options) throw new Error('getMoveOptions: game options undefined');
         throwIfPlayerNotTargetPlayer(args);
         throwIfGameLost(args);
+        throwIfShouldGoToPrison(args);
         throwIfAlreadyMoved(args);
         throwIfMandatoryActionLeft(args);
         throwIfInPrison(args);
