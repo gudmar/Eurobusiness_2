@@ -1,7 +1,7 @@
 import { findEntry } from "../../../Functions/findEntry";
 import { TurnPhases } from "../../types";
-import { GET_MONEY } from "../const";
-import { OptionTypes, tJournalistOptionsUnderDevelopement } from "../types";
+import { ACTIONS, GET_MONEY, IS_MANDATORY } from "../const";
+import { OptionTypes, tJournalistOptionsUnderDevelopement, tOption } from "../types";
 import { tCustomError, tStateModifierArgs } from "./types";
 
 export enum MovementReasons {
@@ -32,7 +32,8 @@ const getMandatoryOptionLocation = (pathToMandatoryAction?: string) => {
 const throwIfPlayerNotTargetPlayer = (args: tStateModifierArgs):void => {
     const { options, playerName} = args;
     const currentPlayerName = options?.players.currentPlayersName;
-    if (currentPlayerName === playerName) throw new Error(MovementReasons.NotTargetPlayer)
+    console.log('Playrs', currentPlayerName, playerName)
+    if (currentPlayerName !== playerName) throw new Error(MovementReasons.NotTargetPlayer)
 }
 
 const throwIfAlreadyMoved = (args: tStateModifierArgs): void => {
@@ -50,25 +51,25 @@ const throwIfMandatoryActionLeft = (args: tStateModifierArgs): void => {
     )
 }
 
-const getCurrentPlayerParam = (args: tStateModifierArgs, paramName: string) => {
+const getCurrentPlayerParamValue = (args: tStateModifierArgs, paramName: string) => {
     const { options, state, playerName} = args;
     const players = options?.players?.playersList;
     const currentPlayer = players?.find(({name}) => playerName === name);
     if (!currentPlayer) throw new Error(`No player named ${playerName}`)
-    if (paramName in Object.keys(currentPlayer)) {
-        const param = (currentPlayer as any)?.[paramName];
-        return param;
+    const paramValue = (currentPlayer as any)?.[paramName];
+    if (paramValue === undefined) {
+        throw new Error(`No param named ${paramName} in player ${playerName}`);
     }
-    throw new Error(`No param named ${paramName} in player ${playerName}`)
+    return paramValue;
 }
 
 const isInPrison = (args: tStateModifierArgs) => {
-    const result = getCurrentPlayerParam(args, 'isInPrison');
+    const result = getCurrentPlayerParamValue(args, 'isInPrison');
     return result;
 }
 
 const isGameLost = (args: tStateModifierArgs) => {
-    const result = getCurrentPlayerParam(args, 'isGameLost');
+    const result = getCurrentPlayerParamValue(args, 'isGameLost');
     return result;
 }
 
@@ -95,6 +96,11 @@ export const getMoveOptions = (args: tStateModifierArgs): tJournalistOptionsUnde
         const reason = (error as tCustomError)?.message
         if (!reason) throw error;
         state.move = { reason };
+        return state;
+    };
+    state.move = {
+        [IS_MANDATORY]: false,
+        [ACTIONS]: [{ type: OptionTypes.Move, }],
     }
     return args.state
 }

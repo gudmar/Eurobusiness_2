@@ -47,7 +47,7 @@ export type tJournalistOutputArrayOrRejection = tJournalistOutputArray | tReject
 type tJournalistOutputObject = tObject<any>;
 // When all entries are rejections, it may better to show a single reason?
 
-type tJournalistOutputBooleanOrRejection = boolean | tRejection;
+type tJournalistOutputBooleanOrRejection = tOption | tRejection;
 
 type tPayments = {   
     visigingOtherPlayersEstate?: tJournalistOutput,
@@ -81,7 +81,7 @@ export type tJournalistState = {
     goToJail?: tJournalistOutput;
     specialCards?: tJournalistOutput;
     drawChanceCard?: tJournalistOutput;
-    move: boolean;
+    move?: tJournalistOutputBooleanOrRejection;
     endTurn: tJournalistOutput;
     playerName?: string;
 }

@@ -104,6 +104,17 @@ const sendToJail = (args: tStateModifierArgs) => {
   return state;
 }
 
+const setGameLost = (args: tStateModifierArgs) => {
+  const { options, state } = args;
+  const playersInState = state.players;
+  const playersNamesToLoseGame = options?.setGameLost || [];
+  playersNamesToLoseGame.forEach((playerName) => {
+    const player = playersInState.playersList.find((playerInState) => playerInState.name === playerName);
+    if (player) player.isGameLost = true;
+  })
+  return state;
+}
+
 type tOptionsKeys = keyof tGetGameStateMockOptions;
 type tPlayerKeys = keyof iPlayerSnapshot;
 
@@ -161,6 +172,7 @@ export const getMockedGameState = (options?: tGetGameStateMockOptions) => {
       setMoney,
       setCards,
       sendToJail,
+      setGameLost,
       setTurnsToWait,
       setCurrentPlayer,
       setGamePhase,
