@@ -13,7 +13,6 @@ export type tFindEntryResult = {
     result: boolean, path?: string
 }
 
-const KEY_INDEX = 0;
 const VALUE_INDEX = 1;
 
 const findInPath = (args: tFindInPathArgs): tFindInPathArgs => {
