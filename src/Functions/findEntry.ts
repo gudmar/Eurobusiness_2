@@ -29,7 +29,6 @@ const findInPath = (args: tFindInPathArgs): tFindInPathArgs => {
     if (notFound) {
         const result = entriesInCrrentPath.reduce((acc: tFindInPathArgs | null, [currentKey, currentValue]) => {
             if (acc) return acc;
-            console.log('Current entyr', currentKey, currentValue)
             const resultForCurrentEntry: tFindInPathArgs = findInPath({
                 obj: currentValue,
                 entry,

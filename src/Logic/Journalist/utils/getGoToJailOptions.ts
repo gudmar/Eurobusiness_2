@@ -5,6 +5,7 @@ import { IS_MANDATORY, PAY, PAYLOAD, TYPE } from "../const";
 import { OptionTypes, tJournalistOptionsUnderDevelopement } from "../types";
 import { getCurrentPlayer, isCurrentPlayerQueried } from "./commonFunctions";
 import {tStateModifierArgs } from "./types";
+import { checkIsOnGoToJailField } from "./utils";
 
 
 export const GO_TO_JAIL_INDEX = 30;
@@ -13,10 +14,6 @@ const didCurrentPlayerAlreadyGoToJail = (state: tGameState) => {
     const {doneThisTurn} = state.game;
     const result = doneThisTurn.includes(DoneThisTurn.GoneToJail);
     return result
-}
-const checkIsOnGoToJailField = (state: tGameState) => {
-    const {fieldNr} = getCurrentPlayer(state);
-    return fieldNr === GO_TO_JAIL_INDEX;
 }
 
 const checkIfPlayerInJail = (state: tGameState) => getCurrentPlayer(state).isInPrison;

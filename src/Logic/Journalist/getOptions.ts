@@ -40,7 +40,6 @@ const throwIfNotInOrder = ({ expectedBeforeFunction, expectedAfterFunction, sequ
 // This is not for chance card actions. Chance card actions
 // are a separate responsiblity
 export const getTestableOptions = (state: tGameState, playerName: string): tJournalistState => {
-    // const result = {};
     const builderSequence = [
         getTestableOptionsWithBuyBuildings,
         getTestableOptionsWithSellBuildings,
@@ -71,17 +70,12 @@ export const getTestableOptions = (state: tGameState, playerName: string): tJour
         },
         builderSequence,
     )
-    console.log('Options of the game', result)
     return result as tJournalistState;
 }
 
 export const getOptions = () => {
     const gameState = getGameState();
-    // const currentPlayerName = gameState.game.currentPlayer;
     const currentPlayerName = gameState.players.currentPlayersName;
-    // console.log(gameState)
-    // debugger;
     const options = getTestableOptions(gameState, currentPlayerName);
-    console.log('Game options:', options)
     return options;
 }

@@ -60,6 +60,8 @@ type tChangeShouldStartPayments = tChangeShouldPayForStart[]
 
 type tAddDoneThisTurn = DoneThisTurn[]
 
+type tSetGameLost = tPlayerName[]
+
 export type tGetGameStateMockOptions = {
     estatesDelta?: tChangePropsInEstatesDelta,
     estatesOwner?: tChangeEstatesOwner,
@@ -76,6 +78,7 @@ export type tGetGameStateMockOptions = {
     lastPlayersField?: tMovePlayers,
     shouldPayForStart?: tChangeShouldStartPayments,
     addDoneThisTurn?: tAddDoneThisTurn,
+    setGameLost?: tSetGameLost,
 }
 
 export type tProps = {
