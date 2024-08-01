@@ -374,7 +374,7 @@ describe('Options after player move', () => {
             expect(paymentStatus).toEqual(expectedPaymentStatus);
         })
         it('Should add a mandatory payment when stepped on other players posession: no houses case', () => {
-            const balinEstates = [ ROME, MEDIOLAN, NEAPOL];
+            const balinEstates = [ ROME, NEAPOL];
             const state = getMockedGameState({
                 estatesOwner: [BALIN, balinEstates],
                 currentPlayer: [DORIN],
@@ -419,6 +419,31 @@ describe('Options after player move', () => {
                         [PAYLOAD]: {
                             target: BALIN,
                             ammount: NEAPOL_WITH_4_HOUSES_FEE,
+                        }        
+                    }
+                ]
+            }
+            expect(result).toEqual(expectedResult)
+        })
+
+        it('Should add a mandatory payment option with double stay price, when estate player stays on is empty, and someone owns all estates from this countery', () => {
+            const balinEstates = [ ROME, MEDIOLAN, NEAPOL];
+            const state = getMockedGameState({
+                estatesOwner: [BALIN, balinEstates],
+                currentPlayer: [DORIN],
+                setGamePhase: TurnPhases.AfterMove,
+                movePlayers: [[NEAPOL_INDEX, DORIN]]
+            });
+            const options = getTestableOptions(state, DORIN);
+            const result = options.pay?.visigingOtherPlayersEstate;
+            const expectedResult = {
+                [IS_MANDATORY]: true,
+                [ACTIONS]: [
+                    {
+                        [TYPE]: OptionTypes.Pay,
+                        [PAYLOAD]: {
+                            target: BALIN,
+                            ammount: NEAPOL_FEE * 2,
                         }        
                     }
                 ]

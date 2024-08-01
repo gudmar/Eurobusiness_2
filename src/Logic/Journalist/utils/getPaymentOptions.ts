@@ -3,12 +3,14 @@ import { GUARDED_PARKING_FEE, TAX_FEE } from "../../../Data/fees";
 import { iCityField, iNonCityEstates } from "../../../Data/types";
 import { createPath } from "../../../Functions/createPath";
 import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
+import { BoardCaretaker } from "../../BoardCaretaker";
 import { iChanceFieldState, iCityFieldState, iFieldState, iNonCityEstatesFieldState, iOtherFieldTypesFieldState, isCityFieldState } from "../../boardTypes";
 import { DoneThisTurn, TurnPhases } from "../../types";
 import { ACTIONS, IS_MANDATORY, PAY, PAYLOAD, TYPE } from "../const";
 import { OptionTypes, tJournalistOptionsUnderDevelopement } from "../types";
 import { getCurrentPlayer, getFieldData, getFieldIfOwned, getNrPlantsPlayerOwns, getNrRailwaysPlayerOwns, getPlayer, getPlayerByColor, isCurrentPlayerQueried, isPlayerInJail } from "./commonFunctions";
-import {tStateModifierArgs } from "./types";
+import {tCityOrNotCityEstate, tStateModifierArgs } from "./types";
+import { getCountryFieldsFromGameState } from "./utils";
 
 export const TAX_FIELD_INDEX = 38;
 export const GUARDED_PARKING_FIELD_INDEX = 4;
@@ -112,6 +114,21 @@ const isPlant = (field: iFieldState) => {
     return field.type === PLANT;
 }
 
+const checkIfSinglePlayerOwnsAllEstates = (options: tGameState, field: tCityOrNotCityEstate) => {
+    const {country, owner} = field;
+    const thisCountryFields =  getCountryFieldsFromGameState(options, country) as unknown as tCityOrNotCityEstate[];
+    if (!thisCountryFields.length) throw new Error(`Country ${field.country} seems not to have any fields`)
+    const result = thisCountryFields.every((field) => field.owner === owner)
+    return result;
+}
+const getOwnAllEstatesFromThisCountryFactor = (options: tGameState, field: tCityOrNotCityEstate) => {
+    const areAllOwnedBySinglePlayer = checkIfSinglePlayerOwnsAllEstates(options, field);
+    if (('nrOfHouses' in field) && ('nrOfHotels' in field)) {
+        if (field.nrOfHotels > 0 || field.nrOfHouses > 0) return 1;
+    }
+    return areAllOwnedBySinglePlayer ? 2 : 1;
+}
+
 const addPayForEstateVisitOptions = (args: tStateModifierArgs) => {
     const { options, state, playerName } = args;
     const field = getFieldIfOwned(options!, playerName);
@@ -146,6 +163,7 @@ const addPayForEstateVisitOptions = (args: tStateModifierArgs) => {
         }
         return state
     };
+    const singlePlayerOwnsWholeCountryFactor = getOwnAllEstatesFromThisCountryFactor(options!, field);
     if (isCityField(field)) {
         state.pay!.visigingOtherPlayersEstate = {
             [IS_MANDATORY]: true,
@@ -154,7 +172,7 @@ const addPayForEstateVisitOptions = (args: tStateModifierArgs) => {
                     [TYPE]: OptionTypes.Pay,
                     [PAYLOAD]: {
                         target: ownerPlayer.name,
-                        ammount: getCityStopByFee(field)
+                        ammount: getCityStopByFee(field) as number * singlePlayerOwnsWholeCountryFactor
                     }        
                 }
             ]
@@ -162,7 +180,7 @@ const addPayForEstateVisitOptions = (args: tStateModifierArgs) => {
         return state;
     }
     if (isRailway(field)) {
-        const ammount = getRailwayStopByFee(options!, field);
+        const ammount = getRailwayStopByFee(options!, field); // as number * singlePlayerOwnsWholeCountryFactor;
         state.pay!.visigingOtherPlayersEstate = {
             [IS_MANDATORY]: true,
             [ACTIONS]: [

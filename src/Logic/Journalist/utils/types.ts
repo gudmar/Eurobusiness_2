@@ -56,3 +56,5 @@ export type tCustomError = {
     message: string,
     stack: string,
 }
+
+export type tCityOrNotCityEstate = iCityFieldState | iNonCityEstatesFieldState;
