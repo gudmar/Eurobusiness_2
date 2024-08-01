@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react"
+import { FC, useCallback, useEffect, useState } from "react"
 import { getTestableOptions } from "../../Logic/Journalist/getOptions";
 import { tObject } from "../../Logic/types"
 import { getGameState } from "../../Functions/PersistRetrieveGameState/utils";
@@ -15,15 +15,32 @@ import SellEstatesForm, { SellEstatesAlternative } from "./SellEstatesFrom";
 import SellCards from "./SellCards";
 import { Commander } from "../../Logic/Commander/Commander";
 import { useStyles } from "./styles";
+import { Game } from "../../Logic/Game/Game";
+import { Messages as GameMessages } from "../../Logic/Game/types";
+
+const ID = 'use game options';
 
 const useGameOptions = (playerName: string) => {
     const [options, setOptions] = useState<tObject<any>>({});
-    const refreshGameState = () => {
+    const refreshGameState = useCallback(() => {
         const currentGameState = getGameState()
         const options = { ...getTestableOptions(currentGameState, playerName), playerName};
         setOptions(options);
-    }
-    useEffect(refreshGameState, []);
+    }, []);
+    useEffect(
+        () => {
+            const gameSubscribtion = {
+                callback: refreshGameState,
+                id: ID,
+                messageType: GameMessages.stateChanged,
+            }
+            Game.instance.subscribeWithInformation(gameSubscribtion)
+            // refreshGameState,
+            return () => {
+                Game.instance.unsubscribe(GameMessages.stateChanged, ID)
+            }
+        },
+    []);
     return {
         options, refreshGameState,
     }
@@ -89,6 +106,24 @@ const AcceptModneyActions = ({actions}: tObject<any>) => {
     )
 }
 
+const getMoveAction = (type: string) => {Commander.moveCurrentPlayer()};
+
+const Move = ({ gameOptions }: tObject<any>) => {
+    const { move } = gameOptions;
+    const { reason, actions } = move;
+    if (reason) return <>{reason}</>
+    console.log('Options', move, actions);
+    return (
+        <div>
+            {
+                actions.map(({type}: {type: string}) => 
+                    <Button label={type} action={() => getMoveAction(type)}/>
+                )
+            }
+        </div>
+    )
+}
+
 const AcceptMoney = withPresentReason(AcceptModneyActions);
 
 const optionKeyToButtonPropsMap = {
@@ -99,6 +134,10 @@ const optionKeyToButtonPropsMap = {
     endTurn: {
         buttonName: 'End turn',
         component: EndTurnOptions,
+    },
+    move: {
+        buttonName: 'Move',
+        component: Move,
     },
     getMoney: {
         buttonName: 'Get money',
@@ -167,7 +206,10 @@ const useSelectOptions = (depsArray: any[]) => {
     }
 }
 
+    // When moving player and ending turn a few times current player is different then player given in move function
+
 export const GameOptions = ({playerName}: any) => {
+    console.log('Player name in GameOptions', playerName)
     const {options, refreshGameState} = useGameOptions(playerName);
     useIncludeCleaer(REFRESH_GAME_OPTIONS, refreshGameState);
     

@@ -9,3 +9,11 @@ export const checkIsOnGoToJailField = (state: tGameState) => {
 }
 
 export const isAlreadyMoved = (state: tGameState) => state?.game.turnPhase === TurnPhases.AfterMove;
+
+export const getCountryFieldsFromGameState = (state: tGameState, countryName: string) => {
+    const fields = state.boardFields.filter((field) => {
+        if (!('country' in field)) return false;
+        return field.country === countryName
+    })
+    return fields;
+}

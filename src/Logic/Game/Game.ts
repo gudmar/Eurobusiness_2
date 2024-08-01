@@ -73,6 +73,20 @@ export class Game extends SubscribtionsHandler<Messages, tGameLogicState | strin
         this.runAllSubscriptions(Messages.stateChanged, this.state)
     }
 
+    static setAfterMoveState() {
+        Game.instance._turnPhase = TurnPhases.AfterMove;
+        Game.instance.runAllSubscriptions(Messages.stateChanged, this.state)
+    }
+
+    static setBeforeMoveState() {
+        Game.instance._turnPhase = TurnPhases.BeforeMove;
+        Game.instance.runAllSubscriptions(Messages.stateChanged, this.state)
+    }
+
+    static get isInAfterMovePhase() {
+        return Game.instance._turnPhase === TurnPhases.AfterMove;
+    }
+
     nextPlayer() {
         Players.nextTurn();
         // DON'T DELETE:

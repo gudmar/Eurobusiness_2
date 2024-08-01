@@ -1,7 +1,7 @@
 import { MAX_NR_HOTELS_IN_CITY, MAX_NR_HOUSES_IN_CITY, NR_OF_HOTELS, NR_OF_HOUSES } from "../Constants/constants";
 import { boardInOrder, descriptors } from "../Data/boardFields";
 import { CHANCE_BLUE, CHANCE_RED, CITIES, CITY, FREE_PARK, GO_TO_JAIL, GUARDED_PARKING, JAIL, PLANT, POWER_STATION, RAILWAY, START, TAX } from "../Data/const";
-import { iCityField, iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, iNonCityEstates, iOtherFieldTypes, tBoard, tBoardField, tChanceTypes, tColors, tEstate, tNamedBoardField, } from "../Data/types";
+import { iCityField, iNamedChance, iNamedCityField, iNamedNonCityEstates, iNamedOtherField, iNonCityEstates, iOtherFieldTypes, tBoard, tBoardField, tChanceTypes, tColors, tCountries, tEstate, tNamedBoardField, } from "../Data/types";
 import { iBoardCaretaker, tEstateField, tField } from "./boardTypes";
 import { ChanceField, CityField, NonCityEstatesField, NullishField, OtherFieldTypesField } from "./FieldCreators";
 import { NrOfHotels } from "./Journalist/utils/getBuildingPermits";
@@ -93,6 +93,14 @@ export class BoardCaretaker extends FieldCreator implements iBoardCaretaker {
     getFieldByIndex(index: number):tField | undefined {
         const field = BoardCaretaker.fieldInstances.find((instance: tField) => instance.index === index);
         return field;
+    }
+
+    static getFieldsByCountry(countryName: tCountries) {
+        const fields = BoardCaretaker.fieldInstances.filter((field) => {
+            if (!('country' in field)) return false;
+            return countryName === field.country;
+        })
+        return fields;
     }
 
     getPlayersEstates(playerColor: tColors) {
@@ -232,7 +240,6 @@ export class BoardCreator {
     }
 
     increaseNrOfHouses(nrOfHousesToAdd: number, cityName: string) {
-        console.log('In increaseNrOfHouses', nrOfHousesToAdd)
         const city = this.getCityByName(cityName);
         if (!city) return;
         (city as iCityField).nrOfHouses = nrOfHousesToAdd + (city as iCityField).nrOfHouses;
