@@ -28,7 +28,11 @@ export const getStateMock = (): tGameState => {
           playersList: getPlayersStateTemplate(),
           currentPlayersName: BALIN,
           currentPlayersColor: YELLOW as tColors,
+          currentPlayerName: BALIN,
+          currentPlayerColor: YELLOW as tColors,
           playerNamesOrder: [BALIN, DWALIN, DORIN, GLOIN],
+          currentInterruptingPlayerName: BALIN,
+          currentInterruptingPlayerColor: YELLOW,
         },
         chanceCards: getChanceCardsStateTemplate().chanceCards,
         game: getGameLogicState()

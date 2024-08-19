@@ -1,36 +1,11 @@
 import { useEffect, useState } from "react"
-import { BLUE, GREEN, RED, YELLOW } from "../../Data/const"
-import { Game } from "../../Logic/Game/Game"
+import { TEST_PLAYERS } from "../../Constants/testPlayers"
+import { GameSettings } from "../../GameSettings/GameSettings"
 import { Messages } from "../../Logic/Messages/constants"
 import { Players } from "../../Logic/Players/Players"
-import { iPlayerDescriptor } from "../../Logic/Players/types"
-import { StrategyNames } from "../../Logic/Strategies/types"
 import { Board } from "../Board/Board"
 import CommandArea from "../CommandArea/CommandArea"
 import { Pawns } from "../Pawns/Pawns"
-
-const TEST_PLAYERS: iPlayerDescriptor[] = [
-    {
-        color: YELLOW,
-        name: 'Balin',
-        strategy: StrategyNames.manual,
-    },
-    {
-        color: RED,
-        name: 'Dwalin',
-        strategy: StrategyNames.manual,
-    },
-    {
-        color: GREEN,
-        name: 'Dorin',
-        strategy: StrategyNames.manual,
-    }, 
-    {
-        color: BLUE,
-        name: 'Gloin',
-        strategy: StrategyNames.manual,
-    }
-];
 
 const GAME_STARTER_ID = 'Game-starter';
 
@@ -68,14 +43,10 @@ export const GameStarter = () => {
 
     // useStartChanceCardsHolders();
     // useEffect(() => {new Bank()}, [])
-    useEffect(() => {
-        new Game({
-            playersData: getPlayersDescriptors(),
-        })
-    }, [])
     const playersDescriptors = usePlayersDescriptors()
     return (
         <>
+            <GameSettings />
             <Board/>
             <Pawns playerDescriptors={playersDescriptors}/>
             <CommandArea/>

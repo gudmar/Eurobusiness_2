@@ -6,7 +6,7 @@ import { ChanceCardHolder } from "../Chance/ChanceCardHolder";
 import { DiceTestModeDecorator } from "../Dice/Dice";
 import { tPlayerName } from "../Player/types";
 import { Players } from "../Players/Players";
-import { iPlayerDescriptor } from "../Players/types";
+import { iPlayerDescriptor, iPlayersSnapshot } from "../Players/types";
 import { SubscribtionsHandler } from "../SubscrbtionsHandler";
 import { DoneThisTurn, TurnPhases } from "../types";
 import { Messages, tGameConstructionArgs, tGameLogicState } from "./types";
@@ -41,7 +41,7 @@ export class Game extends SubscribtionsHandler<Messages, tGameLogicState | strin
         })
     }
 
-    createInitialInstance(playersData: iPlayerDescriptor[]) {
+    createInitialInstance(playersData: iPlayersSnapshot) {
         new ChanceCardHolder(CHANCE_CARDS_BLUE);
         new ChanceCardHolder(CHANCE_CARDS_RED);    
         new Bank();

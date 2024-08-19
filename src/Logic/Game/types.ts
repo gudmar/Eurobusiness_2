@@ -1,9 +1,8 @@
-import { tPlayerName } from "../Player/types"
-import { iPlayerDescriptor } from "../Players/types"
+import { iPlayersSnapshot } from "../Players/types"
 import { DoneThisTurn, TurnPhases } from "../types"
 
 export type tGameConstructionArgs = {
-    playersData: iPlayerDescriptor[]
+    playersData: iPlayersSnapshot
 }
 
 export type tGameLogicState = {

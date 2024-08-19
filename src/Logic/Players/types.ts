@@ -14,7 +14,7 @@ export interface iPlayerDescriptor {
 
 export interface iAllPlayersArgs {
     DiceClass?: tDiceTestModeDecorator;
-    players?: iPlayerDescriptor[];
+    players?: iPlayersSnapshot;
 }
 
 export interface iPlayerArgs {
@@ -57,6 +57,8 @@ export type iPlayersSnapshot = {
     playersList: iPlayerSnapshot[],
     currentPlayersName: string,
     currentPlayersColor: tColors,
+    currentInterruptingPlayerName: string,
+    currentInterruptingPlayerColor: string,
     playerNamesOrder: string[]
 };
 
@@ -69,6 +71,8 @@ export interface iAllPlayers extends iSubscribtionHandler<Messages, iPlayer> {
     allPlayersStates: iPlayerState[],
     getPlayerFieldIndex(color:tColors): number,
     currentPlayer: iPlayer,
+    currentInterruptingPlayerName: string,
+    currentInterruptingPlayerColor: string,
     // makeMove(): Promise<boolean>,
 }
 

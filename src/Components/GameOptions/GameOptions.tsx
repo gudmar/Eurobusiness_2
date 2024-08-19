@@ -206,7 +206,11 @@ const useSelectOptions = (depsArray: any[]) => {
     }
 }
 
-    // When moving player and ending turn a few times current player is different then player given in move function
+// Implementing Game motorics
+// Last done: implementation of playerThatInterrupts => when auction ongoing, there will be one players turn, but other player will have possibility to do some actions,
+// Because of this, and the fact that playersSnapshot was changed from array having players to object having currentPlayer, playerThatInterrupts and playersList, 
+// there are types mismatch that need to be taken care of.
+// Probably there is some initial state, that is undefined (has players instance undefined), and because of this shit happens
 
 export const GameOptions = ({playerName}: any) => {
     console.log('Player name in GameOptions', playerName)

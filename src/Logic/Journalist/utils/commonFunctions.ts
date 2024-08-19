@@ -1,17 +1,17 @@
-import { tBoard, tBoardField, tBoardFieldName } from "../../../Data/types";
+import { tBoardField, tBoardFieldName } from "../../../Data/types";
 import { tGameState } from "../../../Functions/PersistRetrieveGameState/types";
-import { getEstate } from "../../BoardCaretaker";
 import { tFieldState } from "../../boardTypes";
 import { tObject } from "../../types";
-import { tProcessEachCountryCallback, tStateModifierArgs } from "./types";
+import { tProcessEachCountryCallback } from "./types";
 import { descriptors } from '../../../Data/boardFields';
-import { mapCitiesToCountries, mapEstatesToCountries } from "../../../Functions/mapCitiesToCountries";
+import { mapEstatesToCountries } from "../../../Functions/mapCitiesToCountries";
 import { PLANT, RAILWAY } from "../../../Data/const";
 import { isDefined } from "../../../Functions/isDefined";
 
 export const getCurrentPlayerName = (state: tGameState) => state.players.currentPlayersName;
 
 export const getPlayer = (state: tGameState, playerName: string) => {
+    console.log('Game state', state)
     const player = state.players.playersList.find(({name}) => name === playerName);
     if (!player) throw new Error(`Cannot find player named ${playerName}`)
     return player;
