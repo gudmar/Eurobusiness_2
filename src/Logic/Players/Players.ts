@@ -11,14 +11,25 @@ import { iAllPlayers, iAllPlayersArgs,  iPlayer, iPlayerDescriptor, iPlayersMeme
 
 export class Players extends SubscribtionsHandler<Messages, iPlayer> implements iAllPlayers {
     static _instance: Players;
-    
     private _diceClassInstance!: iDiceTestModeDecorator;
     static players: iPlayer[] = [];
     private _currentPlayerIndex: number = 0;
+    private _playerThatInterruptedIndex: number = 0;
     private _createPlayer({color, name, strategy}: iPlayerDescriptor) {
         const player = new Player({ name, color, strategy, money: INITIAL_MONEY, DiceClassInstance: this._diceClassInstance })
         return player;
     }
+    get currentInterruptingPlayerName() {
+        return Players.players[Players._instance._playerThatInterruptedIndex].name
+    }
+    get currentInterruptingPlayerColor() {
+        return Players.players[Players._instance._playerThatInterruptedIndex].color
+    }
+
+    static get exists() {
+        return !!Players._instance
+    }
+
     private static get nextPlayerIndex() {
         const nrOfPlayers = Players.players.length;
         const maxPlayerIndex = nrOfPlayers - 1;
@@ -26,18 +37,46 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
         const result = currentPlayerIndex + 1 > maxPlayerIndex ? 0 : currentPlayerIndex + 1;
         return result;
     }
+
+    private static get nextPlayerThatInterruptedIndex() {
+        const nrOfPlayers = Players.players.length;
+        const maxPlayerIndex = nrOfPlayers - 1;
+        const currentPlayerThatInterruptedIndex = Players._instance._playerThatInterruptedIndex;
+        const result = currentPlayerThatInterruptedIndex + 1 > maxPlayerIndex ? 0 : currentPlayerThatInterruptedIndex + 1;
+        return result;
+    }
+
     static nextTurn() {
         const nextPlayerIndex = Players.nextPlayerIndex;
         Players._instance._currentPlayerIndex = nextPlayerIndex;
+        Players._instance._playerThatInterruptedIndex = nextPlayerIndex;
         Players._instance.runAllSubscriptions(Messages.switchPlayer, Players._instance.currentPlayer)
     }
+
+    static nextInterruptingPlayer() {
+        const nextInterruptingPlayerIndex = Players.nextPlayerThatInterruptedIndex;
+        Players._instance._playerThatInterruptedIndex = nextInterruptingPlayerIndex;
+        Players._instance.runAllSubscriptions(Messages.switchPlayer, Players._instance.currentPlayer);
+        if (nextInterruptingPlayerIndex === Players.instance._currentPlayerIndex) return null;
+        return Players.players[nextInterruptingPlayerIndex];
+
+    }
+
     get state() {
         const state = {
-            currentPlayersName: Players.players[this._currentPlayerIndex].name,
+            currentPlayersName: Players.players[this._currentPlayerIndex]?.name,
             playerNamesOrder: Players.players.map(({name}) => name),
-            currentPlayersColor: Players.players[this._currentPlayerIndex].color
+            currentPlayersColor: Players.players[this._currentPlayerIndex]?.color,
+            currentInterruptingPlayerName: Players.players[this._playerThatInterruptedIndex]?.name as string,
+            currentInterruptingPlayerColor: Players.players[this._playerThatInterruptedIndex]?.color as string,
         };
         return state;
+    }
+
+    static get snapshot() {
+        const state = Players._instance?.state;
+        const playersList = Players.players.map((player) => player.state);
+        return {...state, playersList}
     }
 
     set currentPlayerColor(playerColor: string) {
@@ -53,20 +92,38 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
         if (nextPlayersIndex !== -1) Players._instance._currentPlayerIndex = nextPlayersIndex;
     }
     get currentPlayerName() {
-        return Players.players[Players._instance._currentPlayerIndex].name
+        return Players.players[Players._instance._currentPlayerIndex]?.name
     }
 
+    set currentPlayerThatInterruptsName(playerName: string) {
+        const nextPlayersThatInterruptsIndex = Players.players.findIndex((player) =>
+            player.name === playerName
+        )
+        if (nextPlayersThatInterruptsIndex !== -1) Players._instance._playerThatInterruptedIndex = nextPlayersThatInterruptsIndex;
+    }
+
+    static get isPlayerInterrupting() {
+        const result = Players._instance._currentPlayerIndex !== Players._instance._playerThatInterruptedIndex;
+        return result;
+    }
 
     static get instance() {return Players._instance}
+
+    private static setPlayerIndexes(players: iPlayersSnapshot) {
+        Players._instance.currentPlayerName = players.currentPlayersName;
+        Players._instance.currentPlayerThatInterruptsName = players.currentInterruptingPlayerName;
+    }
+
     constructor({DiceClass, players}: iAllPlayersArgs){
         super();
+        console.log ('PLAYERS, CONStructerd');
         if (Players._instance) {
             if (!Players._instance._diceClassInstance) {
                 Players._instance._diceClassInstance = new DiceClass!();
             }
             if (Players.players?.length === 0) {
-                players!.forEach((player) => { this._addNewPlayer(player); })
-                console.log('Subscribtions fr4om Players constructor')
+                Players.setPlayerIndexes(players!)
+                players?.playersList!.forEach((player) => { this._addNewPlayer(player); })
                 Players._instance.runAllSubscriptions( Messages.loadPlayers, {});
                 Players._instance.runAllSubscriptions(Messages.switchPlayer, Players._instance.currentPlayer)
             }    
@@ -76,7 +133,8 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
         }
         if (!this._diceClassInstance) this._diceClassInstance = new DiceClass!();
         if (Players.players?.length === 0) {
-            players!.forEach((player) => {  this._addNewPlayer(player) })
+            Players.setPlayerIndexes(players!)
+            players?.playersList!.forEach((player) => {  this._addNewPlayer(player) })
             // Players._instance.runAllSubscriptions(Messages.switchPlayer, Players._instance.currentPlayer)
         }
     }

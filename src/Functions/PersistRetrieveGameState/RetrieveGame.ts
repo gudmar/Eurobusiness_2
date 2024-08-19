@@ -20,7 +20,7 @@ const setChanceCardsState = (state: tGameState) => {
 }
 
 const setPlayersState = (state: tGameState) => {
-    const stateTemplates = state.players.playersList;
+    const stateTemplates = state.players;
     Players.deleteAllPlayers();
     const playersConstructorArgs = stateTemplates;
     new Players({DiceClass: DiceTestModeDecorator, players: playersConstructorArgs});
