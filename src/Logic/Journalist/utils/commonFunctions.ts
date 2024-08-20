@@ -11,7 +11,6 @@ import { isDefined } from "../../../Functions/isDefined";
 export const getCurrentPlayerName = (state: tGameState) => state.players.currentPlayersName;
 
 export const getPlayer = (state: tGameState, playerName: string) => {
-    console.log('Game state', state)
     const player = state.players.playersList.find(({name}) => name === playerName);
     if (!player) throw new Error(`Cannot find player named ${playerName}`)
     return player;
