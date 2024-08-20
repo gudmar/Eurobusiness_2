@@ -19,4 +19,6 @@ export enum Messages {
     movePlayer = 'move-player',
     loadPlayers = 'load-players',
     stateChanged = 'state-changed',
+    playerChanged = 'player-changed',
+    interruptingPlayerChanged = 'player-that-interrupts-during-auction-changed'
 }

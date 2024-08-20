@@ -51,12 +51,17 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
         Players._instance._currentPlayerIndex = nextPlayerIndex;
         Players._instance._playerThatInterruptedIndex = nextPlayerIndex;
         Players._instance.runAllSubscriptions(Messages.switchPlayer, Players._instance.currentPlayer)
+        Players._instance.runAllSubscriptions(Messages.playerChanged, Players._instance.currentPlayer)
+        Players._instance.runAllSubscriptions(Messages.interruptingPlayerChanged, Players._instance.currentPlayer)
+        console.log('ENDING turn', Players._instance.currentPlayer.name)
     }
 
     static nextInterruptingPlayer() {
         const nextInterruptingPlayerIndex = Players.nextPlayerThatInterruptedIndex;
+        const nextInterruptingPlayer = Players.players[nextInterruptingPlayerIndex];
         Players._instance._playerThatInterruptedIndex = nextInterruptingPlayerIndex;
-        Players._instance.runAllSubscriptions(Messages.switchPlayer, Players._instance.currentPlayer);
+        Players._instance.runAllSubscriptions(Messages.switchPlayer, nextInterruptingPlayer); // playerChanged is for acknowledgement, that current player changed
+        Players._instance.runAllSubscriptions(Messages.interruptingPlayerChanged, nextInterruptingPlayer)
         if (nextInterruptingPlayerIndex === Players.instance._currentPlayerIndex) return null;
         return Players.players[nextInterruptingPlayerIndex];
 
@@ -84,12 +89,16 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
             player.color === playerColor
         )
         if (nextPlayersIndex !== -1) Players._instance._currentPlayerIndex = nextPlayersIndex;
+        Players._instance.runAllSubscriptions(Messages.playerChanged, Players._instance.currentPlayer)
+        Players._instance.runAllSubscriptions(Messages.interruptingPlayerChanged, Players._instance.currentPlayer)
     }
     set currentPlayerName(playerName: string) {
         const nextPlayersIndex = Players.players.findIndex((player) =>
             player.name === playerName
         )
         if (nextPlayersIndex !== -1) Players._instance._currentPlayerIndex = nextPlayersIndex;
+        Players._instance.runAllSubscriptions(Messages.playerChanged, Players._instance.currentPlayer)
+        Players._instance.runAllSubscriptions(Messages.interruptingPlayerChanged, Players._instance.currentPlayer)
     }
     get currentPlayerName() {
         return Players.players[Players._instance._currentPlayerIndex]?.name
@@ -116,7 +125,6 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
 
     constructor({DiceClass, players}: iAllPlayersArgs){
         super();
-        console.log ('PLAYERS, CONStructerd');
         if (Players._instance) {
             if (!Players._instance._diceClassInstance) {
                 Players._instance._diceClassInstance = new DiceClass!();
@@ -125,7 +133,9 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
                 Players.setPlayerIndexes(players!)
                 players?.playersList!.forEach((player) => { this._addNewPlayer(player); })
                 Players._instance.runAllSubscriptions( Messages.loadPlayers, {});
-                Players._instance.runAllSubscriptions(Messages.switchPlayer, Players._instance.currentPlayer)
+                Players._instance.runAllSubscriptions(Messages.switchPlayer, Players._instance.currentPlayer);
+                Players._instance.runAllSubscriptions(Messages.playerChanged, Players._instance.currentPlayer)
+                Players._instance.runAllSubscriptions(Messages.interruptingPlayerChanged, Players._instance.currentPlayer)
             }    
             return Players._instance
         } else {
@@ -149,6 +159,8 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
             [Messages.movePlayer]: null,
             [Messages.loadPlayers]: null,
             [Messages.stateChanged]: this.state,
+            [Messages.playerChanged]: null,
+            [Messages.interruptingPlayerChanged]: null,
         }
         const message = typeToInfoMap?.[messageType];
         if (!message) return;
@@ -160,7 +172,8 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
         Players.players.push(nextPlayer);
         this.runAllSubscriptions( Messages.playerAddedDeleted, Players.players )
         this.runAllSubscriptions(Messages.switchPlayer, Players._instance.currentPlayer)
-        console.log('Add new player subscribtions', Players._instance)
+        this.runAllSubscriptions(Messages.playerChanged, Players._instance.currentPlayer)
+        Players._instance.runAllSubscriptions(Messages.interruptingPlayerChanged, Players._instance.currentPlayer)
     }
 
     private static _getPlayerByColor(color: tColors) {

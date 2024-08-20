@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { CLOSE_GAME_OPTIONS } from "../../Constants/cleaners";
 import { useIncludeCleaer } from "../../Contexts/CleaningContext/CleaningContext";
+import { useSwitch } from "../../hooks/useSwitch";
 import { Game } from "../../Logic/Game/Game";
-import { Messages } from "../../Logic/Game/types";
 import { getOptions } from "../../Logic/Journalist/getOptions";
+import { Messages } from "../../Logic/Messages/constants";
 import { Players } from "../../Logic/Players/Players";
 import { GameOptions } from "../GameOptions/GameOptions";
 import HelpTip from "../HelpTip/HelpTip";
@@ -88,20 +89,32 @@ const useCurrentPlayerName = (id: string) => {
     const [currentPlayerName, setCurrentPlayerName] = useState('');
     useEffect(() => {
         const subscribtion = {
-            callback: setCurrentPlayerName,
+            callback: (player: any) => {
+                console.log('Setting name t0p ', player.name);
+                setCurrentPlayerName(player.name);
+            },
             id,
-            messageType: Messages.currentPlayerChanged
+            messageType: Messages.playerChanged
         }
-        if (Game.instance) {
-            Game.instance.subscribe(subscribtion);
+        if (Players.instance) {
+            Players.instance.subscribe(subscribtion);
             setCurrentPlayerName(Players.instance.state.currentPlayersName)
         }
+        // if (Game.instance) {
+        //     Game.instance.subscribe(subscribtion);
+        //     setCurrentPlayerName(Players.instance.state.currentPlayersName)
+        // }
         return () => {
-            if (Game.instance) {
-                Game.instance.unsubscribe(Messages.currentPlayerChanged, id)
+            if (Players.instance) {
+                Players.instance.unsubscribe(Messages.playerChanged, id)
             }
         }
-    }, [Game.instance])
+        // return () => {
+        //     if (Game.instance) {
+        //         Game.instance.unsubscribe(Messages.currentPlayerChanged, id)
+        //     }
+        // }
+    }, [Players.instance])
     return currentPlayerName;
 }
 
@@ -110,10 +123,15 @@ const useSelectPlayerName = (id: string) => {
     const [playerNames, setPlayerNames] = useState<string[]>([]);
     const currentPlayerName = useCurrentPlayerName(id);
     const [selectedPlayerName, setSelectedPlayerName] = useState<string>(currentPlayerName);
+    const setPlayer = (name: string) => {
+        Players._instance.currentPlayerName = name;
+        setSelectedPlayerName(name)
+    }
     useEffect(() => {
             const names = Players.players.map((player) => player.name)
             setPlayerNames(names);
-            if (selectedPlayerName === '') setSelectedPlayerName(currentPlayerName)
+            setSelectedPlayerName(currentPlayerName);
+            console.log('Player name now is ', currentPlayerName)
         },[Players.players, currentPlayerName]
     )    
     const PlayerSelection = useCallback(() => {
@@ -123,7 +141,7 @@ const useSelectPlayerName = (id: string) => {
                     id={`${id}_single_select`}
                     label={'Select player'}
                     items={playerNames}
-                    onSelect={setSelectedPlayerName}
+                    onSelect={setPlayer}
                     defaultValue={selectedPlayerName}
                 />
             </div>
@@ -132,25 +150,10 @@ const useSelectPlayerName = (id: string) => {
     return {selectedPlayerName, PlayerSelection}
 }
 
-const useSwitch = (label: string, isInitiallyChecked: boolean) => {
-    const [isChecked, setIsChecked] = useState<boolean>(isInitiallyChecked);
-    const setSelection = () => setIsChecked(true);
-    const clearSelection = () => setIsChecked(false);
-    const Switch = useCallback(() => {
-        return (
-            <Checkbox
-                label={label}
-                onChange={() => setIsChecked(!isChecked)}
-                checked={isChecked}
-            />
-        )
-    }, [isChecked])
-    return {isChecked, Switch, setSelection, clearSelection}
-}
-
 const GameControl = () => {
     const classes = useStyles();
     const {selectedPlayerName, PlayerSelection} = useSelectPlayerName('Select player name')
+    useEffect(() => console.log('Selected payer name is ', selectedPlayerName), [selectedPlayerName])
     const {isChecked: shouldDisplayOptions, Switch, clearSelection} = useSwitch('Toggle select player', false);
     useIncludeCleaer(CLOSE_GAME_OPTIONS, () => clearSelection() )
     return (

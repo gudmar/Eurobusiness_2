@@ -79,6 +79,7 @@ export const Board = () => {
                 <CurrentPlayerInfo />
                 <button onClick={() => console.log('Game', getGameState())}>Log game state</button>
                 <button onClick={() => console.log('Game', getOptions())}>Log game options</button>
+                <button onClick={() => console.clear()}>Clear console</button>
                 <GameControl />
             </div>
         </div>

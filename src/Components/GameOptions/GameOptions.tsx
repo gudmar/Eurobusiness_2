@@ -23,24 +23,31 @@ const ID = 'use game options';
 const useGameOptions = (playerName: string) => {
     const [options, setOptions] = useState<tObject<any>>({});
     const refreshGameState = useCallback(() => {
+        console.log('%cREFRESING GAME STATE', 'background-color: black; color: yellow; padding: 3px' )
         const currentGameState = getGameState()
         const options = { ...getTestableOptions(currentGameState, playerName), playerName};
         setOptions(options);
-    }, []);
+    }, [playerName]);
     useEffect(
         () => {
+            const refreshGameState = () => {
+                console.log('%cREFRESING GAME STATE', 'background-color: black; color: yellow; padding: 3px' )
+                const currentGameState = getGameState()
+                const options = { ...getTestableOptions(currentGameState, playerName), playerName};
+                setOptions(options);
+            }
+
             const gameSubscribtion = {
                 callback: refreshGameState,
                 id: ID,
                 messageType: GameMessages.stateChanged,
             }
             Game.instance.subscribeWithInformation(gameSubscribtion)
-            // refreshGameState,
             return () => {
                 Game.instance.unsubscribe(GameMessages.stateChanged, ID)
             }
         },
-    []);
+    [playerName]);
     return {
         options, refreshGameState,
     }
@@ -54,7 +61,6 @@ const getPlegdeCountries = (options: tObject<any>) => {
 const getUnplegdeCountries = getPlegdeCountries;
 
 const getSellEstates = (options: tObject<any>) => {
-    console.log('getSellEstates', options)
     const countries = options?.actions?.[0]?.payload;
     return countries;
 }
@@ -73,7 +79,6 @@ const UnplegdeEstates = withDisplayOptionsAsCountries({
 
 
 const withPresentReason = (Actions: FC<tObject<any>>) => ({reason, actions}: tObject<any>) => {
-    console.log('Reason', reason, 'actions:', actions)
     const classes = useStyles();
     if (reason) return (<div className={classes.smallReason}>{reason}</div>)
     return (
@@ -93,7 +98,6 @@ const EndTurnActions = () => {
 }
 
 const EndTurnOptions = ({ gameOptions }: tGameOptions) => {
-    console.log('args', gameOptions);
     return withPresentReason(EndTurnActions)(gameOptions.endTurn);
 } 
 
@@ -112,7 +116,6 @@ const Move = ({ gameOptions }: tObject<any>) => {
     const { move } = gameOptions;
     const { reason, actions } = move;
     if (reason) return <>{reason}</>
-    console.log('Options', move, actions);
     return (
         <div>
             {
@@ -213,10 +216,9 @@ const useSelectOptions = (depsArray: any[]) => {
 // Probably there is some initial state, that is undefined (has players instance undefined), and because of this shit happens
 
 export const GameOptions = ({playerName}: any) => {
-    console.log('Player name in GameOptions', playerName)
     const {options, refreshGameState} = useGameOptions(playerName);
     useIncludeCleaer(REFRESH_GAME_OPTIONS, refreshGameState);
-    
+    useEffect(() => console.log('In GameOptions, playerName', playerName), [playerName])
     const { OptionsComponent, currentLabel, setPropMapKey, clearSelectedOption } = useSelectOptions([playerName])
     useIncludeCleaer(CLOSE_ALL_GAME_OPTIONS, () => clearSelectedOption());
     const optionsEntries = Object.entries(options);
@@ -234,6 +236,7 @@ export const GameOptions = ({playerName}: any) => {
     }
     return (
         <>
+            <button onClick={() => console.log('player name', playerName)}>Log playerName</button>
             { optionsEntries.map(getOptionButton) }
             <OptionsComponent gameOptions={options} />
         </>

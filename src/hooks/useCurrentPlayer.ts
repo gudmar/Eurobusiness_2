@@ -11,12 +11,12 @@ export const useCurrentPlayer = () => {
             callback: (player: Player) => {
                 setCurrentPlayer(player)
             },
-            messageType: Messages.switchPlayer
+            messageType: Messages.playerChanged
         }
         if (Players._instance) {
             Players._instance.subscribeWithInformation(subscribtion)
         }
-        return () => Players?._instance?.unsubscribe(Messages.switchPlayer, subscribtion.id)
+        return () => Players?._instance?.unsubscribe(Messages.playerChanged, subscribtion.id)
     }, [Players._instance])
     return {
         currentPlayer,
