@@ -2,8 +2,8 @@ import { FC, useCallback, useEffect, useState } from "react"
 import { getTestableOptions } from "../../Logic/Journalist/getOptions";
 import { tObject } from "../../Logic/types"
 import { getGameState } from "../../Functions/PersistRetrieveGameState/utils";
-import { Button } from "../Button/Button";
-import { tEstateProps, tGameOptions } from "./types";
+import { Button, ButtonColorScheme } from "../Button/Button";
+import { tOptionsComponentArgs } from "./types";
 import { withDisplayOptionsAsCountries } from "./withDisplayOptionsFromCountry";
 import { BuyBuildings } from "./BuyBuildings";
 import { SellBuildings } from "./SellBuildings";
@@ -17,6 +17,11 @@ import { Commander } from "../../Logic/Commander/Commander";
 import { useStyles } from "./styles";
 import { Game } from "../../Logic/Game/Game";
 import { Messages as GameMessages } from "../../Logic/Game/types";
+import { OptionTypes } from "../../Logic/Journalist/types";
+import { tHandleBankOwnedEstateActions, tRefreshFunction } from "../../Logic/Commander/types";
+import { Players } from "../../Logic/Players/Players";
+import { BoardCaretaker } from "../../Logic/BoardCaretaker";
+import { tEstate } from "../../Data/types";
 
 const ID = 'use game options';
 
@@ -91,13 +96,13 @@ const EndTurnActions = () => {
     return (
         <div>
             <h3>Sure you want to end turn?</h3>
-            <Button disabled={false} action={()=>{Commander.endTurn()}} label={'Yes'} />
-            <Button disabled={false} action={restartOptionsComponent} label={'No'} />
+            <Button colorVariant={ButtonColorScheme.light} disabled={false} action={()=>{Commander.endTurn()}} label={'Yes'} />
+            <Button colorVariant={ButtonColorScheme.light} disabled={false} action={restartOptionsComponent} label={'No'} />
         </div>
     )
 }
 
-const EndTurnOptions = ({ gameOptions }: tGameOptions) => {
+const EndTurnOptions = ({ gameOptions, refreshFunction }: tOptionsComponentArgs) => {
     return withPresentReason(EndTurnActions)(gameOptions.endTurn);
 } 
 
@@ -105,14 +110,17 @@ const AcceptModneyActions = ({actions}: tObject<any>) => {
     return (
         <div>
             <h3>You have to accept payment</h3>
-            <Button disabled={false} action={() => {}} label={'Accept'}/>
+            <Button colorVariant={ButtonColorScheme.light} disabled={false} action={() => {}} label={'Accept'}/>
         </div>
     )
 }
 
-const getMoveAction = (type: string) => {Commander.moveCurrentPlayer()};
+const getMoveAction = async (refreshFunction: tRefreshFunction) => {
+    await Commander.moveCurrentPlayer();
+    refreshFunction();
+};
 
-const Move = ({ gameOptions }: tObject<any>) => {
+const Move = ({ gameOptions, refreshFunction }: tOptionsComponentArgs) => {
     const { move } = gameOptions;
     const { reason, actions } = move;
     if (reason) return <>{reason}</>
@@ -120,7 +128,45 @@ const Move = ({ gameOptions }: tObject<any>) => {
         <div>
             {
                 actions.map(({type}: {type: string}) => 
-                    <Button label={type} action={() => getMoveAction(type)}/>
+                    <Button label={type} colorVariant={ButtonColorScheme.light} action={() => getMoveAction(refreshFunction)}/>
+                )
+            }
+        </div>
+    )
+}
+
+type tBankOwnedEstatesActionsKeys = OptionTypes.AuctionEstate | OptionTypes.BuyEstate;
+
+const bankOwnedEstatesActions = ({
+    [OptionTypes.AuctionEstate]: async (args: tHandleBankOwnedEstateActions) => {},
+    [OptionTypes.BuyEstate]: (args: tHandleBankOwnedEstateActions) => {
+        Commander.buyEstateForStandardPrice(args);
+        args.refreshFunction();
+    }
+})
+
+const HandleBankOwnedEstate = ({ gameOptions, refreshFunction }: tOptionsComponentArgs) => {
+    console.log('Game options in HnaldeBankOwnedEstate', gameOptions)
+    const { handleStayOnBankOwnedEstate } = gameOptions;
+    if (!handleStayOnBankOwnedEstate) return null;
+    const { actions, reason } = handleStayOnBankOwnedEstate;
+    if (reason) return <>{reason}</>
+    return (
+        <div>
+            {
+                actions.map(({type}: {type: tBankOwnedEstatesActionsKeys}) => 
+                    <Button
+                        colorVariant={ButtonColorScheme.light}
+                        label={type}
+                        action={
+                            () => {
+                                const currentPlayerField = Players.instance.currentPlayer.fieldNr;
+                                const estateName = BoardCaretaker.getFieldByIndex(currentPlayerField)!.name as unknown as tEstate;
+                                if (estateName){
+                                    bankOwnedEstatesActions[type]({playerName: gameOptions.playerName, estateName, refreshFunction})
+                                }
+                            }
+                        }/>
                 )
             }
         </div>
@@ -157,6 +203,10 @@ const optionKeyToButtonPropsMap = {
             const countries = options?.actions?.[0]?.payload;
             return countries;
         }        
+    },
+    handleStayOnBankOwnedEstate: {
+        buttonName: 'Buy/auction estate',
+        component: HandleBankOwnedEstate,
     },
     unplegdeEstates: {
         buttonName: 'Unplegde estates',
@@ -221,6 +271,7 @@ export const GameOptions = ({playerName}: any) => {
     useEffect(() => console.log('In GameOptions, playerName', playerName), [playerName])
     const { OptionsComponent, currentLabel, setPropMapKey, clearSelectedOption } = useSelectOptions([playerName])
     useIncludeCleaer(CLOSE_ALL_GAME_OPTIONS, () => clearSelectedOption());
+    useEffect(() => console.log('Options changed', options), [options])
     const optionsEntries = Object.entries(options);
     const getOptionButton = ([key, value]: [string, any]) => {
         const label = (optionKeyToButtonPropsMap as any)?.[key]?.buttonName;
@@ -238,7 +289,8 @@ export const GameOptions = ({playerName}: any) => {
         <>
             <button onClick={() => console.log('player name', playerName)}>Log playerName</button>
             { optionsEntries.map(getOptionButton) }
-            <OptionsComponent gameOptions={options} />
+            <hr/>
+            <OptionsComponent gameOptions={options} refreshFunction={refreshGameState}/>
         </>
     )
 }

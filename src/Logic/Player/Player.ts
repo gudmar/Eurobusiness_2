@@ -75,6 +75,7 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
     get strategy() {return this._strategyName}
 
     get lastFieldNr() { return this._lastFieldNr }
+    set lastFieldNr(val: number) { this._lastFieldNr = val }
     setLastFieldNrForTestingPurposes(val:number) {
         if (val < 0 || val > 39) throw new Error('Last field nr has to be in the range 0 to 39');
         this._lastFieldNr = val;

@@ -5,7 +5,7 @@ import { Players } from "../../Logic/Players/Players";
 import { Button } from "../Button/Button";
 import { ALLOWED } from "./cosnt";
 import { useStyles } from "./styles";
-import { tEstateOptions } from "./types";
+import { tPlegdeEstatesFromArgs } from "./types";
 
 const isPlayerWealthyEnough = (playerName: string, price: number) => {
     const player = Players.getPlayerByName(playerName);
@@ -13,7 +13,7 @@ const isPlayerWealthyEnough = (playerName: string, price: number) => {
     return result;
 }
 
-const UnplegdeEstatesForm = (({ estate, estateName, playerName }: tEstateOptions) => {
+const UnplegdeEstatesForm = (({ estate, estateName, playerName }: tPlegdeEstatesFromArgs) => {
     const classes = useStyles()
     const refreshGameState = useImportCleaner(REFRESH_GAME_OPTIONS);
     const hasMoney = isPlayerWealthyEnough(playerName, estate?.price);

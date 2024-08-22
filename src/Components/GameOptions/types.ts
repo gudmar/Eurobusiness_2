@@ -1,6 +1,6 @@
-import { FC } from "react";
 import { tCity } from "../../Data/types";
-import { OptionTypes, tJournalistOptionsUnderDevelopement } from "../../Logic/Journalist/types";
+import { tRefreshFunction } from "../../Logic/Commander/types";
+import { OptionTypes } from "../../Logic/Journalist/types";
 import { NrOfHotels, NrOfHouses } from "../../Logic/Journalist/utils/getBuildingPermits";
 import { tObject } from "../../Logic/types";
 
@@ -9,18 +9,18 @@ export type tActionType = {
     type: OptionTypes,
 }
 
-export type tEstate = {
+export type tEstateOption = {
     name: string,
     reason?: string,
     actions?: tActionType[]
 };
 
 export type tEstateProps = {
-    estate: tEstate,
+    estate: tEstateOption,
     isOpen: boolean,
 }
 
-export type tEstatesProps = {estates: tEstate[]}
+export type tEstatesProps = {estates: tEstateOption[]}
 
 export type iSingleCountryProps = {
     country: tObject<any>,
@@ -100,7 +100,7 @@ export type tPresentSingleSellBuildingOption = {
 
 export type tGetCountries = (options: tObject<any>) => tObject<any>
 
-export type tEstateOptions = {
+export type tPlegdeEstatesFromArgs = {
     estate: tObject<any>,
     estateName: string,
     playerName: string,
@@ -120,3 +120,8 @@ export type tWithDisplayOptionsAsCountries = {
 }
 
 export type tGameOptions = tObject<any>
+
+export type tOptionsComponentArgs = {
+    gameOptions: tObject<any>,
+    refreshFunction: tRefreshFunction,
+}
