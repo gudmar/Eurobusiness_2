@@ -90,9 +90,13 @@ export class BoardCaretaker extends FieldCreator implements iBoardCaretaker {
         return field;
     }
 
-    getFieldByIndex(index: number):tField | undefined {
+    static getFieldByIndex(index: number):tField | undefined {
         const field = BoardCaretaker.fieldInstances.find((instance: tField) => instance.index === index);
         return field;
+    }
+
+    getFieldByIndex(index: number): tField | undefined {
+        return BoardCaretaker.getFieldByIndex(index);
     }
 
     static getFieldsByCountry(countryName: tCountries) {

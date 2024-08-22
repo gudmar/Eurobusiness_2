@@ -9,7 +9,7 @@ export enum Messages {
 export enum OptionTypes {
     Move = 'Move pawn to next field',
     BuyEstate = 'Buy estate that just standed on',
-    AuctionEstate = 'Let all players auction estate in case no will to purchase',
+    AuctionEstate = 'Let all players auction estate',
     AuctionOwnedEstate = 'Let all players auction estate already owned by player',
     BuyBuildings = 'Buy buildings',
     SellBuildings = 'Sell buildings',

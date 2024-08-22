@@ -32,6 +32,23 @@ export const useStyles = createUseStyles((theme: CustomTheme) => ({
         ...CENTER,
         padding: '0.5rem',
     },
+    light: {
+        cursor: 'pointer',
+        color: '#333333',
+        transition: '0.3s',
+        border: 'solid thin',
+        borderColor: '#dddddd',
+        '&:hover':{
+            backgroundColor: '#eeeeee',
+            color: '#222222',
+            transition: '0.3s',
+        },
+        '&:active':{
+            backgroundColor: '#cccccc',
+            color: 'black',
+            transition: '0.3s',
+        }
+    },
     alert: {
         cursor: 'pointer',
         backgroundColor: '#ff5555',
@@ -114,6 +131,10 @@ export const useStyles = createUseStyles((theme: CustomTheme) => ({
 
     disabled: {
         backgroundColor: '#555555',
+        color: '#777777',
+        cursor: 'default'
+    },
+    disabledLight: {
         color: '#777777',
         cursor: 'default'
     },

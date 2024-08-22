@@ -1,11 +1,10 @@
-import { tSellBuildingOption } from "../../Components/GameOptions/types";
-import { MORTGAGE_INTEREST_RENT_FACTOR, PRISON_FIELD_NR_INDEXED_FROM_0, TURNS_TO_WAIT_TO_GET_OUT_OF_JAIL } from "../../Constants/constants";
+import { PRISON_FIELD_NR_INDEXED_FROM_0, TURNS_TO_WAIT_TO_GET_OUT_OF_JAIL } from "../../Constants/constants";
 import { BOARD_SIZE } from "../../Data/const";
-import { tBoardField, tColors, tEstate } from "../../Data/types";
+import { tColors, } from "../../Data/types";
 import { addUniqueArrayItems } from "../../Functions/addArrayUniqueItems";
 import { displayError, displayInfo } from "../../Functions/displayMessage";
 import { shiftBoardIndexBy1 } from "../../Functions/shiftIndex";
-import { BoardCaretaker, BoardCreator } from "../BoardCaretaker";
+import { BoardCreator } from "../BoardCaretaker";
 import { tEstateField } from "../boardTypes";
 import { ChanceCardHolder } from "../Chance/ChanceCardHolder";
 import { DiceTestModeDecorator } from "../Dice/Dice";
@@ -14,8 +13,8 @@ import { Game } from "../Game/Game";
 import { Players } from "../Players/Players";
 import { iPlayer } from "../Players/types";
 import { addBuildingsToEstates, payForBuildings, returnHousesBeforeBuildingHotelsToBank, takeBuildingsFromBank, throwWhenBuildingsCannotBePurchased, updateNrBuildingsPlayerBoughtThisTurn } from "./buyBuildingsCommands";
-import { tBuyBuilding, tChanceCardPayload, tSellBuildingsArgs } from "./types";
-import { getPlayerByColor, removeHousesToBuildHotels, removeSoldHousessFromBuildings, returnBuildingsToBank, returnMoneyToPlayer } from "./utils";
+import { tBuyBuilding, tChanceCardPayload, tHandleBankOwnedEstateActions, tSellBuildingsArgs } from "./types";
+import { getPlayerByColor, getPlayerByName, removeHousesToBuildHotels, removeSoldHousessFromBuildings, returnBuildingsToBank, returnMoneyToPlayer } from "./utils";
 
 type asyncBool = Promise<boolean>
 
@@ -108,7 +107,9 @@ export class Commander {
     static async animateMovingPlayer(player: iPlayer, desiredPosition: number): asyncBool {
         const currentPosition = player.fieldNr;
         const nrOfSteps = desiredPosition > currentPosition ? desiredPosition - currentPosition - 1: BOARD_SIZE - currentPosition + desiredPosition - 1;
-        const isDone = await Commander.step(player, nrOfSteps)
+        const lastFieldNr = player.fieldNr;
+        const isDone = await Commander.step(player, nrOfSteps);
+        player.lastFieldNr=lastFieldNr;
         return isDone;
     }
 
@@ -196,11 +197,11 @@ export class Commander {
     }
 
     // =================  Buy estate ===============
-    static buyEstateForStandardPrice(args: tBuyEstate) {
-        const { name, playerColor } = args;
-        const standardEstatePrice = (BoardCreator.instance.getEstateByName(name) as tEstateField)?.price
-        BoardCreator.instance.changeEstateOwner(name, playerColor);
-        const player = getPlayerByColor(playerColor);
+    static buyEstateForStandardPrice(args: tHandleBankOwnedEstateActions) {
+        const { estateName, playerName } = args;
+        const standardEstatePrice = (BoardCreator.instance.getEstateByName(estateName) as tEstateField)?.price;
+        const player = getPlayerByName(playerName);
+        BoardCreator.instance.changeEstateOwner(estateName, player.color);
         player.money -= standardEstatePrice;
     }
 
@@ -241,9 +242,4 @@ export class Commander {
         Game.setBeforeMoveState();
         Players.nextTurn();
     }
-}
-
-type tBuyEstate = {
-    name: tEstate,
-    playerColor: tColors,
 }

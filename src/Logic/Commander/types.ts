@@ -1,5 +1,5 @@
 import { tLocationAfterTransaction } from "../../Components/GameOptions/types";
-import { tCity, tColors } from "../../Data/types";
+import { tCity, tColors, tEstate } from "../../Data/types";
 
 export type tChanceCardPayload = {
     description: string;
@@ -28,3 +28,16 @@ export type tCompareBuildingsLeftToCurrentBuildingsArgs = {
     nrOfHousesCurrent: number,
     nrOfHotelsCurrent: number
 }
+
+export type tBuyEstate = {
+    estateName: tEstate,
+    playerName: string,
+}
+
+export type tHandleBankOwnedEstateActions = {
+    playerName: string,
+    estateName: tEstate,
+    refreshFunction: tRefreshFunction,
+}
+
+export type tRefreshFunction =  () => void;
