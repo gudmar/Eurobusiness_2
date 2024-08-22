@@ -22,6 +22,7 @@ import { tHandleBankOwnedEstateActions, tRefreshFunction } from "../../Logic/Com
 import { Players } from "../../Logic/Players/Players";
 import { BoardCaretaker } from "../../Logic/BoardCaretaker";
 import { tEstate } from "../../Data/types";
+import { withPresentReason } from "./withPresentReason";
 
 const ID = 'use game options';
 
@@ -82,15 +83,6 @@ const UnplegdeEstates = withDisplayOptionsAsCountries({
         EstateOptions: UnplegdeEstatesForm, countriesKey: 'unplegdeEstates', getCountries: getUnplegdeCountries
     });
 
-
-const withPresentReason = (Actions: FC<tObject<any>>) => ({reason, actions}: tObject<any>) => {
-    const classes = useStyles();
-    if (reason) return (<div className={classes.smallReason}>{reason}</div>)
-    return (
-        <Actions actions={actions} />
-    )
-}
-
 const EndTurnActions = () => {
     const restartOptionsComponent = useImportCleaner(CLOSE_ALL_GAME_OPTIONS)
     return (
@@ -106,7 +98,8 @@ const EndTurnOptions = ({ gameOptions, refreshFunction }: tOptionsComponentArgs)
     return withPresentReason(EndTurnActions)(gameOptions.endTurn);
 } 
 
-const AcceptModneyActions = ({actions}: tObject<any>) => {
+const AcceptModneyActions = ({gameOptions, refreshFunction}: tObject<any>) => {
+    console.log(gameOptions)
     return (
         <div>
             <h3>You have to accept payment</h3>
@@ -119,6 +112,15 @@ const getMoveAction = async (refreshFunction: tRefreshFunction) => {
     await Commander.moveCurrentPlayer();
     refreshFunction();
 };
+
+const acceptStartPayment = (gameOptions: tObject<any>, refreshFunction: tRefreshFunction) => {
+    try {
+        const { type, payload } = gameOptions?.getMoney?.passingStart?.actions[0]
+        if (type === OptionTypes.GetMoney) {
+            Commander.getPassStartMoney(gameOptions.playerName, payload, refreshFunction);
+        }
+    } catch(e) {}
+}
 
 const Move = ({ gameOptions, refreshFunction }: tOptionsComponentArgs) => {
     const { move } = gameOptions;
@@ -189,8 +191,9 @@ const optionKeyToButtonPropsMap = {
         component: Move,
     },
     getMoney: {
-        buttonName: 'Get money',
-        component: AcceptMoney,
+        // buttonName: 'Get money',
+        noButtonAction: acceptStartPayment,
+        // component: AcceptMoney,
     },
     sellBuildings: {
         buttonName: 'Sell buildings',
@@ -275,6 +278,10 @@ export const GameOptions = ({playerName}: any) => {
     const optionsEntries = Object.entries(options);
     const getOptionButton = ([key, value]: [string, any]) => {
         const label = (optionKeyToButtonPropsMap as any)?.[key]?.buttonName;
+        const noButtonAction = (optionKeyToButtonPropsMap as any)?.[key]?.noButtonAction;
+        if (noButtonAction) {
+            noButtonAction(options, refreshGameState);
+        }
         if (!label) return null;
         return (
             <Button
