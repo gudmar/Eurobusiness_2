@@ -63,6 +63,17 @@ export class Game extends SubscribtionsHandler<Messages, tGameLogicState | strin
         }
     }
 
+    addDoneThisTurn(action: DoneThisTurn){
+        this._doneThisTurn.push(action);
+    }
+
+    resetDoneThisTurn() { this._doneThisTurn = [] }
+
+    wasDoneThisTurn(action: DoneThisTurn) {
+        const result = this._doneThisTurn.includes(action);
+        return result;
+    }
+
     set state(val: tGameLogicState) {
         throwIfNotContainKeys({
             keys: ['currentPlayer', 'playersOrder', 'turnPhase'],
@@ -80,6 +91,7 @@ export class Game extends SubscribtionsHandler<Messages, tGameLogicState | strin
 
     static setBeforeMoveState() {
         Game.instance._turnPhase = TurnPhases.BeforeMove;
+        Game.instance.resetDoneThisTurn();
         Game.instance.runAllSubscriptions(Messages.stateChanged, this.state)
     }
 

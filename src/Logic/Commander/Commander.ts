@@ -12,8 +12,9 @@ import { TestModes } from "../Dice/types";
 import { Game } from "../Game/Game";
 import { Players } from "../Players/Players";
 import { iPlayer } from "../Players/types";
+import { DoneThisTurn } from "../types";
 import { addBuildingsToEstates, payForBuildings, returnHousesBeforeBuildingHotelsToBank, takeBuildingsFromBank, throwWhenBuildingsCannotBePurchased, updateNrBuildingsPlayerBoughtThisTurn } from "./buyBuildingsCommands";
-import { tBuyBuilding, tChanceCardPayload, tHandleBankOwnedEstateActions, tSellBuildingsArgs } from "./types";
+import { tBuyBuilding, tChanceCardPayload, tHandleBankOwnedEstateActions, tRefreshFunction, tSellBuildingsArgs } from "./types";
 import { getPlayerByColor, getPlayerByName, removeHousesToBuildHotels, removeSoldHousessFromBuildings, returnBuildingsToBank, returnMoneyToPlayer } from "./utils";
 
 type asyncBool = Promise<boolean>
@@ -241,5 +242,15 @@ export class Commander {
     static endTurn() {
         Game.setBeforeMoveState();
         Players.nextTurn();
+    }
+
+    //=========== Get money =============
+    static getPassStartMoney(playerName: string, ammount: number, refreshFunction: tRefreshFunction) {
+        if (Game.instance.wasDoneThisTurn(DoneThisTurn.GotMoneyForStart)) return;
+        const player = getPlayerByName(playerName);
+        player.money += ammount;
+        Game.instance.addDoneThisTurn(DoneThisTurn.GotMoneyForStart);
+        displayInfo({title: `Player ${playerName} received money`, message: `For passing start`});
+        refreshFunction();
     }
 }
