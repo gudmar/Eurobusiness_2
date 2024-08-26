@@ -15,6 +15,7 @@ import { getSellEstatesOptions } from "./utils/getSellEstatesOptions"
 import { getShouldPayForPassingStartOptions } from "./utils/getShouldPayForPassingStartOptions"
 import { getStoppedOnBankOwnedEstateOptions } from "./utils/getStoppedOnBankOwnedEstatesOptions"
 import { getUnplegdeOptions } from "./utils/getUnplegdeOptions"
+import { giveUp } from "./utils/giveUp"
 
 
 type tJournalistOptionsModifier = tStateModifier<tJournalistOptionsUnderDevelopement, tGameState>
@@ -41,6 +42,7 @@ const throwIfNotInOrder = ({ expectedBeforeFunction, expectedAfterFunction, sequ
 // are a separate responsiblity
 export const getTestableOptions = (state: tGameState, playerName: string): tJournalistState => {
     const builderSequence = [
+        giveUp,
         getTestableOptionsWithBuyBuildings,
         getTestableOptionsWithSellBuildings,
         getSellEstatesOptions,

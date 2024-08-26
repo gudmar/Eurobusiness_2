@@ -1,5 +1,7 @@
+import { PlayerStateEditor } from "../../Components/StateEditor/PlayerStateEditor/PlayerStateEditor";
 import { INITIAL_MONEY } from "../../Data/money";
 import { tColors } from "../../Data/types";
+import { displayError } from "../../Functions/displayMessage";
 import { iSubscription } from "../../Types/types";
 import { tChanceCardPayload } from "../Commander/types";
 import { iDiceTestModeDecorator } from "../Dice/types";
@@ -9,7 +11,7 @@ import { iPlayerMemento } from "../Player/types";
 import { SubscribtionsHandler } from "../SubscrbtionsHandler";
 import { iAllPlayers, iAllPlayersArgs,  iPlayer, iPlayerDescriptor, iPlayersMemento, iPlayersSnapshot, iPlayerState, tSwitchPlayer } from "./types";
 
-export class Players extends SubscribtionsHandler<Messages, iPlayer> implements iAllPlayers {
+export class Players extends SubscribtionsHandler<Messages, iPlayer | null> implements iAllPlayers {
     static _instance: Players;
     private _diceClassInstance!: iDiceTestModeDecorator;
     static players: iPlayer[] = [];
@@ -25,12 +27,46 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
     get currentInterruptingPlayerColor() {
         return Players.players[Players._instance._playerThatInterruptedIndex].color
     }
+    static get isOnlyPlayerLeft() {
+        const leftPlayers = Players.players.filter(({ isGameLost }) => isGameLost);
+        const result = leftPlayers.length >= 1;
+        return result;
+    }
+
+    static get nrOfPlayersLeftInGame() {
+        const result = Players.players.filter(({isGameLost}) => !isGameLost).length;
+        return result;
+    }
+
+    static surrenderPlayer(playerName: string) {
+        if (Players.nrOfPlayersLeftInGame <= 1) throw new Error('Cannot surrender last player')
+        const playerIndex = Players.players.findIndex((player) => player.name === playerName);
+        if (playerIndex === -1) throw new Error(`No player named ${playerName}`);
+        const player = Players.players[playerIndex];
+        player.isGameLost = true;
+        if (Players.isOnlyPlayerLeft) {
+            Players.instance.runAllSubscriptions(Messages.gameEnded, null);
+        }
+        Players.instance.runAllSubscriptions(Messages.playerLost, player);
+    }
 
     static get exists() {
         return !!Players._instance
     }
 
+    private static handleNotEnoughPlayersLeft() {
+        if (Players.nrOfPlayersLeftInGame === 1) {
+            displayError({message: 'Cannot select next player, when there is only one left', title: 'Operation not possible' });
+            return false;
+        }
+        if (Players.nrOfPlayersLeftInGame === 0) {
+            throw new Error('No player left in the game. This should never happen')
+        }
+    }
+
     private static get nextPlayerIndex() {
+        const isLastPlayerLeft = this.handleNotEnoughPlayersLeft();
+        if (isLastPlayerLeft) return Players.instance._currentPlayerIndex;
         const nrOfPlayers = Players.players.length;
         const maxPlayerIndex = nrOfPlayers - 1;
         const currentPlayerIndex = Players._instance._currentPlayerIndex;
@@ -161,6 +197,8 @@ export class Players extends SubscribtionsHandler<Messages, iPlayer> implements 
             [Messages.stateChanged]: this.state,
             [Messages.playerChanged]: null,
             [Messages.interruptingPlayerChanged]: null,
+            [Messages.gameEnded]: null,
+            [Messages.playerLost]: null,
         }
         const message = typeToInfoMap?.[messageType];
         if (!message) return;

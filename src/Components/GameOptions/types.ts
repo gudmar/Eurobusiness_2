@@ -1,5 +1,6 @@
 import { tCity } from "../../Data/types";
-import { tRefreshFunction } from "../../Logic/Commander/types";
+import { Commander } from "../../Logic/Commander/Commander";
+import { tHandleBankOwnedEstateActions, tRefreshFunction } from "../../Logic/Commander/types";
 import { OptionTypes } from "../../Logic/Journalist/types";
 import { NrOfHotels, NrOfHouses } from "../../Logic/Journalist/utils/getBuildingPermits";
 import { tObject } from "../../Logic/types";
@@ -125,3 +126,13 @@ export type tOptionsComponentArgs = {
     gameOptions: tObject<any>,
     refreshFunction: tRefreshFunction,
 }
+
+export type tBankOwnedEstatesActionsKeys = OptionTypes.AuctionEstate | OptionTypes.BuyEstate;
+
+export const bankOwnedEstatesActions = ({
+    [OptionTypes.AuctionEstate]: async (args: tHandleBankOwnedEstateActions) => {},
+    [OptionTypes.BuyEstate]: (args: tHandleBankOwnedEstateActions) => {
+        Commander.buyEstateForStandardPrice(args);
+        args.refreshFunction();
+    }
+})

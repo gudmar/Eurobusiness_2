@@ -22,6 +22,7 @@ export enum OptionTypes {
     SellSpecialCard = 'Sell special card',
     GetMoney = 'Get money',
     EndTurn = 'End turn',
+    GiveUp = 'Give up',
 }
 
 export type tOptionAction = {
@@ -84,6 +85,7 @@ export type tJournalistState = {
     move?: tJournalistOutputBooleanOrRejection;
     endTurn: tJournalistOutput;
     playerName?: string;
+    giveUp?: tJournalistOutput;
 }
 
 export type tJournalistOptionsUnderDevelopement = {
@@ -102,6 +104,7 @@ export type tJournalistOptionsUnderDevelopement = {
     goToJail?: tJournalistOutput;
     move?: tJournalistOutputBooleanOrRejection;
     endTurn?: tJournalistOutput;
+    giveUp?: tJournalistOutputBooleanOrRejection;
 }
 
 export type tSellEstatePrivilage = {

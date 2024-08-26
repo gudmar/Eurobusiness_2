@@ -5,7 +5,7 @@ import { iPlayerArgs, iPlayerState, iPlayer, iMoveMessage, tPlayerChanged, iAnyC
 import { INITIAL_MONEY } from "../../Data/money";
 import { iStrategy, StrategyNames } from "../Strategies/types";
 import { SubscribtionsHandler } from "../SubscrbtionsHandler";
-import { ANY_CHANGE, MOVE } from "../Messages/constants";
+import { ANY_CHANGE, Messages, MOVE } from "../Messages/constants";
 import { getStrategyProvider } from "../Strategies/getStrategyProvider";
 import { iPlayerMemento, iPlayerSnapshot, PassStartPayments } from "./types";
 import { YELLOW } from "../../Data/const";
@@ -53,7 +53,7 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
     }
 
     private _informAnyChange() { 
-        this.runAllSubscriptions(ANY_CHANGE, {...this.getSnapshot()}) 
+        this.runAllSubscriptions(ANY_CHANGE, {...this.getSnapshot()})
     }
 
     set name(val: string) { this._name = val; this._informAnyChange(); }
@@ -68,7 +68,9 @@ export class Player extends SubscribtionsHandler<tPlayerChanged, iMoveMessage | 
     set isInPrison(val: boolean) { this._isInPrison = val; this._informAnyChange(); }
     // this is a part of more complicated transaction
     set nrTurnsToWait(val: number) { this._nrTurnsToWait = val; this._informAnyChange(); }
-    set isGameLost(val: boolean) { this._isGameLost = val; this._informAnyChange(); }
+    set isGameLost(val: boolean) { 
+        this._isGameLost = val; this._informAnyChange(); 
+    }
     set strategy(val: StrategyNames) {this._strategyName = val; this._strategy = getStrategyProvider(val)}
     set shouldPayForPassingStart(val: PassStartPayments) {this._shouldPayForPassingStart = val; this._informAnyChange(); };
     get shouldPayForPassingStart() { return this._shouldPayForPassingStart; };

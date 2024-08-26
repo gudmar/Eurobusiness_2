@@ -73,7 +73,12 @@ export const usePlayerData = (playersData: iPlayerDescriptor[] | null) => {
             const newData = getData(playersInstance);
             setData(newData);    
         }
-        return playersInstance?.unsubscribe(Messages.switchPlayer, USE_PLAYER_DATA_ID)
+        if (playersInstance) {
+            const newData = getData(playersInstance);
+            setData(newData);    
+        }
+        
+        return () => playersInstance?.unsubscribe(Messages.switchPlayer, USE_PLAYER_DATA_ID)
     }, [setCurrentPlayer, playersInstance, currentPlayer])
     return data
 }
