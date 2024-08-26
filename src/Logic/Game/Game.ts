@@ -23,6 +23,10 @@ export class Game extends SubscribtionsHandler<Messages, tGameLogicState | strin
     private _playersOrder: tPlayerName[] = [];
     private _currentPlayer: tPlayerName = '';
     private _doneThisTurn: DoneThisTurn[] = []
+    static get isGameOver(){
+        const result = Players.isOnlyPlayerLeft;
+        return result;
+    }
     constructor({
         playersData
     }: tGameConstructionArgs){

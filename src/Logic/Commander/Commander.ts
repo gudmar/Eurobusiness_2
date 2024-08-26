@@ -253,4 +253,11 @@ export class Commander {
         displayInfo({title: `Player ${playerName} received money`, message: `For passing start`});
         refreshFunction();
     }
+
+    static surrender(playerName: string, refreshFunction: tRefreshFunction) {2
+        Players.surrenderPlayer(playerName);
+        displayInfo({title: `Player lost the game`, message: `${playerName} lost the game`});
+        Commander.nextPlayer();
+        refreshFunction();
+    }
 }

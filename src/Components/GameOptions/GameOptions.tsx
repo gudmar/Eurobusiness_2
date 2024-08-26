@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { getTestableOptions } from "../../Logic/Journalist/getOptions";
 import { tObject } from "../../Logic/types"
 import { getGameState } from "../../Functions/PersistRetrieveGameState/utils";
@@ -14,15 +14,12 @@ import UnplegdeEstatesForm from "./UnplegdeEstatesForm";
 import SellEstatesForm, { SellEstatesAlternative } from "./SellEstatesFrom";
 import SellCards from "./SellCards";
 import { Commander } from "../../Logic/Commander/Commander";
-import { useStyles } from "./styles";
 import { Game } from "../../Logic/Game/Game";
 import { Messages as GameMessages } from "../../Logic/Game/types";
 import { OptionTypes } from "../../Logic/Journalist/types";
-import { tHandleBankOwnedEstateActions, tRefreshFunction } from "../../Logic/Commander/types";
-import { Players } from "../../Logic/Players/Players";
-import { BoardCaretaker } from "../../Logic/BoardCaretaker";
-import { tEstate } from "../../Data/types";
+import { tRefreshFunction } from "../../Logic/Commander/types";
 import { withPresentReason } from "./withPresentReason";
+import { HandleBankOwnedEstate } from "./HandleBankOwnEstate";
 
 const ID = 'use game options';
 
@@ -137,40 +134,10 @@ const Move = ({ gameOptions, refreshFunction }: tOptionsComponentArgs) => {
     )
 }
 
-type tBankOwnedEstatesActionsKeys = OptionTypes.AuctionEstate | OptionTypes.BuyEstate;
-
-const bankOwnedEstatesActions = ({
-    [OptionTypes.AuctionEstate]: async (args: tHandleBankOwnedEstateActions) => {},
-    [OptionTypes.BuyEstate]: (args: tHandleBankOwnedEstateActions) => {
-        Commander.buyEstateForStandardPrice(args);
-        args.refreshFunction();
-    }
-})
-
-const HandleBankOwnedEstate = ({ gameOptions, refreshFunction }: tOptionsComponentArgs) => {
-    console.log('Game options in HnaldeBankOwnedEstate', gameOptions)
-    const { handleStayOnBankOwnedEstate } = gameOptions;
-    if (!handleStayOnBankOwnedEstate) return null;
-    const { actions, reason } = handleStayOnBankOwnedEstate;
-    if (reason) return <>{reason}</>
+const GiveUp = ({ gameOptions, refreshFunction }: tOptionsComponentArgs) => {
     return (
         <div>
-            {
-                actions.map(({type}: {type: tBankOwnedEstatesActionsKeys}) => 
-                    <Button
-                        colorVariant={ButtonColorScheme.light}
-                        label={type}
-                        action={
-                            () => {
-                                const currentPlayerField = Players.instance.currentPlayer.fieldNr;
-                                const estateName = BoardCaretaker.getFieldByIndex(currentPlayerField)!.name as unknown as tEstate;
-                                if (estateName){
-                                    bankOwnedEstatesActions[type]({playerName: gameOptions.playerName, estateName, refreshFunction})
-                                }
-                            }
-                        }/>
-                )
-            }
+            <Button label={`Surrender ${gameOptions.playerName}`} colorVariant={ButtonColorScheme.alert} action={() => Commander.surrender(gameOptions.playerName, refreshFunction)} />
         </div>
     )
 }
@@ -178,6 +145,10 @@ const HandleBankOwnedEstate = ({ gameOptions, refreshFunction }: tOptionsCompone
 const AcceptMoney = withPresentReason(AcceptModneyActions);
 
 const optionKeyToButtonPropsMap = {
+    giveUp: {
+        buttonName: 'Give up',
+        component: GiveUp,
+    },
     buyBuildings: {
         buttonName: 'Buy buildings',
         component: BuyBuildings,

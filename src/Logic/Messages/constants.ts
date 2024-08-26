@@ -20,5 +20,7 @@ export enum Messages {
     loadPlayers = 'load-players',
     stateChanged = 'state-changed',
     playerChanged = 'player-changed',
-    interruptingPlayerChanged = 'player-that-interrupts-during-auction-changed'
+    interruptingPlayerChanged = 'player-that-interrupts-during-auction-changed',
+    gameEnded = 'game-ended',
+    playerLost = 'player-lost',
 }
